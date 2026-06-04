@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Ege Cantürk | Portfolio</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="cursor-glow"></div>
+  <div class="background-blur blur-one"></div>
+  <div class="background-blur blur-two"></div>
+
+  <header class="navbar">
+    <a href="#home" class="logo">
+      <span>&lt;</span>Ege<span>/&gt;</span>
+    </a>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="home" class="hero reveal">
+      <div class="hero-content">
+        <p class="eyebrow">Computer Engineering Student</p>
+
+        <h1>
+          I build <span id="typing-text"></span>
+        </h1>
+
+        <p class="hero-description">
+          I'm Ege Cantürk, a computer engineering student interested in
+          cybersecurity, electronics, game development, and experimental systems.
+          I like building things from scratch to understand how they really work.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#projects" class="btn primary-btn">View Projects</a>
+          <a href="#contact" class="btn secondary-btn">Contact Me</a>
+        </div>
+
+        <div class="stats">
+          <div>
+            <strong>4+</strong>
+            <span>Project Areas</span>
+          </div>
+          <div>
+            <strong>10+</strong>
+            <span>Tools & Skills</span>
+          </div>
+          <div>
+            <strong>∞</strong>
+            <span>Things to Learn</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="terminal-card">
+        <div class="terminal-header">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="terminal-body">
+          <p><span class="green">$</span> whoami</p>
+          <p>Ege Cantürk</p>
+
+          <p><span class="green">$</span> interests</p>
+          <p>Cybersecurity / Electronics / Game Dev</p>
+
+          <p><span class="green">$</span> current_status</p>
+          <p>Building, learning, debugging life...</p>
+
+          <p><span class="green">$</span> motto</p>
+          <p>"Small systems, big lessons."</p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="projects" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Selected Work</p>
+        <h2>Projects</h2>
+        <p>
+          A collection of software, electronics, cybersecurity and design-oriented experiments.
+        </p>
+      </div>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="software">Software</button>
+        <button class="filter-btn" data-filter="electronics">Electronics</button>
+        <button class="filter-btn" data-filter="cybersecurity">Cybersecurity</button>
+        <button class="filter-btn" data-filter="design">Design</button>
+      </div>
+
+      <div class="project-grid">
+
+        <article class="project-card" data-category="software">
+          <div class="project-icon">⌘</div>
+          <h3>Mini Interpreter</h3>
+          <p>
+            A Python-based toy programming language with variables, conditionals,
+            loops, custom syntax, and basic math operations.
+          </p>
+          <div class="project-tags">
+            <span>Python</span>
+            <span>Interpreter</span>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="software">
+          <div class="project-icon">⏱</div>
+          <h3>Event Scheduler</h3>
+          <p>
+            A JavaScript console application for adding, listing, updating,
+            validating and sorting scheduled events.
+          </p>
+          <div class="project-tags">
+            <span>JavaScript</span>
+            <span>CLI</span>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="electronics">
+          <div class="project-icon">⚡</div>
+          <h3>Bench Power Supply</h3>
+          <p>
+            A custom 12V power supply project with buck converter, fuse protection,
+            active cooling and a 3D printed enclosure.
+          </p>
+          <div class="project-tags">
+            <span>Electronics</span>
+            <span>3D Print</span>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="cybersecurity">
+          <div class="project-icon">☣</div>
+          <h3>Cybersecurity Lab</h3>
+          <p>
+            A local Kali Linux and Metasploitable2 environment for practicing
+            vulnerability scanning and exploitation basics.
+          </p>
+          <div class="project-tags">
+            <span>Kali Linux</span>
+            <span>Security</span>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="design">
+          <div class="project-icon">✦</div>
+          <h3>Drone Concept Design</h3>
+          <p>
+            Early fixed-wing UAV design experiments focused on structure,
+            airflow, control surfaces, and long-endurance concepts.
+          </p>
+          <div class="project-tags">
+            <span>Fusion 360</span>
+            <span>Design</span>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="software">
+          <div class="project-icon">🎮</div>
+          <h3>Game Prototypes</h3>
+          <p>
+            Small game development experiments using Unity, C#, pixel art ideas,
+            mechanics testing and gameplay systems.
+          </p>
+          <div class="project-tags">
+            <span>Unity</span>
+            <span>C#</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="skills" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Toolkit</p>
+        <h2>Skills & Tools</h2>
+        <p>
+          Technologies and tools I use while learning, building and experimenting.
+        </p>
+      </div>
+
+      <div class="skills-grid">
+        <span>Python</span>
+        <span>Java</span>
+        <span>JavaScript</span>
+        <span>C++</span>
+        <span>HTML</span>
+        <span>CSS</span>
+        <span>Kali Linux</span>
+        <span>Metasploitable2</span>
+        <span>Unity</span>
+        <span>C#</span>
+        <span>Fusion 360</span>
+        <span>Electronics</span>
+        <span>Arduino</span>
+        <span>3D Printing</span>
+        <span>GitHub</span>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact reveal">
+      <div class="contact-card">
+        <p class="eyebrow">Let's Connect</p>
+        <h2>Contact</h2>
+        <p>
+          If you want to reach me, check my work, or just talk about projects,
+          you can contact me from here.
+        </p>
+
+        <div class="contact-links">
+          <a href="mailto:canturkege74@gmail.com">Email Me</a>
+          <a href="https://github.com/canturkege74" target="_blank">GitHub</a>
+          <a href="#" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Ege Cantürk. Built from scratch.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
