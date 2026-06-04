@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Ege Cantürk | Portfolio</title>
+  <meta
+    name="description"
+    content="Portfolio website of Ege Cantürk, a Computer Engineering student interested in cybersecurity, electronics, game development and experimental systems."
+  />
 
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -13,6 +17,7 @@
   <div class="cursor-glow"></div>
   <div class="background-blur blur-one"></div>
   <div class="background-blur blur-two"></div>
+  <div class="grid-overlay"></div>
 
   <header class="navbar">
     <a href="#home" class="logo">
@@ -22,6 +27,7 @@
     <nav>
       <a href="#home">Home</a>
       <a href="#projects">Projects</a>
+      <a href="#timeline">Timeline</a>
       <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -32,6 +38,11 @@
     <section id="home" class="hero reveal">
       <div class="hero-content">
         <p class="eyebrow">Computer Engineering Student</p>
+
+        <div class="status-badge">
+          <span></span>
+          Available for internship & project-based work
+        </div>
 
         <h1>
           I build <span id="typing-text"></span>
@@ -46,6 +57,13 @@
         <div class="hero-buttons">
           <a href="#projects" class="btn primary-btn">View Projects</a>
           <a href="#contact" class="btn secondary-btn">Contact Me</a>
+          <a href="Ege_Canturk_CV.pdf" target="_blank" class="btn ghost-btn">Download CV</a>
+        </div>
+
+        <div class="social-strip">
+          <a href="https://github.com/CanturkEge" target="_blank">GitHub</a>
+          <a href="https://www.linkedin.com/in/ege-cant%C3%BCrk-461910365/" target="_blank">LinkedIn</a>
+          <a href="mailto:canturkege74@gmail.com">Email</a>
         </div>
 
         <div class="stats">
@@ -81,10 +99,49 @@
           <p><span class="green">$</span> current_status</p>
           <p>Building, learning, debugging life...</p>
 
+          <p><span class="green">$</span> links</p>
+          <p>github.com/CanturkEge</p>
+
           <p><span class="green">$</span> motto</p>
           <p>"Small systems, big lessons."</p>
         </div>
       </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Current Focus</p>
+        <h2>Currently Building</h2>
+        <p>
+          My current focus is learning by building small but practical systems.
+        </p>
+      </div>
+
+      <div class="focus-grid">
+        <div class="focus-card">
+          <span>01</span>
+          <h3>Cybersecurity Practice</h3>
+          <p>
+            Practicing scanning, enumeration and vulnerability analysis using safe local lab environments.
+          </p>
+        </div>
+
+        <div class="focus-card">
+          <span>02</span>
+          <h3>Electronics Projects</h3>
+          <p>
+            Designing small practical circuits, power systems and 3D printed enclosures.
+          </p>
+        </div>
+
+        <div class="focus-card">
+          <span>03</span>
+          <h3>Software Systems</h3>
+          <p>
+            Building small applications and interpreters to understand programming logic deeply.
+          </p>
+        </div>
+      </div>
     </section>
 
     <section id="projects" class="section reveal">
@@ -117,6 +174,7 @@
             <span>Python</span>
             <span>Interpreter</span>
           </div>
+          <button class="project-detail-btn">View Details</button>
         </article>
 
         <article class="project-card" data-category="software">
@@ -130,6 +188,7 @@
             <span>JavaScript</span>
             <span>CLI</span>
           </div>
+          <button class="project-detail-btn">View Details</button>
         </article>
 
         <article class="project-card" data-category="electronics">
@@ -143,6 +202,7 @@
             <span>Electronics</span>
             <span>3D Print</span>
           </div>
+          <button class="project-detail-btn">View Details</button>
         </article>
 
         <article class="project-card" data-category="cybersecurity">
@@ -156,6 +216,7 @@
             <span>Kali Linux</span>
             <span>Security</span>
           </div>
+          <button class="project-detail-btn">View Details</button>
         </article>
 
         <article class="project-card" data-category="design">
@@ -169,6 +230,7 @@
             <span>Fusion 360</span>
             <span>Design</span>
           </div>
+          <button class="project-detail-btn">View Details</button>
         </article>
 
         <article class="project-card" data-category="software">
@@ -182,8 +244,53 @@
             <span>Unity</span>
             <span>C#</span>
           </div>
+          <button class="project-detail-btn">View Details</button>
         </article>
 
+      </div>
+    </section>
+
+    <section id="timeline" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Path</p>
+        <h2>Learning Timeline</h2>
+        <p>
+          A simple overview of the areas I am developing step by step.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div>
+            <h3>Computer Engineering</h3>
+            <p>Studying software, systems, programming languages and engineering fundamentals.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div>
+            <h3>Cybersecurity Labs</h3>
+            <p>Building local practice environments to understand real vulnerabilities safely.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div>
+            <h3>Electronics & Design</h3>
+            <p>Experimenting with circuits, 3D printing, enclosures, power systems and mechanical concepts.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div>
+            <h3>Future Direction</h3>
+            <p>Combining software, security and hardware knowledge into practical projects.</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -220,17 +327,48 @@
         <p class="eyebrow">Let's Connect</p>
         <h2>Contact</h2>
         <p>
-          If you want to reach me, check my work, or just talk about projects,
+          If you want to reach me, check my work, or talk about projects,
           you can contact me from here.
         </p>
 
         <div class="contact-links">
           <a href="mailto:canturkege74@gmail.com">Email Me</a>
-          <a href="https://github.com/canturkege74" target="_blank">GitHub</a>
-          <a href="#" target="_blank">LinkedIn</a>
+          <button id="copy-email-btn">Copy Email</button>
+          <a href="https://github.com/CanturkEge" target="_blank">GitHub</a>
+          <a href="https://www.linkedin.com/in/ege-cant%C3%BCrk-461910365/" target="_blank">LinkedIn</a>
+        </div>
+
+        <p id="copy-message">Email copied to clipboard.</p>
+
+        <div class="contact-info">
+          <div>
+            <span>Email</span>
+            <strong>canturkege74@gmail.com</strong>
+          </div>
+
+          <div>
+            <span>GitHub</span>
+            <strong>github.com/CanturkEge</strong>
+          </div>
+
+          <div>
+            <span>LinkedIn</span>
+            <strong>ege-cantürk</strong>
+          </div>
         </div>
       </div>
     </section>
+
+    <div class="modal-overlay" id="project-modal">
+      <div class="modal-box">
+        <button class="modal-close" id="modal-close">×</button>
+        <p class="eyebrow">Project Details</p>
+        <h2 id="modal-title">Project Title</h2>
+        <p id="modal-description">
+          Project description will appear here.
+        </p>
+      </div>
+    </div>
 
   </main>
 
