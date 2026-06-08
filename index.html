@@ -7,7 +7,7 @@
   <title>Ege Cantürk | Portfolio</title>
   <meta
     name="description"
-    content="Portfolio website of Ege Cantürk, a Computer Engineering student interested in cybersecurity, electronics, game development and experimental systems."
+    content="Portfolio website of Ege Cantürk, a Computer Engineering student interested in software, electronics, game development and experimental systems."
   />
 
   <link rel="stylesheet" href="style.css" />
@@ -26,8 +26,9 @@
 
     <nav>
       <a href="#home">Home</a>
+      <a href="#focus">Focus</a>
       <a href="#projects">Projects</a>
-      <a href="#timeline">Timeline</a>
+      <a href="#timeline">Roadmap</a>
       <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -50,7 +51,7 @@
 
         <p class="hero-description">
           I'm Ege Cantürk, a computer engineering student interested in
-          cybersecurity, electronics, game development, and experimental systems.
+          electronics, software development, game development, and experimental systems.
           I like building things from scratch to understand how they really work.
         </p>
 
@@ -68,12 +69,12 @@
 
         <div class="stats">
           <div>
-            <strong>4+</strong>
-            <span>Project Areas</span>
+            <strong>3</strong>
+            <span>Main Focus Areas</span>
           </div>
           <div>
-            <strong>10+</strong>
-            <span>Tools & Skills</span>
+            <strong>1+</strong>
+            <span>Documented Projects</span>
           </div>
           <div>
             <strong>∞</strong>
@@ -83,37 +84,41 @@
       </div>
     </section>
 
-    <section class="section reveal">
+    <section id="focus" class="section reveal">
       <div class="section-heading">
-        <p class="eyebrow">Current Focus</p>
-        <h2>Currently Building</h2>
+        <p class="eyebrow">Learning Focus</p>
+        <h2>What I'm Currently Focusing On</h2>
         <p>
-          My current focus is learning by building small but practical systems.
+          Instead of trying to look like I know everything, I focus on a few areas
+          and build practical projects around them.
         </p>
       </div>
 
       <div class="focus-grid">
         <div class="focus-card">
           <span>01</span>
-          <h3>Cybersecurity Practice</h3>
+          <h3>Electronics</h3>
           <p>
-            Practicing scanning, enumeration and vulnerability analysis using safe local lab environments.
+            Learning circuit logic, power systems, soldering, protection circuits,
+            component behavior and practical hardware design.
           </p>
         </div>
 
         <div class="focus-card">
           <span>02</span>
-          <h3>Electronics Projects</h3>
+          <h3>Software</h3>
           <p>
-            Designing small practical circuits, power systems and 3D printed enclosures.
+            Improving programming fundamentals through university projects,
+            small applications, algorithms and clean code practice.
           </p>
         </div>
 
         <div class="focus-card">
           <span>03</span>
-          <h3>Software Systems</h3>
+          <h3>Game Development</h3>
           <p>
-            Building small applications and interpreters to understand programming logic deeply.
+            Building a foundation in gameplay logic, Unity, C#, game mechanics,
+            project structure and interactive systems.
           </p>
         </div>
       </div>
@@ -124,102 +129,30 @@
         <p class="eyebrow">Selected Work</p>
         <h2>Projects</h2>
         <p>
-          A collection of software, electronics, cybersecurity and design-oriented experiments.
+          I document my projects here with explanations, technical details,
+          files, visuals and development notes.
         </p>
       </div>
 
-      <div class="filter-buttons">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="software">Software</button>
-        <button class="filter-btn" data-filter="electronics">Electronics</button>
-        <button class="filter-btn" data-filter="cybersecurity">Cybersecurity</button>
-        <button class="filter-btn" data-filter="design">Design</button>
-      </div>
+      <div class="project-grid single-project-grid">
 
-      <div class="project-grid">
-
-        <article class="project-card" data-category="software">
-          <div class="project-icon">⌘</div>
-          <h3>Mini Interpreter</h3>
-          <p>
-            A Python-based toy programming language with variables, conditionals,
-            loops, custom syntax, and basic math operations.
-          </p>
-          <div class="project-tags">
-            <span>Python</span>
-            <span>Interpreter</span>
-          </div>
-          <button class="project-detail-btn">View Details</button>
-        </article>
-
-        <article class="project-card" data-category="software">
-          <div class="project-icon">⏱</div>
-          <h3>Event Scheduler</h3>
-          <p>
-            A JavaScript console application for adding, listing, updating,
-            validating and sorting scheduled events.
-          </p>
-          <div class="project-tags">
-            <span>JavaScript</span>
-            <span>CLI</span>
-          </div>
-          <button class="project-detail-btn">View Details</button>
-        </article>
-
-        <article class="project-card" data-category="electronics">
+        <article class="project-card featured-project-card">
           <div class="project-icon">⚡</div>
           <h3>Bench Power Supply</h3>
           <p>
-            A custom 12V power supply project with buck converter, fuse protection,
-            active cooling and a 3D printed enclosure.
+            A custom bench power supply project using a buck converter,
+            fuse protection, cooling, panel components and a 3D printed enclosure.
           </p>
+
           <div class="project-tags">
             <span>Electronics</span>
+            <span>Power Supply</span>
             <span>3D Print</span>
           </div>
-          <button class="project-detail-btn">View Details</button>
-        </article>
 
-        <article class="project-card" data-category="cybersecurity">
-          <div class="project-icon">☣</div>
-          <h3>Cybersecurity Lab</h3>
-          <p>
-            A local Kali Linux and Metasploitable2 environment for practicing
-            vulnerability scanning and exploitation basics.
-          </p>
-          <div class="project-tags">
-            <span>Kali Linux</span>
-            <span>Security</span>
-          </div>
-          <button class="project-detail-btn">View Details</button>
-        </article>
-
-        <article class="project-card" data-category="design">
-          <div class="project-icon">✦</div>
-          <h3>Drone Concept Design</h3>
-          <p>
-            Early fixed-wing UAV design experiments focused on structure,
-            airflow, control surfaces, and long-endurance concepts.
-          </p>
-          <div class="project-tags">
-            <span>Fusion 360</span>
-            <span>Design</span>
-          </div>
-          <button class="project-detail-btn">View Details</button>
-        </article>
-
-        <article class="project-card" data-category="software">
-          <div class="project-icon">🎮</div>
-          <h3>Game Prototypes</h3>
-          <p>
-            Small game development experiments using Unity, C#, pixel art ideas,
-            mechanics testing and gameplay systems.
-          </p>
-          <div class="project-tags">
-            <span>Unity</span>
-            <span>C#</span>
-          </div>
-          <button class="project-detail-btn">View Details</button>
+          <a href="bench-power-supply.html" class="project-detail-btn">
+            View Project Page
+          </a>
         </article>
 
       </div>
@@ -227,44 +160,49 @@
 
     <section id="timeline" class="section reveal">
       <div class="section-heading">
-        <p class="eyebrow">Path</p>
-        <h2>Learning Timeline</h2>
+        <p class="eyebrow">Learning Roadmap</p>
+        <h2>Past, Present & Next Steps</h2>
         <p>
-          A simple overview of the areas I am developing step by step.
+          A cleaner roadmap of what I have done, what I am learning now,
+          and what I plan to build next.
         </p>
       </div>
 
-      <div class="timeline">
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div>
-            <h3>Computer Engineering</h3>
-            <p>Studying software, systems, programming languages and engineering fundamentals.</p>
-          </div>
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <span>Past</span>
+          <h3>University Projects</h3>
+          <p>
+            Built small programming projects for courses, including console apps,
+            basic interpreters, algorithm assignments and reports.
+          </p>
         </div>
 
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div>
-            <h3>Cybersecurity Labs</h3>
-            <p>Building local practice environments to understand real vulnerabilities safely.</p>
-          </div>
+        <div class="roadmap-card active-roadmap">
+          <span>Now</span>
+          <h3>Electronics & Software Practice</h3>
+          <p>
+            Currently focusing on practical electronics projects, programming logic,
+            documentation and building a better project portfolio.
+          </p>
         </div>
 
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div>
-            <h3>Electronics & Design</h3>
-            <p>Experimenting with circuits, 3D printing, enclosures, power systems and mechanical concepts.</p>
-          </div>
+        <div class="roadmap-card">
+          <span>Next</span>
+          <h3>Game Development</h3>
+          <p>
+            Planning to improve Unity and C# skills by building smaller game prototypes
+            before moving into bigger game ideas.
+          </p>
         </div>
 
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div>
-            <h3>Future Direction</h3>
-            <p>Combining software, security and hardware knowledge into practical projects.</p>
-          </div>
+        <div class="roadmap-card">
+          <span>Later</span>
+          <h3>More Advanced Systems</h3>
+          <p>
+            Long-term goal is to combine software, hardware and design knowledge
+            into more complete and serious projects.
+          </p>
         </div>
       </div>
     </section>
@@ -274,26 +212,44 @@
         <p class="eyebrow">Toolkit</p>
         <h2>Skills & Tools</h2>
         <p>
-          Technologies and tools I use while learning, building and experimenting.
+          A more honest and organized list of languages, tools and areas I currently use or study.
         </p>
       </div>
 
-      <div class="skills-grid">
-        <span>Python</span>
-        <span>Java</span>
-        <span>JavaScript</span>
-        <span>C++</span>
-        <span>HTML</span>
-        <span>CSS</span>
-        <span>Kali Linux</span>
-        <span>Metasploitable2</span>
-        <span>Unity</span>
-        <span>C#</span>
-        <span>Fusion 360</span>
-        <span>Electronics</span>
-        <span>Arduino</span>
-        <span>3D Printing</span>
-        <span>GitHub</span>
+      <div class="skills-category-grid">
+
+        <div class="skill-category-card">
+          <h3>Programming Languages</h3>
+          <div class="skills-grid">
+            <span>Python</span>
+            <span>Java</span>
+            <span>C++</span>
+            <span>C#</span>
+          </div>
+        </div>
+
+        <div class="skill-category-card">
+          <h3>Tools & Software</h3>
+          <div class="skills-grid">
+            <span>GitHub</span>
+            <span>Visual Studio Code</span>
+            <span>Unity</span>
+            <span>Fusion 360</span>
+            <span>Bambu Studio</span>
+          </div>
+        </div>
+
+        <div class="skill-category-card">
+          <h3>Technical Areas</h3>
+          <div class="skills-grid">
+            <span>Electronics</span>
+            <span>Arduino</span>
+            <span>3D Printing</span>
+            <span>Game Development</span>
+            <span>Basic Circuit Design</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -333,17 +289,6 @@
         </div>
       </div>
     </section>
-
-    <div class="modal-overlay" id="project-modal">
-      <div class="modal-box">
-        <button class="modal-close" id="modal-close">×</button>
-        <p class="eyebrow">Project Details</p>
-        <h2 id="modal-title">Project Title</h2>
-        <p id="modal-description">
-          Project description will appear here.
-        </p>
-      </div>
-    </div>
 
   </main>
 
