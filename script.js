@@ -12,7 +12,7 @@ const words = [
   "software.",
   "game systems.",
   "practical tools.",
-  "experimental ideas."
+  "cool ideas"
 ];
 
 const typingText = document.getElementById("typing-text");
