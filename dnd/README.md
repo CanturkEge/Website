@@ -8,6 +8,8 @@ Kampanya değişiklikleri Supabase Realtime Broadcast ile diğer açık cihazlar
 
 Supabase > SQL Editor > New query aç. `supabase-setup.sql` dosyasının tamamını yapıştır ve **Run** düğmesine bas. `Success. No rows returned` görünmelidir. Eski kampanyalar silinmez.
 
+Önceki sürüm zaten kuruluysa tüm dosya yerine yalnızca `pact-update.sql` içeriğini bir kez çalıştırman yeterlidir. Bu işlem mevcut hesapları, kampanyaları ve kayıtları silmez.
+
 ## 2. GitHub Pages
 
 Bu ZIP içindeki `dnd` klasörünü sitenin kök klasöründeki eski `dnd` klasörünün üzerine kopyala. GitHub Desktop'ta değişiklikleri commit edip pushla. Adres: `https://egecanturk.dev/dnd/`
