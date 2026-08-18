@@ -32,3 +32,4 @@ body:not(.landing-mode){display:block!important;width:100%;min-height:100vh}body
 @media (max-width:420px){
   .toolbar{grid-template-columns:1fr}.sheet .toolbar{grid-template-columns:1fr 1fr}.primary,.ghost,.danger{min-height:42px}.card h3{font-size:17px}.stat{font-size:27px}
 }
+.cascade{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tree-list{display:grid;gap:8px;margin:14px 0}.tree-node{display:grid;grid-template-columns:minmax(120px,.7fr) 1fr auto;align-items:center;gap:10px;padding:11px;border:1px solid #9b6b3438;background:#120c0a}.tree-node small{color:#a79782}.tree-node .danger{padding:6px 9px}@media(max-width:600px){.cascade{grid-template-columns:1fr}.tree-node{grid-template-columns:1fr auto}.tree-node small{grid-column:1/-1}}
