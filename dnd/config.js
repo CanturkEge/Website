@@ -1,1 +1,1 @@
-window.DM_CONFIG={SUPABASE_URL:'',SUPABASE_ANON_KEY:'',DEFAULT_DM_PASSWORD:'123123'};const medievalTheme=document.createElement('link');medievalTheme.rel='stylesheet';medievalTheme.href='medieval.css';document.head.appendChild(medievalTheme);
+window.DM_CONFIG={SUPABASE_URL:'https://mfzytjjwiwsezjunwmhc.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_CyoOE3zloOcbFnSI_hMPsA_VBYXywNc',DEFAULT_DM_PASSWORD:'123123'};const medievalTheme=document.createElement('link');medievalTheme.rel='stylesheet';medievalTheme.href='medieval.css';document.head.appendChild(medievalTheme);
