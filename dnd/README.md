@@ -2,6 +2,8 @@
 
 Bu sürümde kullanıcı hesabı, kalıcı kampanya üyeliği ve ayrı DM/oyuncu panelleri bulunur.
 
+Karakter oluşturma ve düzenleme penceresinde Species → Subspecies ile Class → Subclass seçimleri birbirine bağlıdır; üst seçim değiştiğinde alt seçenekler anında yenilenir.
+
 Kampanya değişiklikleri Supabase Realtime Broadcast ile diğer açık cihazlara anında bildirilir. Bağlantı kısa süreli kesilirse 30 saniyelik yedek kontrol otomatik olarak devreye girer. Bunun için ek SQL çalıştırmak gerekmez.
 
 ## 1. Supabase güncellemesi (zorunlu)
