@@ -1,1 +1,1 @@
-window.DM_CONFIG={SUPABASE_URL:'https://okxtjzyudhsvenetpmin.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_O1WNt6PS67CfQ1TAsnPEXw_6TmlBtVz'};
+window.DM_CONFIG={SUPABASE_URL:'https://okxtjzyudhsvenetpmin.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_O1WNt6PS67CfQ1TAsnPEXw_6TmlBtVz'};const mobileUI=document.createElement('link');mobileUI.rel='stylesheet';mobileUI.href='mobile.css';document.head.appendChild(mobileUI);
