@@ -14,6 +14,8 @@ Supabase > SQL Editor > New query aç. `supabase-setup.sql` dosyasının tamamı
 
 Para, gelişmiş market ve güvenli satın alma sistemi için `economy-update.sql` dosyasını da SQL Editor'de bir kez çalıştır. Mevcut kayıtları silmez.
 
+Ortak zar günlüğü için `progression-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Bu işlem de mevcut kayıtları silmez. Class/species gelişim sistemi JSON kampanya kaydında çalıştığı için başka SQL gerekmez.
+
 ## 2. GitHub Pages
 
 Bu ZIP içindeki `dnd` klasörünü sitenin kök klasöründeki eski `dnd` klasörünün üzerine kopyala. GitHub Desktop'ta değişiklikleri commit edip pushla. Adres: `https://egecanturk.dev/dnd/`
