@@ -1,4 +1,4 @@
--- Kadim Masa Defteri v17: oyuncuların kalıcı ve ortak zar günlüğü.
+-- Kadim Masa Defteri v19: oyuncu karakter oluşturma ve tek seferlik subclass seçimi.
 -- Mevcut hesap, kampanya ve karakter kayıtlarını silmez.
 
 create table if not exists public.dice_rolls (
@@ -56,13 +56,40 @@ begin
  where e.value->>'userId'=p_user::text limit 1;
  if idx is null then raise exception 'Hesabına bağlı karakter yok'; end if;
  lvl:=coalesce((ch->>'level')::integer,1);
- if lvl<3 and (coalesce(trim(p_subclass),'')<>'' or coalesce(trim(p_subspecies),'')<>'') then raise exception 'Subclass ve alt miras 3. seviyede açılır'; end if;
- st:=jsonb_set(st,array['characters',idx::text,'subclass'],to_jsonb(case when lvl>=3 then coalesce(p_subclass,'') else '' end),true);
- st:=jsonb_set(st,array['characters',idx::text,'subspecies'],to_jsonb(case when lvl>=3 then coalesce(p_subspecies,'') else '' end),true);
+ if lvl<3 and coalesce(trim(p_subclass),'')<>'' then raise exception 'Subclass 3. seviyede açılır'; end if;
+ if coalesce(ch->>'subclass','')<>'' and trim(coalesce(p_subclass,''))<>ch->>'subclass' then raise exception 'Subclass seçimi kilitli; yalnızca DM değiştirebilir'; end if;
+ if coalesce(ch->>'subclass','')='' and lvl>=3 and coalesce(trim(p_subclass),'')<>'' then
+   st:=jsonb_set(st,array['characters',idx::text,'subclass'],to_jsonb(trim(p_subclass)),true);
+ end if;
  st:=jsonb_set(st,array['characters',idx::text,'preparedSpells'],coalesce(p_spells,'[]'::jsonb),true);
  update campaigns set state=st,updated_at=now() where id=p_campaign;
  return true;
 end $$;
 
-revoke all on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid),public.character_choices_set(uuid,uuid,text,text,jsonb) from public;
-grant execute on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid),public.character_choices_set(uuid,uuid,text,text,jsonb) to anon,authenticated;
+create or replace function public.character_create_player(
+ p_user uuid,p_campaign uuid,p_name text,p_species text,p_subspecies text,p_class_name text,
+ p_base_stats jsonb,p_max_hp integer,p_ac integer
+) returns boolean language plpgsql security definer set search_path=public,extensions as $$
+declare st jsonb; new_character jsonb;
+begin
+ if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='player') then raise exception 'Bu kampanyada oyuncu değilsin'; end if;
+ if length(trim(coalesce(p_name,'')))<2 then raise exception 'Karakter adı en az 2 karakter olmalı'; end if;
+ select state into st from campaigns where id=p_campaign for update;
+ if exists(select 1 from jsonb_array_elements(coalesce(st->'characters','[]'::jsonb)) c where c->>'userId'=p_user::text) then raise exception 'Bu kampanyada zaten bir karakterin var'; end if;
+ new_character:=jsonb_build_object(
+  'id',gen_random_uuid()::text,'userId',p_user::text,'name',left(trim(p_name),60),
+  'species',left(trim(coalesce(p_species,'Human')),80),'subspecies',left(trim(coalesce(p_subspecies,'')),100),
+  'className',left(trim(coalesce(p_class_name,'Fighter')),80),'subclass','','level',1,
+  'baseStats',coalesce(p_base_stats,'{}'::jsonb),'stats',coalesce(p_base_stats,'{}'::jsonb),'statOverrides','{}'::jsonb,
+  'maxHp',greatest(1,least(coalesce(p_max_hp,10),100)),'hp',greatest(1,least(coalesce(p_max_hp,10),100)),
+  'ac',greatest(0,least(coalesce(p_ac,10),30)),'autoVitals',true,'tempHp',0,'speed',30,'pp',10,
+  'guild','','inventory','[]'::jsonb,'effects','[]'::jsonb,'skills','[]'::jsonb,'preparedSpells','[]'::jsonb,
+  'resistances','[]'::jsonb,'weaknesses','[]'::jsonb
+ );
+ st:=jsonb_set(st,'{characters}',coalesce(st->'characters','[]'::jsonb)||jsonb_build_array(new_character),true);
+ update campaigns set state=st,updated_at=now() where id=p_campaign;
+ return true;
+end $$;
+
+revoke all on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid),public.character_choices_set(uuid,uuid,text,text,jsonb),public.character_create_player(uuid,uuid,text,text,text,text,jsonb,integer,integer) from public;
+grant execute on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid),public.character_choices_set(uuid,uuid,text,text,jsonb),public.character_create_player(uuid,uuid,text,text,text,text,jsonb,integer,integer) to anon,authenticated;

@@ -14,7 +14,7 @@ Supabase > SQL Editor > New query aç. `supabase-setup.sql` dosyasının tamamı
 
 Para, gelişmiş market ve güvenli satın alma sistemi için `economy-update.sql` dosyasını da SQL Editor'de bir kez çalıştır. Mevcut kayıtları silmez.
 
-Ortak zar günlüğü ve oyuncuların subclass, alt miras ve hazırlanmış büyü seçimlerini kaydetmesi için `progression-update.sql` dosyasının güncel halini SQL Editor'de çalıştır. Önceki sürümünü çalıştırdıysan bunu tekrar çalıştırmak güvenlidir; mevcut kampanya ve karakterleri silmez.
+Ortak zar günlüğü, oyuncunun kendi seviye 1 karakterini oluşturması ve tek seferlik subclass seçimi için `progression-update.sql` dosyasının güncel halini SQL Editor'de çalıştır. Önceki sürümünü çalıştırdıysan bunu tekrar çalıştırmak güvenlidir; mevcut kampanya ve karakterleri silmez.
 
 ## 2. GitHub Pages
 

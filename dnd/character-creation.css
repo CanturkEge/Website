@@ -1,0 +1,19 @@
+.pr-create-hero {
+  max-width: 780px;
+  margin: 0 auto;
+  border-color: #9a682d;
+  background: radial-gradient(circle at 85% 0, #42220f55, transparent 38%), #120c09;
+}
+.pr-create-hero > small { color: #d99c3d; letter-spacing: .18em; }
+.pr-create-hero h2 { margin: 6px 0; font-size: 34px; }
+.pr-create-hero .primary { width: 100%; margin-top: 14px; }
+.pr-locked-choice {
+  display: grid;
+  gap: 3px;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid #604222;
+  background: #120d09;
+}
+.pr-locked-choice span { color: #d99c3d; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+.pr-locked-choice small { color: #a9957b; }
