@@ -16,6 +16,8 @@ Para, gelişmiş market ve güvenli satın alma sistemi için `economy-update.sq
 
 Ortak zar günlüğü, oyuncunun kendi seviye 1 karakterini oluşturması ve tek seferlik subclass seçimi için `progression-update.sql` dosyasının güncel halini SQL Editor'de çalıştır. Önceki sürümünü çalıştırdıysan bunu tekrar çalıştırmak güvenlidir; mevcut kampanya ve karakterleri silmez.
 
+DM kampanya silme ve `admin / Admin27!` sunucu yönetim paneli için `admin-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Bu kurulum mevcut kayıtları silmez; yalnızca silme yetkilerini ve yönetim sorgularını ekler.
+
 ## 2. GitHub Pages
 
 Bu ZIP içindeki `dnd` klasörünü sitenin kök klasöründeki eski `dnd` klasörünün üzerine kopyala. GitHub Desktop'ta değişiklikleri commit edip pushla. Adres: `https://egecanturk.dev/dnd/`
