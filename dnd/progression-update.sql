@@ -45,5 +45,24 @@ begin
  return true;
 end $$;
 
-revoke all on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid) from public;
-grant execute on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid) to anon,authenticated;
+create or replace function public.character_choices_set(p_user uuid,p_campaign uuid,p_subclass text,p_subspecies text,p_spells jsonb)
+returns boolean language plpgsql security definer set search_path=public as $$
+declare st jsonb; idx integer; ch jsonb; lvl integer;
+begin
+ if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='player') then raise exception 'Bu kampanyada oyuncu değilsin'; end if;
+ select state into st from campaigns where id=p_campaign for update;
+ select (e.ordinality-1)::integer,e.value into idx,ch
+ from jsonb_array_elements(coalesce(st->'characters','[]'::jsonb)) with ordinality e(value,ordinality)
+ where e.value->>'userId'=p_user::text limit 1;
+ if idx is null then raise exception 'Hesabına bağlı karakter yok'; end if;
+ lvl:=coalesce((ch->>'level')::integer,1);
+ if lvl<3 and (coalesce(trim(p_subclass),'')<>'' or coalesce(trim(p_subspecies),'')<>'') then raise exception 'Subclass ve alt miras 3. seviyede açılır'; end if;
+ st:=jsonb_set(st,array['characters',idx::text,'subclass'],to_jsonb(case when lvl>=3 then coalesce(p_subclass,'') else '' end),true);
+ st:=jsonb_set(st,array['characters',idx::text,'subspecies'],to_jsonb(case when lvl>=3 then coalesce(p_subspecies,'') else '' end),true);
+ st:=jsonb_set(st,array['characters',idx::text,'preparedSpells'],coalesce(p_spells,'[]'::jsonb),true);
+ update campaigns set state=st,updated_at=now() where id=p_campaign;
+ return true;
+end $$;
+
+revoke all on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid),public.character_choices_set(uuid,uuid,text,text,jsonb) from public;
+grant execute on function public.dice_roll_add(uuid,uuid,text,text,integer[],integer,integer),public.dice_roll_list(uuid,uuid,integer),public.dice_roll_clear(uuid,uuid),public.character_choices_set(uuid,uuid,text,text,jsonb) to anon,authenticated;
