@@ -12,7 +12,7 @@ Supabase > SQL Editor > New query aç. `supabase-setup.sql` dosyasının tamamı
 
 Önceki sürüm zaten kuruluysa tüm dosya yerine yalnızca `pact-update.sql` içeriğini bir kez çalıştırman yeterlidir. Bu işlem mevcut hesapları, kampanyaları ve kayıtları silmez.
 
-Para, gelişmiş market ve güvenli satın alma sistemi için `economy-update.sql` dosyasını da SQL Editor'de bir kez çalıştır. Mevcut kayıtları silmez.
+Para, gelişmiş market, otomatik para bozma ve oyuncular arası transfer için güncel `economy-update.sql` dosyasını SQL Editor'de çalıştır. Daha önce çalıştırmış olsan da tekrar çalıştırman gerekir; mevcut para ve kampanya kayıtlarını silmez.
 
 Ortak zar günlüğü, oyuncunun kendi seviye 1 karakterini oluşturması ve tek seferlik subclass seçimi için `progression-update.sql` dosyasının güncel halini SQL Editor'de çalıştır. Önceki sürümünü çalıştırdıysan bunu tekrar çalıştırmak güvenlidir; mevcut kampanya ve karakterleri silmez.
 

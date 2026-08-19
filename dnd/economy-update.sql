@@ -1,4 +1,4 @@
--- Kadim Masa Defteri v14: özel cüzdanlar, lonca kasası ve güvenli market satın alımı
+-- Kadim Masa Defteri v22: güvenli para bozma, eksiltme ve oyuncular arası transfer
 -- Mevcut hesapları, kampanyaları, karakterleri ve mesajları silmez.
 
 create table if not exists public.campaign_wallets (
@@ -57,30 +57,57 @@ end $$;
 
 create or replace function public.wallet_adjust(p_user uuid,p_campaign uuid,p_target uuid,p_coin text,p_delta integer)
 returns boolean language plpgsql security definer set search_path=public as $$
+declare total bigint; multiplier integer;
 begin
   if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='dm') then raise exception 'Yalnızca DM para düzenleyebilir'; end if;
   if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_target and role='player') then raise exception 'Oyuncu bu kampanyada değil'; end if;
+  if p_delta=0 then return true; end if;
+  multiplier:=case p_coin when 'platinum' then 1000 when 'gold' then 100 when 'silver' then 10 when 'copper' then 1 else null end;
+  if multiplier is null then raise exception 'Geçersiz para türü'; end if;
   insert into campaign_wallets(campaign_id,user_id) values(p_campaign,p_target) on conflict do nothing;
-  if p_coin='platinum' then update campaign_wallets set platinum=platinum+p_delta,updated_at=now() where campaign_id=p_campaign and user_id=p_target and platinum+p_delta>=0;
-  elsif p_coin='gold' then update campaign_wallets set gold=gold+p_delta,updated_at=now() where campaign_id=p_campaign and user_id=p_target and gold+p_delta>=0;
-  elsif p_coin='silver' then update campaign_wallets set silver=silver+p_delta,updated_at=now() where campaign_id=p_campaign and user_id=p_target and silver+p_delta>=0;
-  elsif p_coin='copper' then update campaign_wallets set copper=copper+p_delta,updated_at=now() where campaign_id=p_campaign and user_id=p_target and copper+p_delta>=0;
-  else raise exception 'Geçersiz para türü'; end if;
-  if not found then raise exception 'Bakiye sıfırın altına inemez'; end if;
+  select platinum*1000::bigint+gold*100::bigint+silver*10::bigint+copper into total from campaign_wallets where campaign_id=p_campaign and user_id=p_target for update;
+  total:=total+(p_delta::bigint*multiplier);
+  if total<0 then raise exception 'Yetersiz bakiye'; end if;
+  update campaign_wallets set platinum=(total/1000)::integer,gold=((total%1000)/100)::integer,silver=((total%100)/10)::integer,copper=(total%10)::integer,updated_at=now() where campaign_id=p_campaign and user_id=p_target;
   return true;
 end $$;
 
 create or replace function public.guild_wallet_adjust(p_user uuid,p_campaign uuid,p_coin text,p_delta integer)
 returns boolean language plpgsql security definer set search_path=public as $$
+declare total bigint; multiplier integer;
 begin
   if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='dm') then raise exception 'Yalnızca DM lonca kasasını düzenleyebilir'; end if;
+  if p_delta=0 then return true; end if;
+  multiplier:=case p_coin when 'platinum' then 1000 when 'gold' then 100 when 'silver' then 10 when 'copper' then 1 else null end;
+  if multiplier is null then raise exception 'Geçersiz para türü'; end if;
   insert into guild_wallets(campaign_id) values(p_campaign) on conflict do nothing;
-  if p_coin='platinum' then update guild_wallets set platinum=platinum+p_delta,updated_at=now() where campaign_id=p_campaign and platinum+p_delta>=0;
-  elsif p_coin='gold' then update guild_wallets set gold=gold+p_delta,updated_at=now() where campaign_id=p_campaign and gold+p_delta>=0;
-  elsif p_coin='silver' then update guild_wallets set silver=silver+p_delta,updated_at=now() where campaign_id=p_campaign and silver+p_delta>=0;
-  elsif p_coin='copper' then update guild_wallets set copper=copper+p_delta,updated_at=now() where campaign_id=p_campaign and copper+p_delta>=0;
-  else raise exception 'Geçersiz para türü'; end if;
-  if not found then raise exception 'Bakiye sıfırın altına inemez'; end if;
+  select platinum*1000::bigint+gold*100::bigint+silver*10::bigint+copper into total from guild_wallets where campaign_id=p_campaign for update;
+  total:=total+(p_delta::bigint*multiplier);
+  if total<0 then raise exception 'Yetersiz lonca bakiyesi'; end if;
+  update guild_wallets set platinum=(total/1000)::integer,gold=((total%1000)/100)::integer,silver=((total%100)/10)::integer,copper=(total%10)::integer,updated_at=now() where campaign_id=p_campaign;
+  return true;
+end $$;
+
+create or replace function public.wallet_transfer(p_user uuid,p_campaign uuid,p_target uuid,p_coin text,p_amount integer)
+returns boolean
+language plpgsql security definer set search_path=public as $$
+declare source_total bigint; target_total bigint; transfer_value bigint; multiplier integer;
+begin
+  if p_user=p_target then raise exception 'Kendine para gönderemezsin'; end if;
+  if p_amount is null or p_amount<=0 then raise exception 'Miktar sıfırdan büyük olmalı'; end if;
+  if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='player') then raise exception 'Bu kampanyada oyuncu değilsin'; end if;
+  if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_target and role='player') then raise exception 'Alıcı bu kampanyada değil'; end if;
+  multiplier:=case p_coin when 'platinum' then 1000 when 'gold' then 100 when 'silver' then 10 when 'copper' then 1 else null end;
+  if multiplier is null then raise exception 'Geçersiz para türü'; end if;
+  transfer_value:=p_amount::bigint*multiplier;
+  insert into campaign_wallets(campaign_id,user_id) values(p_campaign,p_user),(p_campaign,p_target) on conflict do nothing;
+  perform 1 from campaign_wallets where campaign_id=p_campaign and user_id in (p_user,p_target) order by user_id for update;
+  select w.platinum*1000::bigint+w.gold*100::bigint+w.silver*10::bigint+w.copper into source_total from campaign_wallets w where w.campaign_id=p_campaign and w.user_id=p_user;
+  if source_total<transfer_value then raise exception 'Yeterli paran yok'; end if;
+  select w.platinum*1000::bigint+w.gold*100::bigint+w.silver*10::bigint+w.copper into target_total from campaign_wallets w where w.campaign_id=p_campaign and w.user_id=p_target;
+  source_total:=source_total-transfer_value; target_total:=target_total+transfer_value;
+  update campaign_wallets set platinum=(source_total/1000)::integer,gold=((source_total%1000)/100)::integer,silver=((source_total%100)/10)::integer,copper=(source_total%10)::integer,updated_at=now() where campaign_id=p_campaign and user_id=p_user;
+  update campaign_wallets set platinum=(target_total/1000)::integer,gold=((target_total%1000)/100)::integer,silver=((target_total%100)/10)::integer,copper=(target_total%10)::integer,updated_at=now() where campaign_id=p_campaign and user_id=p_target;
   return true;
 end $$;
 
@@ -131,5 +158,5 @@ begin
   return query select item->>'name',wpp,wgp,wsp,wcp;
 end $$;
 
-revoke all on function public.wallet_list(uuid,uuid),public.guild_wallet_get(uuid,uuid),public.wallet_adjust(uuid,uuid,uuid,text,integer),public.guild_wallet_adjust(uuid,uuid,text,integer),public.shop_buy(uuid,uuid,text) from public;
-grant execute on function public.wallet_list(uuid,uuid),public.guild_wallet_get(uuid,uuid),public.wallet_adjust(uuid,uuid,uuid,text,integer),public.guild_wallet_adjust(uuid,uuid,text,integer),public.shop_buy(uuid,uuid,text) to anon,authenticated;
+revoke all on function public.wallet_list(uuid,uuid),public.guild_wallet_get(uuid,uuid),public.wallet_adjust(uuid,uuid,uuid,text,integer),public.guild_wallet_adjust(uuid,uuid,text,integer),public.wallet_transfer(uuid,uuid,uuid,text,integer),public.shop_buy(uuid,uuid,text) from public;
+grant execute on function public.wallet_list(uuid,uuid),public.guild_wallet_get(uuid,uuid),public.wallet_adjust(uuid,uuid,uuid,text,integer),public.guild_wallet_adjust(uuid,uuid,text,integer),public.wallet_transfer(uuid,uuid,uuid,text,integer),public.shop_buy(uuid,uuid,text) to anon,authenticated;
