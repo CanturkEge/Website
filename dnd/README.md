@@ -20,6 +20,8 @@ DM kampanya silme ve `admin / Admin27!` sunucu yönetim paneli için `admin-upda
 
 Kalıcı genel/özel yazışmalar ve bildirim merkezi için `session-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Karakter onayı, kampanya tarihi, Long Rest ve savaş turu verileri mevcut kampanya kaydının içinde saklanır.
 
+Oyuncuların eşyayı bütün bonuslarıyla başka oyuncuya vermesi, lonca envanterine koyması veya yere bırakması için `inventory-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Yerdeki eşyaları diğer oyuncular alabilir; eşyanın tüm özel alanları korunur.
+
 ## 2. GitHub Pages
 
 Bu ZIP içindeki `dnd` klasörünü sitenin kök klasöründeki eski `dnd` klasörünün üzerine kopyala. GitHub Desktop'ta değişiklikleri commit edip pushla. Adres: `https://egecanturk.dev/dnd/`
