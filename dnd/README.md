@@ -18,6 +18,8 @@ Ortak zar günlüğü, oyuncunun kendi seviye 1 karakterini oluşturması ve tek
 
 DM kampanya silme ve `admin / Admin27!` sunucu yönetim paneli için `admin-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Bu kurulum mevcut kayıtları silmez; yalnızca silme yetkilerini ve yönetim sorgularını ekler.
 
+Kalıcı genel/özel yazışmalar ve bildirim merkezi için `session-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Karakter onayı, kampanya tarihi, Long Rest ve savaş turu verileri mevcut kampanya kaydının içinde saklanır.
+
 ## 2. GitHub Pages
 
 Bu ZIP içindeki `dnd` klasörünü sitenin kök klasöründeki eski `dnd` klasörünün üzerine kopyala. GitHub Desktop'ta değişiklikleri commit edip pushla. Adres: `https://egecanturk.dev/dnd/`

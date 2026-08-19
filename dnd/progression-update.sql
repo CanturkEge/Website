@@ -80,6 +80,7 @@ begin
   'id',gen_random_uuid()::text,'userId',p_user::text,'name',left(trim(p_name),60),
   'species',left(trim(coalesce(p_species,'Human')),80),'subspecies',left(trim(coalesce(p_subspecies,'')),100),
   'className',left(trim(coalesce(p_class_name,'Fighter')),80),'subclass','','level',1,
+  'approvalStatus','pending',
   'baseStats',coalesce(p_base_stats,'{}'::jsonb),'stats',coalesce(p_base_stats,'{}'::jsonb),'statOverrides','{}'::jsonb,
   'maxHp',greatest(1,least(coalesce(p_max_hp,10),100)),'hp',greatest(1,least(coalesce(p_max_hp,10),100)),
   'ac',greatest(0,least(coalesce(p_ac,10),30)),'autoVitals',true,'tempHp',0,'speed',30,'pp',10,
