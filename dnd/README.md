@@ -1,5 +1,13 @@
 # Kadim Masa Defteri — Kurulum
 
+## v25.1 — Açıklamalı Yetenek ve Savaş Kartı
+
+- Bütün görünen class özelliklerinde kullanım türü, kaynak, süre ve masada uygulanış alanları bulunur.
+- Hazırlanmış spell kartlarında casting time, menzil, süre, V/S/M, slot ve gerçek zar/save çözümü gösterilir.
+- Karaktere özel “Nasıl Dövüşürüm?” kartı saldırı bonusunu, hasarı, spell DC’yi ve temel tur akışını otomatik hesaplar.
+- Monk/Plasmoid, Druid, Paladin, Rogue ve Fighter için doğrudan oynanış yönlendirmesi vardır.
+- 2014, 2024 ve homebrew özellikleri birbirinden ayrılır.
+
 ## v25 — Oturum ve Savaş Düzeltme Paketi
 
 - Savaş/skill/AC/büyü rehberi genişletildi.
