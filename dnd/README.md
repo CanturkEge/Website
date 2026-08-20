@@ -1,5 +1,24 @@
 # Kadim Masa Defteri — Kurulum
 
+## v28 — DM Eşya Aktarımı ve Karakter Ansiklopedisi
+
+- v27.1 açık panel ve kaydırma konumu koruması bu pakete dahildir.
+- DM, Karakterler menüsünde bir oyuncunun eşyasını adet seçerek başka karaktere aktarabilir; eşyanın bonusları korunur ve kuşanılmış durumu güvenlik için kapanır.
+- Zar Günlüğü başlığına DM için `Geçmişi Temizle` düğmesi geri eklendi.
+- Rehbere ayrı `Karakter Ansiklopedisi` bölümü eklendi.
+- Ansiklopedi sitedeki bütün species/subspecies ve 2014 class/subclass seçeneklerini listeler; classların 1–20 seviye gelişimi açılır satırlardadır.
+- Ansiklopedi araması ve mobil tek sütun görünümü eklendi.
+
+v28 yeni SQL gerektirmez. Zar geçmişi temizleme için önceki paketteki `progression-update.sql` daha önce çalıştırılmadıysa bir kez çalıştır.
+
+## v27.1 — Açık Paneller Korunur
+
+- Bulut eşitlemesi veya arka plan yenilemesi sırasında açık karakter, skill, spell, yaratık, market ve kasa ayrıntıları artık kapanmaz.
+- Aynı sayfa yeniden çizildiğinde sayfa ve masaüstü sol menü kaydırma konumu korunur.
+- Sayfa değiştirip geri dönüldüğünde o sayfada açık bırakılan ayrıntılar yeniden açılır.
+
+v27.1 yeni SQL gerektirmez.
+
 ## v27 — Ekran Ekran UX ve Yaratık Ansiklopedisi
 
 - Masaüstü sol menü kendi içinde kaydırılabilir hale getirildi.

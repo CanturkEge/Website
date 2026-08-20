@@ -70,7 +70,44 @@ function v27Npcs(){return `<section class="card">${v26Head('DÜNYA','NPC Defteri
 
 dmPages.party=v27PartyDM;playerPages.skills=prSkillsPlayer;dmPages.bestiary=v27Bestiary;dmPages.treasury=exTreasury;playerPages.treasury=exTreasury;dmPages.market=exMarket;playerPages.market=exMarket;dmPages.npcs=v27Npcs;
 const V27_PAGE_HELP={dashboard:'Oturum özeti, notlar ve aktif görevler.',party:'Karakterleri özet gör; yalnız gerektiğinde ayrıntıyı aç.',partyview:'Partinin HP ve aktif efekt özeti.',inventory:'Eşyaya basarak kuşanma ve transfer araçlarını aç.',guild:'Ortak kasa, üyelik ve lonca envanteri.',guilddm:'Lonca, ortak kasa ve envanter yönetimi.',world:'Tarih, görev, özel içerik ve dünya ayarları.',encounter:'Initiative, tur, HP ve encounter yönetimi.',encounterview:'Oyuncu için salt okunur aktif savaş görünümü.',npcs:'NPC kartları özet başlar; karta basarak ayrıntıyı aç.',bestiary:'Kategori ve CR filtreli yaratık ansiklopedisi.',market:'Dükkân ve ürün özetleri; ayrıntı karta basınca açılır.',treasury:'Kasa özetleri; para düzenleme alanı karta basınca açılır.',skills:'Class, species, skill ve spell açıklamaları kapalı bölümlerdedir.',pacts:'Gizli oyuncu–DM anlaşmaları.',chat:'Genel ve özel masa yazışmaları.',notifications:'Kalıcı kampanya bildirimleri.',guide:'Sade 2014 masa rehberi.',dice:'Skill bonuslu ortak zar masası.'};
-const v27RenderBase=render;render=function(){let out=v27RenderBase();queueMicrotask(()=>{let view=$('#view');if(!view)return;view.className=`v27-view v27-page-${page}`;if(!view.querySelector('.v26-page-head')&&V27_PAGE_HELP[page])view.insertAdjacentHTML('afterbegin',`<p class="v27-page-note">${esc(V27_PAGE_HELP[page])}</p>`)});return out};
+const v271OpenDetails=new Map(),v271ScrollState=new Map();
+let v271RenderedPage=page;
+function v271DetailEntries(root,pageName){
+  const counts=new Map();
+  return [...root.querySelectorAll('details')].map(el=>{
+    const summary=(el.querySelector(':scope > summary')?.textContent||'Ayrıntı').trim().replace(/\s+/g,' ');
+    const owner=el.closest('.v27-char')?.querySelector('h2')?.textContent?.trim()
+      ||el.closest('.v27-monster')?.querySelector('h3')?.textContent?.trim()
+      ||el.closest('.shop-item')?.querySelector('summary b')?.textContent?.trim()
+      ||el.closest('.v27-wallet')?.querySelector('h3')?.textContent?.trim()
+      ||el.closest('.v27-npc')?.querySelector('h3')?.textContent?.trim()||'';
+    const base=`${pageName}|${owner}|${summary}`,occurrence=counts.get(base)||0;
+    counts.set(base,occurrence+1);
+    return {el,key:`${base}|${occurrence}`};
+  });
+}
+function v271RememberView(view,pageName){
+  v271OpenDetails.set(pageName,new Set(v271DetailEntries(view,pageName).filter(x=>x.el.open).map(x=>x.key)));
+  v271ScrollState.set(pageName,{windowY:window.scrollY,asideY:document.querySelector('aside')?.scrollTop||0});
+}
+const v27RenderBase=render;render=function(){
+  const oldView=$('#view'),domPage=v271RenderedPage,targetPage=page;
+  if(oldView&&current)v271RememberView(oldView,domPage);
+  let out=v27RenderBase();
+  queueMicrotask(()=>{
+    const view=$('#view');if(!view)return;
+    view.className=`v27-view v27-page-${targetPage}`;
+    if(!view.querySelector('.v26-page-head')&&V27_PAGE_HELP[targetPage])view.insertAdjacentHTML('afterbegin',`<p class="v27-page-note">${esc(V27_PAGE_HELP[targetPage])}</p>`);
+    const openKeys=v271OpenDetails.get(targetPage)||new Set();
+    v271DetailEntries(view,targetPage).forEach(({el,key})=>{el.dataset.v271Key=key;if(openKeys.has(key))el.open=true});
+    v271RenderedPage=targetPage;
+    if(domPage===targetPage){
+      const pos=v271ScrollState.get(targetPage);
+      if(pos)requestAnimationFrame(()=>{window.scrollTo(0,pos.windowY);const aside=document.querySelector('aside');if(aside)aside.scrollTop=pos.asideY});
+    }
+  });
+  return out
+};
 document.addEventListener('input',e=>{if(e.target.id==='monsterSearch'){e.stopImmediatePropagation();v27MonsterQuery=e.target.value;$('#monsterList').innerHTML=monsterCards(v27FilteredMonsters());bind()}},true);
 document.addEventListener('change',e=>{if(e.target.id==='v27MonsterCategory'){v27MonsterCategory=e.target.value;$('#monsterList').innerHTML=monsterCards(v27FilteredMonsters());bind()}if(e.target.id==='v27MonsterCr'){v27MonsterCr=e.target.value;$('#monsterList').innerHTML=monsterCards(v27FilteredMonsters());bind()}},true);
 if(current)render();
