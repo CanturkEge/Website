@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v35 — Responsive Market Düzeltmesi
+
+- DM marketindeki üst üste binme ve kataloğun dar sol sütuna düşmesi düzeltildi.
+- Masaüstünde market ayarları solda, ürün kataloğu kalan genişlikte çok sütunlu görünür.
+- Tablet ve telefonda market kontrollü biçimde tek sütuna iner; kartlar ekran dışına taşmaz.
+- Haritada dokunarak iki yönde kaydırma, küçük ekran tuvali ve düzenleme penceresi iyileştirildi.
+
+v35 için yeni SQL gerekmez. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalaman yeterli.
+
 ## v34 — Kale Ekonomisi, Binekler, Tapınak Hizmetleri ve Görev Havuzu
 
 - Market kataloğu 141 kayıttan **286 ürün/hizmete** çıkarıldı; mevcut hazır içerik neredeyse iki katına ulaştı.

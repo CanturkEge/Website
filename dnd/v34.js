@@ -128,8 +128,9 @@ exMarket=function(){
   if(current.role==='dm')v34MigrateCastleEconomy();
   queueMicrotask(()=>exLoadWallets());
   let shops=current.role==='dm'?Object.keys(EX_SHOPS):Object.keys(EX_SHOPS).filter(key=>state.shopSettings.shops[key]?.enabled);
-  let content=`<div>${v34MarketFilters()}<div class="shop-tabs"><button data-shop-filter="all" class="${exShopFilter==='all'?'active':''}">Tümü</button>${shops.map(key=>`<button data-shop-filter="${key}" class="${exShopFilter===key?'active':''}">${esc(EX_SHOPS[key])}</button>`).join('')}</div><div id="v34MarketGrid" class="shop-grid">${v34MarketGridHtml()}</div></div>`;
+  let content=`<div class="v35-market-catalog">${v34MarketFilters()}<div class="shop-tabs"><button data-shop-filter="all" class="${exShopFilter==='all'?'active':''}">Tümü</button>${shops.map(key=>`<button data-shop-filter="${key}" class="${exShopFilter===key?'active':''}">${esc(EX_SHOPS[key])}</button>`).join('')}</div><div id="v34MarketGrid" class="shop-grid">${v34MarketGridHtml()}</div></div>`;
   let controls=current.role==='dm'?`${exShopControls()}<section class="card v34-economy-note"><b>Tier mantığı</b><p><strong>T1:</strong> gündelik ve başlangıç ekipmanı. <strong>T2:</strong> uzman, pahalı veya bölgesel ürün. <strong>T3:</strong> nadir, güçlü ya da hikâye seviyesi hizmet. Tier erişimdir; fiyatın yerine geçmez.</p></section>`:`<div class="shop-player-head card"><div><small>KİŞİSEL BAKİYE</small>${exMoney(exCoinTotal(exWalletRows.find(row=>row.user_id===auth.id)||{}))}</div><p>${state.shopSettings.buyingEnabled?'Dükkânlar alışverişe açık.':'DM satın almayı kapattı.'}</p></div>`;
+  controls=`<div class="v35-market-sidebar">${controls}</div>`;
   return `${v26Head('ALIŞVERİŞ','Market, Hizmetler ve Binekler',`${state.market.length} kayıt. Ürün özeti görünür; açıklama ve yönetim araçları karta basınca açılır.`)}${v34MarketLocationPanel()}<div class="v27-market-layout">${controls}${content}</div>`;
 };
 dmPages.market=exMarket;
