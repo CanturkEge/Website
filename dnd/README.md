@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v32 — Etkileşimli Harita ve Lonca İşlem Geçmişi
+
+- Ana menüye DM ve oyuncu için ayrı davranan **Harita** bölümü eklendi.
+- `Map.png` üzerinde tam 12 sabit kale noktası bulunur. Kale, bölge ve orman adları görsele gömülü değildir; DM bunları oyun içinden yazar.
+- DM arazi sisi, konum işareti/adı, geçmiş, içerisi/istihbarat ve dungeon bilgisini birbirinden bağımsız açabilir.
+- Kale kartlarında normal hizmetler, demirci tieri, savunma/tehlike, içeridekiler, bağlı dungeon, önerilen seviye ve yaratık bilgileri tutulur. Yalnızca DM notu hiçbir keşif ayarıyla oyuncuya gösterilmez.
+- DM haritaya sonradan bölge, dungeon, yerleşim, özel nokta, gizli dükkân veya lanetli dükkân ekleyip taşıyabilir. Bu iki dükkân türü kale içi hizmetlerden ayrı konum olarak tasarlanmıştır.
+- Oyuncular yalnızca DM’nin sisini kaldırdığı araziyi ve ayrıca açtığı bilgi katmanlarını görür. DM tek tuşla oyuncu görünümünü önizleyebilir.
+- Oyuncuların lonca kasasına para yatırması/çekmesi ve ortak envantere eşya koyması/alması ortak işlem geçmişine kaydedilir. Diğer lonca üyeleri son 200 işlemi görür.
+- DM’nin Kasa veya envanter yönetiminden yaptığı manuel düzeltmeler işlem geçmişine yazılmaz.
+
+Önce Supabase SQL Editor’de `v32-update.sql` dosyasının tamamını **bir kez çalıştır**, ardından bu paketteki `dnd` klasörünü sitendeki `dnd` klasörünün üzerine kopyala. SQL mevcut kayıtları silmez ve tekrar çalıştırılabilir. `v31-update.sql` ile `guild-update.sql` daha önce kurulmuş olmalıdır.
+
 ## v31 — Performans ve Veri Güvenilirliği
 
 - DM kayıtları sıraya alınır; kampanya değiştirme, salona dönme ve çıkış öncesinde bekleyen kayıt tamamlanır.
