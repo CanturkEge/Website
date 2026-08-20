@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v28.1 — Subspecies ve Subclass Gerçek Mekanikleri
+
+- `Türe uygun güç kazanır` gibi belirsiz placeholder açıklamalar kaldırıldı.
+- Alt türlerde ability, direnç, hareket, büyü, action/bonus action ve kullanım hakkı açıkça yazıldı.
+- Subclasslarda ilk açılan temel mekanikler, kullanılan action/reaction, zar, save ve dinlenmede yenilenme özeti eklendi.
+- 2014/5e ile 2024/5.5e ayrımı korundu; homebrew seçenekler açıkça etiketlendi ve ölçülebilir kampanya kuralları verildi.
+
+v28.1 yeni SQL gerektirmez.
+
 ## v28 — DM Eşya Aktarımı ve Karakter Ansiklopedisi
 
 - v27.1 açık panel ve kaydırma konumu koruması bu pakete dahildir.
