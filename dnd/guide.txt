@@ -1416,3 +1416,117 @@ with-the-2024-dungeon
 
                                                          31
 
+============================================================
+43. SAVAŞI BAŞTAN SONA YÖNETME — HIZLI MASA AKIŞI
+============================================================
+
+1) SAVAŞ BAŞLARKEN
+- DM sürpriz olup olmadığına karar verir.
+- Her savaşçı Initiative atar: d20 + DEX modifier. Yüksekten düşüğe sıralanır.
+- Eşitlikte oyuncular kendi aralarında karar verebilir; yaratık ile oyuncu eşitse DEX'i yüksek olan önce gider.
+- DM hedeflerin HP, AC, hız, direnç, bağışıklık ve saldırı bonuslarını hazır tutar.
+
+2) BİR TURDA NELER YAPILIR?
+- Hareket: hızın kadar ilerlersin. Hareketini action öncesi ve sonrası bölebilirsin.
+- 1 Action: Attack, Cast a Spell, Dash, Disengage, Dodge, Help, Hide, Ready, Search veya Use an Object.
+- En fazla 1 Bonus Action: yalnız bir özellik/büyü özellikle “bonus action” diyorsa kullanılır.
+- 1 Reaction: kendi turun dışında tetiklenince kullanılır; sonraki turunun başında geri gelir.
+- Serbest etkileşim: kapı açmak, kısa bir cümle söylemek, silah çekmek gibi küçük bir işlem.
+- Cantrip kullanmak genellikle Cast a Spell action'ıdır ama spell slot harcamaz.
+
+3) SALDIRI NASIL ÇÖZÜLÜR?
+- Yakın ağır/normal silah: d20 + STR modifier + proficiency (silaha hakiminse).
+- Finesse silah: STR veya DEX'ten seçilen + proficiency.
+- Menzilli silah: d20 + DEX modifier + proficiency.
+- Büyü saldırısı: d20 + spellcasting modifier + proficiency.
+- Sonuç hedefin AC'sine eşit veya yüksekse isabet eder.
+- Doğal 20 kritik: hasar zarlarını iki kez at, sabit modifier'ı bir kez ekle.
+- Doğal 1 otomatik ıskadır.
+- Hasar: silah/büyü zarı + ilgili modifier. Off-hand gibi özel saldırılarda modifier her zaman eklenmeyebilir.
+
+4) SAVING THROW VE SPELL DC
+- Save: d20 + ilgili ability modifier + o save'de proficiency varsa proficiency bonusu.
+- Spell Save DC = 8 + proficiency + spellcasting modifier.
+- Spell Attack Bonus = proficiency + spellcasting modifier.
+- STR save itme/tutunma; DEX save patlama/tuzak; CON save zehir/dayanma; INT save zihin mantığı; WIS save irade/algı; CHA save benlik/düzlem etkilerinde sık görülür.
+
+5) HP, ÖLÜM VE CONCENTRATION
+- Hasar önce temporary HP'den düşer, kalan gerçek HP'ye gider.
+- 0 HP'de bilinçsiz düşersin. Tur başında death save: d20, 10+ başarı; 3 başarı stabilize, 3 başarısızlık ölüm.
+- Concentration büyüsünü kullanan hasar alınca CON save atar: DC 10 veya alınan hasarın yarısı, hangisi yüksekse.
+- Yeni concentration büyüsü açmak eskisini bitirir. Incapacitated olmak veya ölmek concentration'ı bitirir.
+
+6) GRAPPLE, SHOVE, HIDE VE STEALTH
+- Grapple/Shove (2014): saldırgan Athletics; hedef Athletics veya Acrobatics ile karşı koyar. Grappled hedefin hızı 0 olur.
+- Hide: görünürken kafana göre kaybolamazsın; saklanabileceğin görüş engeli gerekir. Stealth = d20 + DEX + varsa proficiency.
+- Fark edilme çoğunlukla Stealth sonucunun pasif Perception ile karşılaştırılmasıdır.
+- Ağır zırh “stealth disadvantage” diyorsa iki d20 atıp düşüğü kullan.
+
+============================================================
+44. TÜM ABILITY VE SKILL HESAPLARI
+============================================================
+
+ABILITY MODIFIER: floor((stat - 10) / 2). Örnek: 16 stat = +3, 9 stat = -1.
+PROFICIENCY BONUS: seviye 1-4 +2; 5-8 +3; 9-12 +4; 13-16 +5; 17-20 +6.
+SKILL CHECK: d20 + bağlı ability modifier + o skill'de proficiency varsa proficiency.
+EXPERTISE: proficiency bonusunu bir kez daha ekler; toplam iki proficiency olur.
+
+STR
+- Athletics: tırmanma, yüzme, zıplama, kapı kırma, grapple ve shove.
+
+DEX
+- Acrobatics: denge, takla, grapple'dan çeviklikle kaçma.
+- Sleight of Hand: yankesicilik, küçük nesne saklama, hassas el işi.
+- Stealth (Gizlilik): saklanma ve sessiz ilerleme.
+- Initiative ve çoğu menzilli/finesse saldırı DEX'ten hesaplanır.
+
+INT
+- Arcana: büyü, büyülü yaratık, rün ve düzlem bilgisi.
+- History: tarih, krallık, savaş ve geçmiş olay bilgisi.
+- Investigation: ipuçlarını birleştirme, çekmece arama, düzenek çözme. “Ne görüyorum?” Perception; “gördüğüm şey ne anlama geliyor?” Investigation.
+- Nature: hayvan, bitki, hava ve doğal çevre bilgisi.
+- Religion: tanrı, tarikat, undead ve kutsal ritüel bilgisi.
+
+WIS
+- Animal Handling: hayvan sakinleştirme/yönlendirme.
+- Insight: yalan, niyet ve duygu okuma.
+- Medicine: teşhis ve ölmekte olanı stabilize etme.
+- Perception (Farkındalık): görme, duyma, koklama; pusu ve gizli tehlikeyi fark etme.
+- Passive Perception = 10 + Perception bonusu. Avantaj çoğu durumda +5, dezavantaj -5 kabul edilir.
+- Survival: iz sürme, yön bulma, avlanma ve doğada hayatta kalma.
+
+CHA
+- Deception: inandırıcı yalan ve rol yapma.
+- Intimidation: tehdit ve baskı.
+- Performance: sahne, müzik, hitabet.
+- Persuasion: dürüst ikna, pazarlık ve diplomasi.
+
+============================================================
+45. AC, ZIRH, KALKAN VE EKİPMAN
+============================================================
+
+- Zırhsız çoğu karakter: 10 + DEX modifier.
+- Hafif zırh: zırhın taban AC'si + tüm DEX modifier.
+- Orta zırh: taban AC + DEX modifier, DEX katkısı en fazla +2.
+- Ağır zırh: yalnız yazan taban AC; DEX eklenmez.
+- Kalkan genellikle seçilen AC hesabına +2 ekler.
+- Zırh hesabı eski AC formülünün yerine geçer; iki ayrı AC formülü toplanmaz.
+- “AC 15 olur” yeni hesaplama yöntemidir. “AC +1” mevcut geçerli hesaba ek bonustur.
+- Monk Unarmored Defense: zırh ve kalkan yokken 10 + DEX + WIS.
+- Barbarian Unarmored Defense: zırh yokken 10 + DEX + CON; kalkan kullanabilir.
+- Tortle doğal zırhı 17'dir; normal zırhla toplanmaz. Kalkan eklenebilir.
+- Ağır zırhın STR şartını karşılamamak çoğunlukla hızı düşürür; AC bonusunu kaldırmaz.
+- Birden fazla kalkan bonusu toplanmaz. Aynı slotta tek zırh/tek kalkan kuşanılır.
+
+============================================================
+46. BÜYÜ KULLANMA KISA KARTI
+============================================================
+
+- Cantrip: spell slot yemez; kullanım süresi yazdığı kadar action/bonus action/reaction harcar.
+- Seviyeli büyü: uygun seviyede spell slot harcar. Daha yüksek slotla atılırsa açıklamasında “at higher levels” etkisi varsa güçlenir.
+- Casting time: Action, Bonus Action, Reaction, dakika/saat olabilir. Büyünün kendi satırı genel kuralı ezer.
+- V/S/M: Verbal konuşma, Somatic el hareketi, Material bileşen demektir.
+- Concentration: aynı anda yalnız bir concentration büyüsü sürdürülebilir.
+- Ritual: class/özellik izin veriyorsa slot harcamadan, genellikle 10 dakika ek süreyle atılır.
+- Bonus-action spell kullanınca aynı turda diğer büyü kullanımı baskıya göre değişebilir; masanız 2014 oynuyorsa diğer büyü action'ı yalnız cantrip olmalıdır.
+- Spell attack AC'ye karşı atılır. “Target makes a save” diyorsa saldırı zarı atılmaz; hedef belirtilen saving throw'u atar.

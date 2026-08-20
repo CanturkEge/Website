@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v25 — Oturum ve Savaş Düzeltme Paketi
+
+- Savaş/skill/AC/büyü rehberi genişletildi.
+- Akıllı zar menüsü seçilen skill'in ability ve proficiency bonusunu otomatik yazar.
+- Aktif form alanları bulut senkronu tarafından artık sıfırlanmaz.
+- Market eşyaları ID ile DM tarafından ücretsiz verilebilir.
+- Zırh, kalkan ve stat bonuslu eşyalar kuşanılabilir; AC/stat hesabına uygulanır.
+- Oyuncu envanteri açılır kompakt aksiyon menüsüne kavuştu.
+- Species/subspecies başlangıç seçimi ve canlı karakter önizlemesi geliştirildi.
+
+Bu sürüm için güncel `inventory-update.sql` dosyasının tamamını SQL Editor'de çalıştır.
+
 Bu sürümde kullanıcı hesabı, kalıcı kampanya üyeliği ve ayrı DM/oyuncu panelleri bulunur.
 
 Karakter oluşturma ve düzenleme penceresinde Species → Subspecies ile Class → Subclass seçimleri birbirine bağlıdır; üst seçim değiştiğinde alt seçenekler anında yenilenir.
