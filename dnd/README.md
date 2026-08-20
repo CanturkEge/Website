@@ -1,5 +1,19 @@
 # Kadim Masa Defteri — Kurulum
 
+## v34 — Kale Ekonomisi, Binekler, Tapınak Hizmetleri ve Görev Havuzu
+
+- Market kataloğu 141 kayıttan **286 ürün/hizmete** çıkarıldı; mevcut hazır içerik neredeyse iki katına ulaştı.
+- Market içinde ayrı **Simyacı**, **Ahır ve Binekler** ve **Tapınak** dükkânları eklendi.
+- Ahırda resmî 2014 fiyat mantığındaki sıradan binekler, taşıtlar, binek ekipmanları; daha yüksek tierlerde DM onaylı fantastik binek ve ulaşım sözleşmeleri bulunur.
+- Tapınakta yalnız eşya değil; Bless, Lesser/Greater Restoration, Remove Curse, Death Ward, diriltme ayinleri, kehanet ve alan koruması gibi açık kurallı hizmetler satın alınabilir. Hizmet alımı karakter envanterine uygulanmayı bekleyen bir hizmet kaydı bırakır.
+- Market araması ve tier filtresi eklendi. Hizmet, binek ve normal ürün kartları birbirinden ayrıldı.
+- Bariz fiyat hataları düzeltildi: örneğin İyileştirme İksiri ve Antitoksin 5 GP yerine 50 GP, Meşale 1 SP yerine 1 CP oldu. Nadir/çok nadir büyülü eşyalar hikâye seviyesindeki güçlerine göre pahalılaştırıldı. DM’nin elle değiştirdiği fiyat aynı eski varsayılanla eşleşmiyorsa korunur.
+- 12 kalenin dükkân tierleri zorluk, biyom ve lore’a göre yeniden dengelendi. Karaçam yalnız uygun T1 hizmetlerle başlar; Kültaç’ın şifacı, simyacı, demirci, zırhçı ve ateş tapınağı T3’tür; dağ, liman, ticaret, çöl ve bataklık kaleleri kendi uzmanlıklarına sahiptir.
+- Market, grubun bulunduğu kalenin açık dükkân ve tierlerini tek tuşla uygulayabilir. DM partiyi başka kaleye aldığında market ayarı da o kaleye geçer. Mevcut elle kurulmuş açık market ilk kurulumda zorla ezilmez.
+- DM Rehberi’ne **50 Görev Fikri** bölümü eklendi. Görevler Lv 1–2, 3–4, 5–7, 8–10, 11–14 ve 15–20 olarak ayrılır; başlangıç, ters köşe ve ödül fikri içerir. Seçilen fikir tek tuşla aktif görevlere eklenebilir.
+
+v34 için yeni SQL gerekmez. Alışveriş ve ekonomi SQL’leri daha önce kuruluysa bu paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalaman yeterli.
+
 ## v33 — Dolu Kale Atlası ve Sade Harita Düzenleyicisi
 
 - Haritadaki 12 kalenin adı, bölgesi, kısa hikâyesi, zorluğu, önerilen seviye aralığı, tehlikeleri, istihbaratı, dungeonı ve DM sırrı hazırlandı.
