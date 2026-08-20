@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v26 — 2014 Kuralları, Okunabilir Arayüz ve Lonca
+
+- Mevcut karakter, species/subspecies, class/subclass, para ve envanter kayıtları korunur.
+- Yeni class/subclass seçimlerinden 2024 ve homebrew sınıf karmaşası temizlendi; eski karakterde kullanılıyorsa seçim gösterilmeye devam eder.
+- Seviye düşürme veya düzenleme artık mevcut subclassı otomatik silmez.
+- Class özellikleri 2014 akışına göre yeniden düzenlendi; karaktere özel fight kartına silah proficiency, saldırı, hasar, spell attack ve DC eklendi.
+- Rehber kısa, aranabilir ve oturum odaklı bir 2014 metnine çevrildi.
+- Tüm sayfalarda okunabilirlik, kart, buton, form ve menü aralıkları geliştirildi.
+- Mobil sol menüye görünür X kapatma tuşu eklendi.
+- Lonca kurma, kodla katılma, çıkma, ortak kasaya para yatırma/çekme ve ortak envantere eşya yatırma/geri alma eklendi.
+
+Bu sürümde yalnızca `guild-update.sql` dosyasının tamamını Supabase SQL Editor'de çalıştır.
+
 ## v25.1 — Açıklamalı Yetenek ve Savaş Kartı
 
 - Bütün görünen class özelliklerinde kullanım türü, kaynak, süre ve masada uygulanış alanları bulunur.

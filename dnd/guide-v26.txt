@@ -1,0 +1,61 @@
+KADİM MASA DEFTERİ — D&D 5E 2014 HIZLI REHBER
+
+Bu metin oturum sırasında hızlı bakmak içindir. Karaktere özel class, subclass, species, subspecies, skill ve spell ayrıntıları Yetenekler ekranında gösterilir.
+
+1. SAVAŞA BAŞLAMA
+Herkes d20 + DEX modifier ile Initiative atar. Yüksekten düşüğe sıra oluştur. Surprise yalnız gerçekten hazırlıksız hedefe uygulanır. DM yaratıkların HP, AC, hız ve saldırı satırlarını hazır tutar.
+
+2. BİR TUR
+Karakter hızına kadar hareket eder, 1 action kullanır ve yalnız özelliği varsa 1 bonus action kullanır. Reaction tetiklenince tur dışında kullanılır ve karakterin sonraki turu başlarken yenilenir. Hareket action öncesi ve sonrası bölünebilir.
+
+3. SALDIRI
+Yakın STR silah: d20 + STR modifier + proficiency.
+Finesse silah: STR veya DEX seçilir.
+Menzilli silah: d20 + DEX modifier + proficiency.
+Spell attack: d20 + proficiency + spellcasting modifier.
+Sonuç AC’ye eşit veya yüksekse isabet. Hasar, silah/spell zarı + kuralın söylediği modifierdır. Doğal 20’de hasar zarları iki kez, sabit modifier bir kez uygulanır.
+
+4. ABILITY CHECK VE SKILL
+Ability check = d20 + ilgili ability modifier + proficiency varsa proficiency.
+Athletics STR. Acrobatics, Sleight of Hand ve Stealth DEX. Arcana, History, Investigation, Nature ve Religion INT. Animal Handling, Insight, Medicine, Perception ve Survival WIS. Deception, Intimidation, Performance ve Persuasion CHA.
+Perception çevrede olanı fark eder. Investigation bulunan ipuçlarını çözümler. Survival iz sürer. Insight niyet ve yalanı okumaya çalışır.
+
+5. SAVING THROW
+Saving throw = d20 + ilgili ability modifier + class proficiency veriyorsa proficiency bonusu. Bir spell “DEX save” diyorsa hedef DEX save atar; büyüyü kullanan saldırı zarı atmaz.
+
+6. SPELL HESABI
+Spell Save DC = 8 + proficiency + spellcasting modifier.
+Spell Attack = d20 + proficiency + spellcasting modifier.
+Bard, Paladin, Sorcerer ve Warlock CHA; Cleric, Druid ve Ranger WIS; Artificer ve Wizard INT kullanır.
+Cantrip slot harcamaz ama casting time harcar. Seviyeli spell uygun slot harcar.
+
+7. CONCENTRATION
+Aynı anda tek concentration spell sürer. Hasar alınca CON save: DC 10 veya alınan hasarın yarısı, hangisi yüksekse. Incapacitated veya 0 HP olmak concentrationı bitirir.
+
+8. AC VE ZIRH
+Zırhsız çoğu karakter 10 + DEX. Hafif zırh taban AC + tüm DEX. Orta zırh taban AC + en fazla +2 DEX. Ağır zırh yalnız taban AC. Kalkan genellikle +2. Ayrı AC formülleri toplanmaz; geçerli bir formül seçilir.
+Monk zırhsız/kalkansız 10 + DEX + WIS. Barbarian zırhsız 10 + DEX + CON ve kalkan kullanabilir.
+
+9. GRAPPLE VE SHOVE
+2014: Attack actionındaki saldırılardan biri yerine Athletics atılır. Hedef Athletics veya Acrobatics seçerek karşı koyar. Grappled hedefin hızı 0. Kaçmak için action ile aynı karşılaştırma yapılır. Shove hedefi prone yapar veya 5 ft iter.
+
+10. HIDE VE STEALTH
+Görüş açıkken saklanılmaz; mantıklı görüş engeli gerekir. Stealth sonucu düşmanın Passive Perception değeriyle karşılaştırılır. Passive Perception = 10 + Perception bonusu. Ağır zırh stealth disadvantage verebilir.
+
+11. 0 HP VE ÖLÜM
+0 HP’de unconscious ve prone olunur. Tur başında Death Save: d20, 10+ başarı. 3 başarı stabilize, 3 başarısızlık ölüm. Doğal 20 ile 1 HP; doğal 1 iki başarısızlık sayılır. 0 HP’de hasar ayrıca başarısızlık verir; yakın kritik ciddi risk taşır.
+
+12. TEMEL CONDITIONLAR
+Grappled: hız 0.
+Restrained: hız 0; saldırılar dezavantajlı, sana saldırılar avantajlı, DEX save dezavantajlı.
+Prone: ayağa kalkmak hızın yarısı; 5 ft içi saldırılar avantajlı, uzak saldırılar dezavantajlı.
+Stunned: hareket/action yok; STR/DEX save otomatik başarısız; saldırılar avantajlı.
+Paralyzed: stunned etkilerine ek olarak 5 ft içi isabetler kritik.
+Frightened: korku kaynağı görünürken ability check ve saldırılar dezavantajlı; ona isteyerek yaklaşamaz.
+Poisoned: attack roll ve ability check dezavantajlı.
+
+13. DINLENME
+Short Rest en az 1 saat; Hit Die harcanabilir ve bazı class kaynakları yenilenir. Long Rest yaklaşık 8 saat; HP ve harcanan Hit Die’ın bir kısmı yenilenir, çoğu class kaynağı geri gelir. Long Rest 24 saatte bir tamamlanabilir.
+
+14. DM İÇİN HIZLI FIGHT AKIŞI
+Sıradaki savaşçıyı söyle. Hareketini sor. Actionını çöz. Varsa bonus action ve reaction kaynağını kontrol et. Hasar/condition kaydet. Sırayı geçir. Round başında süreli etkileri azalt. Yaratık davranışını stat bloğu ve zekâsına göre seç; sonucu önceden belirleyip zarı eğip bükme.
