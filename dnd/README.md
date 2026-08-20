@@ -1,5 +1,15 @@
 # Kadim Masa Defteri — Kurulum
 
+## v37 — Uygulama İçi Sürüm Notları
+
+- DM ve oyuncu sol menüsüne ayrı **Sürüm Notları** sayfası eklendi.
+- Projenin başlangıcından bugüne bütün büyük değişiklikler oyuncuya açık `v0.1–v1.4` kilometre taşları halinde yazıldı.
+- Her sürümde **Yeni / Düzeltildi / Değiştirildi** ayrımı ve kapsadığı teknik build etiketi bulunur.
+- Özellik arama, eski/yeni sıralama, tüm sürümleri açma ve kapatma kontrolleri eklendi.
+- Masaüstünde üç sütunlu değişiklik özeti; tablet ve telefonda tek sütunlu, dokunma dostu görünüm kullanılır.
+
+v37 için yeni SQL gerekmez. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalaman yeterli.
+
 ## v36 — 380 Kayıtlık Market
 
 - Market kataloğu **286’dan 380 ürün/hizmete** çıkarıldı.
