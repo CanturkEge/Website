@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v33 — Dolu Kale Atlası ve Sade Harita Düzenleyicisi
+
+- Haritadaki 12 kalenin adı, bölgesi, kısa hikâyesi, zorluğu, önerilen seviye aralığı, tehlikeleri, istihbaratı, dungeonı ve DM sırrı hazırlandı.
+- Her kalede Şifacı, Simyacı, Demirci, Zırhçı, Okçu, Genel Eşya, Han/Bar, Restoran, Ahır ve Tapınak ayrı ayrı `Yok / Tier 1–3` olarak tanımlandı. Her hizmet her kalede bulunmaz.
+- Gizemli ve Lanetli Dükkânlar kale hizmeti olamaz; DM bunları haritaya ayrı bir nokta olarak ekleyebilir.
+- Grup başlangıçta **5 numaralı Taçova Kalesi**ndedir. Kale, geçmişi ve içerideki hizmetler oyuncuya açık; bağlı dungeon bilgisi keşfedilmemiş başlar.
+- Normal Harita sayfası sadeleştirildi. DM üstteki **Kalem** düğmesini açıp bir kaleye dokunduğunda ayrı düzenleme penceresi açılır.
+- Seçili kale kartındaki **Oyuncuya göster** ve **İçerisi keşfedildi** sürgüleri hızlı görünürlük kontrolü sağlar. Ayrıntılı sis, geçmiş ve dungeon izinleri düzenleme penceresindedir.
+- Önceden yazdığın kale bilgileri korunur; yalnız boş alanlar hazır atlas verisiyle tamamlanır.
+
+v33 için yeni SQL gerekmez. v32 lonca işlem geçmişi daha önce kurulmadıysa `v32-update.sql` dosyasını bir kez çalıştır; ardından bu paketteki `dnd` klasörünü sitendeki `dnd` klasörünün üzerine kopyala.
+
 ## v32 — Etkileşimli Harita ve Lonca İşlem Geçmişi
 
 - Ana menüye DM ve oyuncu için ayrı davranan **Harita** bölümü eklendi.
