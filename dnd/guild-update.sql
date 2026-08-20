@@ -56,7 +56,7 @@ begin
 end $$;
 
 create or replace function public.guild_inventory_move_v26(p_user uuid,p_campaign uuid,p_direction text,p_item_index integer,p_quantity integer)
-returns boolean language plpgsql security definer set search_path=public as $$
+returns boolean language plpgsql security definer set search_path=public,extensions as $$
 declare st jsonb; g jsonb; ci integer; source jsonb; target jsonb; item jsonb; moved jsonb; available integer; remaining integer;
 begin
  if p_direction not in ('deposit','withdraw') or p_item_index<0 or p_quantity<1 then raise exception 'Geçersiz eşya işlemi'; end if;
@@ -69,8 +69,8 @@ begin
  else source:=coalesce(st->'guildInventory','[]'::jsonb); target:=coalesce(st#>array['characters',ci::text,'inventory'],'[]'::jsonb); end if;
  if p_item_index>=jsonb_array_length(source) then raise exception 'Eşya artık burada değil'; end if;
  item:=source->p_item_index; available:=greatest(1,coalesce((item->>'qty')::integer,1)); if p_quantity>available then raise exception 'Bu kadar eşya yok'; end if;
- remaining:=available-p_quantity; moved:=jsonb_set(item,'{qty}',to_jsonb(p_quantity),true);
- if p_direction='deposit' then moved:=jsonb_set(moved,'{equipped}','false'::jsonb,true); end if;
+ remaining:=available-p_quantity; moved:=jsonb_set(item,'{qty}',to_jsonb(p_quantity),true)||jsonb_build_object('equipped',false);
+ if remaining>0 then moved:=moved||jsonb_build_object('id',gen_random_uuid()::text); end if;
  if remaining=0 then source:=source-p_item_index; else source:=jsonb_set(source,array[p_item_index::text,'qty'],to_jsonb(remaining),true); end if;
  target:=target||jsonb_build_array(moved);
  if p_direction='deposit' then st:=jsonb_set(st,array['characters',ci::text,'inventory'],source,true); st:=jsonb_set(st,'{guildInventory}',target,true);

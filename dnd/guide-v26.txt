@@ -35,6 +35,7 @@ Aynı anda tek concentration spell sürer. Hasar alınca CON save: DC 10 veya al
 8. AC VE ZIRH
 Zırhsız çoğu karakter 10 + DEX. Hafif zırh taban AC + tüm DEX. Orta zırh taban AC + en fazla +2 DEX. Ağır zırh yalnız taban AC. Kalkan genellikle +2. Ayrı AC formülleri toplanmaz; geçerli bir formül seçilir.
 Monk zırhsız/kalkansız 10 + DEX + WIS. Barbarian zırhsız 10 + DEX + CON ve kalkan kullanabilir.
+Zırhın AC formülü karakterin daha düşük zırhsız AC’sinin yerine geçer; iki formülden yüksek olan otomatik seçilmez. Zırha/kalkana proficient değilsen STR veya DEX içeren attack/check/save atışlarında disadvantage alır ve spell atamazsın. Ağır zırhın STR şartı karşılanmıyorsa hız 10 ft düşer. Zırh kartında Stealth dezavantajı yazıyorsa Stealth 2d20 düşük sonuçla atılır.
 
 9. GRAPPLE VE SHOVE
 2014: Attack actionındaki saldırılardan biri yerine Athletics atılır. Hedef Athletics veya Acrobatics seçerek karşı koyar. Grappled hedefin hızı 0. Kaçmak için action ile aynı karşılaştırma yapılır. Shove hedefi prone yapar veya 5 ft iter.

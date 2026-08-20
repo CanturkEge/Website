@@ -26,7 +26,7 @@ alter table public.guild_wallets enable row level security;
 
 create or replace function public.wallet_list(p_user uuid,p_campaign uuid)
 returns table(user_id uuid,player_name text,platinum integer,gold integer,silver integer,copper integer)
-language plpgsql security definer set search_path=public as $$
+language plpgsql security definer set search_path=public,extensions as $$
 declare caller_role text;
 begin
   select cm.role into caller_role from campaign_members cm
@@ -113,7 +113,7 @@ end $$;
 
 create or replace function public.shop_buy(p_user uuid,p_campaign uuid,p_item_id text)
 returns table(item_name text,platinum integer,gold integer,silver integer,copper integer)
-language plpgsql security definer set search_path=public as $$
+language plpgsql security definer set search_path=public,extensions as $$
 declare
   st jsonb; settings jsonb; item jsonb; shop_cfg jsonb; inv jsonb;
   item_idx integer; char_idx integer; price bigint; total bigint; discount integer;
@@ -149,7 +149,10 @@ begin
   where e.value->>'userId'=p_user::text limit 1;
   if char_idx is null then raise exception 'DM hesabına bağlı karakter oluşturmalı'; end if;
   inv:=coalesce(st#>array['characters',char_idx::text,'inventory'],'[]'::jsonb);
-  inv:=inv||jsonb_build_array(jsonb_build_object('name',item->>'name','qty',1,'note',item->>'note','effect',item->>'effect','purchased',true));
+  inv:=inv||jsonb_build_array(
+    (item-'id'-'stock'-'active'-'shop'-'priceCopper'-'tier'-'ready'-'custom')
+    ||jsonb_build_object('id',gen_random_uuid()::text,'sourceItemId',item->>'id','qty',1,'equipped',false,'purchased',true)
+  );
   st:=jsonb_set(st,array['characters',char_idx::text,'inventory'],inv,true);
   st:=jsonb_set(st,array['market',item_idx::text,'stock'],to_jsonb((item->>'stock')::integer-1),true);
 

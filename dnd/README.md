@@ -1,5 +1,20 @@
 # Kadim Masa Defteri — Kurulum
 
+## v31 — Performans ve Veri Güvenilirliği
+
+- DM kayıtları sıraya alınır; kampanya değiştirme, salona dönme ve çıkış öncesinde bekleyen kayıt tamamlanır.
+- DM’in yerel değişiklikleri, aynı anda oyuncuların yaptığı HP/eşya/market güncellemeleriyle üç yönlü birleştirilir; bütün kampanya JSON’unun eski kopyayla ezilmesi önlenir.
+- Eşya taşıma, yerden alma, lonca hareketi, kuşanma ve silme işlemleri index yanında ID/ad doğrular. Liste başka sekmede değiştiyse yanlış eşya yerine işlem güvenle durur.
+- Bölünen stack yeni bir ID alır; transfer edilen zırh/kalkan kuşanılmış gitmez. Market satın alımı eşyanın AC/stat/özel alanlarını artık korur.
+- Kampanya değişince zar, mesaj, bildirim, kasa, filtre ve açık-panel cache’leri temizlenir. Bildirim istekleri üst üste binmez; arka plandaki sekmede gereksiz polling durur.
+- Yaratık filtresi artık bütün sayfanın eventlerini her tuşta yeniden bağlamaz; dışa aktarma Blob URL’si kullanımdan sonra serbest bırakılır.
+- Karakter ile ona bağlı encounter savaşçısının HP’si iki yönlü eşitlenir; Long Rest ve karakter efektleri aktif savaşa yansır. Oyuncudaki iki ayrı savaş menüsü tek menüye indirilmiştir.
+- ASI puanları mevcut seviye bütçesini aşsa bile statlara fazladan uygulanmaz. Subclass açılışı 2014 class seviyesine göre 1/2/3 olarak doğrulanır; Cleric/Sorcerer/Warlock başlangıç subclassını artık karakter oluştururken seçer ve kaydeder.
+- Zırh AC formülleri; Monk+kalkan şartı, büyülü zırh AC bonusu, tek zırh/tek kalkan ve zırh proficiency uyarılarıyla düzeltilmiştir.
+- Eksik sekiz temel yaratığın stat/saldırı/özellik/zayıflık kartları tamamlanmıştır.
+
+Önce Supabase SQL Editor’de `v31-update.sql` dosyasının tamamını **bir kez çalıştır**, ardından bu paketteki `dnd` klasörünü sitendeki `dnd` klasörünün üzerine kopyala. SQL veri silmez ve tekrar çalıştırılabilir. Bu sürüm, isteğin doğrultusunda mevcut giriş/admin güvenlik mimarisini değiştirmez.
+
 ## v30 — Gerçek Proficiency, Background, Expertise ve ASI
 
 - 18 skill bağlı ability ve hesaplanmış bonuslarıyla karakter ekranına eklendi.

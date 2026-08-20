@@ -2,7 +2,7 @@
 -- Mevcut kampanya ve envanterleri silmez.
 
 create or replace function public.inventory_move(p_user uuid,p_campaign uuid,p_item_index integer,p_quantity integer,p_destination text,p_target uuid default null)
-returns boolean language plpgsql security definer set search_path=public as $$
+returns boolean language plpgsql security definer set search_path=public,extensions as $$
 declare st jsonb; source_idx integer; target_idx integer; inv jsonb; target_inv jsonb; item jsonb; moved jsonb; available integer; remaining integer;
 begin
   if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='player') then raise exception 'Bu kampanyada oyuncu değilsin'; end if;
@@ -15,7 +15,8 @@ begin
   if p_item_index>=jsonb_array_length(inv) then raise exception 'Eşya artık envanterde değil'; end if;
   item:=inv->p_item_index; available:=greatest(1,coalesce((item->>'qty')::integer,1));
   if p_quantity>available then raise exception 'Bu kadar eşyan yok'; end if;
-  remaining:=available-p_quantity; moved:=jsonb_set(item,'{qty}',to_jsonb(p_quantity),true);
+  remaining:=available-p_quantity; moved:=jsonb_set(item,'{qty}',to_jsonb(p_quantity),true)||jsonb_build_object('equipped',false);
+  if remaining>0 then moved:=moved||jsonb_build_object('id',gen_random_uuid()::text); end if;
   if remaining=0 then inv:=inv-p_item_index; else inv:=jsonb_set(inv,array[p_item_index::text,'qty'],to_jsonb(remaining),true); end if;
   st:=jsonb_set(st,array['characters',source_idx::text,'inventory'],inv,true);
   if p_destination='guild' then
@@ -38,7 +39,7 @@ begin
 end $$;
 
 create or replace function public.inventory_take_ground(p_user uuid,p_campaign uuid,p_ground_index integer,p_quantity integer)
-returns boolean language plpgsql security definer set search_path=public as $$
+returns boolean language plpgsql security definer set search_path=public,extensions as $$
 declare st jsonb; char_idx integer; ground jsonb; inv jsonb; item jsonb; moved jsonb; available integer; remaining integer;
 begin
   if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='player') then raise exception 'Bu kampanyada oyuncu değilsin'; end if;
@@ -50,7 +51,8 @@ begin
   if p_ground_index>=jsonb_array_length(ground) then raise exception 'Eşya artık yerde değil'; end if;
   item:=ground->p_ground_index; available:=greatest(1,coalesce((item->>'qty')::integer,1));
   if p_quantity>available then raise exception 'Yerde bu kadar eşya yok'; end if;
-  remaining:=available-p_quantity; moved:=(item-'groundId'-'droppedBy'-'droppedAt')||jsonb_build_object('qty',p_quantity);
+  remaining:=available-p_quantity; moved:=(item-'groundId'-'droppedBy'-'droppedAt')||jsonb_build_object('qty',p_quantity,'equipped',false);
+  if remaining>0 then moved:=moved||jsonb_build_object('id',gen_random_uuid()::text); end if;
   if remaining=0 then ground:=ground-p_ground_index; else ground:=jsonb_set(ground,array[p_ground_index::text,'qty'],to_jsonb(remaining),true); end if;
   inv:=coalesce(st#>array['characters',char_idx::text,'inventory'],'[]'::jsonb)||jsonb_build_array(moved);
   st:=jsonb_set(st,'{groundLoot}',ground,true); st:=jsonb_set(st,array['characters',char_idx::text,'inventory'],inv,true);

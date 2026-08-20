@@ -47,7 +47,7 @@ end $$;
 
 create or replace function public.character_choices_set(p_user uuid,p_campaign uuid,p_subclass text,p_subspecies text,p_spells jsonb)
 returns boolean language plpgsql security definer set search_path=public as $$
-declare st jsonb; idx integer; ch jsonb; lvl integer;
+declare st jsonb; idx integer; ch jsonb; lvl integer; unlock_level integer;
 begin
  if not exists(select 1 from campaign_members where campaign_id=p_campaign and user_id=p_user and role='player') then raise exception 'Bu kampanyada oyuncu değilsin'; end if;
  select state into st from campaigns where id=p_campaign for update;
@@ -56,9 +56,10 @@ begin
  where e.value->>'userId'=p_user::text limit 1;
  if idx is null then raise exception 'Hesabına bağlı karakter yok'; end if;
  lvl:=coalesce((ch->>'level')::integer,1);
- if lvl<3 and coalesce(trim(p_subclass),'')<>'' then raise exception 'Subclass 3. seviyede açılır'; end if;
+ unlock_level:=case when ch->>'className' in ('Cleric','Sorcerer','Warlock') then 1 when ch->>'className' in ('Druid','Wizard') then 2 else 3 end;
+ if lvl<unlock_level and coalesce(trim(p_subclass),'')<>'' then raise exception 'Bu class için subclass % seviyede açılır',unlock_level; end if;
  if coalesce(ch->>'subclass','')<>'' and trim(coalesce(p_subclass,''))<>ch->>'subclass' then raise exception 'Subclass seçimi kilitli; yalnızca DM değiştirebilir'; end if;
- if coalesce(ch->>'subclass','')='' and lvl>=3 and coalesce(trim(p_subclass),'')<>'' then
+ if coalesce(ch->>'subclass','')='' and lvl>=unlock_level and coalesce(trim(p_subclass),'')<>'' then
    st:=jsonb_set(st,array['characters',idx::text,'subclass'],to_jsonb(trim(p_subclass)),true);
  end if;
  st:=jsonb_set(st,array['characters',idx::text,'preparedSpells'],coalesce(p_spells,'[]'::jsonb),true);
