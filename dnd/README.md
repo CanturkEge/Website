@@ -1,5 +1,13 @@
 # Kadim Masa Defteri — Kurulum
 
+## v29 — Placeholder Açıklama Temizliği
+
+- Karakter oluşturma önizlemesi, karakter trait kartı ve seviye özellikleri ayrıntılı alt tür/subclass verisine bağlandı.
+- `Temasına uygun güç kazanır`, `mirası güçlenir` ve `kesin mekaniği DM belirler` şeklindeki eski otomatik metinler kaldırıldı.
+- Subspecies özellikleri seviye 1’de, subclass özelliği ise classın gerçek seçim seviyesinde gösterilir.
+
+v29 yeni SQL gerektirmez.
+
 ## v28.1 — Subspecies ve Subclass Gerçek Mekanikleri
 
 - `Türe uygun güç kazanır` gibi belirsiz placeholder açıklamalar kaldırıldı.
