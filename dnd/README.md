@@ -1,5 +1,20 @@
 # Kadim Masa Defteri — Kurulum
 
+## v27 — Ekran Ekran UX ve Yaratık Ansiklopedisi
+
+- Masaüstü sol menü kendi içinde kaydırılabilir hale getirildi.
+- Karakterler sayfası kompakt özet kartlarına çevrildi; stat, trait, class, subclass, spell ve envanter ayrıntıları kapalı başlar.
+- Oyuncu Yetenekler sayfasındaki uzun açıklamalar başlığa basınca açılır.
+- Kasa kartları özet görünür; DM para düzenleme alanları karta basınca açılır.
+- Market iki bölümlü düzene kavuştu; ürün açıklama ve yönetim araçları kapalı başlar.
+- Yaratıklar kategori ve CR filtreli ansiklopediye çevrildi.
+- Yaratık kartlarında STR/DEX/CON/INT/WIS/CHA, HP, AC, hız, CR, saldırılar, yetenekler, dirençler, bağışıklıklar ve karşı oyun bilgisi bulunur.
+- Hazır yaratık kataloğu Beast, Humanoid, Undead, Ooze, Giant, Dragon, Construct, Aberration ve Monstrosity kategorilerinde genişletildi.
+- NPC kartları kompakt/açılır hale getirildi.
+- Bütün sayfalara açıklayıcı kısa menü notu ve tutarlı boşluk/buton düzeni uygulandı.
+
+v27 yeni SQL gerektirmez. v26 `guild-update.sql` daha önce çalıştırılmadıysa yalnız onu çalıştır.
+
 ## v26 — 2014 Kuralları, Okunabilir Arayüz ve Lonca
 
 - Mevcut karakter, species/subspecies, class/subclass, para ve envanter kayıtları korunur.
