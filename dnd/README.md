@@ -1,5 +1,15 @@
 # Kadim Masa Defteri — Kurulum
 
+## v36 — 380 Kayıtlık Market
+
+- Market kataloğu **286’dan 380 ürün/hizmete** çıkarıldı.
+- 94 yeni kayıt; şifacı, demirci, zırhçı, okçu, genel eşya, han, restoran, gizemli/lanetli dükkân, simyacı, ahır ve tapınağa dengeli dağıtıldı.
+- Eksik 2014 silahları ve macera ekipmanları; resmî büyülü/lanetli eşya aileleri, örnek zehirler, ulaşım ve açık kurallı hizmetler eklendi.
+- Eski kampanyalarda yalnız eksik v36 kayıtları eklenir. Oyuncu envanterleri, özel ürünler, stoklar ve DM’nin elle değiştirdiği fiyatlar korunur.
+- v35 responsive market ve telefon/harita düzeltmeleri aynen korunur.
+
+v36 için yeni SQL gerekmez. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalaman yeterli.
+
 ## v35 — Responsive Market Düzeltmesi
 
 - DM marketindeki üst üste binme ve kataloğun dar sol sütuna düşmesi düzeltildi.

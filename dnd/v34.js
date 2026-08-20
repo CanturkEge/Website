@@ -19,13 +19,13 @@ exEnsureState=function(){
   for(let key of Object.keys(EX_SHOPS)){
     if(!state.shopSettings.shops[key]){state.shopSettings.shops[key]={enabled:false,tier:1};changed=true}
   }
-  if(current.role==='dm'&&(+state.shopSeedVersion||0)<4){
+  if(current.role==='dm'&&(+state.shopSeedVersion||0)<5){
     for(let item of V34_MARKET_CATALOG){
       if(!(state.market||[]).some(row=>row.id===item.id||row.name===item.name)){
         state.market.push({...item});changed=true;
       }
     }
-    state.shopSeedVersion=4;changed=true;
+    state.shopSeedVersion=5;changed=true;
   }
   if(current.role==='dm'&&(+state.shopPriceVersion||0)<1){
     for(let item of state.market||[]){
