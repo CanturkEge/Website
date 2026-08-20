@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v30 — Gerçek Proficiency, Background, Expertise ve ASI
+
+- 18 skill bağlı ability ve hesaplanmış bonuslarıyla karakter ekranına eklendi.
+- Class skill seçim havuzu ve seçim sınırı, background skill/tool/dil proficiencyleri ve species ek skillleri kaydedilir.
+- Bard/Rogue Expertise seçimleri gerçek proficiency listesinden yapılır.
+- Save, weapon, armor, tool ve language proficiencyleri tek panelde görünür.
+- Zar menüsü artık sabit class tahmini yerine karakterin kaydedilmiş skill proficiency ve Expertise seçimlerini kullanır.
+- Level atlayınca STR/DEX otomatik dağıtımı kaldırıldı. ASI hakları oyuncu tarafından ability veya feat olarak harcanır.
+- Eski karakterler `Yetenekler > Seçimleri Düzenle`, DM ise `Karakterler > Proficiency / ASI` ile yapılandırılabilir.
+
+Kurulumdan sonra `v30-update.sql` dosyasını Supabase SQL Editor’de bir kez çalıştır. Veri silmez.
+
 ## v29 — Placeholder Açıklama Temizliği
 
 - Karakter oluşturma önizlemesi, karakter trait kartı ve seviye özellikleri ayrıntılı alt tür/subclass verisine bağlandı.
