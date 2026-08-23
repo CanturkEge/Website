@@ -1,5 +1,20 @@
 # Kadim Masa Defteri — Kurulum
 
+## v38 — Yol Ağı ve Taktik Savaş Alanı
+
+- Haritadaki 12 kale, arazi ve risk açıklaması olan **23 yol** ile bağlandı. Her yolun yaya temel süresi haritada görünür; rota planlayıcı keşfedilmiş kaleler arasında en kısa güzergâhı hesaplar.
+- DM seyahati uyguladığında parti konumu, kampanya tarihi ve o kalenin market tierleri birlikte güncellenir. Son 100 yolculuk kayıt içinde korunur.
+- Ahır ve Binekler kartlarına yolculuk süresini kaç yüzde kısalttığı ve hangi arazide uygun olduğu eklendi. Bu oranlar D&D 2014’ün evrensel olmayan binek kurallarını masada hızlandıran, açıkça işaretlenmiş kampanya yardımcısıdır.
+- Encounter ekranına eski initiative/HP/efekt sistemini kullanan **kareli taktik savaş alanı** eklendi. 1 kare 5 ft’tir; her token hızını ve o tur kaç ft yürüdüğünü gösterir.
+- DM; oyuncu, NPC ve hazır yaratıkları masaüstünde sürükleyip bırakarak, telefonda öğeye ve ardından kareye dokunarak ekleyebilir. Eklenen savaşçı encounter listesine ve haritaya aynı anda girer.
+- Altı hazır alan bulunur: Karaçam Pususu, Yıkık Taç Salonu, Eşkıya Kampı, Meşalesiz Mahzen, Kırık Köprü Savunması ve Kale Kapısı Kuşatması. Boyut 8–40 sütun ve 8–30 satır arasında değiştirilebilir.
+- Ağaç, çalılık, kaya, su, çamur, duvar, parmaklık, barikat, yıkık sütun, moloz, lahit, sandık, kapı, çadır, meşale ve kamp ateşi yerleştirilebilir. Boyut, hareket/görüş engeli ve ışık ayarları düzenlenebilir.
+- Parlak, loş ve karanlık ışık; normal görüş, darkvision, ışık kaynakları, görüş kesen engeller ve kare bazlı sis bulunur. DM sisi fırçayla açıp kapatabilir veya oyuncu görünümünü önizleyebilir.
+- Savaş tahtası hazırlıkta oyuncuya görünmez. DM **Oyuncuya Aç** dediğinde veya **Savaşı Başlat** kullandığında yayınlanır; savaş bitince tekrar gizlenir.
+- Masaüstü üç panelli düzen kullanır; tablet ve telefonda araçlar tek sütuna iner, büyük savaş tahtası iki yönde dokunarak kaydırılır.
+
+v38 için yeni SQL gerekmez. Mevcut kampanya, karakter, encounter, market ve harita verileri korunur. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalaman yeterli.
+
 ## v37 — Uygulama İçi Sürüm Notları
 
 - DM ve oyuncu sol menüsüne ayrı **Sürüm Notları** sayfası eklendi.

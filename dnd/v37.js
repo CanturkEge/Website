@@ -4,7 +4,31 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
-    version:'1.4',build:'Build 37',title:'Sürüm Notları Merkezi',tag:'GÜNCEL',tone:'current',
+    version:'1.5',build:'Build 38',title:'Yol Ağı ve Taktik Savaş Alanı',tag:'GÜNCEL',tone:'current',
+    summary:'On iki kale gerçek yol süreleriyle bağlandı; encounter sistemi sis ve görüş kullanan kareli savaş tahtasına dönüştü.',
+    added:[
+      'Haritadaki 12 kale arasına 23 bağlantılı yol, yol parçası süreleri, arazi/risk açıklamaları ve en kısa rota hesabı eklendi.',
+      'Yaya, sıradan binek, savaş bineği, egzotik binek ve uçan ulaşım için açık yüzde süre azaltma kuralları eklendi.',
+      'DM için 8–40 sütun ve 8–30 satır arasında boyutlandırılabilen kareli taktik savaş alanı eklendi.',
+      'Oyuncu, NPC ve hazır yaratıkları sürükle-bırak veya telefonda dokun-yerleştir ile encounter ve haritaya birlikte ekleme eklendi.',
+      'Karaçam Pususu, Yıkık Taç Salonu, Eşkıya Kampı, Meşalesiz Mahzen, Kırık Köprü ve Kale Kapısı hazır savaş alanları eklendi.',
+      'Ağaç, sık çalılık, kaya, su, çamur, duvar, parmaklık, barikat, yıkık sütun, moloz, lahit, sandık, kapı, çadır, meşale ve kamp ateşi objeleri eklendi.',
+      'Parlak/loş/karanlık ışık, normal görüş, darkvision, ışık kaynakları, görüş kesen engeller ve kare bazlı savaş sisi eklendi.'
+    ],
+    fixed:[
+      'Savaş haritasının DM hazırlığı sırasında oyuncuya görünmesi engellendi; tahta yalnız DM açınca veya savaş başlayınca yayınlanır.',
+      'Encounter’a eski butonlardan eklenen veya silinen savaşçıların taktik tokenlarla ayrışması otomatik eşitlemeyle giderildi.',
+      'Tur değişiminde token hareket sayacının sıfırlanmaması ve HP değişiminin karakter kaydından ayrışması önlendi.'
+    ],
+    changed:[
+      'Mevcut initiative, HP, efekt ve encounter şablonları kaldırılmadı; taktik tahta aynı veri kaynağını kullanır.',
+      'Tokenlarda hız, tur içi gidilen mesafe, HP, AC ve initiative tek bakışta görünür; 1 kare 5 ft olarak hesaplanır.',
+      'Ahırdaki binek kartları hangi arazide işe yaradığını ve yol süresini yüzde kaç kısalttığını açıkça gösterir.',
+      'Savaş editörü masaüstünde üç panelli, telefon ve tablette kaydırılabilir tek sütunlu düzene geçer.'
+    ]
+  },
+  {
+    version:'1.4',build:'Build 37',title:'Sürüm Notları Merkezi',tag:'ARŞİV',tone:'system',
     summary:'Oyunun gelişim geçmişi artık DM ve oyuncular tarafından uygulama içinden okunabilir.',
     added:[
       'Sol menüye DM ve oyuncu için ayrı Sürüm Notları sayfası eklendi.',
@@ -296,7 +320,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.4'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.5'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -304,8 +328,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.4 • Build 37</h2><p>İlk oda kodundan 12 kalelik haritaya ve 380 ürünlü markete kadar bütün büyük değişiklikler.</p></div>
-      <div class="v37-patch-stats"><span><b>14</b>Sürüm</span><span><b>380</b>Market kaydı</span><span><b>12</b>Kale</span><span><b>50</b>Görev fikri</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.5 • Build 38</h2><p>23 kale yolu, binek süreleri ve sis/görüş kullanan kareli taktik savaş alanıyla büyük masa güncellemesi.</p></div>
+      <div class="v37-patch-stats"><span><b>15</b>Sürüm</span><span><b>23</b>Kale yolu</span><span><b>6</b>Hazır savaş alanı</span><span><b>380</b>Market kaydı</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -314,7 +338,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v1.4 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v1.5 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
