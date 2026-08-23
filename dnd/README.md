@@ -1,5 +1,16 @@
 # Kadim Masa Defteri — Kurulum
 
+## v39 — Market Eşyasını Oyuncuya Verme Düzeltmesi
+
+- DM market kartındaki **Oyuncuya Ver / Hizmeti Tanımla** düğmesi artık eski `inventory_give_market` SQL fonksiyonuna bağlı değildir.
+- Hedef karakter ve adet doğrulanır; eşya benzersiz envanter ID’siyle ve kaynak market ID’si korunarak verilir.
+- Zırh AC alanları, silah bonusları, stat bonusları, binek yolculuk bilgileri, hizmet türü ve diğer bütün mekanik alanlar eksiksiz kopyalanır.
+- Ücretsiz DM hediyesi market stokunu varsayılan olarak azaltmaz. İstenirse penceredeki **Market stokundan da düş** seçeneği açılabilir; yetersiz stokta işlem durdurulur.
+- İşlem v31’in sıralı/birleştirmeli bulut kayıt hattını kullanır; eşzamanlı oyuncu değişikliklerini korur ve kayıt tamamlanınca sonuç bildirir.
+- Hediye penceresi masaüstü ve telefonda okunabilir, büyük dokunma alanlı düzene geçirildi.
+
+v39 için yeni SQL gerekmez. Mevcut kampanya, karakter, market, stok, fiyat ve oyuncu envanterleri korunur. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalaman yeterli.
+
 ## v38 — Yol Ağı ve Taktik Savaş Alanı
 
 - Haritadaki 12 kale, arazi ve risk açıklaması olan **23 yol** ile bağlandı. Her yolun yaya temel süresi haritada görünür; rota planlayıcı keşfedilmiş kaleler arasında en kısa güzergâhı hesaplar.

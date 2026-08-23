@@ -95,10 +95,37 @@ prProgress=function(c){let features=prUnlocked(c),spells=prSpells(c),next=[3,4,5
 const v25BaseSkillsPlayer=prSkillsPlayer;prSkillsPlayer=function(){let c=myChar();return c?v25CombatCard(c)+v25BaseSkillsPlayer():v25BaseSkillsPlayer()};playerPages.skills=prSkillsPlayer;
 document.addEventListener('change',e=>{if(e.target.id==='v25Skill')v25UpdateSkill();if(e.target.id==='prNewSpecies'){let x=allSpecies().find(s=>s.name===e.target.value),el=$('#prNewSubspecies');if(el)el.innerHTML=(x?.subs||[]).map(v=>`<option>${esc(v)}</option>`).join('');v25CreatePreview()}if(e.target.id==='prNewSubspecies'||e.target.id==='prNewClass')v25CreatePreview()},true);
 document.addEventListener('focusout',()=>{if(window.kadimSyncQueued){window.kadimSyncQueued=false;setTimeout(()=>syncFromServer(false),150)}},true);
+function v39MarketGiftItem(item,quantity){
+ let gifted=globalThis.structuredClone?structuredClone(item):JSON.parse(JSON.stringify(item));
+ v25HydrateItem(gifted);
+ for(let key of ['stock','active','shop','price','priceCopper','tier','ready','custom'])delete gifted[key];
+ gifted.id=uid();gifted.sourceItemId=item.id;gifted.qty=quantity;gifted.equipped=false;
+ return gifted;
+}
+function v39MarketGiftDialog(item){
+ if(!state.characters.length)return alert('Eşya verilecek karakter yok. Önce Karakterler bölümünden bir karakter oluştur.');
+ let options=state.characters.map(c=>{let owner=members.find(m=>m.userId===c.userId)?.name;return `<option value="${esc(c.id)}">${esc(c.name)}${owner?` — ${esc(owner)}`:''}</option>`}).join('');
+ modal(item.service?'Market hizmetini tanımla':'Market eşyasını oyuncuya ver',`<div class="v39-gift-preview"><small>SEÇİLEN MARKET KAYDI</small><h3>${esc(item.name)}</h3><p>${esc(item.note||item.effect||'Açıklama yok.')}</p><span>ID: ${esc(item.id)}</span></div><label>Hedef karakter<select id="v39GiftCharacter">${options}</select></label><label>Adet<input id="v39GiftQuantity" type="number" min="1" max="9999" step="1" value="1"></label><label class="v39-gift-stock"><input id="v39GiftUseStock" type="checkbox"> <span>Market stokundan da düş <small>Kapalı bırakırsan ücretsiz DM hediyesi olur.</small></span></label><button id="v39ConfirmMarketGift" data-item="${esc(item.id)}" class="primary">${item.service?'Hizmeti Tanımla':'Ücretsiz Ver'}</button>`);
+}
+async function v39GiveMarketItem(button){
+ let item=state.market.find(x=>x.id===button.dataset.item),character=state.characters.find(x=>x.id===$('#v39GiftCharacter')?.value),quantity=Math.floor(Number($('#v39GiftQuantity')?.value)),useStock=!!$('#v39GiftUseStock')?.checked;
+ if(!item)return alert('Market kaydı artık bulunamıyor. Marketi yenileyip tekrar dene.');
+ if(!character)return alert('Hedef karakter artık bulunamıyor. Karakteri yeniden seç.');
+ if(!Number.isInteger(quantity)||quantity<1||quantity>9999)return alert('Adet 1 ile 9999 arasında tam sayı olmalı.');
+ let stock=Math.max(0,Math.floor(Number(item.stock)||0));
+ if(useStock&&quantity>stock)return alert(`Stokta yalnızca ${stock} adet var. Stoktan düşmeyi kapatabilir veya adedi azaltabilirsin.`);
+ button.disabled=true;button.textContent='Veriliyor…';
+ character.inventory??=[];character.inventory.push(v39MarketGiftItem(item,quantity));
+ if(useStock)item.stock=stock-quantity;
+ save();$('#modal')?.close();render();
+ let saved=typeof flushSave==='function'?await flushSave():true;
+ toast(saved?`${item.name}, ${character.name} envanterine verildi`:'Eşya yerelde eklendi; bulut kaydı otomatik tekrar denenecek',!saved);
+}
+window.v39MarketGiftItem=v39MarketGiftItem;
 document.addEventListener('click',async e=>{let b=e.target.closest('button');if(!b||!current)return;
  if(b.dataset.iaExpand!=null){let p=document.querySelector(`[data-ia-panel="${b.dataset.iaExpand}"]`),open=p?.hidden;if(p)p.hidden=!open;b.setAttribute('aria-expanded',String(open));b.closest('.ia-item')?.classList.toggle('open',open);return}
- if(b.dataset.v25MarketGive){let item=state.market.find(x=>x.id===b.dataset.v25MarketGive);if(!item)return;modal('Market eşyasını oyuncuya ver',`<p><b>${esc(item.name)}</b> — ID: ${esc(item.id)}</p><label>Karakter<select id="v25GiveChar">${state.characters.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></label><label>Adet<input id="v25GiveQty" type="number" min="1" value="1"></label><button id="v25ConfirmGive" data-item="${item.id}" class="primary">Ücretsiz Ver</button>`);return}
- if(b.id==='v25ConfirmGive'){let item=state.market.find(x=>x.id===b.dataset.item),target=$('#v25GiveChar').value,qty=Math.max(1,Math.floor(+$('#v25GiveQty').value||1));b.disabled=true;let {error}=await db.rpc('inventory_give_market',{p_user:auth.id,p_campaign:current.id,p_target_character:target,p_item_id:item.id,p_quantity:qty});if(error){b.disabled=false;return alert(error.message)}$('#modal').close();await syncFromServer(true);return}
+ if(b.dataset.v25MarketGive){if(current.role!=='dm')return;let item=state.market.find(x=>x.id===b.dataset.v25MarketGive);if(item)v39MarketGiftDialog(item);return}
+ if(b.id==='v39ConfirmMarketGift'){if(current.role!=='dm')return;await v39GiveMarketItem(b);return}
  if(b.dataset.v25Equip!=null){if(window.v31ToggleEquip)return window.v31ToggleEquip(b,+b.dataset.v25Equip);b.disabled=true;let {error}=await db.rpc('inventory_equip',{p_user:auth.id,p_campaign:current.id,p_item_index:+b.dataset.v25Equip});if(error){b.disabled=false;return alert(error.message)}await syncFromServer(true);return}
  if(b.dataset.v25Trash!=null){if(window.v31TrashItem)return window.v31TrashItem(b,+b.dataset.v25Trash);let item=myChar()?.inventory?.[+b.dataset.v25Trash];if(!item||!confirm(`${item.name} kalıcı olarak çöpe atılsın mı?`))return;b.disabled=true;let {error}=await db.rpc('inventory_delete',{p_user:auth.id,p_campaign:current.id,p_item_index:+b.dataset.v25Trash});if(error){b.disabled=false;return alert(error.message)}await syncFromServer(true);return}
 },true);
