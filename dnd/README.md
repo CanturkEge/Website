@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v41 — Efekt ve Lonca Yönetimi Düzeltmesi
+
+- Karakter efektleri artık hem eski düz metin kayıtlarını hem de savaştan gelen süreli kayıtları aynı anda tanır. **Efektleri Yönet** penceresinden tek tek kaldırılabilir veya topluca temizlenebilir.
+- Karakter ile encounter arasındaki eşitleme efekt adı, süre ve kimliğini kaybetmeden iki yönlü çalışır. Oyuncu ekranlarındaki `[object Object]` görünümü giderildi.
+- Lonca sayfasına tam bir **DM Müdahale Paneli** eklendi: lonca adını değiştirme, oyuncuyu üye yapma/çıkarma, ortak eşya ekleme, düzenleme, silme ve karaktere aktarma.
+- Lonca kasasının PP/GP/SP/CP ekleme–çıkarma araçları doğrudan Lonca ekranında görünür. İlk yüklemede eski bakiyede kalma sorunu düzeltildi.
+- Lonca eşyası aktarılırken zırh, AC, saldırı/hasar/save, stat bonusları ve diğer özel alanlar korunur; kaynak adet güvenli biçimde azaltılır.
+- NPC Defteri’ndeki eski işlevsiz **Eşya** düğmesi çalışır hale getirildi. DM artık NPC envanterine eşya ekleyip kaldırabilir.
+- DM tarafından verilen özel yetenekler artık düzenlenebilir ve silinebilir.
+- Yeni yönetim ekranları telefon ve tablette tek sütuna iner; düğmeler dokunma için tam genişlik kullanır.
+
+v41 için yeni SQL gerekmez. Mevcut karakter, efekt, encounter, lonca, kasa ve envanter verileri korunur. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalayıp tarayıcıda `Ctrl + Shift + R` yapman yeterli.
+
 ## v40 — Market Buton Çakışması Hotfix
 
 - Market hediyesindeki onay düğmesinin **Bonuslu Eşya Ver** penceresini açmasına neden olan `data-item` çakışması kaldırıldı.

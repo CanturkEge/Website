@@ -4,7 +4,30 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
-    version:'1.6.1',build:'Build 40',title:'Market Buton Çakışması Hotfix',tag:'GÜNCEL',tone:'current',
+    version:'1.6.2',build:'Build 41',title:'Efekt ve Lonca Yönetimi Düzeltmesi',tag:'GÜNCEL',tone:'current',
+    summary:'Efektlerin kaldırılamaması giderildi; lonca, NPC eşyası ve özel yetenekler için eksik DM müdahale kontrolleri tamamlandı.',
+    added:[
+      'Karakter kartlarına süreli ve süresiz kayıtları birlikte gösteren Efektleri Yönet penceresi eklendi.',
+      'Lonca sayfasına üye ekleme/çıkarma, ad değiştirme, ortak eşya ekleme/düzenleme/silme ve karaktere aktarma araçları eklendi.',
+      'Lonca kasası DM para düzenleme kontrolleri doğrudan Lonca menüsüne taşındı.',
+      'NPC Eşya düğmesine çalışan envanter penceresi; özel yeteneklere düzenleme ve silme araçları eklendi.'
+    ],
+    fixed:[
+      'Savaştan gelen nesne biçimli efektlerin eski metin karşılaştırması yüzünden kaldırılamaması giderildi.',
+      'Karakter ile encounter arasında efekt süresi ve kimliğinin kaybolması önlendi.',
+      'Oyuncu Karakterim ve Parti kartlarında nesne efektlerin [object Object] görünmesi giderildi.',
+      'Lonca sayfası açıldığında kasa verisinin yüklenmesine rağmen ekranın eski bakiyede kalması düzeltildi.',
+      'Yeni lonca görünümünde kaybolan DM envanter ve üyelik müdahalesi geri getirildi.',
+      'NPC Defteri içindeki işlevsiz Eşya düğmesi çalışır hale getirildi.'
+    ],
+    changed:[
+      'Efektler düz metin veya süreli kayıt olarak gelse de tek uyumlu veri hattından yönetilir.',
+      'DM’nin lonca üyeliği, para ve eşya düzenlemeleri oyuncu lonca hareket geçmişine eklenmez.',
+      'Yeni yönetim panelleri masaüstünde çok sütunlu, telefonda tek sütun ve büyük dokunma alanlıdır.'
+    ]
+  },
+  {
+    version:'1.6.1',build:'Build 40',title:'Market Buton Çakışması Hotfix',tag:'HOTFIX',tone:'system',
     summary:'Market hediyesinin onay düğmesini Bonuslu Eşya Ver penceresine yönlendiren ortak veri etiketi çakışması kaldırıldı.',
     added:[],
     fixed:[
@@ -352,7 +375,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.6.1'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.6.2'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -360,8 +383,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.6.1 • Build 40</h2><p>Market hediyesi ile Bonuslu Eşya Ver işlemlerinin birbirini yakalamasına neden olan buton çakışması giderildi.</p></div>
-      <div class="v37-patch-stats"><span><b>17</b>Sürüm</span><span><b>23</b>Kale yolu</span><span><b>6</b>Hazır savaş alanı</span><span><b>380</b>Market kaydı</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.6.2 • Build 41</h2><p>Efekt silme uyumsuzluğu giderildi; Lonca menüsü tam DM yönetimi, kasa, üye ve eşya müdahale araçlarına kavuştu.</p></div>
+      <div class="v37-patch-stats"><span><b>18</b>Sürüm</span><span><b>23</b>Kale yolu</span><span><b>6</b>Hazır savaş alanı</span><span><b>380</b>Market kaydı</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -370,7 +393,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v1.6.1 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v1.6.2 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
