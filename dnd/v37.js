@@ -4,7 +4,20 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
-    version:'1.6',build:'Build 39',title:'Market Hediye Akışı Düzeltmesi',tag:'GÜNCEL',tone:'current',
+    version:'1.6.1',build:'Build 40',title:'Market Buton Çakışması Hotfix',tag:'GÜNCEL',tone:'current',
+    summary:'Market hediyesinin onay düğmesini Bonuslu Eşya Ver penceresine yönlendiren ortak veri etiketi çakışması kaldırıldı.',
+    added:[],
+    fixed:[
+      'Market hediyesi onaylanırken yanlışlıkla Bonuslu Eşya Ver penceresinin açılması giderildi.',
+      'Karakter ekranındaki Bonuslu Eşya Ver dinleyicisi yalnız gerçek bir karakter ID’si taşıyan düğmelerle sınırlandı.',
+      'Market onay düğmesi kendine ait data-v39-market-item etiketiyle diğer envanter işlemlerinden tamamen ayrıldı.'
+    ],
+    changed:[
+      'Market hediyesi ve manuel bonuslu eşya verme akışları artık aynı sayfada birbirini yakalamadan bağımsız çalışır.'
+    ]
+  },
+  {
+    version:'1.6',build:'Build 39',title:'Market Hediye Akışı Düzeltmesi',tag:'MARKET',tone:'system',
     summary:'DM artık marketteki herhangi bir eşya, hizmet veya bineği eski SQL fonksiyonuna bağlı kalmadan güvenle karaktere verebilir.',
     added:[
       'Hedef karakter, adet ve isteğe bağlı stoktan düşme seçeneği olan yeni market hediye penceresi eklendi.',
@@ -329,7 +342,8 @@ function v37Fold(value){
 function v37PatchRows(){
   let needle=v37Fold(v37PatchQuery.trim());
   let rows=V37_PATCH_NOTES.filter(note=>!needle||v37Fold(`${note.version} ${note.build} ${note.title} ${note.tag} ${note.summary} ${note.added.join(' ')} ${note.fixed.join(' ')} ${note.changed.join(' ')}`).includes(needle));
-  return rows.slice().sort((a,b)=>v37PatchOrder==='asc'?parseFloat(a.version)-parseFloat(b.version):parseFloat(b.version)-parseFloat(a.version));
+  let compare=(a,b)=>{let aa=String(a).split('.').map(Number),bb=String(b).split('.').map(Number),length=Math.max(aa.length,bb.length);for(let i=0;i<length;i++){let diff=(aa[i]||0)-(bb[i]||0);if(diff)return diff}return 0};
+  return rows.slice().sort((a,b)=>v37PatchOrder==='asc'?compare(a.version,b.version):compare(b.version,a.version));
 }
 
 function v37PatchGroup(kind,title,items){
@@ -338,7 +352,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.6'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.6.1'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -346,8 +360,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.6 • Build 39</h2><p>Market eşyasını oyuncuya ücretsiz verme akışı SQL bağımlılığından kurtarıldı ve bulut kaydı güçlendirildi.</p></div>
-      <div class="v37-patch-stats"><span><b>16</b>Sürüm</span><span><b>23</b>Kale yolu</span><span><b>6</b>Hazır savaş alanı</span><span><b>380</b>Market kaydı</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.6.1 • Build 40</h2><p>Market hediyesi ile Bonuslu Eşya Ver işlemlerinin birbirini yakalamasına neden olan buton çakışması giderildi.</p></div>
+      <div class="v37-patch-stats"><span><b>17</b>Sürüm</span><span><b>23</b>Kale yolu</span><span><b>6</b>Hazır savaş alanı</span><span><b>380</b>Market kaydı</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -356,7 +370,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v1.6 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v1.6.1 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

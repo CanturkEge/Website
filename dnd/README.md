@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v40 — Market Buton Çakışması Hotfix
+
+- Market hediyesindeki onay düğmesinin **Bonuslu Eşya Ver** penceresini açmasına neden olan `data-item` çakışması kaldırıldı.
+- Market onayı artık yalnız kendisine ait `data-v39-market-item` etiketiyle çalışır.
+- Bonuslu eşya dinleyicisi yalnız gerçekten var olan bir karakter ID’sine bağlı düğmeyi kabul eder; başka menülerin butonlarını yakalayamaz.
+- Build 39’daki tam özellikli eşya kopyalama, benzersiz ID, isteğe bağlı stok düşme ve sıralı bulut kaydı aynen korunur.
+
+v40 için yeni SQL gerekmez. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalayıp tarayıcıda `Ctrl + Shift + R` yapman yeterli.
+
 ## v39 — Market Eşyasını Oyuncuya Verme Düzeltmesi
 
 - DM market kartındaki **Oyuncuya Ver / Hizmeti Tanımla** düğmesi artık eski `inventory_give_market` SQL fonksiyonuna bağlı değildir.
