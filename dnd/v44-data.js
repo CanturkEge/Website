@@ -327,6 +327,9 @@
   add({name:'Alevdamarı Yakut Kolye',category:'accessory',size:'tiny',themes:['elemental','noble'],rarity:'rare',minLevel:4,effect:'Ateş hasarı verdiğinde tur başına 1 kez +1d6 ateş hasarı; günde 1 kez aldığın ateş hasarını yarıya indirir.',note:'Nadir aksesuar • Açık ateş saldırısı ve savunması.',valueCopper:22000,slot:'neck'});
   add({name:'Sıfır Numaralı Kader Sikkesi',category:'consumable',size:'tiny',themes:['arcane','cursed','alchemy'],rarity:'artifact',minLevel:10,effect:'Bir kez yazı-tura atılıp kırılır: yazı, görülen bir d20’yi doğal 20; tura, doğal 1 yapar. Hangi tarafın geleceğini DM bile önceden açıklamak zorunda değildir.',note:'Tek kullanımlık artefakt; kampanya kaderini değiştirebilir.',valueCopper:1000000,qtyMax:1});
 
+  /* v48 keeps all previous IDs stable and appends the expanded catalogue. */
+  if(typeof root.V48_BUILD_LOOT==='function')root.V48_BUILD_LOOT(add,{catalogue,rarities,categoryLabels});
+
   function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
   function randomInt(min,max,rng=Math.random){return Math.floor(rng()*(max-min+1))+min}
   function pick(list,rng=Math.random){return list[Math.min(list.length-1,Math.floor(rng()*list.length))]}

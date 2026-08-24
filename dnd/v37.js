@@ -4,6 +4,32 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.0',build:'Build 48',title:'4.000 Ganimet, Büyü Materyalleri ve Gündelik Harikalar',tag:'GANİMET',tone:'current',
+    summary:'Ganimet kataloğu tam 4.000 açıklamalı kayda çıktı; büyü materyalleri, gündelik eşyalar, keyif içecekleri ve oynanabilir özel araçlar dengeli nadirlik katmanlarına yerleştirildi.',
+    added:[
+      'Katalog nadirlik dağılımı 900 Sıradan, 1.000 Yaygın, 750 Seyrek, 550 Nadir, 380 Çok Nadir, 310 Efsanevi ve 110 Artefakt olacak şekilde tam 4.000 kayda dengelendi.',
+      'Materyal kullanan 184 adet 2014 SRD büyüsü için büyü adıyla eşleşen gerçek Büyü Materyal Kiti eklendi.',
+      'Her büyü kitine materyalin Türkçe açıklaması, varsa zorunlu GP değeri, focus/component pouch ile ikame kuralı ve büyünün materyali tüketip tüketmediği eklendi.',
+      '722 sıradan gündelik eşya; kamp, sofra, giyim, yazı, zanaat, kervan ve rol yapma kullanım açıklamalarıyla eklendi.',
+      '288 keyif veren fantastik içecek; süreli zararsız eğlence etkileri veya küçük sosyal katkılarla eklendi.',
+      '500 tekrar kullanılabilir/tüketilebilir gündelik büyülü yardımcı ve 46 özel isimli eşya eklendi.',
+      'Ölülerin Son İzleri Kolyesi, Kayıp Eşya Çanı, Son Söz Balmumu, Bir Dakikalık Hayalet Feneri ve benzeri açık activation/kullanım sınırı taşıyan özel eşyalar eklendi.'
+    ],
+    fixed:[
+      'Katalog sayısı büyürken sıradan ve yaygın kayıtların nadir eşyalardan az kalması giderildi.',
+      'Büyü materyalinin ne zaman gerektiği, focus ile değiştirilip değiştirilemeyeceği ve kullanım sonunda silinip silinmeyeceği belirsizliği giderildi.',
+      'Ganimetin yalnız silah, zırh ve aksesuar hissi vermesi; çok sayıda gündelik, tüketilebilir, alet, belge ve bileşen kaydıyla dengelendi.',
+      '4.000 uzun açıklamanın her arama tuşunda tekrar normalize edilmesi engellendi; arama metni önbelleğe alındı ve 120 ms gecikmeli filtreleme eklendi.'
+    ],
+    changed:[
+      'Ganimet Ansiklopedisine Büyü Materyalleri, Gündelik Eşyalar, Keyif Veren Sıvılar, Kullanışlı Büyülü Eşyalar ve Özel Etkili Eşyalar filtresi eklendi.',
+      'Eşya kartları artık Action/Bonus Action/ritüel kullanımını, günlük hakkı, bağlı büyüyü ve zorunlu materyal GP değerini ayrı okunabilir etiketlerde gösterir.',
+      'Nadirlik adetleri ganimet ekranının üstünde tıklanabilir sayaçlar olarak gösterilir; telefonda yatay kaydırılır ve kart listesi yine yalnız ilk 60 sonucu çizer.',
+      'Önceki 2.260 kaydın katalog sırası ve ID’leri aynen korundu; mevcut karakter, envanter, kuşanım, yerdeki eşya ve ganimet geçmişi değişmez.',
+      'v48 yeni SQL gerektirmez; v45-update.sql daha önce çalıştırılmış olmalıdır.'
+    ]
+  },
+  {
     version:'1.9',build:'Build 47',title:'2014 Büyü Kitabı ve Gerçek Büyü Sayfaları',tag:'BÜYÜ',tone:'current',
     summary:'2014 SRD büyülerinin tamamı aranabilir bir kitapta toplandı; aynı kayıtlar artık ganimet üreticide tek tek büyü sayfası olarak düşer.',
     added:[
@@ -501,7 +527,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.9'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -509,8 +535,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.9 • Build 47</h2><p>2014 Büyü Kitabı ve ganimetten düşen gerçek büyü sayfaları hazır.</p></div>
-      <div class="v37-patch-stats"><span><b>24</b>Sürüm</span><span><b>319</b>Büyü</span><span><b>319</b>Büyü sayfası</span><span><b>2.260</b>Ganimet</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.0 • Build 48</h2><p>4.000 kayıtlık dengeli ganimet kataloğu, gerçek büyü materyalleri ve gündelik harikalar hazır.</p></div>
+      <div class="v37-patch-stats"><span><b>25</b>Sürüm</span><span><b>319</b>Büyü</span><span><b>184</b>Materyal kiti</span><span><b>4.000</b>Ganimet</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -519,7 +545,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v1.9 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.0 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

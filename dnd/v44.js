@@ -13,11 +13,14 @@
   let v44KarmaCategory='all';
   let v44LootResultId='';
   let v44LootSelected=new Set();
-  let v44LootUi={level:1,container:'chest',theme:'mixed',quality:'standard',rarity:'auto',query:'',catalogTheme:'all',catalogRarity:'all',catalogCategory:'all'};
+  let v44CatalogSearchTimer=0;
+  const v44LootSearchCache=new WeakMap();
+  const v44RarityTotals=Object.fromEntries(V44_RARITY_ORDER.map(key=>[key,V44_LOOT_CATALOG.filter(item=>item.rarity===key).length]));
+  let v44LootUi={level:1,container:'chest',theme:'mixed',quality:'standard',rarity:'auto',query:'',catalogTheme:'all',catalogRarity:'all',catalogCategory:'all',catalogKind:'all'};
 
   function v44ResetLocal(){
-    v44KarmaCharacter='';v44KarmaQuery='';v44KarmaSign='all';v44KarmaCategory='all';v44LootResultId='';v44LootSelected=new Set();
-    v44LootUi={level:1,container:'chest',theme:'mixed',quality:'standard',rarity:'auto',query:'',catalogTheme:'all',catalogRarity:'all',catalogCategory:'all'};
+    clearTimeout(v44CatalogSearchTimer);v44CatalogSearchTimer=0;v44KarmaCharacter='';v44KarmaQuery='';v44KarmaSign='all';v44KarmaCategory='all';v44LootResultId='';v44LootSelected=new Set();
+    v44LootUi={level:1,container:'chest',theme:'mixed',quality:'standard',rarity:'auto',query:'',catalogTheme:'all',catalogRarity:'all',catalogCategory:'all',catalogKind:'all'};
   }
 
   function v44Ensure(){
@@ -128,10 +131,10 @@
   function v44SelectedResultItems(){let items=v44ResultItems();return items.filter(item=>v44LootSelected.has(item.instanceId))}
 
   function v44LootItemCard(item,index,{catalog=false}={}){
-    let checked=v44LootSelected.has(item.instanceId),themes=(item.themes||[]).filter(theme=>theme!=='mixed').slice(0,3).map(theme=>V44_LOOT_THEMES[theme]?.label||theme).join(' • ');
+    let checked=v44LootSelected.has(item.instanceId),themes=(item.themes||[]).filter(theme=>theme!=='mixed').slice(0,3).map(theme=>V44_LOOT_THEMES[theme]?.label||theme).join(' • '),kind=(window.V48_LOOT_KIND_LABELS||{})[item.lootKind]||'',rules=[item.activation&&`Kullanım: ${item.activation}`,item.uses&&`Kullanım hakkı: ${item.uses}`,item.linkedSpellName&&`Bağlı büyü: ${item.linkedSpellName}`,Number.isFinite(+item.componentCostGp)&&+item.componentCostGp>0&&`Zorunlu materyal değeri: ${(+item.componentCostGp).toLocaleString('tr-TR')} GP`].filter(Boolean);
     return `<details class="v44-loot-item" ${catalog?'':'open'}>
-      <summary>${catalog?'':`<input type="checkbox" data-v44-loot-select="${esc(item.instanceId)}" ${checked?'checked':''} aria-label="Ganimeti seç">`}<span><b>${esc(item.name)}${item.qty>1?` ×${item.qty}`:''}</b><small>${esc(item.categoryLabel||V44_LOOT_CATEGORY_LABELS[item.category]||item.category)}${themes?' • '+esc(themes):''}</small></span>${v44Rarity(item)}<i>＋</i></summary>
-      <div class="v44-loot-body"><p>${esc(item.effect)}</p><div><span>Boyut: <b>${({tiny:'Çok küçük',small:'Küçük',medium:'Orta',large:'Büyük'})[item.size]||item.size}</b></span><span>Önerilen değer: <b>${v44Value(item.valueCopper)}</b></span><span>Önerilen sandık seviyesi: <b>${item.minLevel}+</b></span></div>${catalog?`<button class="primary" data-v44-catalog-add="${esc(item.id)}">Bu Sonuca Ekle</button>`:''}</div>
+      <summary>${catalog?'':`<input type="checkbox" data-v44-loot-select="${esc(item.instanceId)}" ${checked?'checked':''} aria-label="Ganimeti seç">`}<span><b>${esc(item.name)}${item.qty>1?` ×${item.qty}`:''}</b><small>${esc(item.categoryLabel||V44_LOOT_CATEGORY_LABELS[item.category]||item.category)}${kind?' • '+esc(kind):''}${themes?' • '+esc(themes):''}</small></span>${v44Rarity(item)}<i>＋</i></summary>
+      <div class="v44-loot-body"><p>${esc(item.effect)}</p>${rules.length?`<div class="v48-loot-rules">${rules.map(rule=>`<span>${esc(rule)}</span>`).join('')}</div>`:''}<div><span>Boyut: <b>${({tiny:'Çok küçük',small:'Küçük',medium:'Orta',large:'Büyük'})[item.size]||item.size}</b></span><span>Önerilen değer: <b>${v44Value(item.valueCopper)}</b></span><span>Önerilen sandık seviyesi: <b>${item.minLevel}+</b></span></div>${catalog?`<button class="primary" data-v44-catalog-add="${esc(item.id)}">Bu Sonuca Ekle</button>`:''}</div>
     </details>`;
   }
 
@@ -147,9 +150,13 @@
     </section>`;
   }
 
+  function v44LootSearchText(item){
+    let cached=v44LootSearchCache.get(item);if(cached)return cached;
+    cached=v44Fold(`${item.name} ${item.effect} ${item.note} ${item.categoryLabel} ${item.linkedSpellName||''} ${(window.V48_LOOT_KIND_LABELS||{})[item.lootKind]||''}`);v44LootSearchCache.set(item,cached);return cached;
+  }
   function v44CatalogFiltered(){
     let query=v44Fold(v44LootUi.query);
-    return V44_LOOT_CATALOG.filter(item=>(v44LootUi.catalogTheme==='all'||item.themes.includes(v44LootUi.catalogTheme))&&(v44LootUi.catalogRarity==='all'||item.rarity===v44LootUi.catalogRarity)&&(v44LootUi.catalogCategory==='all'||item.category===v44LootUi.catalogCategory)&&(!query||v44Fold(`${item.name} ${item.effect} ${item.note} ${item.categoryLabel}`).includes(query)));
+    return V44_LOOT_CATALOG.filter(item=>(v44LootUi.catalogTheme==='all'||item.themes.includes(v44LootUi.catalogTheme))&&(v44LootUi.catalogRarity==='all'||item.rarity===v44LootUi.catalogRarity)&&(v44LootUi.catalogCategory==='all'||item.category===v44LootUi.catalogCategory)&&(v44LootUi.catalogKind==='all'||(item.lootKind||'legacy')===v44LootUi.catalogKind)&&(!query||v44LootSearchText(item).includes(query)));
   }
   function v44CatalogCards(){let rows=v44CatalogFiltered(),visible=rows.slice(0,60);return `${visible.map(item=>v44LootItemCard(item,0,{catalog:true})).join('')||'<div class="empty">Bu filtrede eşya yok.</div>'}${rows.length>visible.length?`<p class="v44-limit-note">Performans için ilk ${visible.length} kayıt gösteriliyor. Aramayı daraltırsan diğerleri gelir.</p>`:''}`}
   function v44RefreshCatalog(){let list=$('#v44CatalogList'),count=$('#v44CatalogCount');if(list)list.innerHTML=v44CatalogCards();if(count)count.textContent=`${v44CatalogFiltered().length}/${V44_LOOT_CATALOG.length}`}
@@ -159,10 +166,15 @@
     return `<div class="v44-history-list">${state.v44LootHistory.map(result=>{let c=V44_LOOT_CONTAINERS[result.container]||V44_LOOT_CONTAINERS.chest;return `<article class="${result.id===v44LootResultId?'selected':''}"><button data-v44-loot-load="${esc(result.id)}"><span>${c.icon}</span><div><b>${esc(c.label)} • Sv ${result.level}</b><small>${esc(result.summary||'')} • ${v44Date(result.at)}</small></div></button><button class="danger" data-v44-loot-delete="${esc(result.id)}" aria-label="Ganimet kaydını sil">×</button></article>`}).join('')||'<div class="empty">Üretilen son 30 sonuç burada saklanır.</div>'}</div>`;
   }
 
+  function v44RarityOverview(){
+    return `<section class="v48-loot-overview">${V44_RARITY_ORDER.map(key=>{let rarity=V44_RARITIES[key];return `<button type="button" data-v48-rarity="${key}" style="--rarity:${rarity.color}" title="Ganimet ansiklopedisini ${esc(rarity.label)} olarak filtrele"><span>${esc(rarity.label)}</span><b>${v44RarityTotals[key].toLocaleString('tr-TR')}</b></button>`}).join('')}</section>`;
+  }
+
   function v44LootPage(){
-    v44Ensure();let container=V44_LOOT_CONTAINERS[v44LootUi.container]||V44_LOOT_CONTAINERS.chest,categories=Object.entries(V44_LOOT_CATEGORY_LABELS),themeOptions=Object.entries(V44_LOOT_THEMES),rarityOptions=V44_RARITY_ORDER.map(key=>[key,V44_RARITIES[key]]);
+    v44Ensure();let container=V44_LOOT_CONTAINERS[v44LootUi.container]||V44_LOOT_CONTAINERS.chest,categories=Object.entries(V44_LOOT_CATEGORY_LABELS),themeOptions=Object.entries(V44_LOOT_THEMES),rarityOptions=V44_RARITY_ORDER.map(key=>[key,V44_RARITIES[key]]),kindOptions=Object.entries(window.V48_LOOT_KIND_LABELS||{all:'Tüm kullanım türleri',legacy:'Önceki ganimetler'});
     return `<section class="v44-page">
       <div class="v44-hero loot"><div><span class="v26-kicker">DM HİKÂYE ARACI</span><h2>Kurallı Ganimet Üretici</h2><p><b>${V44_LOOT_CATALOG.length.toLocaleString('tr-TR')}</b> açıklamalı eşya; kap boyutu, tema, seviye, kalite ve nadirlik birlikte değerlendirilir.</p></div><div class="v44-hero-stat"><b>${V44_LOOT_CATALOG.length.toLocaleString('tr-TR')}</b><span>özgün kayıt</span></div></div>
+      ${v44RarityOverview()}
       <div class="v44-generator-layout">
         <section class="card v44-generator-controls">
           <div><span class="v26-kicker">1 • KAYNAĞI SEÇ</span><h3>Sandık Ayarları</h3></div>
@@ -179,7 +191,7 @@
       </div>
       <details class="card v44-catalog" open>
         <summary><span><small class="v26-kicker">2 • İSTERSEN ELLE SEÇ</small><b>Ganimet Ansiklopedisi</b></span><strong id="v44CatalogCount">${v44CatalogFiltered().length}/${V44_LOOT_CATALOG.length}</strong><i>＋</i></summary>
-        <div class="v44-catalog-body"><div class="v44-filters"><input id="v44CatalogSearch" class="input" value="${esc(v44LootUi.query)}" placeholder="Yakut kolye, ateş, görünmezlik…"><select id="v44CatalogTheme"><option value="all">Tüm temalar</option>${themeOptions.filter(([key])=>key!=='mixed').map(([key,row])=>`<option value="${key}" ${v44LootUi.catalogTheme===key?'selected':''}>${esc(row.label)}</option>`).join('')}</select><select id="v44CatalogRarity"><option value="all">Tüm nadirlikler</option>${rarityOptions.map(([key,row])=>`<option value="${key}" ${v44LootUi.catalogRarity===key?'selected':''}>${esc(row.label)}</option>`).join('')}</select><select id="v44CatalogCategory"><option value="all">Tüm türler</option>${categories.map(([key,label])=>`<option value="${key}" ${v44LootUi.catalogCategory===key?'selected':''}>${esc(label)}</option>`).join('')}</select></div><div id="v44CatalogList" class="v44-catalog-list">${v44CatalogCards()}</div></div>
+        <div class="v44-catalog-body"><div class="v44-filters v48-loot-filters"><input id="v44CatalogSearch" class="input" value="${esc(v44LootUi.query)}" placeholder="Büyü, materyal, kolye, içecek, etki…"><select id="v48CatalogKind">${kindOptions.map(([key,label])=>`<option value="${key}" ${v44LootUi.catalogKind===key?'selected':''}>${esc(label)}</option>`).join('')}</select><select id="v44CatalogTheme"><option value="all">Tüm temalar</option>${themeOptions.filter(([key])=>key!=='mixed').map(([key,row])=>`<option value="${key}" ${v44LootUi.catalogTheme===key?'selected':''}>${esc(row.label)}</option>`).join('')}</select><select id="v44CatalogRarity"><option value="all">Tüm nadirlikler</option>${rarityOptions.map(([key,row])=>`<option value="${key}" ${v44LootUi.catalogRarity===key?'selected':''}>${esc(row.label)}</option>`).join('')}</select><select id="v44CatalogCategory"><option value="all">Tüm türler</option>${categories.map(([key,label])=>`<option value="${key}" ${v44LootUi.catalogCategory===key?'selected':''}>${esc(label)}</option>`).join('')}</select></div><div id="v44CatalogList" class="v44-catalog-list">${v44CatalogCards()}</div></div>
       </details>
     </section>`;
   }
@@ -213,7 +225,7 @@
 
   document.addEventListener('input',event=>{
     if(event.target.id==='v44KarmaSearch'){v44KarmaQuery=event.target.value;v44RefreshKarmaRules()}
-    if(event.target.id==='v44CatalogSearch'){v44LootUi.query=event.target.value;v44RefreshCatalog()}
+    if(event.target.id==='v44CatalogSearch'){v44LootUi.query=event.target.value;clearTimeout(v44CatalogSearchTimer);v44CatalogSearchTimer=setTimeout(v44RefreshCatalog,120)}
     if(event.target.id==='v44KarmaDelta'){let character=(state.characters||[]).find(row=>String(row.id)===String($('#v44ConfirmKarma')?.dataset.character)),record=character&&v44KarmaRecord(character.id),delta=Math.trunc(+event.target.value||0),preview=$('#v44KarmaPreview');if(preview&&record)preview.textContent=`Yeni değer: ${v44Clamp(record.value+delta,-100,100)>0?'+':''}${v44Clamp(record.value+delta,-100,100)}`}
   });
 
@@ -223,6 +235,7 @@
     if(event.target.id==='v44CatalogTheme'){v44LootUi.catalogTheme=event.target.value;v44RefreshCatalog()}
     if(event.target.id==='v44CatalogRarity'){v44LootUi.catalogRarity=event.target.value;v44RefreshCatalog()}
     if(event.target.id==='v44CatalogCategory'){v44LootUi.catalogCategory=event.target.value;v44RefreshCatalog()}
+    if(event.target.id==='v48CatalogKind'){v44LootUi.catalogKind=event.target.value;v44RefreshCatalog()}
     if(event.target.matches('[data-v44-loot-select]')){event.target.checked?v44LootSelected.add(event.target.dataset.v44LootSelect):v44LootSelected.delete(event.target.dataset.v44LootSelect);let actions=document.querySelector('.v44-result-actions');if(actions){let count=v44SelectedResultItems().length;actions.querySelector('span b').textContent=count;actions.querySelectorAll('button').forEach(button=>button.disabled=!count)}}
     if(['v44LootLevel','v44LootContainer','v44LootTheme','v44LootQuality','v44LootRarity'].includes(event.target.id)){
       v44ReadLootControls();
@@ -233,6 +246,7 @@
   document.addEventListener('click',async event=>{
     let button=event.target.closest('button');if(!button)return;
     if(button.dataset.v44KarmaCharacter){v44KarmaCharacter=button.dataset.v44KarmaCharacter;render();return}
+    if(button.dataset.v48Rarity){v44LootUi.catalogRarity=button.dataset.v48Rarity;render();setTimeout(()=>document.querySelector('.v44-catalog')?.scrollIntoView?.({behavior:'smooth',block:'start'}),0);return}
     if(button.dataset.v44KarmaQuick){let [id,delta]=button.dataset.v44KarmaQuick.split('|'),character=(state.characters||[]).find(row=>String(row.id)===String(id));if(!character)return;v44AdjustKarma(id,+delta,+delta>0?'DM hızlı iyilik ayarı':'DM hızlı kötülük ayarı','quick');save();render();return}
     if(button.dataset.v44KarmaCustom){let character=(state.characters||[]).find(row=>String(row.id)===String(button.dataset.v44KarmaCustom));if(character)v44KarmaModal(character);return}
     if(button.id==='v44ConfirmKarma'){let character=(state.characters||[]).find(row=>String(row.id)===String(button.dataset.character)),delta=Math.trunc(+($('#v44KarmaDelta')?.value||0)),reason=$('#v44KarmaReason')?.value?.trim();if(!character)return;if(!delta)return alert('Sıfırdan farklı bir puan yaz.');if(!reason)return alert('Geçmişte anlaşılması için kısa bir neden yaz.');v44AdjustKarma(character.id,delta,reason,'manual');save();$('#modal').close();render();return}

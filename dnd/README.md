@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v48 — 4.000 Ganimet, Büyü Materyalleri ve Gündelik Harikalar
+
+- Ganimet kataloğu tam **4.000 açıklamalı kayda** çıkarıldı. Dağılım: **900 Sıradan, 1.000 Yaygın, 750 Seyrek, 550 Nadir, 380 Çok Nadir, 310 Efsanevi, 110 Artefakt**.
+- Materyal bileşeni bulunan **184 adet 2014 SRD büyüsü** için adı belli Büyü Materyal Kiti eklendi. Her kit bağlı büyüyü, gerçek materyali, varsa zorunlu GP değerini, component pouch/focus ikamesini ve materyalin tüketilip tüketilmediğini açıklar.
+- **722 gündelik eşya** eklendi: kamp, sofra, kıyafet, yazı, kervan, hayvan bakımı, zanaat ve rol yapma malzemeleri. Hepsi mekanik bonus vermediğini veya tam olarak nasıl kullanıldığını söyler.
+- **288 keyif veren fantastik içecek** eklendi. Renkli köpük, değişen ses, iyi uyku, sosyal +1 gibi küçük ve süreli etkiler açık kurallıdır; gerçek dünyaya yönelik tarif içermez.
+- **500 gündelik büyülü yardımcı** ile **46 özel isimli eşya** eklendi. Ölülerin Son İzleri Kolyesi gibi her özel kayıtta activation, menzil/süre, kullanım hakkı ve neyi yapamadığı yazılıdır.
+- Ganimet Ansiklopedisine kullanım türü filtresi ve tıklanabilir nadirlik sayaçları eklendi. Arama 4.000 kaydın tamamında çalışır ama yalnız ilk 60 kartı çizer; arama metni önbelleğe alınır ve telefonda yazarken takılmaması için 120 ms gecikmeyle yenilenir.
+- Önceki 2.260 katalog kaydının sırası ve ID’leri aynen korunur. Yeni kayıtlar sonuna eklenir; mevcut envanter, kuşanılmış durum, yerdeki eşya, lonca, market ve ganimet geçmişi silinmez.
+
+v48 için yeni SQL gerekmez; **v45-update.sql daha önce çalıştırılmış olmalıdır**. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyala ve tarayıcıda `Ctrl + Shift + R` yap.
+
 ## v47 — 2014 Büyü Kitabı ve Büyü Sayfası Ganimetleri
 
 - DM ve oyuncu sol menüsüne **Büyü Kitabı** eklendi: 319 adet 2014 SRD 5.1 büyüsü cantrip’ten 9. seviyeye kadar aranabilir.

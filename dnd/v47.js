@@ -6,6 +6,7 @@
   const v47Ability={Bard:'CHA',Cleric:'WIS',Druid:'WIS',Paladin:'CHA',Ranger:'WIS',Sorcerer:'CHA',Warlock:'CHA',Wizard:'INT'};
   const v47SchoolLabels=window.V47_SPELL_SCHOOLS||{};
   const v47ScrollTable=window.V47_SCROLL_TABLE||{};
+  const v48ComponentBySpell=new Map((window.V44_LOOT_CATALOG||[]).filter(item=>item.lootKind==='spellComponent'&&item.linkedSpellId).map(item=>[item.linkedSpellId,item]));
   let v47Scope='';
   let v47SearchTimer=null;
   let v47Ui={query:'',level:'all',className:'all',school:'all',casting:'all',concentration:'all',ritual:'all',limit:48};
@@ -54,7 +55,8 @@
   function v47ClassStats(spell){return spell.classes.map(name=>`${name}: ${v47Ability[name]||'özel'}`).join(' • ')}
   function v47Components(spell){
     let bits=(spell.components||[]).map(code=>({V:'V — sözlü ifade',S:'S — el hareketi',M:'M — materyal'}[code]||code));
-    return `${bits.join(' • ')||'Komponent yok'}${spell.materialTr?`<small><b>Materyal:</b> ${esc(spell.materialTr)}</small>`:''}`;
+    let kit=v48ComponentBySpell.get(spell.id),rule=kit?`${kit.componentCostGp?`${(+kit.componentCostGp).toLocaleString('tr-TR')} GP değer şartı • focus/pouch yerine geçmez`:'GP değeri yok • uygun focus/pouch bunun yerine kullanılabilir'} • ${kit.componentConsumed?'büyü materyali tüketir':'materyal elde kalır'}`:'';
+    return `${bits.join(' • ')||'Komponent yok'}${spell.materialTr?`<small><b>Materyal:</b> ${esc(spell.materialTr)}</small>`:''}${kit?`<small class="v48-component-link"><b>Ganimet kaydı:</b> ${esc(kit.name)}<em>${esc(rule)}</em></small>`:''}`;
   }
   function v47PracticalSteps(spell){
     let dice=v47Dice(spell),steps=[];
