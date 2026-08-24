@@ -1,5 +1,31 @@
 # Kadim Masa Defteri — Kurulum
 
+## v50 — 200 Görevlik Atama Panosu
+
+- DM ve oyuncu sol menüsüne **Görev Panosu** eklendi. Rehberdeki eski 50 görev düğmesi de 200 görevlik yeni panoya yönlendirilir.
+- Toplam **200 benzersiz ve ayrıntılı görev** bulunur: önceki 50 fikir korunup genişletildi, 150 yeni görev eklendi. Altı seviye bandı, 12 harita bölgesi ve 25’ten fazla görev türü aranabilir.
+- Her kayıtta oyuncuya açık özet, hedefler, bilinen ipuçları, önerilen skill/DC kontrolleri, karşılaşma, süre, zorluk ve bölge; ayrı **yalnız DM** alanında ters köşe, sır, gizli ödül, başarısızlık sonucu ve ölçekleme bulunur.
+- DM görevi bütün partiye veya seçili karakter/oyunculara atayabilir. Karakteri henüz bağlanmamış oyuncu hesapları da seçilebilir.
+- **Taslak, Teklif Edildi, Aktif, Tamamlandı, Başarısız ve Arşiv** durumları; yeniden atama, ödülü göster/gizle ve son 24 işlem geçmişi bulunur.
+- Oyuncu ekranı yalnız kendisine/tüm partiye açık kayıtları üretir. Taslak/arşiv, ters köşe, DM sırrı, başarısızlık planı ve kapalı ödül metni oyuncu HTML’inde gösterilmez.
+- Eski Masa ekranındaki basit görevler silinmez; panoya bir defa **Eski Görev** etiketiyle taşınır. Orijinal `state.quests` kayıtları korunur.
+- Katalog ilk 30 kartı çizer, 30’ar yüklenir; arama 120 ms gecikmeli çalışır. Masaüstü filtre çubuğu ve telefon için yatay kaydırmalı/dokunmatik düzen eklendi.
+
+v50 için yeni SQL gerekmez; **v45-update.sql daha önce çalıştırılmış olmalıdır**. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyala ve tarayıcıda `Ctrl + Shift + R` yap. Mevcut kampanya, karakter, class/subclass, envanter, market, lonca, harita, karma, tanrı ve bütün geçmiş kayıtları korunur.
+
+## v49 — 2014 Tanrılar Ansiklopedisi
+
+- DM ve oyuncu sol menüsüne **Tanrılar** eklendi; Rehberin üstünde de doğrudan ansiklopedi kısayolu bulunur.
+- **128 tanrı** altı grupta toplandı: Unutulmuş Diyarlar, Kelt, Yunan, Mısır, İskandinav ve insan olmayan halklar.
+- Her tanrıda alignment, 2014 Appendix B önerilen domainleri, kutsal sembol, etki alanı, kimlerin taptığı, üç inanç ilkesi, adak/ibadet fikri, karakteri oynama biçimi ve DM görev kancası bulunur.
+- Cleric bölümü domainin oyun tarzını açıklar. Tanrı seçiminin tek başına STR, AC, proficiency, zar veya spell bonusu vermediği özellikle belirtilir; mekanik güç class/domain ve DM kararından gelir.
+- Tanrı, kavram, sembol, takipçi ve görev kancasında çalışan arama; pantheon, alignment ve domain filtreleri eklenmiştir.
+- Uzun kartlar kapalı başlar. Liste ilk 36 kartı çizer, arama 128 kaydın tamamında çalışır; telefon filtreleri yatay kaydırılır.
+- Tarihsel pantheonlar gerçek din anlatısı değil, 2014 Appendix B’deki fantastik oyun yorumu olarak işaretlenir. Ölüm Domaini bulunan kartlarda 2014 DMG/DM onayı uyarısı vardır.
+- Veri salt okunurdur; kampanya state’ine veya buluta yazılmaz. Mevcut karakter, class/subclass, envanter, market, lonca ve geçmiş kayıtları değişmez.
+
+v49 için yeni SQL gerekmez; **v45-update.sql daha önce çalıştırılmış olmalıdır**. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyala ve tarayıcıda `Ctrl + Shift + R` yap.
+
 ## v48 — 4.000 Ganimet, Büyü Materyalleri ve Gündelik Harikalar
 
 - Ganimet kataloğu tam **4.000 açıklamalı kayda** çıkarıldı. Dağılım: **900 Sıradan, 1.000 Yaygın, 750 Seyrek, 550 Nadir, 380 Çok Nadir, 310 Efsanevi, 110 Artefakt**.

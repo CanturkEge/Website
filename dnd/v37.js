@@ -4,6 +4,54 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.2',build:'Build 50',title:'200 Görevlik Atama Panosu',tag:'GÖREV',tone:'current',
+    summary:'200 ayrıntılı görev; oyuncuya açık bilgi ile DM sırrını ayıran, partiye veya seçili oyunculara atama ve durum takibi yapan gerçek görev panosunda toplandı.',
+    added:[
+      'DM ve oyuncu sol menüsüne ayrı Görev Panosu eklendi; Rehberdeki eski 50 fikir düğmesi yeni panoya yönlenen 200 görev kısayoluyla değiştirildi.',
+      'Mevcut 50 görev genişletildi, 150 yeni görev eklendi: toplam 200 benzersiz görev; altı seviye bandı, 12 bölge ve 25+ görev türü içerir.',
+      'Her görevde oyuncu özeti, hedefler, bilinen ipuçları, önerilen skill/DC kontrolleri, beklenen karşılaşma, süre, zorluk ve bölge bilgisi bulunur.',
+      'Her görevde yalnız DM’nin gördüğü ters köşe, gizli bilgi, gizli ödül, başarısızlık sonucu ve parti/seviye ölçekleme alanları bulunur.',
+      'Görevler bütün partiye veya seçili karakter/oyunculara atanabilir; karakteri henüz bağlanmamış oyuncu hesabı da hedeflenebilir.',
+      'Taslak, Teklif Edildi, Aktif, Tamamlandı, Başarısız ve Arşiv durumları; yeniden atama, ödülü aç/gizle ve son işlem geçmişi eklendi.',
+      'Katalog dışından görev yazmak için aynı açık/gizli ayrımını kullanan Özel Görev formu eklendi.'
+    ],
+    fixed:[
+      'Oyuncunun gizli ödülü, ters köşeyi veya DM notunu görev kartında görmesi engellendi; ödül varsayılan olarak kapalıdır.',
+      'Eski Masa ekranındaki basit görevlerin kaybolması önlendi; kayıtlar silinmeden panoya bir kez “Eski Görev” olarak taşınır.',
+      'Uzun görev listelerinin sayfayı ve telefonu yavaşlatması önlendi; katalog ilk 30 kartı çizer ve arama 120 ms gecikmeyle çalışır.',
+      'Bulut eşitlemesinde açık görev detaylarının kapanmaması için kartlar mevcut açık-panel/scroll koruma sistemiyle uyumlu tutuldu.'
+    ],
+    changed:[
+      'Atanmış görevler oyuncu hesabı/karakter bağlantısına göre filtrelenir; Taslak ve Arşiv kayıtları oyuncu tarafında çizilmez.',
+      'Görev filtreleri masaüstünde sabit araç çubuğu, telefonda yatay kaydırılabilen dokunmatik şerit olarak düzenlendi.',
+      'Her durum değişikliği, yeniden atama, ödül görünürlüğü ve arşiv işlemi son 24 kayıtlık DM geçmişinde tutulur.',
+      'v50 yeni SQL gerektirmez; görev panosu mevcut kampanya state’i ve güvenli bulut kayıt kuyruğunu kullanır.'
+    ]
+  },
+  {
+    version:'2.1',build:'Build 49',title:'2014 Tanrılar Ansiklopedisi',tag:'REHBER',tone:'current',
+    summary:'Altı pantheon grubundaki 128 tanrı; domain, sembol, inanç yorumu, cleric karşılığı ve DM kancalarıyla aranabilir bir ansiklopedide toplandı.',
+    added:[
+      'DM ve oyuncu sol menüsüne ayrı Tanrılar sayfası; Rehberin üstüne de tek dokunuşluk Tanrılar Ansiklopedisi kısayolu eklendi.',
+      'Unutulmuş Diyarlar, Kelt, Yunan, Mısır, İskandinav ve insan olmayan halklar için toplam 128 ayrı tanrı kaydı eklendi.',
+      'Her kayda alignment, 2014 Appendix B önerilen domaini, kutsal sembol, etki alanı, tipik takipçiler, üç inanç ilkesi, adak fikri ve rol yapma yönü eklendi.',
+      'Her tanrıya doğrudan kullanılabilir bir DM görev kancası ve Cleric/domain mekanik açıklaması eklendi.',
+      'Tanrı adı, kavram, sembol, takipçi, alignment, domain ve görev kancalarında çalışan birleşik arama; pantheon/domain/alignment filtreleri eklendi.'
+    ],
+    fixed:[
+      'Tanrı seçiminin otomatik STR, AC, proficiency, zar veya spell bonusu verdiği yanılgısı sayfanın üstündeki açık mekanik notla giderildi.',
+      'Aynı adı taşıyan fakat farklı pantheonlarda yorumlanan Tyr, Oghma, Silvanus, Surtur ve Thrym kayıtlarının birbirine karışması ayrı kimliklerle önlendi.',
+      'Ölüm Domaininin 2014 DMG seçeneği olduğu ve oyuncu kullanımı için DM onayı gerektiği ilgili kartlarda açıkça işaretlendi.',
+      'Uzun inanç açıklamalarının menüyü şişirmesi önlendi; tanrı kartları varsayılan olarak kapalı başlar.'
+    ],
+    changed:[
+      'Liste ilk 36 kartı çizer; arama 128 kaydın tamamında çalışır ve yazarken 120 ms gecikmeyle yenilenir.',
+      'Pantheon sayaçları tıklanabilir hızlı filtreye dönüştürüldü; masaüstü, tablet ve telefonda yatay kaydırılabilir yapı kullanır.',
+      'Tarihsel pantheonlar gerçek dünya din anlatısı olarak değil, 2014 kitabındaki fantastik oyun yorumu olarak açıkça etiketlendi.',
+      'v49 yeni SQL gerektirmez; ansiklopedi salt okunurdur ve mevcut kampanya, karakter, class/subclass, envanter veya bulut kayıtlarına dokunmaz.'
+    ]
+  },
+  {
     version:'2.0',build:'Build 48',title:'4.000 Ganimet, Büyü Materyalleri ve Gündelik Harikalar',tag:'GANİMET',tone:'current',
     summary:'Ganimet kataloğu tam 4.000 açıklamalı kayda çıktı; büyü materyalleri, gündelik eşyalar, keyif içecekleri ve oynanabilir özel araçlar dengeli nadirlik katmanlarına yerleştirildi.',
     added:[
@@ -527,7 +575,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.2'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -535,8 +583,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.0 • Build 48</h2><p>4.000 kayıtlık dengeli ganimet kataloğu, gerçek büyü materyalleri ve gündelik harikalar hazır.</p></div>
-      <div class="v37-patch-stats"><span><b>25</b>Sürüm</span><span><b>319</b>Büyü</span><span><b>184</b>Materyal kiti</span><span><b>4.000</b>Ganimet</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.2 • Build 50</h2><p>200 ayrıntılı görev; seçili oyuncu ataması, gizli DM alanları, ödül anahtarı ve durum geçmişiyle hazır.</p></div>
+      <div class="v37-patch-stats"><span><b>27</b>Sürüm</span><span><b>200</b>Görev</span><span><b>128</b>Tanrı</span><span><b>4.000</b>Ganimet</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -545,7 +593,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.0 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.2 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
