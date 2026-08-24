@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v45 — Kuşanma Sistemi ve Ganimet Dengesi
+
+- **Kuşan** artık yalnız gerçek ekipmanda görünür: silah, zırh, kalkan, büyü odağı ve gerçekten giyilen aksesuarlar. İksir, parşömen, taş, mücevher, mühimmat, alet, belge, bileşen ve ıvır zıvır bonus alanı taşısa bile kuşanılamaz.
+- Tek zırh, tek kalkan, tek odak ve her beden yuvasından tek eşya kullanılabilir. Silah ve yüzük sınırı ikidir; eski genel `wondrous` kayıtlarında sınır üçtür.
+- Kolye, yüzük, broş, bileklik, halhal, küpe, pelerin, eldiven, kemer, çizme, mercek ve taç ayrı mantıksal yuvalara ayrıldı. Kehanet Aynası, Ruh Feneri, Cep Kum Saati ve Kemik Zar Takımı gibi elde kullanılan kayıtlar artık giyilebilir sayılmaz.
+- Eski kayıtta yanlışlıkla kuşanılmış taş/iksir gibi bir eşya varsa eşya silinmez; yalnız `equipped` işareti temizlenir ve AC/stat/save hesabına etkisi kesilir.
+- Ganimet seçimi katalog adetinden bağımsız kategori ağırlığı kullanır. Böylece 672 silah kaydı bulunduğu için sandığın beş silahla dolması engellendi.
+- Genel sandıklarda en fazla **2 silah**, **1 zırh**, **1 kalkan** ve kap türüne göre sınırlı toplam kuşanılabilir eşya çıkar. Küçük kaplar daha sıkı; savaşçı kasası savaş ağırlıklı ama yine kotalıdır.
+- Kataloğa taş, toprak, kömür, kırık çivi, cam, kemik, yaprak, bez ve benzeri **100 açıklamalı ıvır zıvır** kaydı eklendi. Toplam katalog **2.021 kayıt** oldu; yaratık ini ve yıpranmış kaplar bunlara daha fazla ağırlık verir.
+- Her sonuçta aynı katalog kaydı iki kez seçilmez; zorlanan nadirlik başka bir nadirliğe düşmeden korunur. Kap boyutu, tema, para ve uç jackpot sistemi devam eder.
+
+Kurulumda paketteki `dnd` klasörünü sitendeki mevcut `dnd` klasörünün üzerine kopyala. Sonra Supabase SQL Editor’da **`v45-update.sql`** dosyasını bir kez çalıştır ve tarayıcıda `Ctrl + Shift + R` yap. SQL mevcut kayıtları silmez; kuşanma türü ve yuva sınırını oyuncu isteği geldiğinde sunucuda doğrular. Mevcut kampanya, karakter, class/subclass, envanter, market, lonca, harita ve ganimet geçmişi korunur.
+
 ## v44 — Gizli Karma ve Ganimet Üretici
 
 - DM sol menüsüne **Karma** eklendi. Her karakter için −100 / +100 aralığında gizli puan, yedi kademe, event fikri, hızlı/özel değişim ve son işlemi geri alma bulunur. Bu sayfa ve değerler oyuncu menülerinde gösterilmez.

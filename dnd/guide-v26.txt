@@ -37,6 +37,11 @@ Zırhsız çoğu karakter 10 + DEX. Hafif zırh taban AC + tüm DEX. Orta zırh 
 Monk zırhsız/kalkansız 10 + DEX + WIS. Barbarian zırhsız 10 + DEX + CON ve kalkan kullanabilir.
 Zırhın AC formülü karakterin daha düşük zırhsız AC’sinin yerine geçer; iki formülden yüksek olan otomatik seçilmez. Zırha/kalkana proficient değilsen STR veya DEX içeren attack/check/save atışlarında disadvantage alır ve spell atamazsın. Ağır zırhın STR şartı karşılanmıyorsa hız 10 ft düşer. Zırh kartında Stealth dezavantajı yazıyorsa Stealth 2d20 düşük sonuçla atılır.
 
+8A. ENVANTER VE KUŞANMA
+Envanterde eşyaya dokunup Kuşan kullanılır. Yalnız silah, zırh, kalkan, büyü odağı ve bedene gerçekten takılan aksesuar kuşanılır; iksir, taş, mücevher, parşömen, mühimmat, alet, belge ve malzeme çantada taşınır ama kuşanılmaz.
+Bir karakter aynı anda tek zırh, tek kalkan, tek büyü odağı ve her beden yuvasında tek aksesuar; en fazla iki silah ve iki yüzük kuşanabilir. Yeni aynı-yuvalı tekil eşya eskisini otomatik çıkarır. Silah/yüzük sınırı doluysa önce birini çıkar.
+Bir eşyanın sürekli AC/save/stat bonusu yalnız kuşanılmış ve geçerli bir ekipmansa hesaba katılır. İksir, yağ, parşömen veya elde kullanılan hikâye eşyası açıklamasındaki action/bonus action şartıyla kullanılır; Kuşan düğmesine ihtiyaç duymaz. Zırh ve kalkan için class proficiency şartı ayrıca kontrol edilir.
+
 9. GRAPPLE VE SHOVE
 2014: Attack actionındaki saldırılardan biri yerine Athletics atılır. Hedef Athletics veya Acrobatics seçerek karşı koyar. Grappled hedefin hızı 0. Kaçmak için action ile aynı karşılaştırma yapılır. Shove hedefi prone yapar veya 5 ft iter.
 

@@ -88,20 +88,20 @@
   };
 
   const containers={
-    purse:{label:'Madeni Para Kesesi',icon:'◉',maxSize:'tiny',allowed:['gem','trinket','accessory','component','document'],nativeThemes:[],itemMin:0,itemMax:2,moneyOnly:.58,itemOnly:.07,coinScale:.32,rule:'Yalnız para, taş, yüzük, küçük belge ve minicik parçalar. Silah, zırh, şişe veya iri alet çıkmaz.'},
-    pouch:{label:'Kemer Çantası',icon:'◒',maxSize:'small',allowed:['gem','trinket','accessory','component','document','consumable','scroll','ammunition','tool'],nativeThemes:[],itemMin:0,itemMax:3,moneyOnly:.30,itemOnly:.16,coinScale:.52,rule:'Küçük iksir, parşömen, yüzük, bileşen ve el aleti sığar; gürz, yay veya zırh sığmaz.'},
-    alchemySatchel:{label:'Simyacı Çantası',icon:'⚗',maxSize:'small',allowed:['component','consumable','tool','document','gem'],nativeThemes:['alchemy'],itemMin:1,itemMax:5,moneyOnly:.04,itemOnly:.62,coinScale:.25,rule:'Şişe, iksir, reaktif ve küçük laboratuvar aleti üretir; savaş teçhizatı üretmez.'},
-    hunterPack:{label:'Avcı Heybesi',icon:'⌁',maxSize:'medium',allowed:['ammunition','tool','component','consumable','weapon','document','trinket'],nativeThemes:['nature'],itemMin:1,itemMax:5,moneyOnly:.06,itemOnly:.55,coinScale:.32,rule:'Ok, tuzak, bitki, yiyecek ve orta boy av silahı sığar; ağır zırh çıkmaz.'},
-    lockbox:{label:'Küçük Kilitli Kutu',icon:'▣',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','focus','tool','ammunition','weapon'],nativeThemes:[],itemMin:1,itemMax:4,moneyOnly:.18,itemOnly:.17,coinScale:.85,rule:'Değerli ve orta boy eşyalar; yalnız küçük/orta silahlar sığabilir, zırh ve büyük silah çıkmaz.'},
-    jewelryBox:{label:'Soylu Mücevher Kutusu',icon:'◇',maxSize:'small',allowed:['gem','trinket','accessory','document'],nativeThemes:['noble'],itemMin:1,itemMax:5,moneyOnly:.12,itemOnly:.22,coinScale:1.1,rule:'Mücevher, mühür, ince belge ve küçük sanat eşyaları; silah veya iksir yok.'},
-    thiefStash:{label:'Hırsız Zulası',icon:'⌕',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','ammunition','tool','weapon'],nativeThemes:['rogue'],itemMin:1,itemMax:6,moneyOnly:.16,itemOnly:.18,coinScale:1.05,rule:'Çalınabilir/değerli küçük eşyalar, alet ve saklanabilen silahlar; büyük savaş teçhizatı çıkmaz.'},
-    chest:{label:'Macera Sandığı',icon:'▤',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document'],nativeThemes:[],itemMin:1,itemMax:6,moneyOnly:.10,itemOnly:.17,coinScale:1,rule:'Her boy eşya çıkabilir; seviye ve seçilen tema ağırlığı belirler.'},
-    reinforced:{label:'Büyük Takviyeli Sandık',icon:'▥',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document'],nativeThemes:[],itemMin:2,itemMax:9,moneyOnly:.05,itemOnly:.12,coinScale:1.8,rule:'Birden fazla iri eşya ve yüksek para taşıyabilir; kalabalık ganimet için.'},
-    wizardChest:{label:'Büyücü Sandığı',icon:'✦',maxSize:'large',allowed:['focus','scroll','component','consumable','accessory','document','gem','trinket','weapon','armor'],nativeThemes:['arcane'],itemMin:1,itemMax:6,moneyOnly:.04,itemOnly:.50,coinScale:.8,rule:'Arkana teması baskın; kitap, parşömen, odak ve büyülü korunma eşyası üretir.'},
-    warriorCache:{label:'Savaşçı Teçhizat Kasası',icon:'⚔',maxSize:'large',allowed:['weapon','armor','shield','ammunition','tool','consumable'],nativeThemes:['martial'],itemMin:2,itemMax:7,moneyOnly:.02,itemOnly:.72,coinScale:.45,rule:'Silah, zırh, kalkan, mühimmat ve savaş tüketimleri; mücevher ağırlığı yok.'},
-    reliquary:{label:'Tapınak Emanet Sandığı',icon:'✧',maxSize:'medium',allowed:['accessory','focus','consumable','scroll','component','document','gem','trinket','weapon'],nativeThemes:['sacred'],itemMin:1,itemMax:5,moneyOnly:.08,itemOnly:.46,coinScale:.75,rule:'Kutsal yadigâr, şifa, sembol ve bağış parası; ağır zırh veya büyük silah çıkmaz.'},
-    lair:{label:'Yaratık İni Ganimeti',icon:'☠',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document'],nativeThemes:[],itemMin:0,itemMax:8,moneyOnly:.15,itemOnly:.10,coinScale:1.35,rule:'Yutulmuş, toplanmış veya kurbanlardan kalmış karışık ganimet; boş/yalnız para sonucu mümkündür.'},
-    cursedChest:{label:'Lanetli Sandık',icon:'♱',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','document'],nativeThemes:['cursed'],itemMin:1,itemMax:5,moneyOnly:.04,itemOnly:.54,coinScale:.95,rule:'Güçlü ama bedelli eşyalar ağırlıklıdır. Açılma biçimi ve lanet sonucu DM kararındadır.'}
+    purse:{label:'Madeni Para Kesesi',icon:'◉',maxSize:'tiny',allowed:['gem','trinket','accessory','component','document','junk'],nativeThemes:[],itemMin:0,itemMax:2,moneyOnly:.58,itemOnly:.07,coinScale:.32,rule:'Yalnız para, taş, yüzük, küçük belge ve minicik ıvır zıvır. Silah, zırh, şişe veya iri alet çıkmaz.'},
+    pouch:{label:'Kemer Çantası',icon:'◒',maxSize:'small',allowed:['gem','trinket','accessory','component','document','consumable','scroll','ammunition','tool','junk'],nativeThemes:[],itemMin:0,itemMax:3,moneyOnly:.30,itemOnly:.16,coinScale:.52,rule:'Küçük iksir, parşömen, yüzük, bileşen ve el aleti sığar; gürz, yay veya zırh sığmaz.'},
+    alchemySatchel:{label:'Simyacı Çantası',icon:'⚗',maxSize:'small',allowed:['component','consumable','tool','document','gem','junk'],nativeThemes:['alchemy'],itemMin:1,itemMax:5,moneyOnly:.04,itemOnly:.62,coinScale:.25,rule:'Şişe, iksir, reaktif, kömür ve küçük laboratuvar artığı üretir; savaş teçhizatı üretmez.'},
+    hunterPack:{label:'Avcı Heybesi',icon:'⌁',maxSize:'medium',allowed:['ammunition','tool','component','consumable','weapon','document','trinket','junk'],nativeThemes:['nature'],itemMin:1,itemMax:5,moneyOnly:.06,itemOnly:.55,coinScale:.32,rule:'Ok, tuzak, bitki, yiyecek ve en fazla 1 orta boy av silahı; ağır zırh çıkmaz.'},
+    lockbox:{label:'Küçük Kilitli Kutu',icon:'▣',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','focus','tool','ammunition','weapon','junk'],nativeThemes:[],itemMin:1,itemMax:4,moneyOnly:.18,itemOnly:.17,coinScale:.85,rule:'Değerli ve orta boy eşyalar; en fazla 1 küçük/orta silah, zırh veya büyük silah yok.'},
+    jewelryBox:{label:'Soylu Mücevher Kutusu',icon:'◇',maxSize:'small',allowed:['gem','trinket','accessory','document','junk'],nativeThemes:['noble'],itemMin:1,itemMax:5,moneyOnly:.12,itemOnly:.22,coinScale:1.1,rule:'Mücevher, mühür, ince belge ve küçük hatıralar; silah, zırh veya iksir yok.'},
+    thiefStash:{label:'Hırsız Zulası',icon:'⌕',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','ammunition','tool','weapon','junk'],nativeThemes:['rogue'],itemMin:1,itemMax:6,moneyOnly:.16,itemOnly:.18,coinScale:1.05,rule:'Çalıntı değerli, alet ve en fazla 1 saklanabilir silah; kalanlar para, taş, belge veya ıvır zıvır olabilir.'},
+    chest:{label:'Macera Sandığı',icon:'▤',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:1,itemMax:6,moneyOnly:.10,itemOnly:.17,coinScale:1,rule:'En fazla 2 silah, 1 zırh ve toplam 3 kuşanılabilir eşya; kalan yuvalar para, taş, malzeme, belge veya ıvır zıvırdan seçilir.'},
+    reinforced:{label:'Büyük Takviyeli Sandık',icon:'▥',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:2,itemMax:9,moneyOnly:.05,itemOnly:.12,coinScale:1.8,rule:'Kalabalık ganimet üretir ama en fazla 2 silah, 1 zırh, 1 kalkan ve toplam 4 kuşanılabilir eşya verir.'},
+    wizardChest:{label:'Büyücü Sandığı',icon:'✦',maxSize:'large',allowed:['focus','scroll','component','consumable','accessory','document','gem','trinket','weapon','armor','junk'],nativeThemes:['arcane'],itemMin:1,itemMax:6,moneyOnly:.04,itemOnly:.50,coinScale:.8,rule:'Parşömen, bileşen ve gizemli artık ağırlıklı; en fazla 1 silah, 1 zırh ve toplam 3 kuşanılabilir eşya.'},
+    warriorCache:{label:'Savaşçı Teçhizat Kasası',icon:'⚔',maxSize:'large',allowed:['weapon','armor','shield','ammunition','tool','consumable','junk'],nativeThemes:['martial'],itemMin:2,itemMax:7,moneyOnly:.02,itemOnly:.72,coinScale:.45,rule:'Savaş ağırlıklıdır ama en fazla 2 silah, 1 zırh ve 1 kalkan; kalanlar mühimmat, bakım aleti, tüketim veya hurda olur.'},
+    reliquary:{label:'Tapınak Emanet Sandığı',icon:'✧',maxSize:'medium',allowed:['accessory','focus','consumable','scroll','component','document','gem','trinket','weapon','junk'],nativeThemes:['sacred'],itemMin:1,itemMax:5,moneyOnly:.08,itemOnly:.46,coinScale:.75,rule:'Kutsal yadigâr, şifa, sembol ve bağış parası; en fazla 1 silah ve toplam 2 kuşanılabilir eşya.'},
+    lair:{label:'Yaratık İni Ganimeti',icon:'☠',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:0,itemMax:8,moneyOnly:.15,itemOnly:.10,coinScale:1.35,rule:'Yutulmuş ve kırılmış ganimet ağırlıklı; en fazla 2 silah, 1 zırh ve toplam 3 kuşanılabilir eşya.'},
+    cursedChest:{label:'Lanetli Sandık',icon:'♱',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','document','junk'],nativeThemes:['cursed'],itemMin:1,itemMax:5,moneyOnly:.04,itemOnly:.54,coinScale:.95,rule:'Bedelli güç ve uğursuz artıklar; en fazla 2 silah, 1 zırh ve toplam 3 kuşanılabilir eşya.'}
   };
 
   const quality={
@@ -112,7 +112,7 @@
   };
 
   const sizeRank={tiny:0,small:1,medium:2,large:3};
-  const categoryLabels={weapon:'Silah',armor:'Zırh',shield:'Kalkan',accessory:'Aksesuar',focus:'Büyü Odağı',consumable:'Tüketilebilir',scroll:'Parşömen',component:'Bileşen',gem:'Değerli Taş',trinket:'Ufak Değerli',tool:'Alet',ammunition:'Mühimmat',document:'Belge'};
+  const categoryLabels={weapon:'Silah',armor:'Zırh',shield:'Kalkan',accessory:'Aksesuar',focus:'Büyü Odağı',consumable:'Tüketilebilir',scroll:'Parşömen',component:'Bileşen',gem:'Değerli Taş',trinket:'Ufak Değerli',tool:'Alet',ammunition:'Mühimmat',document:'Belge',junk:'Ivır Zıvır'};
   const catalogue=[];
   let serial=0;
   const add=item=>{
@@ -206,8 +206,8 @@
   });
 
   const accessoryBases=[
-    ['Yakut Kolye','tiny',['noble','elemental']],['Safir Yüzük','tiny',['noble','elemental']],['Zümrüt Broş','tiny',['noble','nature']],['Ametist Bileklik','tiny',['noble','arcane']],['Aytaşı Muska','tiny',['arcane','sacred']],['Güneş Madalyonu','tiny',['sacred']],['Gümüş Halhal','tiny',['noble']],['Obsidyen Yüzük','tiny',['cursed','elemental']],['Ejderdişi Kolye','small',['martial','elemental']],['Kuzgun Tüyü Broş','tiny',['rogue','cursed']],['İnci Küpe','tiny',['noble']],['Taç Mührü','tiny',['noble']],['Gezgin Pelerini','medium',['nature']],['Gölgeli Pelerin','medium',['rogue','cursed']],['Runik Eldiven','small',['arcane']],['Avcı Eldiveni','small',['nature']],['Dev Kemeri','medium',['martial']],['İpek Kemer','small',['noble','rogue']],['Kanatlı Çizmeler','medium',['arcane']],['Bataklık Çizmeleri','medium',['nature']],['Kristal Mercek','small',['arcane']],['Kehanet Aynası','small',['arcane']],['Ruh Feneri','medium',['sacred','cursed']],['Cep Kum Saati','small',['arcane']],['Kemik Zar Takımı','small',['rogue','cursed']],['Mühürlü Madalyon','tiny',['noble','document']],['Mercan Bilezik','tiny',['elemental']],['Kurt Pençesi Tılsımı','small',['nature','martial']],['Altın Defne Tacı','small',['noble']],['Fısıltı Küpesi','tiny',['arcane','rogue']]
-  ].map(([name,size,themes])=>({name,size,themes}));
+    ['Yakut Kolye','tiny',['noble','elemental'],'neck'],['Safir Yüzük','tiny',['noble','elemental'],'ring'],['Zümrüt Broş','tiny',['noble','nature'],'brooch'],['Ametist Bileklik','tiny',['noble','arcane'],'wrist'],['Aytaşı Muska','tiny',['arcane','sacred'],'neck'],['Güneş Madalyonu','tiny',['sacred'],'neck'],['Gümüş Halhal','tiny',['noble'],'anklet'],['Obsidyen Yüzük','tiny',['cursed','elemental'],'ring'],['Ejderdişi Kolye','small',['martial','elemental'],'neck'],['Kuzgun Tüyü Broş','tiny',['rogue','cursed'],'brooch'],['İnci Küpe','tiny',['noble'],'ears'],['Taç Mührü','tiny',['noble'],'ring'],['Gezgin Pelerini','medium',['nature'],'back'],['Gölgeli Pelerin','medium',['rogue','cursed'],'back'],['Runik Eldiven','small',['arcane'],'hands'],['Avcı Eldiveni','small',['nature'],'hands'],['Dev Kemeri','medium',['martial'],'waist'],['İpek Kemer','small',['noble','rogue'],'waist'],['Kanatlı Çizmeler','medium',['arcane'],'feet'],['Bataklık Çizmeleri','medium',['nature'],'feet'],['Kristal Mercek','small',['arcane'],'eyes'],['Kehanet Aynası','small',['arcane'],null],['Ruh Feneri','medium',['sacred','cursed'],null],['Cep Kum Saati','small',['arcane'],null],['Kemik Zar Takımı','small',['rogue','cursed'],null],['Mühürlü Madalyon','tiny',['noble','document'],'neck'],['Mercan Bilezik','tiny',['elemental'],'wrist'],['Kurt Pençesi Tılsımı','small',['nature','martial'],'neck'],['Altın Defne Tacı','small',['noble'],'head'],['Fısıltı Küpesi','tiny',['arcane','rogue'],'ears']
+  ].map(([name,size,themes,slot])=>({name,size,themes,slot}));
   const accessoryPowers=[
     ['Hatıra','mundane',1,['noble'],'Mekanik bonus vermez; bir aile, lonca veya kayıp kişiyle bağlantılı hikâye kancası taşır.'],
     ['Uğurlu','common',1,['noble'],'Uzun dinlenmede 1 kez bir ability check sonucuna +1 ekleyebilirsin.'],
@@ -230,7 +230,7 @@
   ].map(([prefix,rarity,minLevel,themes,effect])=>({prefix,rarity,minLevel,themes,effect}));
   for(let base of accessoryBases)for(let power of accessoryPowers)add({
     name:`${power.prefix} ${base.name}`,category:'accessory',size:base.size,themes:[...base.themes,...power.themes],rarity:power.rarity,minLevel:power.minLevel,
-    effect:power.effect,note:`${rarities[power.rarity].label} aksesuar. ${power.effect}`,valueCopper:Math.round(300+rarities[power.rarity].value*1100),slot:'wondrous'
+    effect:power.effect,note:`${rarities[power.rarity].label} aksesuar. ${power.effect}`,valueCopper:Math.round(300+rarities[power.rarity].value*1100),slot:base.slot||undefined
   });
 
   const focusBases=[['Meşe Asa','medium',['arcane','nature']],['Kristal Değnek','small',['arcane']],['Kemik Değnek','small',['arcane','cursed']],['Bakır Küre','small',['arcane','elemental']],['Gümüş Kutsal Sembol','tiny',['sacred']],['Druid Totemi','small',['nature']],['Ejder Camı Küre','small',['arcane','elemental']],['Mühürlü Büyü Kitabı','medium',['arcane','document']]];
@@ -280,8 +280,19 @@
   ];
   for(let [name,theme,effect] of documents)add({name,category:'document',size:'small',themes:[theme],rarity:'uncommon',minLevel:2,effect,note:`Görev kancası. ${effect}`,valueCopper:250,qtyMax:1});
 
+  const junkBases=[
+    ['Düz Çakıl','tiny',['nature']],['Siyah Toprak Kesesi','small',['nature','alchemy','cursed']],['Kil Parçası','small',['nature','alchemy']],['Kömür Parçası','small',['alchemy','elemental']],['Cam Kırığı','tiny',['arcane','rogue']],['Eğri Çivi','tiny',['martial','rogue']],['Eski Düğme','tiny',['noble','rogue']],['Kurumuş Yaprak','tiny',['nature']],['Hayvan Kemiği','small',['nature','cursed']],['Boş Minik Şişe','small',['alchemy']],['Balmumu Topağı','tiny',['sacred','document']],['Sicim Parçası','small',['rogue','nature']],['Renksiz Tüy','tiny',['nature','arcane']],['Deniz Kabuğu','small',['elemental','nature']],['Tahta Kıymığı','small',['nature','martial']],['Bakır Pul','tiny',['noble','martial']],['Bez Parçası','small',['rogue','martial']],['Hayvan Dişi','tiny',['nature','cursed']],['Tebeşir Ucu','tiny',['arcane','sacred']],['Çömlek Parçası','small',['noble','nature']]
+  ];
+  const junkStates=[
+    ['Çamurlu','mundane','Sıradan kir ve aşınma taşır.'],['Kırık','mundane','Artık asıl işlevini yerine getirmez.'],['İsli','mundane','Yakın zamanda ateş veya patlama görmüş olabilir.'],['Eski','common','Kime ait olduğu belirsiz küçük bir hikâye izi taşıyabilir.'],['İşaretli','common','Üzerindeki çizik ya da leke DM isterse basit bir ipucuna dönüşebilir.']
+  ];
+  for(let [name,size,itemThemes] of junkBases)for(let [state,rarity,effect] of junkStates)add({
+    name:`${state} ${name}`,category:'junk',size,themes:itemThemes,rarity,minLevel:1,
+    effect:`${effect} Mekanik bonus vermez ve kuşanılamaz.`,note:`Ivır zıvır • ${effect} Mekanik bonus vermez.`,valueCopper:rarity==='common'?3:1,qtyMax:4
+  });
+
   /* A few named pieces make the browser useful even without combining prefixes mentally. */
-  add({name:'Alevdamarı Yakut Kolye',category:'accessory',size:'tiny',themes:['elemental','noble'],rarity:'rare',minLevel:4,effect:'Ateş hasarı verdiğinde tur başına 1 kez +1d6 ateş hasarı; günde 1 kez aldığın ateş hasarını yarıya indirir.',note:'Nadir aksesuar • Açık ateş saldırısı ve savunması.',valueCopper:22000,slot:'wondrous'});
+  add({name:'Alevdamarı Yakut Kolye',category:'accessory',size:'tiny',themes:['elemental','noble'],rarity:'rare',minLevel:4,effect:'Ateş hasarı verdiğinde tur başına 1 kez +1d6 ateş hasarı; günde 1 kez aldığın ateş hasarını yarıya indirir.',note:'Nadir aksesuar • Açık ateş saldırısı ve savunması.',valueCopper:22000,slot:'neck'});
   add({name:'Sıfır Numaralı Kader Sikkesi',category:'consumable',size:'tiny',themes:['arcane','cursed','alchemy'],rarity:'artifact',minLevel:10,effect:'Bir kez yazı-tura atılıp kırılır: yazı, görülen bir d20’yi doğal 20; tura, doğal 1 yapar. Hangi tarafın geleceğini DM bile önceden açıklamak zorunda değildir.',note:'Tek kullanımlık artefakt; kampanya kaderini değiştirebilir.',valueCopper:1000000,qtyMax:1});
 
   function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
@@ -324,12 +335,63 @@
     return {pp,gp,sp,cp,totalCopper:pp*1000+gp*100+sp*10+cp};
   }
 
-  function itemFor(options,rarity,rng=Math.random){
+  const catalogueByRarity=Object.create(null),catalogueByRarityCategory=Object.create(null);
+  for(let item of catalogue){
+    (catalogueByRarity[item.rarity]??=[]).push(item);
+    let key=`${item.rarity}|${item.category}`;(catalogueByRarityCategory[key]??=[]).push(item);
+  }
+  const majorLootCategories=new Set(['weapon','armor','shield','accessory','focus']);
+  const defaultCategoryWeights={junk:22,trinket:13,component:12,gem:11,document:9,consumable:12,scroll:6,tool:6,ammunition:6,accessory:5,focus:3,weapon:5,armor:3,shield:2};
+  const lootProfiles={
+    purse:{major:1,limits:{accessory:1},weights:{gem:25,trinket:22,junk:25,component:12,document:10,accessory:6}},
+    pouch:{major:1,limits:{accessory:1},weights:{junk:20,consumable:14,component:14,trinket:14,gem:10,document:8,tool:8,scroll:6,ammunition:4,accessory:2}},
+    alchemySatchel:{major:0,limits:{},weights:{component:32,consumable:30,junk:22,tool:8,document:5,gem:3}},
+    hunterPack:{major:1,limits:{weapon:1},weights:{ammunition:25,component:18,junk:20,tool:12,consumable:10,weapon:7,document:4,trinket:4}},
+    lockbox:{major:2,limits:{weapon:1,focus:1,accessory:1},weights:{gem:20,trinket:16,document:13,component:10,junk:10,consumable:8,scroll:7,accessory:6,focus:4,weapon:3,tool:2,ammunition:1}},
+    jewelryBox:{major:2,limits:{accessory:2},weights:{gem:35,accessory:20,trinket:20,document:10,junk:15}},
+    thiefStash:{major:2,limits:{weapon:1,accessory:1},weights:{junk:16,gem:14,trinket:13,tool:12,document:11,component:9,consumable:8,ammunition:6,scroll:5,accessory:4,weapon:2}},
+    chest:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{...defaultCategoryWeights}},
+    reinforced:{major:4,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{...defaultCategoryWeights,weapon:7,armor:4,shield:3}},
+    wizardChest:{major:3,limits:{weapon:1,armor:1,accessory:1,focus:1},weights:{scroll:24,component:20,junk:15,consumable:12,document:9,gem:7,focus:6,accessory:3,weapon:2,armor:2,trinket:8}},
+    warriorCache:{major:4,limits:{weapon:2,armor:1,shield:1},weights:{ammunition:24,tool:16,consumable:12,junk:22,weapon:12,armor:8,shield:6}},
+    reliquary:{major:2,limits:{weapon:1,accessory:1,focus:1},weights:{consumable:20,component:18,document:15,junk:14,scroll:10,gem:8,trinket:6,accessory:4,focus:3,weapon:2}},
+    lair:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{junk:30,component:12,trinket:11,gem:10,document:8,consumable:8,ammunition:6,tool:5,weapon:4,accessory:3,armor:1,shield:1,focus:1}},
+    cursedChest:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{junk:22,component:16,trinket:12,document:10,consumable:9,gem:8,scroll:7,accessory:5,weapon:4,focus:3,armor:2,shield:2}}
+  };
+
+  function exactThemeMatch(item,containerKey,themeKey){
+    let target=effectiveTheme(containerKey,themeKey);
+    return target==='mixed'||item.themes.includes(target);
+  }
+  function itemCandidates(options,rarity,category='',excluded=new Set(),strictTheme=true){
     let level=clamp(+options.level||1,1,10),containerKey=containers[options.container]?options.container:'chest',themeKey=themes[options.theme]?options.theme:'mixed';
-    let candidates=catalogue.filter(item=>item.rarity===rarity&&compatible(item,containerKey,themeKey)&&(item.minLevel<=level+1||rarities[rarity].rank>=5));
-    if(!candidates.length)candidates=catalogue.filter(item=>item.rarity===rarity&&compatible(item,containerKey,'mixed'));
-    if(!candidates.length)candidates=catalogue.filter(item=>compatible(item,containerKey,'mixed'));
-    return pick(candidates,rng);
+    let source=category?(catalogueByRarityCategory[`${rarity}|${category}`]||[]):(catalogueByRarity[rarity]||[]);
+    return source.filter(item=>compatible(item,containerKey,'mixed')&&(!strictTheme||exactThemeMatch(item,containerKey,themeKey))&&(item.minLevel<=level+1||rarities[rarity].rank>=5)&&!excluded.has(item.id));
+  }
+  function itemFor(options,rarity,rng=Math.random,category='',excluded=new Set()){
+    let candidates=itemCandidates(options,rarity,category,excluded,true);
+    if(!candidates.length)candidates=itemCandidates(options,rarity,category,excluded,false);
+    return candidates.length?pick(candidates,rng):null;
+  }
+  function weightedPick(entries,rng=Math.random){
+    let total=entries.reduce((sum,entry)=>sum+Math.max(0,+entry.weight||0),0);
+    if(!total)return null;
+    let roll=rng()*total;
+    for(let entry of entries){roll-=Math.max(0,+entry.weight||0);if(roll<0)return entry.value}
+    return entries[entries.length-1]?.value||null;
+  }
+  function categoryFor(options,rarity,counts,excluded,rng=Math.random){
+    let containerKey=containers[options.container]?options.container:'chest',container=containers[containerKey],profile=lootProfiles[containerKey]||lootProfiles.chest;
+    let majorCount=Object.entries(counts).reduce((sum,[category,count])=>sum+(majorLootCategories.has(category)?count:0),0);
+    let choices=[];
+    for(let category of container.allowed){
+      let used=counts[category]||0,limit=majorLootCategories.has(category)?(profile.limits[category]??0):Infinity;
+      if(used>=limit||majorLootCategories.has(category)&&majorCount>=profile.major)continue;
+      if(!itemFor(options,rarity,()=>0,category,excluded))continue;
+      let weight=profile.weights[category]??defaultCategoryWeights[category]??1;
+      if(weight>0)choices.push({value:category,weight});
+    }
+    return weightedPick(choices,rng);
   }
 
   function generateLoot(options={},rng=Math.random){
@@ -337,16 +399,25 @@
     let container=containers[containerKey],q=quality[qualityKey],mode=rng(),moneyOnly=mode<container.moneyOnly,itemOnly=!moneyOnly&&mode<container.moneyOnly+container.itemOnly;
     let min=Math.max(0,container.itemMin+q.count),max=Math.max(min,container.itemMax+q.count),count=moneyOnly?0:randomInt(min,max,rng);
     if(!moneyOnly&&count===0&&itemOnly)count=1;
-    let items=[];
+    let items=[],counts={},excluded=new Set();
     for(let i=0;i<count;i++){
-      let rarity=rollRarity(level,qualityKey,rng,forced),source=itemFor({level,container:containerKey,theme:themeKey},rarity,rng),qty=source.qtyMax>1&&rng()<.22?randomInt(2,Math.min(source.qtyMax,4),rng):1;
+      let rarity=null,category=null,source=null;
+      for(let attempt=0;attempt<6&&!source;attempt++){
+        rarity=rollRarity(level,qualityKey,rng,forced);
+        category=categoryFor({level,container:containerKey,theme:themeKey},rarity,counts,excluded,rng);
+        if(category)source=itemFor({level,container:containerKey,theme:themeKey},rarity,rng,category,excluded);
+        if(forced!=='auto')break;
+      }
+      if(!source)break;
+      let qty=source.qtyMax>1&&rng()<.22?randomInt(2,Math.min(source.qtyMax,4),rng):1;
       items.push({...source,sourceId:source.id,instanceId:`loot-${Date.now().toString(36)}-${i}-${Math.floor(rng()*1e9).toString(36)}`,qty});
+      excluded.add(source.id);counts[category]=(counts[category]||0)+1;
     }
     let coins=itemOnly?{pp:0,gp:0,sp:0,cp:0,totalCopper:0}:coinBundle(level,containerKey,qualityKey,rng,true);
     if(!items.length&&!coins.totalCopper)coins={pp:0,gp:0,sp:0,cp:1,totalCopper:1};
     return {
       id:`haul-${Date.now().toString(36)}-${Math.floor(rng()*1e9).toString(36)}`,at:new Date().toISOString(),level,container:containerKey,theme:themeKey,quality:qualityKey,rarity:forced,
-      items,coins,summary:items.length?`${items.length} eşya${coins.totalCopper?' + para':''}`:'Yalnız para'
+      items,coins,composition:{...counts},summary:items.length?`${items.length} eşya${coins.totalCopper?' + para':''}`:'Yalnız para'
     };
   }
 
@@ -359,7 +430,11 @@
   root.V44_LOOT_QUALITY=quality;
   root.V44_LOOT_CATEGORY_LABELS=categoryLabels;
   root.V44_LOOT_CATALOG=Object.freeze(catalogue);
+  root.V45_LOOT_PROFILES=lootProfiles;
+  root.V45_MAJOR_LOOT_CATEGORIES=Object.freeze(Array.from(majorLootCategories));
   root.v44LootCompatible=compatible;
+  root.v45LootItemFor=itemFor;
+  root.v45LootCategoryFor=categoryFor;
   root.v44RollRarity=rollRarity;
   root.v44GenerateLoot=generateLoot;
 })(typeof window!=='undefined'?window:globalThis);

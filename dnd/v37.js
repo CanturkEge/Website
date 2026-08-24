@@ -4,7 +4,29 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
-    version:'1.7',build:'Build 44',title:'Gizli Karma ve Ganimet Üretici',tag:'GÜNCEL',tone:'current',
+    version:'1.7.1',build:'Build 45',title:'Kuşanma Sistemi ve Ganimet Dengesi',tag:'GÜNCEL',tone:'current',
+    summary:'Yalnız gerçek ekipman kuşanılabilir hâle getirildi; sandıklar artık katalogdaki silah bolluğuna kapılmadan çeşitli ve kotalı ganimet üretir.',
+    added:[
+      'Silah, zırh, kalkan, büyü odağı ve gerçekten giyilen aksesuarlar için açık kuşanma yuvaları eklendi.',
+      'Tek zırh, kalkan, odak ve beden yuvası; en fazla iki silah, iki yüzük ve üç genel büyülü eşya sınırı eklendi.',
+      'Taş, toprak, kömür, kırık çivi, cam, kemik, yaprak ve benzeri 100 açıklamalı ıvır zıvır kaydı ganimet kataloğuna eklendi.',
+      'Kuşanma türünü ve yuva sınırını bulutta da doğrulayan inventory_equip_v45 işlemi eklendi.'
+    ],
+    fixed:[
+      'Yalnız AC, saldırı, hasar, büyü veya stat bonusu alanı bulunduğu için iksir, taş, mücevher, mühimmat ve diğer ganimetlerin Kuşan düğmesi göstermesi giderildi.',
+      'Eski kayıtlarda yanlışlıkla kuşanılmış kuşanılamaz eşyaların AC, save ve stat hesaplarına bonus vermesi engellendi.',
+      'Rastgele üreticide 672 silah kaydının katalog büyüklüğü nedeniyle aynı sandığı silahla doldurması giderildi.',
+      'Ayna, fener, kum saati ve zar takımı gibi elde kullanılan aksesuarların giyilebilir aksesuar sayılması engellendi.'
+    ],
+    changed:[
+      'Her kap artık kategori ağırlığı ve kesin kota kullanır: genel sandıklarda en fazla iki silah, bir zırh ve kap türüne göre sınırlı toplam ekipman çıkar.',
+      'Savaşçı kasası savaş malzemesi ağırlığını korurken kalan sonuçları mühimmat, bakım aleti, tüketim ve hurdayla doldurur; yaratık ini özellikle kırık/önemsiz ganimete ağırlık verir.',
+      'Kolye, yüzük, broş, bileklik, küpe, pelerin, eldiven, kemer, çizme, mercek ve taç artık kendi mantıksal beden yuvasını kullanır.',
+      'Mevcut karakterler, class/subclass, envanter eşyaları ve ganimet geçmişi silinmez; yalnız hatalı equipped işareti temizlenir.'
+    ]
+  },
+  {
+    version:'1.7',build:'Build 44',title:'Gizli Karma ve Ganimet Üretici',tag:'GANİMET',tone:'system',
     summary:'DM’ye özel karma defteri ile fiziksel kap kurallarına uyan, 1.900’den fazla açıklamalı kayıt kullanan rastgele ganimet sistemi eklendi.',
     added:[
       'Oyuncu menülerinde görünmeyen −100 / +100 aralıklı karakter karma defteri, yedi ahlaki kademe ve DM event fikirleri eklendi.',
@@ -434,7 +456,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.7'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.7.1'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -442,8 +464,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.7 • Build 44</h2><p>DM’ye özel gizli karma defteri ve fiziksel kap kuralları kullanan geniş ganimet üretici artık hazır.</p></div>
-      <div class="v37-patch-stats"><span><b>21</b>Sürüm</span><span><b>48</b>Karma olayı</span><span><b>14</b>Kap türü</span><span><b>1.921</b>Ganimet</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.7.1 • Build 45</h2><p>Kuşanma yuvaları düzeltildi; silah/zırh kotalı ve ıvır zıvır içerebilen dengeli ganimet üretimi hazır.</p></div>
+      <div class="v37-patch-stats"><span><b>22</b>Sürüm</span><span><b>48</b>Karma olayı</span><span><b>14</b>Kap türü</span><span><b>2.021</b>Ganimet</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -452,7 +474,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v1.7 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v1.7.1 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
