@@ -4,7 +4,66 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
-    version:'1.6.2',build:'Build 41',title:'Efekt ve Lonca Yönetimi Düzeltmesi',tag:'GÜNCEL',tone:'current',
+    version:'1.7',build:'Build 44',title:'Gizli Karma ve Ganimet Üretici',tag:'GÜNCEL',tone:'current',
+    summary:'DM’ye özel karma defteri ile fiziksel kap kurallarına uyan, 1.900’den fazla açıklamalı kayıt kullanan rastgele ganimet sistemi eklendi.',
+    added:[
+      'Oyuncu menülerinde görünmeyen −100 / +100 aralıklı karakter karma defteri, yedi ahlaki kademe ve DM event fikirleri eklendi.',
+      'İyilik, merhamet, adalet, hırsızlık, masuma zarar, ihanet, zulüm ve bağlam için 48 satırlık uygulanabilir karma referans tablosu eklendi.',
+      'Her karma hareketi için neden, önceki/sonraki değer, tarih ve son işlemi geri alma geçmişi eklendi.',
+      'Seviye 1–10, 14 fiziksel kap, 10 tema, dört hazine kalitesi ve yedi nadirlik seçebilen DM Ganimet Üretici eklendi.',
+      'Silah, zırh, kalkan, aksesuar, odak, iksir, parşömen, bileşen, taş, belge, alet ve mühimmat içeren 1.900’den fazla açıklamalı ganimet kaydı eklendi.',
+      'Üretilen eşyaları seçerek yerdeki ortak alana bırakma veya bütün mekanik alanlarıyla karakter envanterine verme eklendi.',
+      'Son 30 ganimeti saklayan geçmiş ve elle arayıp sonuca eşya ekleten Ganimet Ansiklopedisi eklendi.'
+    ],
+    fixed:[
+      'Madeni para kesesinden gürz, yay, zırh veya şişe gibi fiziksel olarak sığmayan eşya çıkması kap boyutu ve kategori kurallarıyla engellendi.',
+      'Büyücü, savaşçı, simyacı, tapınak, avcı ve hırsız kaplarının alakasız ganimet üretmesi tema ağırlığıyla engellendi.',
+      'Binlerce katalog kaydının tek seferde DOM’a basılıp menüyü ağırlaştırması önlendi; filtreli ilk 60 kayıt gösterilir.'
+    ],
+    changed:[
+      'Düşük seviye/yıpranmış sandıklarda bile artefakt için 1/100.000.000, efsanevi sürpriz için sonraki 1/10.000.000 uç ihtimal bulunur.',
+      'Sandık sonucu yalnız para, yalnız eşya veya birden çok eşya + para olabilir; kap türü adet ve para dağılımını değiştirir.',
+      'Karma otomatik değişmez: niyet ve bağlam kararını DM verir; oyunculara herhangi bir puan veya geçmiş gösterilmez.',
+      'Yeni iki yönetim ekranı masaüstü, tablet ve telefonda yeniden akışkan tek sütun düzene iner; mevcut buton ve kayıt sistemleri korunur.'
+    ]
+  },
+  {
+    version:'1.6.4',build:'Build 43',title:'Hazırlanmış Büyü Görünümü Hotfix',tag:'HOTFIX',tone:'system',
+    summary:'DM ve oyuncu karakter ekranlarında hazırlanmış büyülerin ad, seviye ve açıklama alanlarını undefined gösteren veri biçimi çakışması giderildi.',
+    added:[
+      'Hazırlanmış büyüler için nesne, eski dizi, yalnız ID, yalnız ad ve eski snake_case kayıtlarını okuyabilen ortak dönüştürücü eklendi.',
+      'Hazır kütüphanede bulunmayan eski büyüler silinmek yerine mevcut ad, seviye ve açıklamasıyla gösterilir.'
+    ],
+    fixed:[
+      'Karakter ayrıntısında “undefined. seviye — undefined” görünen hazırlanmış büyü kartları düzeltildi.',
+      'DM Karakterler ve oyuncu Yetenekler ekranlarının aynı büyü kaydını farklı biçimde yorumlaması giderildi.',
+      'Boş veya bozuk tek bir eski kaydın bütün hazırlanmış büyü bölümünü bozması engellendi.'
+    ],
+    changed:[
+      'Büyü kartları artık her zaman ad, cantrip/seviye, açıklama, kullanım süresi, menzil, süre, bileşen, slot ve zar/çözüm alanlarıyla açılır.',
+      'Mevcut hazırlanmış büyü seçimleri korunur; yeni SQL veya oyuncuların büyüleri yeniden seçmesi gerekmez.'
+    ]
+  },
+  {
+    version:'1.6.3',build:'Build 42',title:'Zar Seçimi Kalıcılık Hotfix',tag:'ZAR',tone:'combat',
+    summary:'Zar ocağındaki seçimler günlük yenilendiğinde, bulut eşitlemesinde, sayfaya dönünce veya tarayıcı yenilenince artık sıfırlanmıyor.',
+    added:[
+      'Zar tercihleri oyuncu ve kampanya bazında cihazda saklanır; başka oyuncunun veya başka kampanyanın seçimiyle karışmaz.',
+      'Son zar sonucu, formül ve tek tek zar değerleri ekran yeniden çizildikten sonra Zar Ocağı üzerinde kalır.',
+      'Seçili zar düğmesine erişilebilir aria-pressed durumu eklendi.'
+    ],
+    fixed:[
+      'Zar günlüğü yenilendiğinde seçili d2–d100/Fate zarının görsel seçiminin kaybolması giderildi.',
+      'Bulut eşitlemesi ve sayfa yeniden çizimi sırasında kontrol/saldırı seçimi, zar adedi, bonus ve özel formülün varsayılana dönmesi giderildi.',
+      'Bir atıştan hemen sonra sonuç alanının tekrar “Zar türünü seç” yazısına dönmesi giderildi.'
+    ],
+    changed:[
+      'Otomatik skill bonusu yeniden hesaplanmaya devam eder; oyuncunun elle yazdığı bonus ise yeniden çizimde korunur.',
+      'Zar tercihleri ortak kampanya verisine yazılmadığı için diğer oyuncuların ekranını veya bulut kayıt sırasını etkilemez.'
+    ]
+  },
+  {
+    version:'1.6.2',build:'Build 41',title:'Efekt ve Lonca Yönetimi Düzeltmesi',tag:'YÖNETİM',tone:'system',
     summary:'Efektlerin kaldırılamaması giderildi; lonca, NPC eşyası ve özel yetenekler için eksik DM müdahale kontrolleri tamamlandı.',
     added:[
       'Karakter kartlarına süreli ve süresiz kayıtları birlikte gösteren Efektleri Yönet penceresi eklendi.',
@@ -375,7 +434,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.6.2'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.7'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -383,8 +442,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.6.2 • Build 41</h2><p>Efekt silme uyumsuzluğu giderildi; Lonca menüsü tam DM yönetimi, kasa, üye ve eşya müdahale araçlarına kavuştu.</p></div>
-      <div class="v37-patch-stats"><span><b>18</b>Sürüm</span><span><b>23</b>Kale yolu</span><span><b>6</b>Hazır savaş alanı</span><span><b>380</b>Market kaydı</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.7 • Build 44</h2><p>DM’ye özel gizli karma defteri ve fiziksel kap kuralları kullanan geniş ganimet üretici artık hazır.</p></div>
+      <div class="v37-patch-stats"><span><b>21</b>Sürüm</span><span><b>48</b>Karma olayı</span><span><b>14</b>Kap türü</span><span><b>1.921</b>Ganimet</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -393,7 +452,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v1.6.2 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v1.7 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

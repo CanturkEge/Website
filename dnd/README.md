@@ -1,5 +1,38 @@
 # Kadim Masa Defteri — Kurulum
 
+## v44 — Gizli Karma ve Ganimet Üretici
+
+- DM sol menüsüne **Karma** eklendi. Her karakter için −100 / +100 aralığında gizli puan, yedi kademe, event fikri, hızlı/özel değişim ve son işlemi geri alma bulunur. Bu sayfa ve değerler oyuncu menülerinde gösterilmez.
+- İyilikten fedakârlığa, hırsızlıktan masuma zarar ve ihanete kadar **48 satırlık karma referans tablosu** eklenmiştir. Puanı sistem otomatik vermez; niyet ve bağlama göre son kararı DM uygular.
+- DM sol menüsüne **Ganimet Üretici** eklendi. Seviye 1–10, 14 kap/kaynak, 10 tema, dört kalite ve yedi nadirlik arasından seçim yapılabilir.
+- Katalogda silah, zırh, kalkan, aksesuar, büyü odağı, iksir, parşömen, bileşen, değerli taş, belge, alet ve mühimmat dâhil **1.921 açıklamalı kayıt** vardır. Market kaydı olma şartı yoktur.
+- Kapların fiziksel boyut ve kategori kuralları vardır: para kesesinden gürz/zırh/şişe; simyacı çantasından ağır savaş teçhizatı; mücevher kutusundan silah çıkmaz.
+- Sonuç yalnız para, yalnız eşya veya birden çok eşya + para olabilir. Düşük sandıklarda artefakt ihtimali 1/100.000.000; efsanevi sürpriz için sonraki ihtimal 1/10.000.000’dur.
+- Üretilen eşyalar seçilip yerdeki ortak alana bırakılabilir veya açıklama ve bütün bonus alanlarıyla doğrudan karakter envanterine verilebilir. Son 30 üretim saklanır; ansiklopediden elle eşya eklenebilir.
+- Katalog performans için filtreli ilk 60 sonucu çizer; bütün 1.921 kayıt bellekte aranabilir. Karma ve ganimet ekranları telefon/tablette tek sütun ve büyük dokunma alanı kullanır.
+
+v44 için yeni SQL gerekmez. Mevcut kampanya, karakter, market, envanter, kasa ve geçmiş verileri korunur. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalayıp tarayıcıda `Ctrl + Shift + R` yapman yeterli.
+
+## v43 — Hazırlanmış Büyü Görünümü Hotfix
+
+- DM Karakterler ve oyuncu Yetenekler ekranlarında büyülerin `undefined. seviye — undefined` görünmesine neden olan dizi/nesne veri biçimi çakışması giderildi.
+- Mevcut hazırlanmış büyüler yeniden seçilmeden ad, seviye, açıklama ve ayrıntılı kullanım kartlarıyla görünür.
+- Sistem yeni nesne kayıtlarının yanında eski dizi, yalnız ID/ad ve snake_case kayıtlarını da tanır.
+- Hazır kütüphanede bulunmayan eski veya özel büyü kayıtları silinmez; eldeki bilgileriyle okunabilir kart olarak gösterilir.
+- Tek bir boş/bozuk kayıt artık diğer hazırlanmış büyülerin görünmesini engellemez.
+
+v43 için yeni SQL gerekmez. Karakterler ve hazırlanmış büyü seçimleri korunur. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalayıp tarayıcıda `Ctrl + Shift + R` yapman yeterli.
+
+## v42 — Zar Seçimi Kalıcılık Hotfix
+
+- Zar Ocağı’nda seçilen zar türü artık zar günlüğü yenilendiğinde, bulut eşitlemesinde veya sayfa yeniden çizildiğinde kaybolmaz.
+- Kontrol/saldırı seçimi, zar adedi, bonus ve özel formül de aynı şekilde korunur.
+- Son atışın toplamı, formülü ve tek tek zarları yeniden çizimden sonra sonuç alanında kalır.
+- Tercihler oyuncu ve kampanya bazında yalnız o cihazda saklanır; ortak kampanya state’ine yazılmaz ve başka oyuncunun seçimini etkilemez.
+- Skill seçiminin otomatik bonus hesabı çalışmaya devam eder; elle değiştirilmiş bonus sıfırlanmaz.
+
+v42 için yeni SQL gerekmez. Mevcut kampanya ve zar geçmişi korunur. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyalayıp tarayıcıda `Ctrl + Shift + R` yapman yeterli.
+
 ## v41 — Efekt ve Lonca Yönetimi Düzeltmesi
 
 - Karakter efektleri artık hem eski düz metin kayıtlarını hem de savaştan gelen süreli kayıtları aynı anda tanır. **Efektleri Yönet** penceresinden tek tek kaldırılabilir veya topluca temizlenebilir.
