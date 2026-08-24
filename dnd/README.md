@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v47 — 2014 Büyü Kitabı ve Büyü Sayfası Ganimetleri
+
+- DM ve oyuncu sol menüsüne **Büyü Kitabı** eklendi: 319 adet 2014 SRD 5.1 büyüsü cantrip’ten 9. seviyeye kadar aranabilir.
+- Seviye, class, büyü okulu, Action/Bonus Action/Reaction, concentration ve ritüel filtreleri birlikte kullanılabilir.
+- Her kartta büyü attack/save çözümü, kullanılan zarlar, menzil/alan, süre, komponent, materyal, class büyü statı, yüksek slot ve masada adım adım kullanım bulunur.
+- Uzun açıklamalar kapalı başlar; liste 48 kartlık parçalarla çizildiği için telefonda ve eski bilgisayarlarda bütün katalog tek seferde DOM’a yüklenmez.
+- Ganimet üreticideki 80 genel okul parşömeni kaldırıldı; yerlerine gerçek adı belli **319 Büyü Sayfası** eklendi.
+- Büyü sayfaları class listesi, seviye, rarity, sabit scroll save DC/saldırı bonusu ve `DC 10 + büyü seviyesi` yüksek seviye okuma kontrolünü taşır.
+- Büyü Kitabı ile loot aynı veri kaynağını kullanır; rehber ve ganimet açıklaması birbirinden kopmaz.
+
+v47 için yeni SQL gerekmez; **v45-update.sql daha önce çalıştırılmış olmalıdır**. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyala ve tarayıcıda `Ctrl + Shift + R` yap. Mevcut kampanya, karakter, hazırlanmış büyü, class/subclass, envanter, kuşanılmış durum, market, lonca, harita, karma ve ganimet geçmişi korunur.
+
 ## v46 — Karakter Föyü ve Sınıflandırılmış Envanter
 
 - Oyuncu **Karakterim** ekranı baştan düzenlendi: HP, aktif AC, hız, inisiyatif, proficiency, pasif Farkındalık, büyü statı/Hit Die ve altı ability tek bakışta görünür.

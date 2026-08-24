@@ -4,6 +4,29 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'1.9',build:'Build 47',title:'2014 Büyü Kitabı ve Gerçek Büyü Sayfaları',tag:'BÜYÜ',tone:'current',
+    summary:'2014 SRD büyülerinin tamamı aranabilir bir kitapta toplandı; aynı kayıtlar artık ganimet üreticide tek tek büyü sayfası olarak düşer.',
+    added:[
+      'DM ve oyuncu menüsüne cantrip–9. seviye 319 kayıtlık Büyü Kitabı eklendi.',
+      'Büyü adı, seviye, class, okul, Action türü, concentration ve ritüel için birlikte çalışan arama/filtreler eklendi.',
+      'Her büyüye masada adım adım kullanım, spell attack/save formülü, menzil, alan, süre, komponent, materyal, zarlar ve yüksek slot açıklaması eklendi.',
+      'Ganimet kataloğuna her 2014 SRD büyüsü için adı ve gerçek seviyesi belli tek kullanımlık Büyü Sayfası eklendi.',
+      'Büyü sayfalarına 2014 scroll rarity, sabit save DC/saldırı bonusu ve yüksek seviye okuma kontrolü eklendi.'
+    ],
+    fixed:[
+      'Genel “DM bir büyü seçsin” parşömenleri kaldırıldı; ganimette hangi büyünün çıktığı artık açıkça yazıyor.',
+      'Büyü kartlarında hangi zarı kimin atacağı, hangi class statının kullanılacağı ve concentration takibinin belirsiz kalması giderildi.',
+      'Uzun büyü metinlerinin sayfayı kaplaması önlendi; kart ve tam kural metni ayrı ayrı kapalı başlar.',
+      '8. seviye scroll nadirliği 2014 tablosuna göre Very Rare olarak düzeltildi.'
+    ],
+    changed:[
+      'Rehberin üstüne tek dokunuşla Büyü Kitabı’na geçiş eklendi; katalog telefonda yatay filtre şeridi ve tek sütun kartlarla çalışır.',
+      'Büyü Kitabı ile loot sayfaları aynı veri kaynağını kullanır; ad, seviye, class veya açıklama iki yerde farklılaşmaz.',
+      'Liste performans için 48 kartlık parçalar hâlinde açılır; arama her zaman 319 kaydın tamamında yapılır.',
+      'v47 yeni SQL gerektirmez; mevcut karakter, hazırlanmış büyü, envanter, ganimet geçmişi ve kampanya kayıtları korunur.'
+    ]
+  },
+  {
     version:'1.8',build:'Build 46',title:'Karakter Föyü ve Sınıflandırılmış Envanter',tag:'GÖRSEL',tone:'current',
     summary:'Karakter ekranı tam bir oyun föyüne dönüştü; envanter kullanım türlerine ayrıldı ve bütün kuşanma yuvaları tek menüden görünür oldu.',
     added:[
@@ -478,7 +501,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.8'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='1.9'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -486,8 +509,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.8 • Build 46</h2><p>Karakter föyü, açık kuşanma yuvaları ve sekiz sınıfa ayrılan aranabilir envanter hazır.</p></div>
-      <div class="v37-patch-stats"><span><b>23</b>Sürüm</span><span><b>8</b>Eşya sınıfı</span><span><b>17</b>Yuva türü</span><span><b>2.021</b>Ganimet</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v1.9 • Build 47</h2><p>2014 Büyü Kitabı ve ganimetten düşen gerçek büyü sayfaları hazır.</p></div>
+      <div class="v37-patch-stats"><span><b>24</b>Sürüm</span><span><b>319</b>Büyü</span><span><b>319</b>Büyü sayfası</span><span><b>2.260</b>Ganimet</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -496,7 +519,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v1.8 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v1.9 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

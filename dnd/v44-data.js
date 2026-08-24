@@ -247,9 +247,41 @@
   ];
   for(let [family,theme,text] of consumableFamilies)for(let [grade,rarity,minLevel,dice,bonus,duration,dc,value] of consumableGrades){let effect=text.replaceAll('{dice}',dice).replaceAll('{bonus}',bonus).replaceAll('{duration}',duration).replaceAll('{dc}',dc);add({name:`${grade} ${family}`,category:'consumable',size:'small',themes:[theme,'alchemy'],rarity,minLevel,effect,note:`Tek kullanımlık. ${effect}`,valueCopper:value,qtyMax:rarity==='common'?4:2})}
 
-  const scrollSchools=[['Abjuration','Koruma'],['Conjuration','Çağırma'],['Divination','Kehanet'],['Enchantment','Etkileme'],['Evocation','Yıkım'],['Illusion','İllüzyon'],['Necromancy','Nekromansi'],['Transmutation','Dönüşüm']];
-  const scrollLevels=[['Cantrip','common',1,0,150],['1. Seviye','common',1,1,300],['2. Seviye','uncommon',2,2,900],['3. Seviye','uncommon',3,3,1800],['4. Seviye','rare',4,4,4000],['5. Seviye','rare',5,5,7500],['6. Seviye','veryRare',6,6,14000],['7. Seviye','veryRare',7,7,25000],['8. Seviye','legendary',8,8,50000],['9. Seviye','legendary',9,9,90000]];
-  for(let [school,tr] of scrollSchools)for(let [levelName,rarity,minLevel,spellLevel,value] of scrollLevels)add({name:`${tr} ${levelName} Parşömeni`,category:'scroll',size:'small',themes:['arcane',school==='Necromancy'?'cursed':'mixed'],rarity,minLevel,effect:`İçinde DM’nin seçtiği ${school} okulundan ${levelName.toLowerCase()} bir büyü bulunur. Tek kullanımdır; sınıf listesi ve okuma kontrolünü DM belirler.`,note:`Tek kullanımlık büyü parşömeni • ${tr}.`,valueCopper:value,spellLevel,qtyMax:1});
+  const scrollLevels={
+    0:{label:'Cantrip',rarity:'common',minLevel:1,value:150,dc:13,attack:5},
+    1:{label:'1. Seviye',rarity:'common',minLevel:1,value:300,dc:13,attack:5},
+    2:{label:'2. Seviye',rarity:'uncommon',minLevel:2,value:900,dc:13,attack:5},
+    3:{label:'3. Seviye',rarity:'uncommon',minLevel:3,value:1800,dc:15,attack:7},
+    4:{label:'4. Seviye',rarity:'rare',minLevel:4,value:4000,dc:15,attack:7},
+    5:{label:'5. Seviye',rarity:'rare',minLevel:5,value:7500,dc:17,attack:9},
+    6:{label:'6. Seviye',rarity:'veryRare',minLevel:6,value:14000,dc:17,attack:9},
+    7:{label:'7. Seviye',rarity:'veryRare',minLevel:7,value:25000,dc:18,attack:10},
+    8:{label:'8. Seviye',rarity:'veryRare',minLevel:8,value:50000,dc:18,attack:10},
+    9:{label:'9. Seviye',rarity:'legendary',minLevel:9,value:90000,dc:19,attack:11}
+  };
+  const spellPages=Array.isArray(root.V47_SPELLS)?root.V47_SPELLS:[];
+  if(spellPages.length){
+    for(let spell of spellPages){
+      let tier=scrollLevels[spell.level]||scrollLevels[0],classes=spell.classes.join(', '),themes=['arcane'];
+      if(spell.classes.some(name=>name==='Cleric'||name==='Paladin'))themes.push('sacred');
+      if(spell.classes.some(name=>name==='Druid'||name==='Ranger'))themes.push('nature');
+      if(spell.school==='Necromancy')themes.push('cursed');
+      if(/fire|cold|lightning|thunder|acid|ateş|soğuk|yıldırım|gök gürültüsü|asit/i.test(`${spell.description} ${spell.name}`))themes.push('elemental');
+      let resolution=spell.attackType?`Parşömen büyü saldırısı +${tier.attack}`:(spell.saves||[]).length?`Hedef açıklamadaki aşamada ${spell.saves.join('/')} save atar (DC ${tier.dc})`:'Açıklamadaki etki doğrudan uygulanır';
+      let summary=String(spell.description||'').replace(/\s+/g,' ').trim();
+      if(summary.length>280)summary=summary.slice(0,277).trimEnd()+'…';
+      add({
+        name:`Büyü Sayfası: ${spell.name}${spell.nameTr&&spell.nameTr!==spell.name?` / ${spell.nameTr}`:''}`,
+        category:'scroll',size:'small',themes:[...new Set(themes)],rarity:tier.rarity,minLevel:tier.minLevel,
+        effect:`${summary} Kullanım: ${resolution}. ${spell.concentration?'Concentration gerekir.':'Concentration gerekmez.'} Sayfa yalnız büyü class listendeyse okunur; normalde atabildiğinden yüksek seviyedeyse d20 + spellcasting stat modifier (proficiency eklenmez), DC ${10+spell.level}. Kullanım denemesinde sayfa yok olur.`,
+        note:`Tek kullanımlık 2014 SRD büyü sayfası • ${tier.label} • ${spell.schoolTr||spell.school} • ${classes}.`,
+        valueCopper:tier.value,spellLevel:spell.level,spellId:spell.id,spellName:spell.name,spellClasses:spell.classes,scrollSaveDc:tier.dc,scrollAttackBonus:tier.attack,consumable:true,qtyMax:1
+      });
+    }
+  }else{
+    const scrollSchools=[['Abjuration','Koruma'],['Conjuration','Çağırma'],['Divination','Kehanet'],['Enchantment','Etkileme'],['Evocation','Yıkım'],['Illusion','İllüzyon'],['Necromancy','Nekromansi'],['Transmutation','Dönüşüm']];
+    for(let [school,tr] of scrollSchools)for(let level of Object.values(scrollLevels))add({name:`${tr} ${level.label} Parşömeni`,category:'scroll',size:'small',themes:['arcane',school==='Necromancy'?'cursed':'mixed'],rarity:level.rarity,minLevel:level.minLevel,effect:`İçinde DM’nin seçtiği ${school} okulundan ${level.label.toLocaleLowerCase('tr-TR')} bir büyü bulunur. Tek kullanımdır.`,note:`Tek kullanımlık büyü parşömeni • ${tr}.`,valueCopper:level.value,spellLevel:Object.values(scrollLevels).indexOf(level),qtyMax:1});
+  }
 
   const components=[
     ['Kızıl Ejder Pulu','elemental'],['Kış Kurdu Dişi','elemental'],['Fırtına Camı','elemental'],['Saf Cıva','alchemy'],['Mandrake Kökü','alchemy'],['Ay Çiçeği','nature'],['Kara Lotus Yaprağı','cursed'],['Kutsanmış Tütsü','sacred'],['Gümüş Tozu','sacred'],['İnce Mithral Teli','arcane'],['Adamant Parçası','martial'],['Bazilisk Gözü','alchemy'],['Hayalet Tuzu','cursed'],['Peri Kanadı Tozu','arcane'],['Dev Tırnağı','martial'],['Kraken Mürekkebi','elemental'],['Anka Külü','sacred'],['Boşluk Kristali','arcane'],['Mezar Toprağı','cursed'],['Druidik Tohum','nature']
