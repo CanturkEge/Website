@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v46 — Karakter Föyü ve Sınıflandırılmış Envanter
+
+- Oyuncu **Karakterim** ekranı baştan düzenlendi: HP, aktif AC, hız, inisiyatif, proficiency, pasif Farkındalık, büyü statı/Hit Die ve altı ability tek bakışta görünür.
+- Karakter ekranına ayrı **Kuşanma Menüsü** eklendi. İki silah yuvası, zırh, kalkan, büyü odağı ve bütün aksesuar/beden yuvaları dolu veya boş durumuyla gösterilir; kuşanılmış eşya buradan doğrudan çıkarılabilir.
+- Envanter artık tek uzun liste değildir. Eşyalar **Kuşanılabilir**, **Tüketilebilir & Parşömen**, **Mühimmat**, **Alet & Kamp Malzemesi**, **Bileşen & Hammadde**, **Değerli & Hikâyesel**, **Binek & Hizmet** ve **Diğer & Hurda** olarak ayrılır.
+- Eşya adı, açıklaması, etkisi ve bonusunda çalışan arama; kategori filtreleri ve her grupta kayıt/adet sayacı eklendi.
+- Eşya kartlarının özeti kısa tutuldu. Kuşan, çıkar, arkadaşa ver, loncaya koy, yere at ve çöpe at araçları karta basınca açılır; mevcut işlem ve bulut kayıt altyapısı değiştirilmedi.
+- Species/subspecies, class/subclass, background, saving throw proficiencyleri, hazırlanmış büyü sayısı, direnç/zayıflık ve aktif efektler karakter föyünde düzenli, açılır bölümlere bağlandı.
+- Masaüstü görünümü geniş ekipman ızgarası; tablet ve telefon görünümü tek sütun, büyük dokunma alanları ve yatay kaydırılabilen kategori şeridi kullanır.
+- Genel kart, aktif menü, focus ve buton görselleri okunabilirliği artıracak şekilde yenilendi; eski menü ID’leri ve buton veri etiketleri korunur.
+
+v46 için yeni SQL gerekmez; **v45-update.sql daha önce çalıştırılmış olmalıdır**. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyala ve tarayıcıda `Ctrl + Shift + R` yap. Mevcut kampanya, karakter, class/subclass, envanter, kuşanılmış durum, market, lonca, harita ve geçmiş kayıtları korunur.
+
 ## v45 — Kuşanma Sistemi ve Ganimet Dengesi
 
 - **Kuşan** artık yalnız gerçek ekipmanda görünür: silah, zırh, kalkan, büyü odağı ve gerçekten giyilen aksesuarlar. İksir, parşömen, taş, mücevher, mühimmat, alet, belge, bileşen ve ıvır zıvır bonus alanı taşısa bile kuşanılamaz.
