@@ -79,3 +79,12 @@ Short Rest en az 1 saat; Hit Die harcanabilir ve bazı class kaynakları yenilen
 
 14. DM İÇİN HIZLI FIGHT AKIŞI
 Sıradaki savaşçıyı söyle. Hareketini sor. Actionını çöz. Varsa bonus action ve reaction kaynağını kontrol et. Hasar/condition kaydet. Sırayı geçir. Round başında süreli etkileri azalt. Yaratık davranışını stat bloğu ve zekâsına göre seç; sonucu önceden belirleyip zarı eğip bükme.
+
+15. KARMA, ADALET VE ALIGNMENT
+Karma −100 Kötü ile +100 İyi arasındadır; niyet, öngörülebilir sonuç ve gerçek telafiye bakar. Adalet −100 Kaotik ile +100 Yasal arasındadır; hak, kanıt, orantılı ceza, tutarlı kural, özgür yemin ve hesap verebilirliğe bakar. Zalim bir emre körü körüne uymak otomatik Adalet artışı değildir.
+Karma +30 üstünde İyi, −30 altında Kötü; Adalet +30 üstünde Yasal, −30 altında Kaotik sayılır. Aradaki değer Nötrdür. Bu iki eksen LG/NG/CG/LN/N/CN/LE/NE/CE eğilimini üretir. Bu bir class değildir ve karakteri kilitlemez; DM’ye tutarlılık desteğidir.
+Tanrı Yakınlığı class/subclass teması, species/subspecies mirası, iki eksen ve tanrının alignment/domain/portfolio alanından hesaplanır. Öneri otomatik spell, stat, AC, proficiency, domain veya zar bonusu vermez.
+
+16. İLAHİ DÜZEN — KAMPANYAYA ÖZEL
+İlahi Düzen sayfasındaki dokuz melek düzeni, altı yönetim katmanı, on iki kozmik yasa ve yedi ölümcül günah 2014 çekirdek kuralı değil, bu kampanya için homebrew lore aracıdır. Kartlardaki güç ve sınırlar stat bloğu yerine hikâye çerçevesidir; savaşa girerse DM uygun yaratık stat bloğunu seçer.
+Ölümcül günah aşamaları otomatik condition veya alignment değişimi yapmaz. Bunları ayartı, görünür işaret, görev bedeli ve telafi arkı üretmek için kullan. Oyuncunun kararını zorla değiştirme; yozlaşma ve kurtuluş sonuçlarını masanın sınırlarıyla birlikte belirle.

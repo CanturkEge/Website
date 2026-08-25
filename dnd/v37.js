@@ -4,6 +4,32 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.3',build:'Build 51',title:'Adalet, Alignment ve İlahi Düzen',tag:'İLAHİ',tone:'current',
+    summary:'Gizli Karma defteri ikinci bir Adalet ekseniyle birleşti; otomatik 9’lu alignment, class/species tabanlı tanrı yakınlığı, ilahi lore ansiklopedisi ve gruplanmış kısa ana menü eklendi.',
+    added:[
+      'DM’ye özel −100 / +100 Adalet ekseni eklendi: kaotik/keyfî tutumdan yasal, tutarlı ve hesap verebilir adalete uzanan beş açıklamalı kademe bulunur.',
+      'Adil süreç, yemin, yetki, haklar, ceza, düzen, yolsuzluk, isyan, merhamet, sözleşme ve hesap verme için 44 uygulanabilir Adalet referansı eklendi.',
+      'Karma İyi/Kötü, Adalet Yasal/Kaotik ekseni olarak birleştirildi; LG, NG, CG, LN, N, CN, LE, NE ve CE eğilimi puan eşiklerinden otomatik hesaplanır.',
+      'Her karakter için class, subclass, species, subspecies, Karma, Adalet, deity alignmentı, domaini ve portfolio alanını birlikte değerlendiren ilk üç Tanrı Yakınlığı önerisi eklendi.',
+      'İlahi Düzen Ansiklopedisine dokuz melek düzeni, altı ilahi yönetim katmanı, on iki kozmik yasa, yedi ölümcül günah yozlaşma yolu ve 18 DM görev kancası eklendi.',
+      'Ana menü Karakter & Parti, Macera & Savaş, Lonca & Ekonomi, Dünya & Kayıtlar, Masa İletişimi ve Rehber & Arşiv olarak açılır/kapanır gruplara ayrıldı.'
+    ],
+    fixed:[
+      '“Neutral Evil class mı?” belirsizliği giderildi; sonuç açıkça class değil, otomatik alignment eğilimi olarak etiketlendi ve gerçek class ayrı gösterildi.',
+      'Karma ile kurala uyma davranışının tek puanda karışması giderildi; iyi amaç ile adil yöntem artık iki ayrı geçmişte takip edilebilir.',
+      'Zalim yasaya körü körüne uymanın otomatik Adalet artışı sayılması engellendi; hak, delil, orantı ve hesap verebilirlik açık değerlendirme ölçütü oldu.',
+      'Uzayan sol menüde masaüstünde sayfa bulma ve telefonda gereksiz kaydırma azaltıldı; aktif sayfanın grubu otomatik açık kalır.',
+      'Eski Karma hareketlerinin kaybolması önlendi; v44KarmaLedger kayıt biçimi, değerleri ve son 100 geçmiş satırı değiştirilmeden kullanılır.'
+    ],
+    changed:[
+      'Karma ekranı karakter şeridi, iki canlı eksen kartı, 3×3 alignment matrisi, tanrı yakınlığı, ayrı geçmişler ve sekmeli referans tablosuyla tamamen yenilendi.',
+      'Tanrı yakınlığı rol yapma önerisidir; karaktere otomatik stat, proficiency, AC, spell, domain veya zar bonusu vermez ve oyuncuya gizli kalır.',
+      'Melek hiyerarşisi, ilahi yönetim, kozmik yasalar ve ölümcül günahlar açıkça kampanyaya özel homebrew lore olarak ayrıldı; 2014 çekirdek kuralı gibi sunulmaz.',
+      'Menü grupları açık/kapalı durumunu kampanya ve role göre yerelde hatırlar; mevcut sayfa buttonları taşınır, yeniden üretilmediği için eski eylem akışları korunur.',
+      'v51 yeni SQL gerektirmez; Adalet mevcut kampanya state’i ve bulut kayıt kuyruğunda saklanır, karakter ve diğer sistem verileri değiştirilmez.'
+    ]
+  },
+  {
     version:'2.2',build:'Build 50',title:'200 Görevlik Atama Panosu',tag:'GÖREV',tone:'current',
     summary:'200 ayrıntılı görev; oyuncuya açık bilgi ile DM sırrını ayıran, partiye veya seçili oyunculara atama ve durum takibi yapan gerçek görev panosunda toplandı.',
     added:[
@@ -575,7 +601,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.2'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.3'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -583,8 +609,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.2 • Build 50</h2><p>200 ayrıntılı görev; seçili oyuncu ataması, gizli DM alanları, ödül anahtarı ve durum geçmişiyle hazır.</p></div>
-      <div class="v37-patch-stats"><span><b>27</b>Sürüm</span><span><b>200</b>Görev</span><span><b>128</b>Tanrı</span><span><b>4.000</b>Ganimet</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.3 • Build 51</h2><p>İki gizli ahlaki eksen, otomatik 9 alignment, class/species tabanlı tanrı yakınlığı ve kampanyaya özel İlahi Düzen ansiklopedisi.</p></div>
+      <div class="v37-patch-stats"><span><b>28</b>Sürüm</span><span><b>2</b>Ahlaki Eksen</span><span><b>9</b>Alignment</span><span><b>128</b>Tanrı</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -593,7 +619,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.2 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.3 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

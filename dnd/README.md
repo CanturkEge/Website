@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v51 — Adalet, Alignment ve İlahi Düzen
+
+- DM’ye özel **Karma & Adalet** ekranı iki ayrı −100 / +100 eksen kullanır. Karma, Kötü ↔ İyi davranışı; Adalet ise Kaos ↔ Düzen, adil süreç, hak, yemin ve hesap verebilirliği izler.
+- Adalet için beş kademe ve **44 uygulanabilir eylem referansı** eklendi. Zalim yasaya körü körüne uymak otomatik artı sayılmaz; kanıt, orantı, eşit hak ve sorumluluk özellikle değerlendirilir.
+- İki puan otomatik olarak **LG, NG, CG, LN, N, CN, LE, NE veya CE alignment eğilimi** üretir. Bu sonuç class değildir, karakteri kilitlemez ve yalnız DM’ye karar desteği verir.
+- Her karakter için gerçek class/subclass, species/subspecies, iki ahlaki eksen ve mevcut 128 tanrının alignment/domain/portfolio alanı birlikte değerlendirilir; **en yakın üç tanrı** gerekçeleriyle gösterilir. Yakınlık otomatik bonus veya ibadet zorunluluğu vermez.
+- Oyuncu ve DM menüsüne kampanyaya özel **İlahi Düzen Ansiklopedisi** eklendi: dokuz melek düzeni, altı yönetim katmanı, 12 kozmik yasa, yedi ölümcül günahın üç aşamalı yozlaşması/telafisi ve 18 DM görev kancası bulunur.
+- İlahi Düzen sayfası açıkça **homebrew lore** olarak işaretlidir; 2014 çekirdek mekaniği değildir ve kendi başına stat, spell, condition veya alignment değiştirmez.
+- Uzayan sol ana menü altı açılır gruba ayrıldı. Aktif sayfanın grubu otomatik açılır; açık/kapalı gruplar kampanya ve role göre hatırlanır. Mevcut sayfa butonları taşındığı için eski tıklama akışları korunur.
+- Eski `v44KarmaLedger` değerleri ve geçmişi aynen korunur. Adalet ayrı `v51JusticeLedger` kaydında tutulur; mevcut karakter, envanter, market, lonca, harita, görev veya tanrı verisi dönüştürülmez.
+
+v51 için yeni SQL gerekmez; **v45-update.sql daha önce çalıştırılmış olmalıdır**. Paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyala ve tarayıcıda `Ctrl + Shift + R` yap.
+
 ## v50 — 200 Görevlik Atama Panosu
 
 - DM ve oyuncu sol menüsüne **Görev Panosu** eklendi. Rehberdeki eski 50 görev düğmesi de 200 görevlik yeni panoya yönlendirilir.
