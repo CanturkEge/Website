@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Görev Paneli</title>
+  <meta name="theme-color" content="#13271f">
+  <title>EK Hotel · Operasyon Paneli</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,32 +12,64 @@
     <form id="loginForm" class="login-card">
       <a class="back" href="../">← Ana siteye dön</a>
       <div class="logo">E</div>
-      <p class="eyebrow">EKİP YÖNETİMİ</p>
-      <h1>Görev Paneli</h1>
-      <p class="muted">Hesabınla giriş yapıp görevlerini görüntüle.</p>
-      <label>E-posta<input id="loginEmail" type="email" required placeholder="isim@sirket.com"></label>
-      <label>Şifre<input id="loginPassword" type="password" required minlength="6"></label>
-      <button class="primary" type="submit">Giriş yap</button>
+      <p class="eyebrow">EK HOTEL · PERSONEL GİRİŞİ</p>
+      <h1>Operasyon Paneli</h1>
+      <p class="muted">Departmanına özel çalışma alanına giriş yap.</p>
+      <label>E-posta<input id="loginEmail" type="email" required autocomplete="username" placeholder="isim@ekhotel.com"></label>
+      <label>Şifre<input id="loginPassword" type="password" required minlength="6" autocomplete="current-password"></label>
+      <button class="primary wide" type="submit">Giriş yap</button>
       <p id="loginError" class="error"></p>
     </form>
   </section>
 
   <main id="appView" class="shell hidden">
     <aside>
-      <div class="brand"><b>E</b><span><strong>EK Panel</strong><small>Görev yönetimi</small></span></div>
-      <nav><button class="active" data-view="tasks">⌁ Görevler</button><button data-view="team" class="admin-only">◎ Ekip</button></nav>
-      <div class="profile"><i id="avatar">EC</i><span><strong id="profileName">Kullanıcı</strong><small id="profileRole">Çalışan</small></span></div>
+      <a class="brand" href="#" data-view="dashboard"><b>E</b><span><strong>EK Hotel</strong><small>Operasyon merkezi</small></span></a>
+      <nav id="mainNav">
+        <button class="active" data-view="dashboard"><span>⌂</span> Genel bakış</button>
+        <button data-view="tasks"><span>⌁</span> Görevler</button>
+        <button data-view="team" data-roles="admin,manager"><span>◎</span> Ekip ve roller</button>
+      </nav>
+      <div class="shift-card"><span class="live-dot"></span><div><strong>Aktif vardiya</strong><small id="shiftLabel">Gündüz · 08:00–16:00</small></div></div>
+      <div class="profile"><i id="avatar">EC</i><span><strong id="profileName">Kullanıcı</strong><small id="profileRole">Personel</small></span></div>
       <button id="logoutButton" class="logout">Çıkış yap</button>
     </aside>
+
     <section class="content">
-      <header><div><p class="eyebrow">GÖREV YÖNETİMİ</p><h1 id="pageTitle">Görevlerim</h1><p id="pageSubtitle">Sana atanan işleri buradan takip et.</p></div><div class="actions admin-only"><button id="newUserButton" class="secondary">+ Kullanıcı</button><button id="newTaskButton" class="primary">+ Görev ata</button></div></header>
+      <header>
+        <div><p id="headerEyebrow" class="eyebrow">OTEL OPERASYONU</p><h1 id="pageTitle">Genel bakış</h1><p id="pageSubtitle">Bugünkü operasyonu tek ekrandan takip et.</p></div>
+        <div id="headerActions" class="actions"></div>
+      </header>
       <div id="loading" class="notice">Veriler getiriliyor…</div>
-      <section id="tasksView" class="hidden"><div id="stats" class="stats"></div><div id="board" class="board"></div></section>
-      <section id="teamView" class="team hidden"><div class="team-head"><div><h2>Ekip üyeleri</h2><p id="teamCount"></p></div><button id="newUserButton2" class="primary admin-only">+ Yeni kullanıcı</button></div><div id="userList"></div></section>
+
+      <section id="dashboardView" class="view hidden">
+        <div id="welcomeBanner" class="welcome-banner"></div>
+        <div id="hotelStats" class="stats"></div>
+        <div class="dashboard-grid">
+          <section class="panel"><div class="panel-head"><div><p class="eyebrow">ROLÜNE ÖZEL</p><h2>Hızlı işlemler</h2></div></div><div id="quickActions" class="quick-actions"></div></section>
+          <section class="panel"><div class="panel-head"><div><p class="eyebrow">ÖNCELİKLİ AKIŞ</p><h2>Sıradaki işler</h2></div><button class="text-button" data-view="tasks">Tümünü gör →</button></div><div id="priorityTasks" class="compact-list"></div></section>
+        </div>
+      </section>
+
+      <section id="tasksView" class="view hidden">
+        <div id="taskStats" class="stats"></div>
+        <div id="board" class="board"></div>
+      </section>
+
+      <section id="teamView" class="view team hidden">
+        <div class="team-head"><div><p class="eyebrow">PERSONEL YÖNETİMİ</p><h2>Ekip ve roller</h2><p id="teamCount"></p></div><button id="newUserButton2" class="primary" data-roles="admin">+ Yeni kullanıcı</button></div>
+        <div class="role-legend" id="roleLegend"></div>
+        <div id="userList" class="user-list"></div>
+      </section>
     </section>
   </main>
 
-  <div id="modalBackdrop" class="backdrop hidden"><section class="modal"><div class="modal-head"><div><p class="eyebrow">YÖNETİCİ İŞLEMİ</p><h2 id="modalTitle"></h2></div><button id="closeModal">×</button></div><form id="modalForm"></form></section></div>
+  <div id="modalBackdrop" class="backdrop hidden">
+    <section class="modal">
+      <div class="modal-head"><div><p class="eyebrow">EK HOTEL</p><h2 id="modalTitle"></h2></div><button id="closeModal" type="button">×</button></div>
+      <form id="modalForm"></form>
+    </section>
+  </div>
   <div id="toast" class="toast hidden"></div>
   <script src="config.js"></script>
   <script src="app.js"></script>

@@ -1,0 +1,9 @@
+using System.Text.Json;using TaskPanel.Api.Models;
+namespace TaskPanel.Api.Services;
+public class TaskService(SupabaseRestClient supabase){
+  static bool CanManage(CurrentUser user)=>user.Role is "admin" or "manager";
+  public async Task<JsonElement> GetAsync(CurrentUser user){const string query="tasks?select=id,title,description,assignee_id,status,priority,due_date,created_at,profiles!tasks_assignee_id_fkey(full_name,role)&order=created_at.desc";var response=await supabase.SendAsync(user,HttpMethod.Get,query);await Ensure(response);return JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement.Clone();}
+  public async Task<JsonElement> CreateAsync(CreateTaskRequest request,CurrentUser user){var assignee=CanManage(user)?request.AssigneeId??user.Id:user.Id;var body=new{title=request.Title,description=request.Description,assignee_id=assignee,created_by=user.Id,priority=request.Priority,due_date=request.DueDate};var response=await supabase.SendAsync(user,HttpMethod.Post,"tasks",body,true);await Ensure(response);return JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement.Clone();}
+  public async Task<bool> UpdateStatusAsync(long id,string status,CurrentUser user){if(status is not("pending" or "in_progress" or "completed"))throw new ArgumentException("Geçersiz görev durumu.");var filter=CanManage(user)?$"tasks?id=eq.{id}":$"tasks?id=eq.{id}&assignee_id=eq.{user.Id}";var response=await supabase.SendAsync(user,HttpMethod.Patch,filter,new{status,updated_at=DateTimeOffset.UtcNow},true);await Ensure(response);var json=JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;return json.GetArrayLength()>0;}
+  static async Task Ensure(HttpResponseMessage response){if(response.IsSuccessStatusCode)return;throw new HttpRequestException(await response.Content.ReadAsStringAsync(),null,response.StatusCode);}
+}
