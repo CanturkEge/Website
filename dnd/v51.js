@@ -98,6 +98,7 @@
     return deities.map(deity=>{
       let score=0,reasons=[],distance=v51AlignmentDistance(alignment.code,deity.alignment),alignmentPoints=[58,40,20,2,-18][distance]??-18;
       score+=alignmentPoints;if(distance===0)reasons.push(`${alignment.code} alignment uyumu`);else if(distance===1)reasons.push('Yakın alignment');
+      if(character?.className==='Cleric'&&character?.deityId===deity.id){score+=140;reasons.unshift('Cleric’in seçtiği ana tanrı')}
       const matched=[...new Set([...classDomains,...subDomains])].filter(domain=>deity.domains.includes(domain));
       if(matched.length){const domainPoints=matched.reduce((total,domain)=>total+Math.max(7,18-([...classDomains,...subDomains].indexOf(domain)*4)),0);score+=Math.min(32,domainPoints);reasons.push(`${character?.className||'Class'} → ${matched.join('/')}`)}
       const heritage=species.get(deity.id);if(heritage){score+=heritage.points;reasons.push(...heritage.reasons)}

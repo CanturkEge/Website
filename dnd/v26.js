@@ -1,7 +1,7 @@
 const V26_SUBCLASSES={
 Barbarian:['Berserker','Totem Warrior','Ancestral Guardian','Storm Herald','Zealot','Beast','Wild Magic'],
 Bard:['Lore','Valor','Glamour','Swords','Whispers','Creation','Eloquence','Spirits'],
-Cleric:['Knowledge','Life','Light','Nature','Tempest','Trickery','War','Arcana','Forge','Grave','Order','Peace','Twilight'],
+Cleric:['Knowledge','Life','Light','Nature','Tempest','Trickery','War','Death','Arcana','Forge','Grave','Order','Peace','Twilight'],
 Druid:['Land','Moon','Dreams','Shepherd','Spores','Stars','Wildfire'],
 Fighter:['Champion','Battle Master','Eldritch Knight','Arcane Archer','Cavalier','Samurai','Echo Knight','Psi Warrior','Rune Knight'],
 Monk:['Open Hand','Shadow','Four Elements','Long Death','Sun Soul','Drunken Master','Kensei','Mercy','Astral Self'],

@@ -88,3 +88,9 @@ Tanrı Yakınlığı class/subclass teması, species/subspecies mirası, iki eks
 16. İLAHİ DÜZEN — KAMPANYAYA ÖZEL
 İlahi Düzen sayfasındaki dokuz melek düzeni, altı yönetim katmanı, on iki kozmik yasa ve yedi ölümcül günah 2014 çekirdek kuralı değil, bu kampanya için homebrew lore aracıdır. Kartlardaki güç ve sınırlar stat bloğu yerine hikâye çerçevesidir; savaşa girerse DM uygun yaratık stat bloğunu seçer.
 Ölümcül günah aşamaları otomatik condition veya alignment değişimi yapmaz. Bunları ayartı, görünür işaret, görev bedeli ve telafi arkı üretmek için kullan. Oyuncunun kararını zorla değiştirme; yozlaşma ve kurtuluş sonuçlarını masanın sınırlarıyla birlikte belirle.
+
+17. CLERIC: TANRI, DOMAIN VE SEVİYE
+Tanrı adı kendi başına buff vermez. Cleric ana tanrısını seçer; tanrının portfolio alanıyla uyumlu İlahi Alan/Domain, gerçek spell, proficiency, Channel Divinity ve seviye özelliklerini belirler. Uygulamadaki 30 ana tanrı hızlı seçim içindir; 128 tanrılık ansiklopedi korunur.
+Cleric Spell Save DC = 8 + proficiency + WIS modifier. Spell Attack = d20 + proficiency + WIS modifier. Normal hazırlanmış büyü sınırı Cleric seviyesi + WIS modifierdır ve en az 1’dir. Domain büyüleri 1/3/5/7/9. Cleric seviyelerinde ikişer açılır, daima hazırlanmıştır ve bu sınıra sayılmaz.
+Channel Divinity Lv2’de 1, Lv6’da 2, Lv18’de 3 kullanımdır ve kısa veya uzun dinlenmede yenilenir. Destroy Undead eşikleri Lv5 CR 1/2, Lv8 CR 1, Lv11 CR 2, Lv14 CR 3 ve Lv17 CR 4’tür. Divine Intervention Lv10’dan itibaren d100 sonucu Cleric seviyesine eşit veya düşükse başarılı, Lv20’de otomatik başarılıdır.
+Death Domain 2014 Dungeon Master’s Guide seçeneğidir ve oyuncu karakter için DM onayı ister. Ek kitap domainleri arayüzde PHB 2014 çekirdek domainlerinden ayrı etiketlenir.

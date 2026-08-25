@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v52 — Cleric Tanrı Bağı ve İlahi Alanlar
+
+- Cleric yaratımına **30 ana Forgotten Realms tanrısı** eklendi. Tanrı seçimi, yalnız onun 2014 Appendix B domainlerini ve portfolio alanıyla uyumlu resmî ek kitap domainlerini açar.
+- Toplam **14 resmî 5e domaini** bulunur: Knowledge, Life, Light, Nature, Tempest, Trickery, War; DM onaylı Death; Arcana, Forge, Grave, Order, Peace ve Twilight.
+- Her domainin 1/3/5/7/9. seviyede açılan **10 daima hazırlanmış büyüsü** ile 1–20 arasındaki bütün subclass özellikleri action, kullanım hakkı, menzil, süre ve save bilgisiyle gösterilir.
+- Açılmış domain büyüleri normal hazırlama seçicisinden çıkarılır; böylece hazırlama sınırını yanlışlıkla tüketmez. Forge Cleric’in 6. seviyedeki ağır zırh **+1 AC** özelliği aktif AC hesabına da uygulanır.
+- Cleric ekranında seviyeye ve WIS değerine göre Spell Save DC, spell attack, bilinen cantrip, normal hazırlanmış büyü hakkı, 1–9. seviye slotlar, Channel Divinity hakkı, Destroy Undead CR eşiği ve Divine Intervention kuralı otomatik hesaplanır.
+- Tanrı adı kendi başına STR, AC, proficiency veya zar bonusu vermez. Asıl buff ve yetenekler seçilen domain kartlarından gelir.
+- Eski **128 tanrılık ansiklopedi** aynen korunur; yalnız Cleric yaratım seçicisi masada kullanışlı olması için 30 ana tanrıyla sınırlıdır.
+- Eski Clericler silinmez. Eksik tanrı/domain seçimi oyuncu tarafından bir kez tamamlanır ve sonra kilitlenir; DM karakter düzenleme ekranından değiştirebilir.
+
+Kurulumda önce paketteki `dnd` klasörünü mevcut `dnd` klasörünün üzerine kopyala, ardından **`v52-update.sql` dosyasını Supabase SQL Editor’da bir kez çalıştır** ve tarayıcıda `Ctrl + Shift + R` yap. SQL veri silmez, eski RPC’leri değiştirmez ve v31 kayıt birleştirme hattını korur. Mevcut kampanya, karakter, büyü, envanter, market, lonca, harita, görev, karma, adalet, tanrı ve bütün geçmiş kayıtları korunur.
+
 ## v51 — Adalet, Alignment ve İlahi Düzen
 
 - DM’ye özel **Karma & Adalet** ekranı iki ayrı −100 / +100 eksen kullanır. Karma, Kötü ↔ İyi davranışı; Adalet ise Kaos ↔ Düzen, adil süreç, hak, yemin ve hesap verebilirliği izler.

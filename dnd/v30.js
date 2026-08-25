@@ -23,9 +23,11 @@ document.addEventListener('click',async e=>{let b=e.target.closest('button');if(
  if(b.dataset.v30Build){let c=state.characters.find(x=>x.id===b.dataset.v30Build);if(c)modal(`${c.name} — Build Seçimleri`,v30BuildForm(c));return}
  if(b.id==='v30CreatePlayerCharacter'){
   e.preventDefault();e.stopImmediatePropagation();
-  let name=$('#prNewName').value.trim(),species=$('#prNewSpecies').value,subspecies=$('#prNewSubspecies').value,className=$('#prNewClass').value,background=$('#v30NewBackground').value,startingSubclass=$('#v31NewSubclass')?.value||'',classSkills=[...document.querySelectorAll('[data-v30-new-class]:checked')].map(x=>x.dataset.v30NewClass),bonusSkills=[...document.querySelectorAll('[data-v30-new-bonus]:checked')].map(x=>x.dataset.v30NewBonus),classLimit=+$('#v30NewClassLimit').value,bonusLimit=+$('#v30NewBonusLimit').value;
+  let name=$('#prNewName').value.trim(),species=$('#prNewSpecies').value,subspecies=$('#prNewSubspecies').value,className=$('#prNewClass').value,background=$('#v30NewBackground').value,startingSubclass=$('#v31NewSubclass')?.value||'',deityId=$('#v52NewDeity')?.value||'',classSkills=[...document.querySelectorAll('[data-v30-new-class]:checked')].map(x=>x.dataset.v30NewClass),bonusSkills=[...document.querySelectorAll('[data-v30-new-bonus]:checked')].map(x=>x.dataset.v30NewBonus),classLimit=+$('#v30NewClassLimit').value,bonusLimit=+$('#v30NewBonusLimit').value;
   if(name.length<2)return alert('Karakter adı en az 2 karakter olmalı.');
+  if(className==='Cleric'&&!deityId)return alert('Cleric için önce hizmet ettiğin ana tanrıyı seç.');
   if(prSubclassLevel(className)===1&&!startingSubclass)return alert(`${className} subclassını başlangıçta seç.`);
+  if(className==='Cleric'&&startingSubclass==='Death'&&!confirm('Death Domain 2014 DMG seçeneğidir. DM bu oyuncu karakteri için onay verdi mi?'))return;
   if(classSkills.length!==classLimit)return alert(`${className} için tam ${classLimit} class skill seç.`);
   if(bonusSkills.length!==bonusLimit)return alert(`${species} için tam ${bonusLimit} ek skill seç.`);
   let cl=prClass(className),base=Object.fromEntries(PR_ABILITIES.map((k,i)=>[k,cl.stats[i]])),draft={className,species,subspecies,level:1,baseStats:base,stats:base},maxHp=prAutoHP(draft),ac=prAutoAC(draft);
@@ -35,8 +37,8 @@ document.addEventListener('click',async e=>{let b=e.target.closest('button');if(
   await syncFromServer(false);let c=myChar();
   if(!c)return alert('Karakter oluşturuldu fakat yeniden yüklenemedi; sayfayı yenile.');
   if(startingSubclass){
-   let choice=await db.rpc('character_choices_set',{p_user:auth.id,p_campaign:current.id,p_subclass:startingSubclass,p_subspecies:subspecies,p_spells:[]});
-   if(choice.error)return alert('Karakter oluştu fakat subclass kaydedilemedi; v31-update.sql dosyasını çalıştır: '+choice.error.message);
+   let cleric=className==='Cleric',choice=await db.rpc(cleric?'character_choices_set_v52':'character_choices_set',cleric?{p_user:auth.id,p_campaign:current.id,p_subclass:startingSubclass,p_subspecies:subspecies,p_spells:[],p_deity_id:deityId}:{p_user:auth.id,p_campaign:current.id,p_subclass:startingSubclass,p_subspecies:subspecies,p_spells:[]});
+   if(choice.error)return alert(`Karakter oluştu fakat ${cleric?'tanrı/domain':'subclass'} kaydedilemedi; ${cleric?'v52-update.sql':'v31-update.sql'} dosyasını çalıştır: `+choice.error.message);
   }
   let build={background,classSkillChoices:classSkills,bonusSkillChoices:bonusSkills,expertise:[],asiAllocations:{},feats:[]},second=await db.rpc('character_build_set_v30',{p_user:auth.id,p_campaign:current.id,p_character:c.id,p_build:build});
   if(second.error)return alert('Karakter oluştu; proficiency kaydı için v30-update.sql çalıştır ve Yetenekler menüsünden seçimleri kaydet: '+second.error.message);

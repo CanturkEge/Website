@@ -4,6 +4,31 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.4',build:'Build 52',title:'Cleric Tanrı Bağı ve 14 İlahi Alan',tag:'CLERIC',tone:'current',
+    summary:'Cleric yaratımı 30 ana Forgotten Realms tanrısı, kanonik domain uyumu ve 1–20 seviyeye göre açılan gerçek class/domain mekanikleriyle tamamlandı.',
+    added:[
+      'Cleric karakter yaratımına 30 ana Forgotten Realms tanrısı eklendi; tanrı seçilince yalnız portfolio alanıyla uyumlu domainler gösterilir.',
+      'PHB 2014’ün yedi çekirdek domaini ile Death, Arcana, Forge, Grave, Order, Peace ve Twilight olmak üzere toplam 14 resmî 5e domaini eklendi.',
+      'Her domain için 1/3/5/7/9. Cleric seviyelerinde açılan on daima hazırlanmış büyü ve bütün domain özellikleri seviye, action, kullanım, menzil, süre ve save bilgisiyle işlendi.',
+      'Cleric ekranına canlı Spell Save DC, spell attack, cantrip sayısı, normal hazırlama hakkı, domain spell sayısı ve 1–9. seviye spell slotları eklendi.',
+      'Channel Divinity kullanım sayısı, Turn/Destroy Undead CR eşiği ve Divine Intervention başarı kuralı karakter seviyesine göre otomatik gösterilir.',
+      '30 tanrının Appendix B domainleri ile resmî ek kitap uyumlarını karşılaştıran, 128 tanrılık ansiklopedi kartına bağlanan kısa atlas eklendi.'
+    ],
+    fixed:[
+      'Tanrı adının kendi başına STR, AC, proficiency, zar veya spell bonusu verdiği yanılgısı karakter ekranında açık kuralla giderildi; mekanik güç domain özelliğinden gelir.',
+      'Eski Cleric karakterleri silinmeden korunur; eksik tanrı/domain bağı oyuncu tarafından bir kez tamamlanabilir, sonra yalnız DM değiştirebilir.',
+      'Death Domain oyuncu seçimi DM onayı uyarısıyla korundu; uyumsuz tanrı/domain eşleşmesi hem arayüzde hem sunucu fonksiyonunda reddedilir.',
+      'Seçilmiş ana tanrı, v51 Tanrı Yakınlığı hesabında artık açık ve en güçlü gerekçelerden biri olarak tanınır.'
+    ],
+    changed:[
+      'Cleric ağır zırh, martial silah, tool, dil ve skill proficiency özeti seçilen domainin gerçek özelliklerine göre genişler.',
+      'Normal hazırlanmış Cleric büyüsü sınırı WIS modifierı + Cleric seviyesi olarak hesaplanır; açılmış domain büyüleri seçiciden çıkarılır ve bu sınıra dahil edilmez.',
+      'Forge Cleric’in 6. seviyedeki Soul of the Forge özelliği, heavy armor kuşanıldığında aktif AC hesabına gerçek +1 bonus olarak uygulanır.',
+      'Oyuncunun ilk tanrı/domain kaydı tek atomik işlemde yapılır ve mevcut v31 kayıt birleştirme hattı, karakterler ile hazırlanmış büyüler korunur.',
+      'v52 kurulumu için v52-update.sql dosyası Supabase SQL Editor’da bir kez çalıştırılmalıdır; dosya veri silmez ve eski RPC’leri değiştirmez.'
+    ]
+  },
+  {
     version:'2.3',build:'Build 51',title:'Adalet, Alignment ve İlahi Düzen',tag:'İLAHİ',tone:'current',
     summary:'Gizli Karma defteri ikinci bir Adalet ekseniyle birleşti; otomatik 9’lu alignment, class/species tabanlı tanrı yakınlığı, ilahi lore ansiklopedisi ve gruplanmış kısa ana menü eklendi.',
     added:[
@@ -601,7 +626,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.3'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.4'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -609,8 +634,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.3 • Build 51</h2><p>İki gizli ahlaki eksen, otomatik 9 alignment, class/species tabanlı tanrı yakınlığı ve kampanyaya özel İlahi Düzen ansiklopedisi.</p></div>
-      <div class="v37-patch-stats"><span><b>28</b>Sürüm</span><span><b>2</b>Ahlaki Eksen</span><span><b>9</b>Alignment</span><span><b>128</b>Tanrı</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.4 • Build 52</h2><p>Cleric için 30 ana tanrı, kanonik domain eşleşmesi ve 1–20 seviyeye göre açılan class/domain mekanikleri.</p></div>
+      <div class="v37-patch-stats"><span><b>29</b>Sürüm</span><span><b>14</b>Cleric Domain</span><span><b>30</b>Ana Tanrı</span><span><b>128</b>Ansiklopedi</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -619,7 +644,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.3 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.4 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
