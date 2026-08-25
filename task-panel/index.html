@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Görev Paneli</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section id="loginView" class="login-wrap">
+    <form id="loginForm" class="login-card">
+      <a class="back" href="../">← Ana siteye dön</a>
+      <div class="logo">E</div>
+      <p class="eyebrow">EKİP YÖNETİMİ</p>
+      <h1>Görev Paneli</h1>
+      <p class="muted">Hesabınla giriş yapıp görevlerini görüntüle.</p>
+      <label>E-posta<input id="loginEmail" type="email" required placeholder="isim@sirket.com"></label>
+      <label>Şifre<input id="loginPassword" type="password" required minlength="6"></label>
+      <button class="primary" type="submit">Giriş yap</button>
+      <p id="loginError" class="error"></p>
+    </form>
+  </section>
+
+  <main id="appView" class="shell hidden">
+    <aside>
+      <div class="brand"><b>E</b><span><strong>EK Panel</strong><small>Görev yönetimi</small></span></div>
+      <nav><button class="active" data-view="tasks">⌁ Görevler</button><button data-view="team" class="admin-only">◎ Ekip</button></nav>
+      <div class="profile"><i id="avatar">EC</i><span><strong id="profileName">Kullanıcı</strong><small id="profileRole">Çalışan</small></span></div>
+      <button id="logoutButton" class="logout">Çıkış yap</button>
+    </aside>
+    <section class="content">
+      <header><div><p class="eyebrow">GÖREV YÖNETİMİ</p><h1 id="pageTitle">Görevlerim</h1><p id="pageSubtitle">Sana atanan işleri buradan takip et.</p></div><div class="actions admin-only"><button id="newUserButton" class="secondary">+ Kullanıcı</button><button id="newTaskButton" class="primary">+ Görev ata</button></div></header>
+      <div id="loading" class="notice">Veriler getiriliyor…</div>
+      <section id="tasksView" class="hidden"><div id="stats" class="stats"></div><div id="board" class="board"></div></section>
+      <section id="teamView" class="team hidden"><div class="team-head"><div><h2>Ekip üyeleri</h2><p id="teamCount"></p></div><button id="newUserButton2" class="primary admin-only">+ Yeni kullanıcı</button></div><div id="userList"></div></section>
+    </section>
+  </main>
+
+  <div id="modalBackdrop" class="backdrop hidden"><section class="modal"><div class="modal-head"><div><p class="eyebrow">YÖNETİCİ İŞLEMİ</p><h2 id="modalTitle"></h2></div><button id="closeModal">×</button></div><form id="modalForm"></form></section></div>
+  <div id="toast" class="toast hidden"></div>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
