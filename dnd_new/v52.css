@@ -1,0 +1,60 @@
+/* v52 — canonical deity-bound Cleric progression */
+:root{--v52-gold:#e6b85f;--v52-cream:#f4ddb0;--v52-line:#68502d;--v52-panel:#120d09;--v52-blue:#7eb8c9;--v52-green:#72b98a;--v52-red:#cf7777}
+.v52-cleric,.v52-cleric *,.v52-identity-choice,.v52-identity-choice *{box-sizing:border-box}
+.v52-cleric{display:grid;gap:13px;min-width:0;margin-bottom:16px}
+.v52-cleric-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:22px;padding:22px;border:1px solid #8a6633;border-radius:14px;background:radial-gradient(circle at 92% 10%,#e4b45422,transparent 28%),radial-gradient(circle at 5% 100%,#397e9220,transparent 34%),linear-gradient(145deg,#26180f,#0e0907 72%);box-shadow:0 16px 42px #0006;overflow:hidden}
+.v52-cleric-hero h2{margin:4px 0 7px;color:var(--v52-cream);font-size:clamp(25px,3.2vw,39px)}
+.v52-cleric-hero p{max-width:820px;margin:0;color:#c3b092;line-height:1.55}
+.v52-hero-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.v52-hero-badges span{padding:5px 8px;border:1px solid #6b512e;border-radius:999px;background:#110c08;color:#d6b779;font-size:9px;font-weight:900;letter-spacing:.07em}
+.v52-hero-badges span.warning{border-color:#8a4949;color:#ef9d9d}
+.v52-cleric-mark{display:grid;place-items:center;width:96px;height:96px;border:1px solid #ae7d37;border-radius:50%;background:radial-gradient(circle,#5c3518,#160e09 66%);box-shadow:inset 0 0 24px #e2aa3d22,0 0 28px #e2aa3d1a;color:#f2c66f;font-size:45px}
+.v52-rule-truth{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:12px;padding:12px 14px;border:1px solid #4e7180;border-left:4px solid var(--v52-blue);border-radius:9px;background:linear-gradient(90deg,#13232a,#100c09)}
+.v52-rule-truth>b{color:#9bc9d5}.v52-rule-truth p{margin:0;color:#b9b5a8;line-height:1.5}.v52-rule-truth strong{color:#e4c58d}
+.v52-cleric-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.v52-cleric-stats>article{display:grid;align-content:start;gap:2px;min-width:0;padding:12px;border:1px solid #514026;border-radius:9px;background:linear-gradient(145deg,#17110c,#0e0a08)}
+.v52-cleric-stats small{overflow:hidden;color:#9f8b6d;font-size:9px;font-weight:900;letter-spacing:.05em;text-overflow:ellipsis;white-space:nowrap}
+.v52-cleric-stats b{color:#f0ca7d;font-size:23px;line-height:1.15}.v52-cleric-stats span{color:#776b58;font-size:9px}
+.v52-slot-card,.v52-domain-spell-card,.v52-howto,.v52-deity-atlas{padding:0!important;overflow:hidden}
+.v52-slot-card>summary,.v52-domain-spell-card>summary,.v52-howto>summary,.v52-deity-atlas>summary{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:13px 15px;list-style:none;cursor:pointer}
+.v52-slot-card summary::-webkit-details-marker,.v52-domain-spell-card summary::-webkit-details-marker,.v52-howto summary::-webkit-details-marker,.v52-deity-atlas summary::-webkit-details-marker,.v52-feature summary::-webkit-details-marker{display:none}
+.v52-slot-card>summary>span,.v52-domain-spell-card>summary>span,.v52-howto>summary>span,.v52-deity-atlas>summary>span{display:grid;gap:2px}
+.v52-slot-card summary b,.v52-domain-spell-card summary b,.v52-howto summary b,.v52-deity-atlas summary b{color:#e3c895}
+.v52-slot-card summary small,.v52-domain-spell-card summary small,.v52-howto summary small,.v52-deity-atlas summary small{color:#8e7c63}
+.v52-slot-card summary i,.v52-domain-spell-card summary i,.v52-howto summary i,.v52-deity-atlas summary i{color:#d09c49;font-size:20px;font-style:normal;transition:transform .16s}
+.v52-slot-card[open]>summary,.v52-domain-spell-card[open]>summary,.v52-howto[open]>summary,.v52-deity-atlas[open]>summary{border-bottom:1px solid #4b3822;background:#1b130d}
+.v52-slot-card[open] summary i,.v52-domain-spell-card[open] summary i,.v52-howto[open] summary i,.v52-deity-atlas[open] summary i{transform:rotate(45deg)}
+.v52-slot-row{display:grid;grid-template-columns:repeat(9,minmax(58px,1fr));gap:6px;padding:11px}
+.v52-slot-row>span{display:grid;gap:2px;padding:9px 6px;border:1px solid #4f3c25;border-radius:8px;background:#0e0a08;text-align:center}
+.v52-slot-row small{color:#877760;font-size:8px}.v52-slot-row b{color:#e8bc69;font-size:19px}
+.v52-cleric-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.v52-cleric-columns>.card{min-width:0;padding:15px!important}
+.v52-section-head{display:grid;gap:2px;margin-bottom:11px}.v52-section-head>span{color:#bd8f4c;font-size:9px;font-weight:900;letter-spacing:.12em}.v52-section-head h3{margin:0;color:#ead2a5}.v52-section-head p{margin:0;color:#92836e;line-height:1.45}
+.v52-source-note{margin:0 0 10px;padding:9px 10px;border-left:3px solid #ae7540;background:#21150d;color:#bca380;line-height:1.45}
+.v52-feature-list{display:grid;gap:6px}
+.v52-feature{border:1px solid #4b3924;border-radius:9px;background:#100c09;overflow:hidden}
+.v52-feature>summary{display:grid;grid-template-columns:48px minmax(0,1fr) 20px;align-items:center;gap:9px;padding:10px;list-style:none;cursor:pointer}
+.v52-feature-level{display:grid;place-items:center;min-height:32px;border:1px solid #8b6534;border-radius:7px;color:#e1ad55;font-size:10px;font-weight:900}
+.v52-feature summary>span:nth-child(2){display:grid;min-width:0;gap:1px}.v52-feature summary b{overflow:hidden;color:#d8bd8b;text-overflow:ellipsis;white-space:nowrap}.v52-feature summary small{color:#7f715e;font-size:8px;font-weight:900;letter-spacing:.05em}.v52-feature summary i{color:#bc8a42;font-size:17px;font-style:normal;transition:transform .16s}
+.v52-feature[open]>summary{border-bottom:1px solid #44321f;background:#1a120c}.v52-feature[open] summary i{transform:rotate(45deg)}
+.v52-feature.locked{opacity:.55;filter:saturate(.6)}.v52-feature.unlocked{border-color:#68502f;box-shadow:inset 3px 0 #c89343}.v52-feature.unlocked .v52-feature-level{background:#33200f;color:#ffd98c}
+.v52-feature>div{padding:10px 12px}.v52-feature>div>p{margin:0;color:#b7a58b;line-height:1.52}
+.v52-feature dl{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 0}.v52-feature dl>div{display:grid;gap:1px;min-width:100px;padding:6px 8px;border:1px solid #3d3020;border-radius:6px;background:#0b0807}.v52-feature dt{color:#7d6f5c;font-size:8px;font-weight:900;text-transform:uppercase}.v52-feature dd{margin:0;color:#d0b88b;font-size:10px}
+.v52-domain-spell-card>div,.v52-howto>div{padding:12px 14px}.v52-domain-spell-card>div>p{margin:0 0 10px;color:#a99980;line-height:1.5}.v52-domain-spell-card>div>p b{color:#e0bd79}
+.v52-domain-spells{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.v52-domain-spells>article{display:grid;align-content:start;gap:4px;min-width:0;padding:10px;border:1px solid #4e3b24;border-radius:8px;background:#0f0b08}
+.v52-domain-spells>article>span{color:#a27d43;font-size:8px;font-weight:900;letter-spacing:.06em}.v52-domain-spells>article>b{overflow:hidden;color:#d9bf8c;font-size:11px;text-overflow:ellipsis;white-space:nowrap}.v52-domain-spells>article>small{margin-top:3px;color:#766a57;font-size:8px;line-height:1.35}
+.v52-domain-spells>article.locked{opacity:.45}.v52-domain-spells>article.unlocked{border-color:#766038;background:linear-gradient(145deg,#20160d,#0f0b08)}.v52-domain-spells>article.unlocked>small{color:#75b58b}
+.v52-howto ol{display:grid;gap:7px;margin:0;padding-left:20px;color:#af9d84;line-height:1.5}.v52-howto li::marker{color:#d7a34d}.v52-howto li b{color:#ddc18d}
+.v52-deity-atlas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:11px}
+.v52-deity-atlas-grid>article{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:9px;padding:10px;border:1px solid #463621;border-radius:8px;background:#0f0b08}
+.v52-deity-atlas-grid>article>span{display:grid;place-items:center;min-height:31px;border:1px solid #725532;border-radius:7px;color:#d4a85d;font-size:9px;font-weight:900}
+.v52-deity-atlas-grid article>div{display:grid;min-width:0;gap:1px}.v52-deity-atlas-grid article b{color:#dec594}.v52-deity-atlas-grid article small{overflow:hidden;color:#8b7c66;font-size:9px;text-overflow:ellipsis;white-space:nowrap}.v52-deity-atlas-grid article p{margin:3px 0 0;color:#9c8c74;font-size:9px;line-height:1.35}.v52-deity-atlas-grid article strong{color:#cba665}.v52-deity-atlas-grid button{padding:6px 8px;font-size:9px}
+.v52-identity-choice{display:grid;gap:10px;margin:10px 0;padding:14px;border:1px solid #745531;border-radius:10px;background:radial-gradient(circle at 100% 0,#d69b3420,transparent 30%),linear-gradient(145deg,#1b120c,#0e0a08)}
+.v52-new-choice{grid-column:1/-1}.v52-choice-head{display:grid;gap:2px}.v52-choice-head>span{color:#c99647;font-size:9px;font-weight:900;letter-spacing:.13em}.v52-choice-head>b{color:#ead0a0;font-size:16px}.v52-choice-head p{margin:2px 0 0;color:#9f9079;line-height:1.45}
+.v52-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.v52-choice-grid label{display:grid;align-content:start;gap:5px;color:#cab38b;font-weight:800}.v52-choice-grid small{color:#81735f;font-size:9px;font-weight:400}.v52-choice-grid select:disabled{cursor:not-allowed;opacity:.58}
+.v52-choice-warning{margin:0;padding:8px 10px;border-left:3px solid #a86c3e;background:#24160d;color:#bda383;font-size:10px;line-height:1.45}
+
+@media(max-width:1120px){.v52-cleric-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.v52-slot-row{grid-template-columns:repeat(5,minmax(58px,1fr))}.v52-domain-spells{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:820px){.v52-cleric-hero{grid-template-columns:1fr}.v52-cleric-mark{grid-row:1;justify-self:end;width:70px;height:70px;margin-bottom:-78px;font-size:32px}.v52-cleric-hero>div:first-child{padding-right:72px}.v52-cleric-columns,.v52-deity-atlas-grid{grid-template-columns:1fr}.v52-choice-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.v52-cleric{gap:9px}.v52-cleric-hero{padding:15px}.v52-cleric-hero h2{font-size:25px}.v52-cleric-mark{width:57px;height:57px;margin-bottom:-65px;font-size:27px}.v52-cleric-hero>div:first-child{padding-right:54px}.v52-rule-truth{grid-template-columns:1fr;gap:3px}.v52-cleric-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.v52-cleric-stats>article{padding:9px}.v52-cleric-stats b{font-size:19px}.v52-slot-row{display:flex;overflow-x:auto}.v52-slot-row>span{flex:0 0 68px}.v52-domain-spells{grid-template-columns:1fr}.v52-feature>summary{grid-template-columns:42px minmax(0,1fr) 18px;padding:9px}.v52-feature summary b{white-space:normal}.v52-deity-atlas-grid>article{grid-template-columns:34px minmax(0,1fr)}.v52-deity-atlas-grid button{grid-column:2;justify-self:start}.v52-identity-choice{padding:11px}}

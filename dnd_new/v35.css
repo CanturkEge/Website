@@ -1,0 +1,62 @@
+/* v35 — responsive market and small-screen map hardening */
+#view{width:100%;min-width:0}
+
+/* The layout must always have exactly two grid children: sidebar + catalog. */
+.v27-market-layout{
+  width:100%;
+  min-width:0;
+  grid-template-columns:minmax(340px,420px) minmax(0,1fr);
+  gap:16px;
+}
+.v27-market-layout>.v35-market-sidebar,
+.v27-market-layout>.v35-market-catalog{min-width:0;width:100%}
+.v27-market-layout>.v35-market-sidebar{
+  display:grid;
+  gap:12px;
+  position:sticky;
+  top:15px;
+}
+.v27-market-layout .v35-market-sidebar>.shop-control{
+  position:static;
+  top:auto;
+  min-width:0;
+}
+.v35-market-catalog .shop-tabs{max-width:100%}
+.v35-market-catalog .shop-grid{
+  width:100%;
+  min-width:0;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));
+}
+.v35-market-catalog .shop-item,
+.v35-market-catalog .shop-item>summary,
+.v35-market-catalog .v27-shop-body{min-width:0}
+.v35-market-catalog .shop-item>summary .between{gap:8px;flex-wrap:wrap}
+
+/* Map remains readable on phones: it pans instead of being crushed. */
+.v32-map-viewport{
+  max-width:100%;
+  touch-action:pan-x pan-y;
+  -webkit-overflow-scrolling:touch;
+}
+
+@media(max-width:1100px){
+  .v27-market-layout{grid-template-columns:minmax(0,1fr)}
+  .v27-market-layout>.v35-market-sidebar{position:static;top:auto}
+  .v35-market-sidebar .shop-switches{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+}
+
+@media(max-width:700px){
+  .v27-market-layout{display:grid;gap:12px}
+  .v35-market-sidebar .shop-switches{grid-template-columns:1fr;max-height:46dvh}
+  .v35-market-catalog .shop-grid{grid-template-columns:1fr}
+  .v35-market-catalog .shop-tabs{padding-bottom:10px}
+  .v32-map-canvas{min-width:600px}
+  dialog.v33-map-dialog{width:calc(100vw - 12px);max-height:96dvh;margin:auto}
+  dialog.v33-map-dialog form{max-height:96dvh}
+}
+
+@media(max-width:420px){
+  .v32-map-canvas{min-width:540px}
+  .v35-market-catalog .shop-item>summary{padding:12px}
+  .v35-market-catalog .v27-shop-body{padding-inline:12px}
+}
