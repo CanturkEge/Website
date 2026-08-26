@@ -1,5 +1,16 @@
 # Kadim Masa Defteri — Kurulum
 
+## v53 — Karakter Kuralları Büyük Yenilemesi
+
+- **29 ana species / 95 alt tür ve miras** tek denetlenmiş katalogda toplandı. Parent species ile subspecies ability bonusları artık birlikte hesaplanır; hız, darkvision, direnç ve özel hareketler kaynak etiketiyle gösterilir. Standard Human +1 bütün statlar, Variant Human iki farklı +1, Half-Elf ve Half-Orc 2014 değerleriyle çalışır.
+- **13 legacy class / 113 subclass** için subclass açılma seviyesi, 1–20 çekirdek özellikleri, subclass kilometre taşları, Hit Die, save proficiency ve ana statlar yenilendi. Homebrew/kampanya seçenekleri resmî seçenek gibi gizli buff vermez; etiketlenerek korunur.
+- Oyuncu büyü hazırlama ekranı eski kısa listeden çıkarılıp mevcut **319 büyülük 2014 SRD kataloğuna** bağlandı. Class listesi, açılmış spell seviyesi, cantrip sayısı, bilinen/hazırlanan büyü sınırı, Warlock pact slotu ve Mystic Arcanum ayrı hesaplanır; ad, okul ve seviye filtresi bulunur. Divine Soul Cleric listesine, Eldritch Knight/Arcane Trickster sınırlı Wizard listesine ve Bard Magical Secrets class dışı seçime erişir; okul ve ek seçim sınırları kayıtta doğrulanır.
+- Yeni karakter oluştururken üç ability yöntemi vardır: sınıfa göre otomatik **15/14/13/12/10/8**, değerleri elle yerleştirilen Standard Array ve skor maliyetleri denetlenen **27 Point Buy**. Esnek species bonusları da hangi ability’ye gideceği seçilerek kaydedilir.
+- Tür + alt tür + esnek bonus + seviye ASI + DM düzeltmesi + kuşanılmış eşya bonusu tek stat motorunda birleşir ve karakter kartında kaynak kaynak açıklanır. Hill Dwarf HP, Dwarf ağır zırh hız istisnası, alt tür/özel hareket hızları ve Barbarian Lv20 **STR/CON +4 (tavan 24)** gibi eksik etkiler de uygulanır.
+- Mevcut karakter, subclass, hazırlanmış büyü, envanter, market, görev, tanrı/domain, karma/adalet ve tüm kampanya state’i korunur. Legacy veya özel seçimler katalog dışına düştüğü için silinmez.
+
+Kurulumda paketteki `dnd` klasörünü mevcut klasörün üzerine kopyala, ardından **`v53-update.sql` dosyasını Supabase SQL Editor’da bir kez çalıştır** ve `Ctrl + Shift + R` yap. v52 daha önce kurulmadıysa Cleric tanrı/domain kaydı için `v52-update.sql` de bir kez çalıştırılmalıdır. v53 SQL’i veri silmez; yalnız yeni oyuncu karakter yaratımı için doğrulanmış RPC ekler ve v31 kayıt birleştirme hattını değiştirmez.
+
 ## v52 — Cleric Tanrı Bağı ve İlahi Alanlar
 
 - Cleric yaratımına **30 ana Forgotten Realms tanrısı** eklendi. Tanrı seçimi, yalnız onun 2014 Appendix B domainlerini ve portfolio alanıyla uyumlu resmî ek kitap domainlerini açar.

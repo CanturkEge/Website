@@ -4,6 +4,33 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.5',build:'Build 53',title:'Karakter Kuralları Büyük Yenilemesi',tag:'KARAKTER',tone:'current',
+    summary:'Tür/alt tür statları, 13 legacy sınıf, 113 subclass, 319 SRD büyü ve manuel ability üretimi tek denetlenmiş 2014 kural motorunda birleşti.',
+    added:[
+      'Karakter yaratımına sınıfa göre otomatik Standard Array, elle dağıtılan Standard Array ve gerçek maliyet tablosuyla 27 Point Buy seçenekleri eklendi.',
+      '29 ana species ve 95 alt tür/miras için sabit veya esnek ability bonusu, hız, darkvision, direnç, hareket ve kaynak etiketi eklendi; Half-Elf ve Half-Orc kataloğa döndü.',
+      '13 resmî legacy class için 1–20 çekirdek özellik tablosu, doğru subclass açılma seviyesi, Hit Die, save proficiency, ana stat ve class kaynak sayaçları eklendi.',
+      'Toplam 113 subclassın özellik kilometre taşları ve kaynak/masa kuralı ayrımı karaktere özel ilerleme ekranında gösterilir.',
+      'Oyuncu büyü seçicisi 319 kayıtlık 2014 SRD kataloğuna bağlandı; arama, spell level ve okul filtresi ile cantrip/büyü sayaçları eklendi.'
+    ],
+    fixed:[
+      'Alt tür ability bonuslarının stat hesabına hiç eklenmemesi düzeltildi; parent species ve seçilen subspecies artık aynı hesapta birleşir.',
+      'Human’ın yanlış yalnız CHA +1 bonusu düzeltildi: Standard Human bütün altı ability’ye +1, Variant Human iki farklı ability’ye +1 uygular.',
+      'Yaklaşık 50 büyülük eski mini seçim listesi kaldırıldı; classın SRD listesindeki açılmış büyülerin tamamı oyuncuya ulaşır.',
+      'Bard, Ranger, Sorcerer ve Warlock bilinen büyü; Cleric, Druid, Paladin, Wizard ve Artificer hazırlama sınırları gerçek class tablolarına göre ayrıldı.',
+      'Arcane Trickster’ın zorunlu Mage Hand’i seçim hakkından ayrıldı; Scout expertise, Fey Wanderer/Samurai skill ve Watchers initiative bonusları doğru seviyelerde hesaplanır.',
+      'Kalkanın armor gibi okunup AC tabanını bozması, Dwarf ağır zırh hız cezası ve Champion initiative yarım-PB yuvarlaması düzeltildi.',
+      'Eksik Ancestral Guardian, Storm Herald ve Beast açıklamaları tamamlandı; homebrew seçeneklerin sessizce resmî bonus vermesi engellendi.'
+    ],
+    changed:[
+      'Species + subspecies + esnek tür bonusu + seviye ASI + DM düzeltmesi + kuşanılmış eşya stat kaynağı karakter kartında ayrı ayrı gösterilir.',
+      'Warlock pact slotu/Mystic Arcanum, Monk Ki ve Martial Arts, Barbarian Rage, Rogue Sneak Attack ve diğer class kaynakları seviyeye göre canlı hesaplanır.',
+      'Hill Dwarf seviye başına HP, alt tür hızı/darkvision/direnci ve Barbarian Lv20 STR/CON +4 ile 24 tavanı hesap motoruna bağlandı.',
+      'Yeni karakterin ability yöntemi ve esnek species bonusları güvenli RPC ile JSON state’e eklenir; mevcut karakterler ve v31 kayıt hattı dönüştürülmeden korunur.',
+      'v53 kurulumu için v53-update.sql bir kez çalıştırılmalıdır; daha önce kurulmayan v52 Cleric bağı için v52-update.sql de çalıştırılır.'
+    ]
+  },
+  {
     version:'2.4',build:'Build 52',title:'Cleric Tanrı Bağı ve 14 İlahi Alan',tag:'CLERIC',tone:'current',
     summary:'Cleric yaratımı 30 ana Forgotten Realms tanrısı, kanonik domain uyumu ve 1–20 seviyeye göre açılan gerçek class/domain mekanikleriyle tamamlandı.',
     added:[
@@ -626,7 +653,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.4'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.5'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -634,8 +661,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.4 • Build 52</h2><p>Cleric için 30 ana tanrı, kanonik domain eşleşmesi ve 1–20 seviyeye göre açılan class/domain mekanikleri.</p></div>
-      <div class="v37-patch-stats"><span><b>29</b>Sürüm</span><span><b>14</b>Cleric Domain</span><span><b>30</b>Ana Tanrı</span><span><b>128</b>Ansiklopedi</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.5 • Build 53</h2><p>Tür, alt tür, class, subclass, stat buffı, cantrip ve büyü seçimlerini kapsayan 2014 legacy karakter kuralları yenilemesi.</p></div>
+      <div class="v37-patch-stats"><span><b>30</b>Sürüm</span><span><b>29</b>Species</span><span><b>113</b>Subclass</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -644,7 +671,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.4 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.5 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
