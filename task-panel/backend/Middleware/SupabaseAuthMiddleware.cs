@@ -1,3 +1,0 @@
-using TaskPanel.Api.Services;
-namespace TaskPanel.Api.Middleware;
-public class SupabaseAuthMiddleware(RequestDelegate next){public async Task InvokeAsync(HttpContext context,SupabaseAuthService auth){if(context.Request.Path.StartsWithSegments("/api/auth/login")||context.Request.Path.StartsWithSegments("/swagger")||context.Request.Path=="/"){await next(context);return;}var header=context.Request.Headers.Authorization.ToString();if(!header.StartsWith("Bearer ")){context.Response.StatusCode=401;return;}var user=await auth.ValidateAsync(header[7..]);if(user is null){context.Response.StatusCode=401;return;}context.Items["User"]=user;await next(context);}}
