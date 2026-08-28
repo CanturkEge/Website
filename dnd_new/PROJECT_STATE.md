@@ -2,7 +2,7 @@
 
 Son doğrulama: **2026-08-28**  
 Referans branch: `main`  
-Referans commit: `b39f481` (`dnd back`)
+Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
