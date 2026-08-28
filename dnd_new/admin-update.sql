@@ -11,10 +11,13 @@ create table if not exists public.kadim_admin_settings (
 );
 
 alter table public.kadim_admin_settings enable row level security;
+revoke all on table public.kadim_admin_settings from public,anon,authenticated;
 
+-- Kaynak kodda başlangıç şifresi tutulmaz. Yeni kurulumda hesap kilitli başlar;
+-- parola yalnız Supabase SQL Editor veya güvenilir bir sunucu işlemiyle hashlenerek ayarlanır.
 insert into public.kadim_admin_settings(singleton,username,password_hash)
-values(true,'admin',extensions.crypt('Admin27!',extensions.gen_salt('bf')))
-on conflict(singleton) do update set username=excluded.username,password_hash=excluded.password_hash,updated_at=now();
+values(true,'admin','!ADMIN_PASSWORD_NOT_CONFIGURED!')
+on conflict(singleton) do nothing;
 
 create or replace function public.kadim_admin_valid(p_username text,p_password text)
 returns boolean language sql security definer set search_path=public,extensions as $$
@@ -61,5 +64,6 @@ begin
  return found;
 end $$;
 
-revoke all on function public.kadim_admin_valid(text,text),public.campaign_delete_dm(uuid,uuid),public.kadim_admin_campaign_list(text,text),public.kadim_admin_campaign_delete(text,text,uuid) from public;
-grant execute on function public.kadim_admin_valid(text,text),public.campaign_delete_dm(uuid,uuid),public.kadim_admin_campaign_list(text,text),public.kadim_admin_campaign_delete(text,text,uuid) to anon,authenticated;
+revoke all on function public.kadim_admin_valid(text,text),public.campaign_delete_dm(uuid,uuid),public.kadim_admin_campaign_list(text,text),public.kadim_admin_campaign_delete(text,text,uuid) from public,anon,authenticated;
+grant execute on function public.kadim_admin_valid(text,text),public.kadim_admin_campaign_list(text,text),public.kadim_admin_campaign_delete(text,text,uuid) to service_role;
+grant execute on function public.campaign_delete_dm(uuid,uuid) to anon,authenticated;

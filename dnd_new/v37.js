@@ -4,6 +4,20 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.6.1',build:'Build 55',title:'Admin Girişi Güvenlik Düzeltmesi',tag:'GÜVENLİK',tone:'current',
+    summary:'Admin şifresi kaynak koddan çıkarıldı; bcrypt özeti ve sunucu tarafı yönetim geçidi devreye alındı.',
+    added:[
+      'Admin giriş, kampanya listeleme ve silme işlemleri için Supabase kadim-admin Edge Function eklendi.'
+    ],
+    fixed:[
+      'Düz admin şifresi kaynak koddan kaldırıldı ve eski şifre geçersiz kılındı.',
+      'Admin ayar tablosuna ve yönetim RPC’lerine anonim istemci erişimi kapatıldı.'
+    ],
+    changed:[
+      'Supabase artık admin şifresinin yalnız bcrypt özetini saklar; açık şifre yalnız giriş sırasında bellekte tutulur.'
+    ]
+  },
+  {
     version:'2.6',build:'Build 54',title:'Kampanya Sesli Sohbeti',tag:'SES',tone:'current',
     summary:'Her kampanya güvenli LiveKit ses odası, mikrofon/kulaklık kontrolleri ve konuşan kişi göstergesi kazandı.',
     added:[
@@ -672,7 +686,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.6'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.6.1'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -680,8 +694,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.6 • Build 54</h2><p>Kampanyaya bağlı güvenli ses odaları, mikrofon kontrolleri ve konuşan kişi göstergesi.</p></div>
-      <div class="v37-patch-stats"><span><b>30</b>Sürüm</span><span><b>29</b>Species</span><span><b>113</b>Subclass</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.6.1 • Build 55</h2><p>Admin girişi artık bcrypt özeti ve sunucu tarafı Supabase güvenlik geçidi kullanıyor.</p></div>
+      <div class="v37-patch-stats"><span><b>31</b>Sürüm</span><span><b>29</b>Species</span><span><b>113</b>Subclass</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">

@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Güncel sürüm: **2.6 / v54 / Build 54**
+- Güncel sürüm: **2.6.1 / v55 / Build 55**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -15,6 +15,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Aktif karakter yaratımı RPC'si: `character_create_player_v53`
 - Kampanya sesli sohbeti: `voice.js` + Supabase `livekit-token` Edge Function + LiveKit Cloud
 - Ses erişimi: ham değeri yalnız istemcide bulunan, veritabanında SHA-256 özeti tutulan `account_sessions_v54`
+- Admin erişimi: bcrypt özeti + yalnız service-role erişimli RPC'ler + Supabase `kadim-admin` Edge Function
 - Cleric seçim RPC'si: `character_choices_set_v52`
 - Build seçim RPC'si: `character_build_set_v30`
 

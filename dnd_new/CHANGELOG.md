@@ -1,5 +1,23 @@
 # Kadim Masa Defteri — Kurulum
 
+## v55 — Admin Girişi Güvenlik Düzeltmesi
+
+- Admin şifresi kaynak koddan ve istemcinin doğrudan çağırabildiği RPC akışından çıkarıldı.
+- Supabase yalnız bcrypt özetini saklar; düz şifre veritabanında tutulmaz.
+- Admin giriş, kampanya listeleme ve silme işlemleri service-role kullanan `kadim-admin` Edge Function arkasına alındı.
+- Admin ayar tablosu ile yönetim RPC'lerinin `anon` ve `authenticated` erişimleri kapatıldı.
+- Eski admin şifresi geçersiz kılındı; yeni şifre yalnız teslim sırasında paylaşılır.
+
+## v54 — Kampanya Sesli Sohbeti
+
+- Her kampanya kendi LiveKit ses odasına bağlandı; başka kampanyaya geçildiğinde önceki ses bağlantısı otomatik kapatılır.
+- Katıl/ayrıl, mikrofon aç/kapat, gelen sesi susturma, mikrofon seçimi, katılımcı listesi ve konuşan kişi göstergesi eklendi.
+- LiveKit API secret tarayıcıya veya repository'ye yazılmaz; katılım JWT'si Supabase `livekit-token` Edge Function içinde üretilir.
+- Özel hesap sistemine 30 gün süreli uygulama oturumları eklendi. Ham token yalnız istemciye verilir, veritabanında SHA-256 özeti tutulur ve ses tokenı yalnız doğrulanmış kampanya üyelerine üretilir.
+- Eski açık tarayıcı oturumları oyun verilerini kaybetmez; sesli sohbete ilk katılımda yalnız bir defa yeniden giriş ister.
+
+Kurulumda `v54-update.sql` bir kez uygulanmalı, `LIVEKIT_URL`, `LIVEKIT_API_KEY` ve `LIVEKIT_API_SECRET` Edge Function secret'ı olarak tanımlanmalı ve `livekit-token` fonksiyonu JWT doğrulaması kapalı şekilde yayınlanmalıdır. Fonksiyon kendi uygulama oturumunu ve kampanya üyeliğini doğrular.
+
 ## v53 — Karakter Kuralları Büyük Yenilemesi
 
 - **29 ana species / 95 alt tür ve miras** tek denetlenmiş katalogda toplandı. Parent species ile subspecies ability bonusları artık birlikte hesaplanır; hız, darkvision, direnç ve özel hareketler kaynak etiketiyle gösterilir. Standard Human +1 bütün statlar, Variant Human iki farklı +1, Half-Elf ve Half-Orc 2014 değerleriyle çalışır.
@@ -389,7 +407,7 @@ Para, gelişmiş market, otomatik para bozma ve oyuncular arası transfer için 
 
 Ortak zar günlüğü, oyuncunun kendi seviye 1 karakterini oluşturması ve tek seferlik subclass seçimi için `progression-update.sql` dosyasının güncel halini SQL Editor'de çalıştır. Önceki sürümünü çalıştırdıysan bunu tekrar çalıştırmak güvenlidir; mevcut kampanya ve karakterleri silmez.
 
-DM kampanya silme ve `admin / Admin27!` sunucu yönetim paneli için `admin-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Bu kurulum mevcut kayıtları silmez; yalnızca silme yetkilerini ve yönetim sorgularını ekler.
+DM kampanya silme ve sunucu yönetim paneli için `admin-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Admin parolası kaynak kodda tutulmaz; yalnız Supabase'te bcrypt özeti olarak saklanır. Bu kurulum mevcut parolayı veya kayıtları değiştirmez.
 
 Kalıcı genel/özel yazışmalar ve bildirim merkezi için `session-update.sql` dosyasını SQL Editor'de bir kez çalıştır. Karakter onayı, kampanya tarihi, Long Rest ve savaş turu verileri mevcut kampanya kaydının içinde saklanır.
 
