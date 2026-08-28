@@ -1,0 +1,46 @@
+/* v41 — effect, guild and DM intervention UI */
+.v41-effect-manager{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(250px,.9fr);gap:14px}
+.v41-effect-manager>section,.v41-npc-manager>section{display:grid;align-content:start;gap:10px;padding:13px;border:1px solid #68472b;border-radius:9px;background:#100b08}
+.v41-effect-list,.v41-skill-list{display:grid;gap:7px}
+.v41-effect-row,.v41-skill-row,.v41-npc-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px;border:1px solid #523923;border-radius:7px;background:#17100c}
+.v41-effect-row>span,.v41-skill-row>span,.v41-npc-item>span{display:grid;min-width:0}
+.v41-effect-row small,.v41-skill-row small,.v41-npc-item small{overflow-wrap:anywhere}
+.v41-skill-row>div{display:flex;flex-wrap:wrap;gap:6px}
+.v41-effect-add label{display:grid;gap:5px}
+.v41-guild-admin{display:grid;gap:14px;margin-bottom:14px}
+.v41-admin-banner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px;border:1px solid #9b6833;border-radius:10px;background:radial-gradient(circle at 90% 10%,#74421e55,transparent 38%),linear-gradient(145deg,#25160f,#100b08)}
+.v41-admin-banner h2{margin:3px 0;color:#efc477}.v41-admin-banner p{max-width:760px;margin:0;color:#c0ad92}
+.v41-guild-grid{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(360px,1.2fr);gap:14px;align-items:start}
+.v41-guild-grid>details{padding:0!important;overflow:hidden}
+.v41-guild-grid>details>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px;cursor:pointer;list-style:none;font-weight:900}
+.v41-guild-grid>details>summary::-webkit-details-marker{display:none}
+.v41-guild-grid>details>summary:after{content:'＋';color:#d79b4b;font-size:20px}.v41-guild-grid>details[open]>summary:after{content:'−'}
+.v41-guild-grid>details>summary span{margin-left:auto;color:#bca98d;font-size:11px;font-weight:700}
+.v41-detail-body{display:grid;gap:10px;padding:0 15px 15px}
+.v41-member-list,.v41-guild-items{display:grid;gap:7px}
+.v41-member-row,.v41-guild-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:11px;border:1px solid #503721;border-radius:8px;background:#100b08}
+.v41-member-row.joined{border-color:#6e6331}.v41-member-row.stale{border-color:#8d4637}
+.v41-member-row>div,.v41-guild-item>div:first-child{display:grid;min-width:0}
+.v41-member-row small,.v41-guild-item small,.v41-guild-item span{overflow-wrap:anywhere;color:#b9a68d}
+.v41-guild-item>div:last-child{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.v41-guild-wallet>.v27-wallet{margin:0}
+.v41-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.v41-form-grid label,.v41-stat-fields label{margin:0}
+.v41-item-form{display:grid;gap:12px}.v41-item-form fieldset{border:1px solid #65452c;border-radius:8px}.v41-item-form legend{color:#e3b668}
+.v41-stat-fields{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}.v41-stat-fields input{text-align:center;padding-inline:5px}
+.v41-check{display:flex!important;align-items:flex-start;gap:9px;padding:10px;border:1px solid #604128;border-radius:8px}.v41-check input{width:18px!important;min-width:18px;height:18px;min-height:18px;margin-top:3px}
+.v41-npc-manager{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(230px,.9fr);gap:13px}
+
+@media(max-width:900px){
+  .v41-guild-grid{grid-template-columns:1fr}
+  .v41-admin-banner{align-items:flex-start;flex-direction:column}.v41-admin-banner button{width:100%}
+  .v41-stat-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:640px){
+  .v41-effect-manager,.v41-npc-manager,.v41-form-grid{grid-template-columns:1fr}
+  .v41-member-row,.v41-guild-item,.v41-effect-row,.v41-skill-row,.v41-npc-item{grid-template-columns:1fr}
+  .v41-member-row button,.v41-effect-row button,.v41-npc-item button{width:100%}
+  .v41-guild-item>div:last-child,.v41-skill-row>div{display:grid;grid-template-columns:1fr;width:100%}
+  .v41-stat-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #v41AddEffect,#v41ClearEffects,#v41SaveGuildItem,#v41ConfirmGuildGive,#v41NpcItemAdd{width:100%;min-height:48px}
+}

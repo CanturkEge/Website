@@ -1,16 +1,18 @@
 const cursorGlow = document.querySelector(".cursor-glow");
 
 document.addEventListener("mousemove", (event) => {
+  if (!cursorGlow) return;
+
   cursorGlow.style.left = `${event.clientX}px`;
   cursorGlow.style.top = `${event.clientY}px`;
 });
 
 const words = [
-  "software.",
   "electronics.",
-  "security labs.",
+  "software.",
   "game systems.",
-  "weird ideas."
+  "practical tools.",
+  "cool ideas"
 ];
 
 const typingText = document.getElementById("typing-text");
@@ -20,6 +22,8 @@ let charIndex = 0;
 let isDeleting = false;
 
 function typeEffect() {
+  if (!typingText) return;
+
   const currentWord = words[wordIndex];
 
   if (isDeleting) {
@@ -48,28 +52,6 @@ function typeEffect() {
 
 typeEffect();
 
-const filterButtons = document.querySelectorAll(".filter-btn");
-const projectCards = document.querySelectorAll(".project-card");
-
-filterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    filterButtons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-
-    const filterValue = button.getAttribute("data-filter");
-
-    projectCards.forEach((card) => {
-      const category = card.getAttribute("data-category");
-
-      if (filterValue === "all" || filterValue === category) {
-        card.classList.remove("hidden-card");
-      } else {
-        card.classList.add("hidden-card");
-      }
-    });
-  });
-});
-
 const revealElements = document.querySelectorAll(".reveal");
 
 function revealOnScroll() {
@@ -85,3 +67,18 @@ function revealOnScroll() {
 
 window.addEventListener("scroll", revealOnScroll);
 window.addEventListener("load", revealOnScroll);
+
+const copyEmailButton = document.getElementById("copy-email-btn");
+const copyMessage = document.getElementById("copy-message");
+
+if (copyEmailButton && copyMessage) {
+  copyEmailButton.addEventListener("click", () => {
+    navigator.clipboard.writeText("canturkege74@gmail.com");
+
+    copyMessage.classList.add("show");
+
+    setTimeout(() => {
+      copyMessage.classList.remove("show");
+    }, 1800);
+  });
+}
