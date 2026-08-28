@@ -4,6 +4,25 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.6',build:'Build 54',title:'Kampanya Sesli Sohbeti',tag:'SES',tone:'current',
+    summary:'Her kampanya güvenli LiveKit ses odası, mikrofon/kulaklık kontrolleri ve konuşan kişi göstergesi kazandı.',
+    added:[
+      'Kampanya kimliğine bağlı ses odası, katıl/ayrıl akışı, mikrofon aç/kapat ve gelen sesi susturma eklendi.',
+      'Aktif mikrofon seçimi, canlı katılımcı listesi ve konuşan kişiyi yeşil çerçeveyle gösteren masa paneli eklendi.',
+      'LiveKit katılım tokenlarını yalnız doğrulanmış kampanya üyelerine veren Supabase Edge Function eklendi.'
+    ],
+    fixed:[
+      'LiveKit API secretın tarayıcıya veya public repositoryye düşmesi engellendi; secret yalnız sunucu ortamında kullanılır.',
+      'Yalnız kullanıcı UUID değerini bilen birinin ses odasına katılabilmesi, hashlenmiş kısa ömürlü uygulama oturumuyla engellendi.',
+      'Kampanya değiştirildiğinde veya çıkış yapıldığında eski odada mikrofon bağlantısının açık kalması engellendi.'
+    ],
+    changed:[
+      'Giriş ve kayıt RPC’leri v54 oturum tokenı üretir; eski açık oturumlar ses için bir defa yeniden giriş ister.',
+      'LiveKit istemci ve sunucu SDK sürümleri tekrarlanabilir dağıtım için sabitlendi.',
+      'v54-update.sql, LiveKit secretları ve livekit-token Edge Function bu buildin sunucu gereksinimidir.'
+    ]
+  },
+  {
     version:'2.5',build:'Build 53',title:'Karakter Kuralları Büyük Yenilemesi',tag:'KARAKTER',tone:'current',
     summary:'Tür/alt tür statları, 13 legacy sınıf, 113 subclass, 319 SRD büyü ve manuel ability üretimi tek denetlenmiş 2014 kural motorunda birleşti.',
     added:[
@@ -653,7 +672,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.5'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.6'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -661,7 +680,7 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.5 • Build 53</h2><p>Tür, alt tür, class, subclass, stat buffı, cantrip ve büyü seçimlerini kapsayan 2014 legacy karakter kuralları yenilemesi.</p></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.6 • Build 54</h2><p>Kampanyaya bağlı güvenli ses odaları, mikrofon kontrolleri ve konuşan kişi göstergesi.</p></div>
       <div class="v37-patch-stats"><span><b>30</b>Sürüm</span><span><b>29</b>Species</span><span><b>113</b>Subclass</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
@@ -671,7 +690,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.5 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi ZIP içindeki teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.6 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

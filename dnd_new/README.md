@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **2.5**
-- Build/modül sürümü: **v53 / Build 53**
-- Son büyük paket: karakter kuralları, species/subspecies, class/subclass, ability dağıtımı ve 319 büyülük katalog entegrasyonu
+- Ürün sürümü: **2.6**
+- Build/modül sürümü: **v54 / Build 54**
+- Son büyük paket: kampanyaya bağlı güvenli LiveKit ses odaları, mikrofon/kulaklık kontrolleri ve konuşan kişi göstergesi
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.
@@ -16,7 +16,7 @@ Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevde
 1. `config.js` içindeki Supabase ayarlarının hedef ortamı gösterdiğini doğrula.
 2. Klasörü statik bir web sunucusuyla aç. Dosyayı doğrudan `file://` ile açmak yerine localhost kullan.
 3. Yeni kurulumda `supabase-setup.sql` dosyasını, ardından gereken sürümlü SQL güncellemelerini sırayla çalıştır.
-4. Güncel v53 kurulumu için en az `v52-update.sql` ve `v53-update.sql` gereksinimlerini kontrol et.
+4. Güncel v54 kurulumu için `v54-update.sql`, `livekit-token` Edge Function ve `LIVEKIT_*` secret'larını kontrol et.
 5. Tarayıcı önbelleği eski dosyaları tutuyorsa `Ctrl + Shift + R` yap.
 
 > SQL dosyalarını tekrar çalıştırmadan önce içeriğini ve hedef Supabase projesini kontrol et. Canlı veriye karşı körlemesine SQL çalıştırma.

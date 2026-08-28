@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v53 / uygulama v2.5 / Build 53**  
+Güncel sürüm: **v54 / uygulama v2.6 / Build 54**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -24,6 +24,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Taktik savaş | `v38-battle.js`, `v38.css` | encounter state'i için `app.js`, `v31.js` |
 | Karma/adalet/alignment | `v44.js`, `v51.js` | `v51-data.js` |
 | Notlar/oturum/bildirim | `session.js` | `session-update.sql`, hedef state için `app.js` |
+| Sesli sohbet/LiveKit | `voice.js`, `voice.css` | `v54-update.sql`, `supabase/functions/livekit-token/index.ts`, hesap oturumu için `app.js` |
 | Sürüm notları | `CHANGELOG.md`, `v37.js` | `config.js`, `PROJECT_STATE.md` |
 
 ## Çekirdek
