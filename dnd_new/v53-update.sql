@@ -41,7 +41,8 @@ begin
   end if;
   if length(trim(coalesce(p_name,'')))<2 then raise exception 'Karakter adı en az 2 karakter olmalı'; end if;
   if method_name not in ('recommended','standard','pointbuy') then raise exception 'Ability üretim yöntemi geçersiz'; end if;
-  if jsonb_typeof(coalesce(p_base_stats,'null'::jsonb))<>'object' or jsonb_object_length(p_base_stats)<>6 then
+  if jsonb_typeof(coalesce(p_base_stats,'null'::jsonb))<>'object'
+     or (select count(*) from jsonb_object_keys(p_base_stats))<>6 then
     raise exception 'Altı ability score birlikte gönderilmeli';
   end if;
 

@@ -1,5 +1,5 @@
 /* v54: campaign-scoped LiveKit voice chat. */
-let voiceRoom=null,voiceMicEnabled=true,voiceDeafened=false,voiceJoining=false;
+let voiceRoom=null,voiceMicEnabled=true,voiceDeafened=false,voiceJoining=false,voiceOutputId='';
 
 function voiceMount(){
   if($('#voiceDock'))return;
@@ -9,10 +9,12 @@ function voiceMount(){
       <div class="voice-head"><div><small>KAMPANYA SESİ</small><b id="voiceStatus">Bağlı değil</b></div><button id="voiceClose" class="ghost" aria-label="Ses panelini kapat">×</button></div>
       <div id="voicePeople" class="voice-people"><p class="muted">Odaya katılınca masa burada görünecek.</p></div>
       <label class="voice-device">Mikrofon<select id="voiceInput"><option value="">Varsayılan mikrofon</option></select></label>
+      <label class="voice-device">Hoparlör / ses çıkışı<select id="voiceOutput"><option value="">Sistem varsayılanı</option></select><small id="voiceOutputHelp"></small></label>
       <div class="voice-actions">
         <button id="voiceJoin" class="primary">Sese Katıl</button>
         <button id="voiceMic" class="ghost" hidden>🎙 Mikrofon</button>
         <button id="voiceDeafen" class="ghost" hidden>🎧 Kulaklık</button>
+        <button id="voiceResume" class="ghost" hidden>🔊 Sesi Aç</button>
         <button id="voiceLeave" class="danger" hidden>Çık</button>
       </div>
       <div id="voiceAudio" hidden></div>
@@ -24,7 +26,9 @@ function voiceMount(){
   $('#voiceLeave').onclick=()=>voiceDisconnect();
   $('#voiceMic').onclick=voiceToggleMic;
   $('#voiceDeafen').onclick=voiceToggleDeafen;
+  $('#voiceResume').onclick=()=>voiceResumeAudio().catch(()=>{});
   $('#voiceInput').onchange=voiceSwitchInput;
+  $('#voiceOutput').onchange=voiceSwitchOutput;
   voiceOnCampaignChange();
 }
 
@@ -68,11 +72,15 @@ async function voiceJoin(){
     voiceRoom=room;
     room.on(RoomEvent.TrackSubscribed,(track)=>{
       if(track.kind!==Track.Kind.Audio)return;
-      const element=track.attach();element.autoplay=true;element.muted=voiceDeafened;$('#voiceAudio').appendChild(element);
+      const element=track.attach();element.autoplay=true;element.muted=voiceDeafened;if(voiceOutputId&&typeof element.setSinkId==='function')element.setSinkId(voiceOutputId).catch(()=>{});$('#voiceAudio').appendChild(element);
     });
     room.on(RoomEvent.TrackUnsubscribed,track=>track.detach().forEach(element=>element.remove()));
     room.on(RoomEvent.ParticipantConnected,voiceRenderPeople);
     room.on(RoomEvent.ParticipantDisconnected,voiceRenderPeople);
+    room.on(RoomEvent.TrackPublished,voiceRenderPeople);
+    room.on(RoomEvent.TrackUnpublished,voiceRenderPeople);
+    if(RoomEvent.ParticipantPermissionsChanged)room.on(RoomEvent.ParticipantPermissionsChanged,voiceRenderPeople);
+    room.on(RoomEvent.AudioPlaybackStatusChanged,()=>{$('#voiceResume').hidden=room.canPlaybackAudio;if(!room.canPlaybackAudio)voiceSetStatus('Gelen sesi açmak için Sesi Aç’a dokun',true)});
     room.on(RoomEvent.ActiveSpeakersChanged,speakers=>voiceRenderPeople(new Set(speakers.map(x=>x.identity))));
     room.on(RoomEvent.Disconnected,()=>voiceDisconnectedUI());
     await room.connect(payload.serverUrl,payload.participantToken);
@@ -120,24 +128,63 @@ function voiceUpdateButtons(){
 
 async function voiceLoadDevices(){
   try{
-    const devices=(await navigator.mediaDevices.enumerateDevices()).filter(x=>x.kind==='audioinput');
-    $('#voiceInput').innerHTML='<option value="">Varsayılan mikrofon</option>'+devices.map((d,i)=>`<option value="${esc(d.deviceId)}">${esc(d.label||`Mikrofon ${i+1}`)}</option>`).join('');
+    const devices=await navigator.mediaDevices.enumerateDevices(),inputs=devices.filter(x=>x.kind==='audioinput'),outputs=devices.filter(x=>x.kind==='audiooutput');
+    $('#voiceInput').innerHTML='<option value="">Varsayılan mikrofon</option>'+inputs.map((d,i)=>`<option value="${esc(d.deviceId)}">${esc(d.label||`Mikrofon ${i+1}`)}</option>`).join('');
+    let output=$('#voiceOutput'),supported=typeof HTMLMediaElement.prototype.setSinkId==='function';
+    output.disabled=!supported;output.innerHTML='<option value="">Sistem varsayılanı</option>'+outputs.map((d,i)=>`<option value="${esc(d.deviceId)}">${esc(d.label||`Hoparlör ${i+1}`)}</option>`).join('');
+    $('#voiceOutputHelp').textContent=supported?(outputs.length?'Telefon hoparlörü, kulaklık veya Bluetooth çıkışını seç.':'Çıkış seçimi cihaz listesine göre açılır.'):'Bu tarayıcıda çıkışı telefonun ses menüsünden değiştir.';
   }catch(error){console.warn('Mikrofonlar listelenemedi',error)}
 }
 
 async function voiceSwitchInput(event){
-  if(!voiceRoom||!event.target.value)return;
-  try{await voiceRoom.switchActiveDevice('audioinput',event.target.value);voiceSetStatus('Mikrofon değiştirildi')}catch(error){voiceSetStatus('Mikrofon seçilemedi',true)}
+  if(!voiceRoom)return;
+  let previous=voiceRoom.getActiveDevice?.('audioinput')||'';
+  try{
+    await voiceRoom.switchActiveDevice('audioinput',event.target.value||'default',false);
+    if(voiceMicEnabled&&voiceRoom.localParticipant.permissions?.canPublish!==false)await voiceRoom.localParticipant.setMicrophoneEnabled(true);
+    await voiceResumeAudio();voiceSetStatus('Mikrofon değiştirildi');
+  }catch(error){event.target.value=previous;voiceSetStatus('Mikrofon değiştirilemedi; önceki cihaz korunuyor',true)}
+}
+
+async function voiceSwitchOutput(event){
+  if(!voiceRoom)return;
+  let previous=voiceRoom.getActiveDevice?.('audiooutput')||voiceOutputId;
+  try{
+    let next=event.target.value||'default';await voiceRoom.switchActiveDevice('audiooutput',next,false);
+    voiceOutputId=next;await voiceResumeAudio();voiceSetStatus('Ses çıkışı değiştirildi');
+  }catch(error){event.target.value=previous;voiceSetStatus('Ses çıkışı değiştirilemedi; önceki cihaz korunuyor',true)}
+}
+
+async function voiceResumeAudio(){
+  if(!voiceRoom)return;
+  try{await voiceRoom.startAudio();$('#voiceResume').hidden=true;$('#voiceAudio').querySelectorAll('audio').forEach(audio=>{audio.muted=voiceDeafened;audio.play().catch(()=>{})})}
+  catch(error){$('#voiceResume').hidden=false;throw error}
 }
 
 function voiceRenderPeople(active=new Set()){
+  if(!(active instanceof Set))active=new Set();
   let box=$('#voicePeople'),count=$('#voiceCount');if(!box||!count)return;
   if(!voiceRoom){count.textContent='0';box.innerHTML='<p class="muted">Odaya katılınca masa burada görünecek.</p>';return}
   const people=[voiceRoom.localParticipant,...voiceRoom.remoteParticipants.values()];
   count.textContent=String(people.length);
-  box.innerHTML=people.map(person=>`<article class="${active.has(person.identity)||person.isSpeaking?'speaking':''}"><i>${esc((person.name||'?').slice(0,1).toUpperCase())}</i><span><b>${esc(person.name||'Maceracı')}</b><small>${person===voiceRoom.localParticipant?'Sen':'Masada'}</small></span><em>${person.isMicrophoneEnabled?'🎙':'🔇'}</em></article>`).join('');
+  box.innerHTML=people.map(person=>{let local=person===voiceRoom.localParticipant,dmMuted=person.permissions?.canPublish===false,dmDeafened=person.permissions?.canSubscribe===false,controls=current?.role==='dm'&&!local?`<div class="voice-mod"><button data-voice-mod="mute" data-identity="${esc(person.identity)}" data-enabled="${dmMuted?'false':'true'}">${dmMuted?'Konuştur':'Sustur'}</button><button data-voice-mod="deafen" data-identity="${esc(person.identity)}" data-enabled="${dmDeafened?'false':'true'}">${dmDeafened?'Duyur':'Sağırlaştır'}</button></div>`:'';return `<article class="${active.has(person.identity)||person.isSpeaking?'speaking':''} ${dmMuted?'dm-muted':''} ${dmDeafened?'dm-deafened':''}"><i>${esc((person.name||'?').slice(0,1).toUpperCase())}</i><span><b>${esc(person.name||'Maceracı')}</b><small>${local?'Sen':'Masada'}${dmMuted?' • DM susturdu':''}${dmDeafened?' • DM sağırlaştırdı':''}</small></span><em>${person.isMicrophoneEnabled&&!dmMuted?'🎙':'🔇'}</em>${controls}</article>`}).join('');
+  box.querySelectorAll('[data-voice-mod]').forEach(button=>button.onclick=()=>voiceModerate(button));
+}
+
+async function voiceModerate(button){
+  if(!voiceRoom||current?.role!=='dm')return;
+  button.disabled=true;
+  try{
+    const response=await fetch(`${cfg.SUPABASE_URL}/functions/v1/livekit-token`,{
+      method:'POST',headers:{apikey:cfg.SUPABASE_ANON_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({action:'moderate',campaignId:current.id,sessionToken:auth.sessionToken,targetIdentity:button.dataset.identity,moderation:button.dataset.voiceMod,enabled:button.dataset.enabled==='true'})
+    });
+    const payload=await response.json();
+    if(!response.ok)throw Error(payload.error||'Ses yetkisi değiştirilemedi');
+    setTimeout(()=>voiceRenderPeople(),350);
+  }catch(error){voiceSetStatus(error.message||'Ses yetkisi değiştirilemedi',true)}
+  finally{button.disabled=false}
 }
 
 window.addEventListener('beforeunload',()=>voiceRoom?.disconnect());
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',voiceMount);else voiceMount();
-

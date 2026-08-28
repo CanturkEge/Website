@@ -1,4 +1,4 @@
-import { AccessToken } from "npm:livekit-server-sdk@2.18.0";
+import { AccessToken, RoomServiceClient } from "npm:livekit-server-sdk@2.18.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,7 +29,7 @@ Deno.serve(async (request) => {
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   try {
-    const { campaignId, sessionToken } = await request.json();
+    const { campaignId, sessionToken, action = "token", targetIdentity, moderation, enabled } = await request.json();
     if (!campaignId || !sessionToken) return json({ error: "Eksik oturum bilgisi" }, 400);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -53,6 +53,27 @@ Deno.serve(async (request) => {
 
     const [account] = await dbGet(supabaseUrl, serviceKey, `accounts?select=display_name&id=eq.${encodeURIComponent(session.user_id)}&limit=1`);
     if (!account) return json({ error: "Hesap bulunamadı" }, 401);
+
+    if (action === "moderate") {
+      if (membership.role !== "dm") return json({ error: "Yalnızca DM ses yönetebilir" }, 403);
+      if (!/^user:[0-9a-f-]{36}$/i.test(targetIdentity || "") || targetIdentity === `user:${session.user_id}`) {
+        return json({ error: "Geçersiz oyuncu" }, 400);
+      }
+      if (!["mute", "deafen"].includes(moderation) || typeof enabled !== "boolean") {
+        return json({ error: "Geçersiz ses yönetimi" }, 400);
+      }
+      const roomName = `campaign-${campaignId}`;
+      const roomService = new RoomServiceClient(livekitUrl.replace(/^wss:/, "https:").replace(/^ws:/, "http:"), livekitKey, livekitSecret);
+      const participant = await roomService.getParticipant(roomName, targetIdentity);
+      const permission = {
+        ...participant.permission,
+        canPublish: moderation === "mute" ? !enabled : participant.permission?.canPublish !== false,
+        canSubscribe: moderation === "deafen" ? !enabled : participant.permission?.canSubscribe !== false,
+        canPublishData: participant.permission?.canPublishData !== false,
+      };
+      await roomService.updateParticipant(roomName, targetIdentity, undefined, permission);
+      return json({ ok: true, moderation, enabled });
+    }
 
     const accessToken = new AccessToken(livekitKey, livekitSecret, {
       identity: `user:${session.user_id}`,

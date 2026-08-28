@@ -1,5 +1,16 @@
 # Kadim Masa Defteri — Kurulum
 
+## v56 — DM Kontrolleri ve Veritabanı Sağlık Düzeltmesi
+
+- v53 karakter oluşturmadaki geçersiz `jsonb_object_length` çağrısı veri silmeden düzeltildi.
+- Hesapları ve kampanyaları değiştirmeyen `health-check-v56.sql` sağlık raporu eklendi.
+- DM karakter silme işlemi gecikmeli istemci kaydından çıkarılıp yetki kontrollü, atomik Supabase RPC'sine taşındı.
+- Karakter silme için karakter adını yazarak onaylama ve bağlı savaş kaydını temizleme eklendi.
+- DM, LiveKit ses odasında oyuncuların konuşma ve dinleme izinlerini sunucu tarafından kapatıp açabilir.
+- Mobil ve masaüstünde destekleyen tarayıcılar için hoparlör, kulaklık ve Bluetooth ses çıkışı seçimi eklendi.
+- Cihaz değişiminden sonra mikrofon ve gelen ses akışının yeniden başlamaması düzeltildi; başarısız seçim önceki cihaza geri döner.
+- LiveKit katılımcı/track eventlerinin konuşanlar kümesi sanılması nedeniyle yeni bağlantıda ses listesinin kırılması düzeltildi.
+
 ## v55 — Admin Girişi Güvenlik Düzeltmesi
 
 - Admin şifresi kaynak koddan ve istemcinin doğrudan çağırabildiği RPC akışından çıkarıldı.

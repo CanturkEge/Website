@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **2.6.1**
-- Build/modül sürümü: **v55 / Build 55**
-- Son güvenlik paketi: admin şifresinin bcrypt olarak saklanması ve yönetim işlemlerinin Supabase Edge Function arkasına alınması
+- Ürün sürümü: **2.7**
+- Build/modül sürümü: **v56 / Build 56**
+- Son paket: veritabanı sağlık düzeltmesi, güvenilir karakter silme ve DM ses moderasyonu
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.
@@ -16,7 +16,7 @@ Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevde
 1. `config.js` içindeki Supabase ayarlarının hedef ortamı gösterdiğini doğrula.
 2. Klasörü statik bir web sunucusuyla aç. Dosyayı doğrudan `file://` ile açmak yerine localhost kullan.
 3. Yeni kurulumda `supabase-setup.sql` dosyasını, ardından gereken sürümlü SQL güncellemelerini sırayla çalıştır.
-4. Güncel kurulum için `v54-update.sql`, `livekit-token` ve `kadim-admin` Edge Function'larını kontrol et.
+4. Güncel kurulum için güncellenmiş `v53-update.sql`, `v56-update.sql`, `livekit-token` ve `kadim-admin` Edge Function'larını kontrol et.
 5. Tarayıcı önbelleği eski dosyaları tutuyorsa `Ctrl + Shift + R` yap.
 
 > SQL dosyalarını tekrar çalıştırmadan önce içeriğini ve hedef Supabase projesini kontrol et. Canlı veriye karşı körlemesine SQL çalıştırma.

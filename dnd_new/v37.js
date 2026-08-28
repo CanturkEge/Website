@@ -4,6 +4,25 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.7',build:'Build 56',title:'DM Kontrolleri ve Sistem Sağlığı',tag:'YÖNETİM',tone:'current',
+    summary:'Karakter silme güvenilir hale geldi, v53 SQL hatası düzeltildi ve DM ses moderasyonu eklendi.',
+    added:[
+      'DM ses paneline oyuncuyu susturma, sağırlaştırma ve bu izinleri geri açma kontrolleri eklendi.',
+      'Destekleyen mobil ve masaüstü tarayıcılara hoparlör, kulaklık ve Bluetooth ses çıkışı seçimi eklendi.',
+      'Hesaplara ve kampanyalara dokunmayan salt okunur health-check-v56.sql raporu eklendi.'
+    ],
+    fixed:[
+      'v53 karakter oluşturmadaki PostgreSQL’de bulunmayan jsonb_object_length çağrısı geçerli anahtar sayımıyla değiştirildi.',
+      'Karakter silmenin gecikmeli tarayıcı kaydı nedeniyle geri gelmesi engellendi.',
+      'Mikrofon veya hoparlör değişiminden sonra gelen ve giden sesin yeniden başlamaması düzeltildi.',
+      'Yeni katılımcı veya track eventinde ses listesinin JavaScript hatasıyla durması engellendi.'
+    ],
+    changed:[
+      'Karakter silme DM rolünü veritabanında doğrulayan atomik RPC’ye taşındı ve karakter adıyla onay zorunlu oldu.',
+      'Ses moderasyonu LiveKit canPublish ve canSubscribe izinleriyle sunucu tarafında uygulanır.'
+    ]
+  },
+  {
     version:'2.6.1',build:'Build 55',title:'Admin Girişi Güvenlik Düzeltmesi',tag:'GÜVENLİK',tone:'current',
     summary:'Admin şifresi kaynak koddan çıkarıldı; bcrypt özeti ve sunucu tarafı yönetim geçidi devreye alındı.',
     added:[
@@ -686,7 +705,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.6.1'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.7'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -694,8 +713,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.6.1 • Build 55</h2><p>Admin girişi artık bcrypt özeti ve sunucu tarafı Supabase güvenlik geçidi kullanıyor.</p></div>
-      <div class="v37-patch-stats"><span><b>31</b>Sürüm</span><span><b>29</b>Species</span><span><b>113</b>Subclass</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.7 • Build 56</h2><p>DM ses moderasyonu, güvenilir karakter silme ve veritabanı sağlık düzeltmesi.</p></div>
+      <div class="v37-patch-stats"><span><b>32</b>Sürüm</span><span><b>29</b>Species</span><span><b>113</b>Subclass</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -704,7 +723,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.6 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.7 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
