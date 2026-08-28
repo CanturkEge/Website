@@ -3,6 +3,29 @@
 Güncel sürüm: **v53 / uygulama v2.5 / Build 53**  
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
+## Hızlı kullanım
+
+1. Önce `PROJECT_STATE.md` okunur.
+2. Aşağıdaki tabloda istekle eşleşen tek rota seçilir.
+3. Yalnız "ilk okunacak" dosyalar ve ihtiyaç olursa doğrudan bağımlılıklar açılır.
+
+| İstek | İlk okunacak | Gerekirse |
+|---|---|---|
+| Giriş, hesap, lobi, kampanya | `app.js` içinde hedef sembol | `supabase-setup.sql`, ilgili RPC SQL'i |
+| Mobil menü veya genel görünüm | ilgili CSS + DOM id'si | `mobile.css`, `style.css`, sürüm CSS'i |
+| Karakter oluşturma/stat/species/class | `v53.js`, hedef kayıt için `v53-data.js` | `v30.js`, `v31.js`, `v53-update.sql` |
+| Büyü hazırlama veya büyü kuralı | `v53.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js` |
+| Cleric/tanrı/domain | `v52.js`, hedef tanrı/domain için `v52-data.js` | `v49-data.js`, `v52-update.sql` |
+| Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js` | `v31.js`, `inventory-update.sql` |
+| Market/loot/eşya kataloğu | hedef veri için `v44-data.js` veya `v48-data.js` | `v34.js`, `v44.js` |
+| Görev panosu | `v50.js`, hedef görev için `v50-data.js` | eski `state.quests` için `app.js` |
+| Harita/kale | `v32.js`, `v33.js` | `v34-data.js`, `Map.png` yalnız görsel gerekirse |
+| Yol/binek/seyahat | `v38.js`, `v38-data.js` | `v34-data.js` |
+| Taktik savaş | `v38-battle.js`, `v38.css` | encounter state'i için `app.js`, `v31.js` |
+| Karma/adalet/alignment | `v44.js`, `v51.js` | `v51-data.js` |
+| Notlar/oturum/bildirim | `session.js` | `session-update.sql`, hedef state için `app.js` |
+| Sürüm notları | `CHANGELOG.md`, `v37.js` | `config.js`, `PROJECT_STATE.md` |
+
 ## Çekirdek
 
 | Sistem | Ana dosyalar | Doğrudan bağımlılıklar |
