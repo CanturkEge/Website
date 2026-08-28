@@ -80,7 +80,7 @@ async function voiceJoin(){
     room.on(RoomEvent.ParticipantDisconnected,voiceRenderPeople);
     room.on(RoomEvent.TrackPublished,voiceRenderPeople);
     room.on(RoomEvent.TrackUnpublished,voiceRenderPeople);
-    if(RoomEvent.ParticipantPermissionsChanged)room.on(RoomEvent.ParticipantPermissionsChanged,voiceRenderPeople);
+    if(RoomEvent.ParticipantPermissionsChanged)room.on(RoomEvent.ParticipantPermissionsChanged,()=>{voiceRenderPeople();voiceRecoverMedia()});
     room.on(RoomEvent.AudioPlaybackStatusChanged,()=>{$('#voiceResume').hidden=room.canPlaybackAudio;if(!room.canPlaybackAudio)voiceSetStatus('Gelen sesi açmak için Sesi Aç’a dokun',true)});
     room.on(RoomEvent.MediaDevicesError,error=>voiceSetStatus(`Mikrofon hatası: ${error?.message||'cihaz kullanılamıyor'}`,true));
     room.on(RoomEvent.TrackSubscriptionFailed,()=>voiceSetStatus('Bir katılımcının sesi alınamadı; yeniden bağlanmayı dene',true));
@@ -170,8 +170,13 @@ async function voiceResumeAudio(){
 async function voiceRecoverMedia(){
   if(!voiceRoom)return;
   try{
-    if(voiceMicEnabled&&voiceRoom.localParticipant.permissions?.canPublish!==false&&!voiceRoom.localParticipant.isMicrophoneEnabled)await voiceRoom.localParticipant.setMicrophoneEnabled(true);
-    await voiceResumeAudio();voiceSetStatus('Ses bağlantısı hazır');voiceRenderPeople();
+    let canPublish=voiceRoom.localParticipant.permissions?.canPublish!==false,canSubscribe=voiceRoom.localParticipant.permissions?.canSubscribe!==false;
+    if(voiceMicEnabled&&canPublish&&!voiceRoom.localParticipant.isMicrophoneEnabled)await voiceRoom.localParticipant.setMicrophoneEnabled(true);
+    await voiceResumeAudio();
+    if(!canPublish)voiceSetStatus('DM mikrofonunu susturdu',true);
+    else if(!canSubscribe)voiceSetStatus('DM gelen sesini kapattı',true);
+    else voiceSetStatus('Ses bağlantısı hazır');
+    voiceRenderPeople();
   }catch(error){voiceSetStatus('Ses bağlantısı toparlanamadı; Sesi Aç’a dokun',true);$('#voiceResume').hidden=false}
 }
 

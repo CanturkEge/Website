@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Güncel sürüm: **2.7.1 / v57 / Build 57**
+- Güncel sürüm: **2.7.2 / v58 / Build 58**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -19,6 +19,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Karakter silme: DM doğrulamalı atomik `character_delete_dm_v56` RPC'si
 - Ses moderasyonu: DM tarafından LiveKit `canPublish` / `canSubscribe` izin yönetimi
 - Ses toparlama: mikrofon sonrası playback başlatma + autoplay düğmesi + görünürlük/reconnect kurtarma akışı
+- DM susturma dönüşü: oyuncunun önceki mikrofon tercihini koruyarak permission değişiminde otomatik track yeniden yayını
 - Cleric seçim RPC'si: `character_choices_set_v52`
 - Build seçim RPC'si: `character_build_set_v30`
 

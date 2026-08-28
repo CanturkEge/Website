@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **2.7.1**
-- Build/modül sürümü: **v57 / Build 57**
-- Son paket: mobil autoplay, yeniden bağlantı ve tek yönlü ses akışı düzeltmeleri
+- Ürün sürümü: **2.7.2**
+- Build/modül sürümü: **v58 / Build 58**
+- Son paket: DM susturma izni kaldırıldığında mikrofon track'inin otomatik geri dönmesi
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.

@@ -1,5 +1,11 @@
 # Kadim Masa Defteri — Kurulum
 
+## v58 — DM Susturma Sonrası Otomatik Mikrofon Dönüşü
+
+- DM susturmayı kaldırdığında, oyuncunun mikrofonu daha önce açıksa track otomatik yeniden yayınlanır.
+- Oyuncu mikrofonunu kendi kapattıysa DM izin değişikliği mikrofonu zorla açmaz.
+- DM susturma ve sağırlaştırma durumları oyuncunun ses panelinde açık durum mesajıyla gösterilir.
+
 ## v57 — Mobil ve Tek Yönlü Ses Düzeltmesi
 
 - Token servisinin başarılı olduğu fakat tarayıcı medya oturumunun tek yönde kalabildiği akış düzeltildi.
