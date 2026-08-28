@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Güncel sürüm: **2.7 / v56 / Build 56**
+- Güncel sürüm: **2.7.1 / v57 / Build 57**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -18,6 +18,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Admin erişimi: bcrypt özeti + yalnız service-role erişimli RPC'ler + Supabase `kadim-admin` Edge Function
 - Karakter silme: DM doğrulamalı atomik `character_delete_dm_v56` RPC'si
 - Ses moderasyonu: DM tarafından LiveKit `canPublish` / `canSubscribe` izin yönetimi
+- Ses toparlama: mikrofon sonrası playback başlatma + autoplay düğmesi + görünürlük/reconnect kurtarma akışı
 - Cleric seçim RPC'si: `character_choices_set_v52`
 - Build seçim RPC'si: `character_build_set_v30`
 

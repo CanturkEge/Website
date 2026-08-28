@@ -17,7 +17,7 @@ function voiceMount(){
         <button id="voiceResume" class="ghost" hidden>🔊 Sesi Aç</button>
         <button id="voiceLeave" class="danger" hidden>Çık</button>
       </div>
-      <div id="voiceAudio" hidden></div>
+      <div id="voiceAudio" class="voice-audio-host" aria-hidden="true"></div>
     </div>
   </section>`);
   $('#voiceToggle').onclick=()=>voiceSetOpen($('#voicePanel').hidden);
@@ -60,6 +60,10 @@ async function voiceJoin(){
   }
   if(!window.LivekitClient)return voiceSetStatus('Ses kütüphanesi yüklenemedi',true);
   voiceJoining=true;$('#voiceJoin').disabled=true;voiceSetStatus('Bağlanıyor…');
+  const {Room,RoomEvent,Track}=window.LivekitClient;
+  const room=new Room({adaptiveStream:true,dynacast:true});
+  voiceRoom=room;
+  const earlyAudioStart=room.startAudio().catch(()=>false);
   try{
     const response=await fetch(`${cfg.SUPABASE_URL}/functions/v1/livekit-token`,{
       method:'POST',headers:{apikey:cfg.SUPABASE_ANON_KEY,'Content-Type':'application/json'},
@@ -67,12 +71,9 @@ async function voiceJoin(){
     });
     const payload=await response.json();
     if(!response.ok)throw Error(payload.error||'Ses anahtarı alınamadı');
-    const {Room,RoomEvent,Track}=window.LivekitClient;
-    const room=new Room({adaptiveStream:true,dynacast:true});
-    voiceRoom=room;
     room.on(RoomEvent.TrackSubscribed,(track)=>{
       if(track.kind!==Track.Kind.Audio)return;
-      const element=track.attach();element.autoplay=true;element.muted=voiceDeafened;if(voiceOutputId&&typeof element.setSinkId==='function')element.setSinkId(voiceOutputId).catch(()=>{});$('#voiceAudio').appendChild(element);
+      const element=track.attach();element.autoplay=true;element.playsInline=true;element.muted=voiceDeafened;if(voiceOutputId&&typeof element.setSinkId==='function')element.setSinkId(voiceOutputId).catch(()=>{});$('#voiceAudio').appendChild(element);element.play().catch(()=>{$('#voiceResume').hidden=false;voiceSetStatus('Gelen sesi açmak için Sesi Aç’a dokun',true)});
     });
     room.on(RoomEvent.TrackUnsubscribed,track=>track.detach().forEach(element=>element.remove()));
     room.on(RoomEvent.ParticipantConnected,voiceRenderPeople);
@@ -81,12 +82,16 @@ async function voiceJoin(){
     room.on(RoomEvent.TrackUnpublished,voiceRenderPeople);
     if(RoomEvent.ParticipantPermissionsChanged)room.on(RoomEvent.ParticipantPermissionsChanged,voiceRenderPeople);
     room.on(RoomEvent.AudioPlaybackStatusChanged,()=>{$('#voiceResume').hidden=room.canPlaybackAudio;if(!room.canPlaybackAudio)voiceSetStatus('Gelen sesi açmak için Sesi Aç’a dokun',true)});
+    room.on(RoomEvent.MediaDevicesError,error=>voiceSetStatus(`Mikrofon hatası: ${error?.message||'cihaz kullanılamıyor'}`,true));
+    room.on(RoomEvent.TrackSubscriptionFailed,()=>voiceSetStatus('Bir katılımcının sesi alınamadı; yeniden bağlanmayı dene',true));
+    room.on(RoomEvent.Reconnected,()=>voiceRecoverMedia());
     room.on(RoomEvent.ActiveSpeakersChanged,speakers=>voiceRenderPeople(new Set(speakers.map(x=>x.identity))));
     room.on(RoomEvent.Disconnected,()=>voiceDisconnectedUI());
     await room.connect(payload.serverUrl,payload.participantToken);
-    await room.startAudio();
     await room.localParticipant.setMicrophoneEnabled(true);
-    voiceMicEnabled=true;voiceConnectedUI();await voiceLoadDevices();voiceRenderPeople();
+    voiceMicEnabled=room.localParticipant.isMicrophoneEnabled;
+    await earlyAudioStart;await voiceResumeAudio().catch(()=>{});
+    voiceConnectedUI();await voiceLoadDevices();voiceRenderPeople();
   }catch(error){
     console.error(error);if(voiceRoom){voiceRoom.disconnect();voiceRoom=null}voiceSetStatus(error.message||'Bağlantı kurulamadı',true);
   }finally{voiceJoining=false;$('#voiceJoin').disabled=false}
@@ -95,6 +100,7 @@ async function voiceJoin(){
 function voiceConnectedUI(){
   voiceSetStatus('Ses odasına bağlı');
   $('#voiceJoin').hidden=true;$('#voiceMic').hidden=false;$('#voiceDeafen').hidden=false;$('#voiceLeave').hidden=false;
+  $('#voiceResume').hidden=voiceRoom?.canPlaybackAudio!==false;
   voiceUpdateButtons();
 }
 
@@ -157,8 +163,16 @@ async function voiceSwitchOutput(event){
 
 async function voiceResumeAudio(){
   if(!voiceRoom)return;
-  try{await voiceRoom.startAudio();$('#voiceResume').hidden=true;$('#voiceAudio').querySelectorAll('audio').forEach(audio=>{audio.muted=voiceDeafened;audio.play().catch(()=>{})})}
+  try{await voiceRoom.startAudio();let results=await Promise.allSettled([...$('#voiceAudio').querySelectorAll('audio')].map(audio=>{audio.muted=voiceDeafened;return audio.play()}));if(results.some(result=>result.status==='rejected'))throw Error('Tarayıcı ses oynatmayı engelledi');$('#voiceResume').hidden=true}
   catch(error){$('#voiceResume').hidden=false;throw error}
+}
+
+async function voiceRecoverMedia(){
+  if(!voiceRoom)return;
+  try{
+    if(voiceMicEnabled&&voiceRoom.localParticipant.permissions?.canPublish!==false&&!voiceRoom.localParticipant.isMicrophoneEnabled)await voiceRoom.localParticipant.setMicrophoneEnabled(true);
+    await voiceResumeAudio();voiceSetStatus('Ses bağlantısı hazır');voiceRenderPeople();
+  }catch(error){voiceSetStatus('Ses bağlantısı toparlanamadı; Sesi Aç’a dokun',true);$('#voiceResume').hidden=false}
 }
 
 function voiceRenderPeople(active=new Set()){
@@ -187,4 +201,5 @@ async function voiceModerate(button){
 }
 
 window.addEventListener('beforeunload',()=>voiceRoom?.disconnect());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&voiceRoom)voiceRecoverMedia()});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',voiceMount);else voiceMount();

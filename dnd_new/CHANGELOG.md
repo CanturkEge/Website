@@ -1,5 +1,13 @@
 # Kadim Masa Defteri — Kurulum
 
+## v57 — Mobil ve Tek Yönlü Ses Düzeltmesi
+
+- Token servisinin başarılı olduğu fakat tarayıcı medya oturumunun tek yönde kalabildiği akış düzeltildi.
+- Mikrofon yayını açıldıktan sonra gelen ses başlatılır; mobil kullanıcı etkileşimi için erken audio başlatma denemesi yapılır.
+- Gelen audio elementleri `hidden` DOM'dan çıkarılıp görünmez fakat oynatılabilir bir ses hostuna taşındı.
+- Autoplay engeli, cihaz hatası ve track subscription hatası kullanıcıya açık durum mesajıyla gösterilir.
+- Sekme geri geldiğinde veya LiveKit yeniden bağlandığında mikrofon ve gelen ses otomatik toparlanır.
+
 ## v56 — DM Kontrolleri ve Veritabanı Sağlık Düzeltmesi
 
 - v53 karakter oluşturmadaki geçersiz `jsonb_object_length` çağrısı veri silmeden düzeltildi.
