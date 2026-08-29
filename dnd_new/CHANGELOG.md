@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v60 — Yaratık Ansiklopedisi ve Oyuncu Hareketi
+
+- Build 59 ile eklenen yaratıkların eksik detay alanları güvenli varsayılanlarla tamamlandı; Yaratıklar sekmesinin açılırken çökmesi giderildi.
+- Oyuncular aktif savaşta yalnız kendi sıralarındaki tokenı seçip kalan hızları kadar yürütebilir.
+- Zor arazi iki kat hareket harcar; geçilemez objeler ve harita sınırı hem istemcide hem sunucuda denetlenir.
+- `battle_token_move_v60` RPC'si oturum, kampanya üyeliği, karakter sahipliği, aktif sıra ve hız sınırını doğrular.
+
+Kurulumda `v60-update.sql` dosyasını Supabase SQL Editor'da bir kez çalıştır ve site dosyalarını güncelledikten sonra `Ctrl + Shift + R` yap. SQL mevcut hesapları, kampanyaları veya karakterleri silmez ve tekrar çalıştırılabilir.
+
 ## v59 — Lonca, Büyü Kaynakları ve Taktik İçerik
 
 - NPC’ler lonca kadrosuna eklenebilir, lonca ekranında görüntülenebilir ve ayrı para kesesi taşıyabilir.

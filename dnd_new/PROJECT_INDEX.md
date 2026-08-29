@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v59 / uygulama v2.8.0 / Build 59**
+Güncel sürüm: **v60 / uygulama v2.8.1 / Build 60**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -21,7 +21,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Görev panosu | `v50.js`, hedef görev için `v50-data.js` | eski `state.quests` için `app.js` |
 | Harita/kale | `v32.js`, `v33.js` | `v34-data.js`, `Map.png` yalnız görsel gerekirse |
 | Yol/binek/seyahat | `v38.js`, `v38-data.js` | `v34-data.js` |
-| Taktik savaş | `v38-battle.js`, `v38.css` | encounter state'i için `app.js`, `v31.js` |
+| Taktik savaş | `v38-battle.js`, `v38.css` | encounter state'i için `app.js`, `v31.js`; oyuncu hareketi için `v60-update.sql` |
 | Karma/adalet/alignment | `v44.js`, `v51.js` | `v51-data.js` |
 | Notlar/oturum/bildirim | `session.js` | `session-update.sql`, hedef state için `app.js` |
 | Sesli sohbet/LiveKit | `voice.js`, `voice.css` | `v54-update.sql`, `supabase/functions/livekit-token/index.ts`, hesap oturumu için `app.js` |
@@ -75,6 +75,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 
 - Temel kurulum: `supabase-setup.sql`; sonra kullanılan modüllerin sürümlü `*-update.sql` dosyaları.
 - Güncel karakter yaratımı `character_create_player_v53`; Cleric kimliği `character_choices_set_v52`; build seçimleri `character_build_set_v30` kullanır.
+- Oyuncu savaş hareketi `battle_token_move_v60` ile sunucuda oturum, sahiplik, sıra, engel ve hız açısından doğrulanır.
 - `v31-update.sql` kampanya JSON birleştirme hattının esas güvenli kayıt katmanıdır; lokal özellik değişikliklerinde sebepsiz değiştirilmemelidir.
 - Yeni sürüm eklerken `config.js`, `index.html`, `README.md`, gerekirse `guide-v26.txt` ve `v37.js` sürüm numarası birlikte kontrol edilir.
 

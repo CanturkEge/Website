@@ -10,6 +10,7 @@ let v38FogPainting=false;
 let v38FogPaintKey='';
 let v38SaveTimer=null;
 let v38EnsureSaveQueued=false;
+let v38PlayerMovePending=false;
 const v38VisionCache=new WeakMap();
 
 function v38BattleBlank(){
@@ -105,6 +106,11 @@ function v38EnsureBattle(mutate=current?.role==='dm'){
 }
 
 function v38Combatant(token){return (state.encounter||[]).find(row=>row.id===token?.combatantId)}
+function v38PlayerOwnsToken(token){
+  let fighter=v38Combatant(token),character=v38CharacterForFighter(fighter);
+  return !!(current?.role==='player'&&fighter&&token?.kind==='player'&&(fighter.userId===auth?.id||character?.userId===auth?.id));
+}
+function v38PlayerCanMoveToken(token){let fighter=v38Combatant(token),b=v38EnsureBattle(false);return !!(v38PlayerOwnsToken(token)&&fighter?.turn&&state.encounterActive&&b.published)}
 function v38CellKey(x,y){return `${x},${y}`}
 function v38ManualReveal(b,x,y){let exception=(b.fogCells||[]).includes(v38CellKey(x,y));return b.fogBase==='revealed'?!exception:exception}
 
@@ -158,10 +164,11 @@ function v38PropHtml(b,prop,playerMode){
 
 function v38TokenHtml(b,token,playerMode){
   let fighter=v38Combatant(token);if(!fighter)return '';
-  let own=token.kind==='player',cellVisible=!v38CellIsHidden(b,token.x,token.y,true);
-  if(playerMode&&(!own&&(token.hidden||!cellVisible)))return '';
+  let partyToken=token.kind==='player',owned=playerMode&&v38PlayerOwnsToken(token),movable=owned&&v38PlayerCanMoveToken(token),cellVisible=!v38CellIsHidden(b,token.x,token.y,true);
+  if(playerMode&&(!partyToken&&(token.hidden||!cellVisible)))return '';
   let style=`--token:${esc(token.color||'#9b5f25')};left:${token.x*b.cellSize}px;top:${token.y*b.cellSize}px;width:${token.size*b.cellSize}px;height:${token.size*b.cellSize}px`;
-  return `<button class="v38-token kind-${esc(token.kind)} ${fighter.turn?'active-turn':''} ${token.id===v38SelectedTokenId?'selected':''} ${token.movedFeet>token.speed?'over-speed':''} ${(own||!playerMode)?'above-fog':''}" style="${style}" data-v38-token="${esc(token.id)}" ${!playerMode?'draggable="true"':''} title="${esc(fighter.name)} • HP ${fighter.hp}/${fighter.maxHp||fighter.hp} • AC ${fighter.ac} • Hız ${token.speed} ft"><b>${esc(String(fighter.name||'?').slice(0,2).toUpperCase())}</b><span>${esc(fighter.name)}</span><small>${token.speed} ft${token.movedFeet?` • ${token.movedFeet} ft`:''}</small></button>`;
+  let remaining=Math.max(0,(+token.speed||0)-(+token.movedFeet||0));
+  return `<button class="v38-token kind-${esc(token.kind)} ${fighter.turn?'active-turn':''} ${token.id===v38SelectedTokenId?'selected':''} ${token.movedFeet>token.speed?'over-speed':''} ${(partyToken||!playerMode)?'above-fog':''} ${movable?'player-movable':''}" style="${style}" data-v38-token="${esc(token.id)}" ${!playerMode?'draggable="true"':''} title="${esc(fighter.name)} • HP ${fighter.hp}/${fighter.maxHp||fighter.hp} • AC ${fighter.ac} • Hız ${token.speed} ft${owned?` • Kalan ${remaining} ft`:''}"><b>${esc(String(fighter.name||'?').slice(0,2).toUpperCase())}</b><span>${esc(fighter.name)}</span><small>${owned?`${remaining} ft kaldı`:`${token.speed} ft${token.movedFeet?` • ${token.movedFeet} ft`:''}`}</small></button>`;
 }
 
 function v38BattleBoard(b,playerMode=false){
@@ -211,7 +218,7 @@ function v38BattlePage(playerMode=false){
   let b=v38EnsureBattle(!playerMode&&current.role==='dm');
   if(playerMode&&!b.published)return `<section class="card v38-battle-locked"><span>⚔</span><div><small>TAKTİK SAVAŞ ALANI</small><h2>DM henüz savaş haritasını açmadı</h2><p>Hazırlık, gizli yaratıklar ve arazi oyunculara kapalı. DM “Oyuncuya Aç” veya “Savaşı Başlat” dediğinde tahta burada görünecek.</p></div></section>`;
   let active=(state.encounter||[]).find(row=>row.turn);
-  return `<section class="v38-battle-shell ${playerMode?'player-mode':''}"><div class="v38-battle-head"><div><span class="v26-kicker">KARELİ TAKTİK SAVAŞ</span><h2>${esc(b.name)}</h2><p>${b.cols}×${b.rows} kare • 1 kare = 5 ft • ${b.lighting==='bright'?'Parlak':b.lighting==='dim'?'Loş':'Karanlık'}${b.fogEnabled?' • Sis açık':' • Sis kapalı'}</p></div><div class="v38-round"><small>${state.encounterActive?'AKTİF SAVAŞ':'HAZIRLIK'}</small><b>Tur ${state.encounterRound||1}</b><span>${active?`Sıra: ${esc(active.name)}`:'Sıra başlamadı'}</span></div></div>${playerMode?'':v38BattleTools(b)}${v38InitiativeStrip(b,playerMode||v38BattlePreview)}<div class="v38-battle-layout">${playerMode?'':v38Palette()}<main>${v38BattleBoard(b,playerMode)}</main>${playerMode?'':v38Inspector(b)}</div>${playerMode?'<p class="v38-player-help">Harita salt okunurdur. Siyah kareler sis veya görüş dışıdır; DM açtıkça alan ve düşmanlar görünür.</p>':''}${v38BattleHelp(playerMode)}</section>`;
+  return `<section class="v38-battle-shell ${playerMode?'player-mode':''}"><div class="v38-battle-head"><div><span class="v26-kicker">KARELİ TAKTİK SAVAŞ</span><h2>${esc(b.name)}</h2><p>${b.cols}×${b.rows} kare • 1 kare = 5 ft • ${b.lighting==='bright'?'Parlak':b.lighting==='dim'?'Loş':'Karanlık'}${b.fogEnabled?' • Sis açık':' • Sis kapalı'}</p></div><div class="v38-round"><small>${state.encounterActive?'AKTİF SAVAŞ':'HAZIRLIK'}</small><b>Tur ${state.encounterRound||1}</b><span>${active?`Sıra: ${esc(active.name)}`:'Sıra başlamadı'}</span></div></div>${playerMode?'':v38BattleTools(b)}${v38InitiativeStrip(b,playerMode||v38BattlePreview)}<div class="v38-battle-layout">${playerMode?'':v38Palette()}<main>${v38BattleBoard(b,playerMode)}</main>${playerMode?'':v38Inspector(b)}</div>${playerMode?'<p class="v38-player-help">Sıran geldiğinde parlayan kendi tokenına, ardından gideceğin kareye dokun. Hız sınırı ve zor arazi maliyeti sunucuda doğrulanır.</p>':''}${v38BattleHelp(playerMode)}</section>`;
 }
 
 function v38InjectBattle(html,battle){let end=html.indexOf('</section>');return end<0?`${battle}${html}`:`${html.slice(0,end+10)}${battle}${html.slice(end+10)}`}
@@ -252,12 +259,31 @@ function v38AddProp(type,point){
   let b=v38EnsureBattle(),def=V38_PROP_DEFS[type];if(!def)return;let prop={id:uid(),type,x:point.x,y:point.y,w:def.w||1,h:def.h||1,label:def.label,blocksMove:!!def.blocksMove,blocksVision:!!def.blocksVision,difficult:!!def.difficult,cover:def.cover||'',light:+def.light||0,zone:def.zone||''};b.props.push(prop);v38ClampBattle(b);v38SelectedPropId=prop.id;v38SelectedTokenId=null;save();render();
 }
 
-function v38MoveToken(token,point,b=v38EnsureBattle()){
+function v38MoveAssessment(token,point,b=v38EnsureBattle()){
   let x=Math.max(0,Math.min(b.cols-token.size,point.x)),y=Math.max(0,Math.min(b.rows-token.size,point.y));
   let occupied=[];for(let cy=y;cy<y+token.size;cy++)for(let cx=x;cx<x+token.size;cx++)occupied.push(v38CellKey(cx,cy));
-  if((b.props||[]).some(prop=>prop.blocksMove&&v38PropCells(prop).some(key=>occupied.includes(key)))){toast('Bu karede geçilemez bir obje var');return false}
-  let distance=Math.max(Math.abs(token.x-x),Math.abs(token.y-y))*5,difficult=(b.props||[]).some(prop=>prop.difficult&&v38PropCells(prop).some(key=>occupied.includes(key)));if(difficult)distance*=2;
+  let blocked=(b.props||[]).some(prop=>prop.blocksMove&&v38PropCells(prop).some(key=>occupied.includes(key))),distance=Math.max(Math.abs(token.x-x),Math.abs(token.y-y))*5,difficult=(b.props||[]).some(prop=>prop.difficult&&v38PropCells(prop).some(key=>occupied.includes(key)));if(difficult)distance*=2;
+  return {x,y,blocked,distance,difficult,nextMoved:(+token.movedFeet||0)+distance};
+}
+function v38MoveToken(token,point,b=v38EnsureBattle(),enforceSpeed=false){
+  let move=v38MoveAssessment(token,point,b);if(move.blocked){toast('Bu karede geçilemez bir obje var');return false}if(enforceSpeed&&move.nextMoved>token.speed){toast(`Bu tur yalnız ${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`,true);return false}
+  let {x,y,distance}=move;
   token.movedFeet=(+token.movedFeet||0)+distance;token.x=x;token.y=y;if(token.movedFeet>token.speed)toast(`${v38Combatant(token)?.name||'Token'} hız sınırını aştı: ${token.movedFeet}/${token.speed} ft`);return true;
+}
+
+async function v38MovePlayerToken(token,point,b=v38EnsureBattle(false)){
+  if(v38PlayerMovePending)return;
+  if(!v38PlayerOwnsToken(token))return toast('Yalnız kendi tokenını hareket ettirebilirsin',true);
+  if(!state.encounterActive||!b.published)return toast('Savaş henüz aktif değil',true);
+  if(!v38Combatant(token)?.turn)return toast('Şu an sıra sende değil',true);
+  if(!auth?.sessionToken)return toast('Güvenli hareket için çıkış yapıp yeniden giriş yap',true);
+  let move=v38MoveAssessment(token,point,b);if(move.blocked)return toast('Bu karede geçilemez bir obje var',true);if(move.nextMoved>token.speed)return toast(`Bu tur yalnız ${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`,true);
+  v38PlayerMovePending=true;toast('Hareket doğrulanıyor…');
+  let data,error;try{({data,error}=await db.rpc('battle_token_move_v60',{p_session_token:auth.sessionToken,p_campaign:current.id,p_token_id:token.id,p_x:move.x,p_y:move.y}))}catch(failure){v38PlayerMovePending=false;return toast('Hareket isteği gönderilemedi: '+failure.message,true)}v38PlayerMovePending=false;
+  if(error)return toast('Hareket reddedildi: '+error.message,true);
+  token.x=+data.x;token.y=+data.y;token.movedFeet=+data.movedFeet;v38SelectedTokenId=token.id;
+  if(realtimeChannel&&realtimeCampaignId===current.id)try{await realtimeChannel.send({type:'broadcast',event:'campaign-changed',payload:{campaignId:current.id,at:Date.now()}})}catch(failure){console.warn('Battle movement broadcast failed',failure)}
+  await syncFromServer(false);render();toast(`${data.remaining} ft hareket kaldı`);
 }
 
 function v38SelectedToken(){return v38EnsureBattle().tokens.find(row=>row.id===v38SelectedTokenId)}
@@ -302,7 +328,15 @@ document.addEventListener('click',async event=>{
   let button=event.target.closest('button');if(!button||!current)return;
   if(button.dataset.v38Tool){v38BattleTool=button.dataset.v38Tool;v38PaletteSelection=null;render();return}
   if(button.dataset.v38PaletteType){v38PaletteSelection={type:button.dataset.v38PaletteType,id:button.dataset.v38PaletteId};v38BattleTool='place';document.querySelectorAll('[data-v38-palette-type]').forEach(row=>row.classList.toggle('selected',row===button));toast('Şimdi savaş alanında hedef kareye dokun');return}
-  if(button.dataset.v38Token){if(current.role!=='dm'||v38BattlePreview)return;v38SelectedTokenId=button.dataset.v38Token;v38SelectedPropId=null;v38PaletteSelection=null;v38BattleTool='select';render();return}
+  if(button.dataset.v38Token){
+    let token=v38EnsureBattle(false).tokens.find(row=>row.id===button.dataset.v38Token);
+    if(current.role==='player'){
+      if(!v38PlayerOwnsToken(token))return toast('Yalnız kendi tokenını seçebilirsin',true);
+      if(!v38PlayerCanMoveToken(token))return toast(v38Combatant(token)?.turn?'Savaş henüz aktif değil':'Şu an sıra sende değil',true);
+      v38SelectedTokenId=token.id;v38SelectedPropId=null;render();toast(`${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`);return;
+    }
+    if(current.role!=='dm'||v38BattlePreview)return;v38SelectedTokenId=button.dataset.v38Token;v38SelectedPropId=null;v38PaletteSelection=null;v38BattleTool='select';render();return;
+  }
   if(button.dataset.v38Prop){if(current.role!=='dm'||v38BattlePreview)return;v38SelectedPropId=button.dataset.v38Prop;v38SelectedTokenId=null;v38PaletteSelection=null;render();return}
   if(button.dataset.v38SelectToken&&button.dataset.v38SelectToken){v38SelectedTokenId=button.dataset.v38SelectToken;v38SelectedPropId=null;render();return}
   if(button.id==='v38PublishBattle'){let b=v38EnsureBattle();b.published=true;save();render();toast('Savaş alanı oyunculara açıldı');return}
@@ -348,9 +382,13 @@ document.addEventListener('click',async event=>{
 });
 
 /* The board itself is a div; handle blank-cell taps that are not buttons. */
-document.addEventListener('click',event=>{
-  let board=event.target.closest('[data-v38-board]');if(!board||event.target.closest('button')||current?.role!=='dm'||v38BattlePreview||['reveal','hide'].includes(v38BattleTool))return;
-  let b=v38EnsureBattle(),point=v38Point(board,event,b);
+document.addEventListener('click',async event=>{
+  let board=event.target.closest('[data-v38-board]');if(!board||event.target.closest('button')||v38BattlePreview||['reveal','hide'].includes(v38BattleTool))return;
+  let b=v38EnsureBattle(current?.role==='dm'),point=v38Point(board,event,b);
+  if(current?.role==='player'){
+    let token=b.tokens.find(row=>row.id===v38SelectedTokenId);if(token)await v38MovePlayerToken(token,point,b);return;
+  }
+  if(current?.role!=='dm')return;
   if(v38PaletteSelection){let selected=v38PaletteSelection;selected.type==='prop'?v38AddProp(selected.id,point):v38AddCombatant(selected.type,selected.id,point);return}
   if(v38BattleTool==='select'&&v38SelectedTokenId){let token=v38SelectedToken();if(token){v38MoveToken(token,point,b);save();render()}}
 });

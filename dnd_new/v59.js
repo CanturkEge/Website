@@ -3,7 +3,8 @@
   Object.assign(V38_PROP_DEFS,window.V59_PROP_DEFS||{});
   Object.assign(V38_BATTLE_PRESETS,window.V59_BATTLE_PRESETS||{});
   const v59OldAllMonsters=allMonsters;
-  allMonsters=()=>[...v59OldAllMonsters(),...(window.V59_MONSTERS||[])];
+  function v59MonsterDetail(m){return {...m,stats:Array.isArray(m.stats)&&m.stats.length===6?m.stats:[10,10,10,10,10,10],attacks:m.attacks||m.note||'Stat bloğu DM tarafından tamamlanmalı.',traits:m.traits||m.note||'Özel özellik yok.',resist:m.resist||'Yok',immune:m.immune||'Yok',weak:m.weak||'Belirgin zayıflık yok.'}}
+  allMonsters=()=>[...v59OldAllMonsters(),...(window.V59_MONSTERS||[]).map(v59MonsterDetail)];
 
   const FULL_SLOTS=[[],[2],[3],[4,2],[4,3],[4,3,2],[4,3,3],[4,3,3,1],[4,3,3,2],[4,3,3,3,1],[4,3,3,3,2],[4,3,3,3,2,1],[4,3,3,3,2,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1,1],[4,3,3,3,3,1,1,1,1],[4,3,3,3,3,2,1,1,1],[4,3,3,3,3,2,2,1,1]];
   const HALF_SLOTS=[[],[],[2],[3],[3],[4,2],[4,2],[4,3],[4,3],[4,3,2],[4,3,2],[4,3,3],[4,3,3],[4,3,3,1],[4,3,3,1],[4,3,3,2],[4,3,3,2],[4,3,3,3,1],[4,3,3,3,1],[4,3,3,3,2],[4,3,3,3,2]];
