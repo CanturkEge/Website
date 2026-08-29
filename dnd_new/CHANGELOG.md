@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v59 — Lonca, Büyü Kaynakları ve Taktik İçerik
+
+- NPC’ler lonca kadrosuna eklenebilir, lonca ekranında görüntülenebilir ve ayrı para kesesi taşıyabilir.
+- DM için spell slot harcama/geri alma/yenileme tablosu; oyuncu için salt okunur slot görünümü ve rehber eklendi.
+- Ganimette çıkan para tek adımda seçilen karakterin güvenli Supabase cüzdanına gönderilebilir.
+- Şeytanla anlaşma mesajları DM’e, cevaplar ilgili oyuncuya bildirim üretir.
+- 100 yeni hazır yaratık, 44 yeni taktik harita ve 18 yeni obje eklendi; toplam hazır harita sayısı 51’e çıktı.
+- Savaş ekranındaki araç grupları ve yan paneller daha sakin bir hiyerarşiye alındı.
+
 ## v58 — DM Susturma Sonrası Otomatik Mikrofon Dönüşü
 
 - DM susturmayı kaldırdığında, oyuncunun mikrofonu daha önce açıksa track otomatik yeniden yayınlanır.

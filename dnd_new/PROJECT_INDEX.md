@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v58 / uygulama v2.7.2 / Build 58**
+Güncel sürüm: **v59 / uygulama v2.8.0 / Build 59**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım

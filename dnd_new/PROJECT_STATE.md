@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-08-28**  
+Son doğrulama: **2026-08-29**
 Referans branch: `main`  
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Güncel sürüm: **2.7.2 / v58 / Build 58**
+- Güncel sürüm: **2.8.0 / v59 / Build 59**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -22,6 +22,10 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - DM susturma dönüşü: oyuncunun önceki mikrofon tercihini koruyarak permission değişiminde otomatik track yeniden yayını
 - Cleric seçim RPC'si: `character_choices_set_v52`
 - Build seçim RPC'si: `character_build_set_v30`
+- NPC lonca üyeliği ve NPC para kesesi kampanya state'inde tutulur.
+- Spell slot kullanımı `spellSlotsUsed` alanında tutulur; DM tablosu ve Long Rest aynı alanı kullanır.
+- Hazır taktik içerik: 51 map, 130 hazır yaratık ve genişletilmiş arazi/obje paleti.
+- Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
 
 ## Korunması gereken sözleşmeler
 
