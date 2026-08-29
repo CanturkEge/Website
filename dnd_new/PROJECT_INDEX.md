@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v60 / uygulama v2.8.1 / Build 60**
+Güncel sürüm: **v61 / uygulama v2.8.2 / Build 61**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -17,7 +17,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Büyü hazırlama veya büyü kuralı | `v53.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js` |
 | Cleric/tanrı/domain | `v52.js`, hedef tanrı/domain için `v52-data.js` | `v49-data.js`, `v52-update.sql` |
 | Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js` | `v31.js`, `inventory-update.sql` |
-| Market/loot/eşya kataloğu | hedef veri için `v44-data.js` veya `v48-data.js` | `v34.js`, `v44.js` |
+| Market/loot/eşya kataloğu | hedef veri için `v44-data.js` veya `v48-data.js` | `v34.js`, `v44.js`; oyuncu para yok etme için `expansion.js`, `v61-update.sql` |
 | Görev panosu | `v50.js`, hedef görev için `v50-data.js` | eski `state.quests` için `app.js` |
 | Harita/kale | `v32.js`, `v33.js` | `v34-data.js`, `Map.png` yalnız görsel gerekirse |
 | Yol/binek/seyahat | `v38.js`, `v38-data.js` | `v34-data.js` |
@@ -76,6 +76,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 - Temel kurulum: `supabase-setup.sql`; sonra kullanılan modüllerin sürümlü `*-update.sql` dosyaları.
 - Güncel karakter yaratımı `character_create_player_v53`; Cleric kimliği `character_choices_set_v52`; build seçimleri `character_build_set_v30` kullanır.
 - Oyuncu savaş hareketi `battle_token_move_v60` ile sunucuda oturum, sahiplik, sıra, engel ve hız açısından doğrulanır.
+- Oyuncunun kendi parasını yok etmesi `wallet_discard_v61` ile oturum, üyelik, bakiye ve satır kilidi kullanılarak doğrulanır.
 - `v31-update.sql` kampanya JSON birleştirme hattının esas güvenli kayıt katmanıdır; lokal özellik değişikliklerinde sebepsiz değiştirilmemelidir.
 - Yeni sürüm eklerken `config.js`, `index.html`, `README.md`, gerekirse `guide-v26.txt` ve `v37.js` sürüm numarası birlikte kontrol edilir.
 

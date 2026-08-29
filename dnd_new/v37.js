@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.8.2',build:'Build 61',title:'Oyuncu Para Yok Etme',tag:'EKONOMİ',tone:'current',
+    summary:'Oyuncular kendi keselerindeki parayı onaylayarak kalıcı biçimde yok edebilir.',
+    added:['Kesem ekranına para türü ve miktarı seçilen Parayı Yere At kontrolü eklendi.'],
+    fixed:[],
+    changed:['İşlem oturum, kampanya üyeliği ve bakiye açısından Supabase üzerinde doğrulanır; yerde alınabilir eşya oluşturmaz.']
+  },
+  {
     version:'2.8.1',build:'Build 60',title:'Yaratık Ansiklopedisi ve Oyuncu Hareketi',tag:'HOTFIX',tone:'current',
     summary:'Yaratıklar ekranı onarıldı ve oyunculara hız sınırına bağlı güvenli savaş hareketi eklendi.',
     added:['Oyuncu, aktif sırasında kendi tokenını kalan hareketi kadar yürütebilir.'],
@@ -744,7 +751,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.8.1'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.8.2'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -752,8 +759,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.8.1 • Build 60</h2><p>Yaratık ansiklopedisi onarıldı ve oyuncu savaş hareketi güvenli hale getirildi.</p></div>
-      <div class="v37-patch-stats"><span><b>37</b>Sürüm</span><span><b>130</b>Yaratık</span><span><b>51</b>Map</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.8.2 • Build 61</h2><p>Oyuncular kendi keselerindeki parayı kalıcı olarak yok edebilir.</p></div>
+      <div class="v37-patch-stats"><span><b>38</b>Sürüm</span><span><b>130</b>Yaratık</span><span><b>51</b>Map</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -762,7 +769,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.8.1 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.8.2 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

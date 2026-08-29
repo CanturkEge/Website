@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v61 — Oyuncu Para Yok Etme
+
+- Oyuncunun Kesem ekranına para türü ve miktarı seçilen **Parayı Yere At** işlemi eklendi.
+- Atılan para yerde alınabilir eşya oluşturmaz; oyuncunun kesesinden kalıcı olarak silinir.
+- İşlem geri alınamaz onayı ister; yetersiz bakiye ve geçersiz miktar sunucuda reddedilir.
+- `wallet_discard_v61` RPC'si oyuncuyu ham kullanıcı kimliği yerine v54 oturum tokenından doğrular ve cüzdanı satır kilidiyle günceller.
+
+Kurulumda `v61-update.sql` dosyasını Supabase SQL Editor'da bir kez çalıştır ve site dosyalarını güncelledikten sonra `Ctrl + Shift + R` yap. SQL mevcut hesapları, kampanyaları veya cüzdan bakiyelerini kendiliğinden değiştirmez ve tekrar çalıştırılabilir.
+
 ## v60 — Yaratık Ansiklopedisi ve Oyuncu Hareketi
 
 - Build 59 ile eklenen yaratıkların eksik detay alanları güvenli varsayılanlarla tamamlandı; Yaratıklar sekmesinin açılırken çökmesi giderildi.

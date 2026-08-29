@@ -14,6 +14,9 @@
 .transfer-form label { display: grid; gap: 5px; }
 .transfer-form select,
 .transfer-form input { width: 100%; }
+.discard-form { grid-template-columns: 1fr 1fr auto; }
+.money-discard { border-color: #723d35; background: linear-gradient(145deg,#21120f,#100908); }
+.money-discard > div > small { color: #df8176; }
 .coin-actions {
   grid-template-columns: repeat(2, minmax(150px, 1fr));
 }
