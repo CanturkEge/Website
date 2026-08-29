@@ -1,5 +1,13 @@
 # Kadim Masa Defteri — Kurulum
 
+## v62 — Kesem Görünürlük Düzeltmesi
+
+- Geç yüklenen `v27.js` dosyasının oyuncu Kesem ekranını eski şablonla ezmesi giderildi.
+- **Parayı Yere At** kontrolü artık oyuncu hesabında Kesem sayfasının altında görünür.
+- Veritabanı veya SQL değişikliği yoktur; mevcut `wallet_discard_v61` RPC'si kullanılmaya devam eder.
+
+Site dosyalarını güncelledikten sonra yeni `v62` cache anahtarı dosyaların yeniden indirilmesini sağlar.
+
 ## v61 — Oyuncu Para Yok Etme
 
 - Oyuncunun Kesem ekranına para türü ve miktarı seçilen **Parayı Yere At** işlemi eklendi.
