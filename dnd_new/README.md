@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **2.8.3**
-- Build/modül sürümü: **v62 / Build 62**
-- Son paket: Kesem ekranında para yok etme kontrolünün görünürlük düzeltmesi
+- Ürün sürümü: **2.9.0**
+- Build/modül sürümü: **v63 / Build 63**
+- Son paket: 124 yeni büyücü eşyası, rünlü ekipman ve çalışan Spell Attack/DC eşya bonusları
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.

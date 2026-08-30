@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'2.9.0',build:'Build 63',title:'Büyücü Eşyaları ve Rünlü Ekipman',tag:'GANİMET',tone:'current',
+    summary:'Büyü kullanan classlar için 124 yeni eşya ve çalışan Spell Attack/DC bonusları eklendi.',
+    added:['16 büyü kitabı, 52 caster eşyası, 40 rünlü ekipman ve 16 kutsal emanet.','Artificer, Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock ve Wizard için class odakları.'],
+    fixed:['Kuşanılmış magicBonus artık yalnız etikette kalmaz; Spell Attack ve Spell Save DC’ye gerçekten eklenir.'],
+    changed:['Ganimet kataloğu 4.124 açıklamalı kayda çıktı; SQL değişikliği gerekmez.']
+  },
+  {
     version:'2.8.3',build:'Build 62',title:'Kesem Görünürlük Düzeltmesi',tag:'HOTFIX',tone:'current',
     summary:'Oyuncunun Parayı Yere At kontrolünün Kesem ekranında kaybolması giderildi.',
     added:[],
@@ -758,7 +765,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.8.3'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='2.9.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -766,8 +773,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.8.3 • Build 62</h2><p>Parayı Yere At kontrolü artık oyuncunun Kesem ekranında görünür.</p></div>
-      <div class="v37-patch-stats"><span><b>39</b>Sürüm</span><span><b>130</b>Yaratık</span><span><b>51</b>Map</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v2.9.0 • Build 63</h2><p>124 yeni büyücü eşyası ve gerçek Spell Attack/DC ekipman bonusları eklendi.</p></div>
+      <div class="v37-patch-stats"><span><b>40</b>Sürüm</span><span><b>4.124</b>Eşya</span><span><b>130</b>Yaratık</span><span><b>51</b>Map</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -776,7 +783,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v2.8.3 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v2.9.0 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

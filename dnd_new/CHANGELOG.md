@@ -1,5 +1,15 @@
 # Kadim Masa Defteri — Kurulum
 
+## v63 — Büyücü Eşyaları ve Rünlü Ekipman
+
+- Ganimet kataloğu 4.000 kayıttan **4.124** kayda çıkarıldı.
+- 16 büyü kitabı, 52 class/genel caster eşyası, 40 rünlü eşya ve 16 kutsal büyü emaneti eklendi.
+- Artificer, Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock ve Wizard için class odakları, asalar, değnekler ve aksesuarlar eklendi.
+- Kuşanılan ve class şartı sağlanan `magicBonus`, karakter kartı, class paneli, Cleric paneli ve büyü saldırısı zarına gerçek Spell Attack/DC bonusu olarak bağlandı.
+- Yeni eşyalar ganimet ansiklopedisinde **Büyücü ekipmanları**, **Büyü kitapları**, **Rünlü eşyalar** ve **Kutsal emanetler** filtreleriyle bulunabilir.
+
+SQL değişikliği yoktur. Site dosyalarını güncelledikten sonra `v63` cache anahtarı yeni katalog ve hesaplama dosyalarını yükler.
+
 ## v62 — Kesem Görünürlük Düzeltmesi
 
 - Geç yüklenen `v27.js` dosyasının oyuncu Kesem ekranını eski şablonla ezmesi giderildi.

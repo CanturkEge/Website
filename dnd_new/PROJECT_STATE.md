@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-08-29**
+Son doğrulama: **2026-08-30**
 Referans branch: `main`  
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Güncel sürüm: **2.8.3 / v62 / Build 62**
+- Güncel sürüm: **2.9.0 / v63 / Build 63**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -29,6 +29,8 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Oyuncu, yalnız aktif sırasındaki kendi savaş tokenını kalan hızı kadar hareket ettirebilir; yetki ve mesafe `battle_token_move_v60` RPC'sinde doğrulanır.
 - Oyuncu kendi kesesinden seçtiği parayı geri alınamayacak biçimde yok edebilir; `wallet_discard_v61` oturum ve sahipliği sunucuda doğrular.
 - Geç yüklenen `v27.js`, Kesem ekranındaki para yok etme kontrolünü artık ezmez.
+- Ganimet kataloğu 4.124 kayda çıktı; 124 yeni büyü kitabı, class odağı, kutsal emanet, asa/değnek ve rünlü eşya `v63-data.js` içinde tutulur.
+- Kuşanılmış ve class şartı sağlanan `magicBonus`, Spell Attack ve Spell Save DC hesaplarına `v63SpellBonus` üzerinden eklenir.
 - Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
 
 ## Korunması gereken sözleşmeler
