@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v65 — Tekil Büyü Emanetleri
+
+- Cleric, Wizard, Warlock, Druid, Sorcerer, Bard, Paladin, Ranger ve Artificer için üçer tane olmak üzere **27 özgün isimli emanet** eklendi.
+- Her kayıt yalnız **1 stok**, tier 3, attunement ve açık class şartıyla markete eklenir.
+- Emanetler sıradan seri adları yerine **Kırık Merhamet**, **Geceyi İkiye Bölen Asa**, **Borçsuz Gölge**, **Köklerin Hafızası**, **İçindeki Fırtına**, **Unutulan Nakarat**, **Eğilmeyen Şafak**, **Ufkun Öteki Ucu** ve **Mükemmel Hata** gibi tekil adlar taşır.
+- Spell Attack/DC, AC, saving throw, attack/damage veya ana stat bonusları satın alım ve DM hediyesi sırasında korunur.
+
+SQL değişikliği yoktur. Market seed v7, mevcut ürünlerin fiyat ve stoklarına dokunmadan yalnız eksik v65 kayıtlarını ekler.
+
 ## v64 — Yaratık, Boss, NPC ve Ekonomi Temizliği
 
 - Kör rütbe üreten 100 yaratık kombinasyonu kaldırıldı; 40 ayrı isim, stat, saldırı, özellik ve karşı oyun taşıyan yaratık eklendi.

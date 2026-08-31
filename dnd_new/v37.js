@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.1.0',build:'Build 65',title:'Tekil Büyü Emanetleri',tag:'ÖZEL EŞYA',tone:'current',
+    summary:'Dokuz büyü kullanan class için yalnız bir adet satılan 27 isimli emanet markete eklendi.',
+    added:['Cleric, Wizard, Warlock, Druid, Sorcerer, Bard, Paladin, Ranger ve Artificer için üçer tekil eşya.','Geceyi İkiye Bölen Asa, Kırık Merhamet, Köklerin Hafızası, İçindeki Fırtına ve benzeri özgün isimli emanetler.'],
+    fixed:[],
+    changed:['Her eşyanın market stoğu 1, tieri 3 ve class şartı açıktır.','Satın alım ve DM hediyesi eşyanın çalışan bonuslarını eksiksiz korur; SQL değişikliği gerekmez.']
+  },
+  {
     version:'3.0.0',build:'Build 64',title:'Yaratık, Boss ve Ekonomi Temizliği',tag:'BÜYÜK TEMİZLİK',tone:'current',
     summary:'Kopya yaratık/eşya üretimi temizlendi; Bosslar sayfası, NPC varlık yönetimi ve Büyücü Dükkânı eklendi.',
     added:['40 ayrı savaş rolüne sahip yaratık ve 24 fazlı boss.','36 class-özel pelerin, focus, eldiven, çizme ve aksesuar.','30 fiyatlandırılmış büyü odağı, materyal ve büyücü ürünü.','NPC için katalogdan bonuslarıyla eşya verme ve para ekleme/çıkarma paneli.'],
@@ -772,7 +779,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.0.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.1.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -780,8 +787,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.0.0 • Build 64</h2><p>Yaratık, boss, NPC varlıkları ve büyü ekonomisi baştan temizlendi.</p></div>
-      <div class="v37-patch-stats"><span><b>41</b>Sürüm</span><span><b>2.154</b>Eşya</span><span><b>24</b>Boss</span><span><b>51</b>Map</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.1.0 • Build 65</h2><p>Dokuz büyü classı için 27 tekil isimli emanet markete geldi.</p></div>
+      <div class="v37-patch-stats"><span><b>42</b>Sürüm</span><span><b>2.181</b>Eşya</span><span><b>27</b>Tekil</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -790,7 +797,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v3.0.0 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v3.1.0 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

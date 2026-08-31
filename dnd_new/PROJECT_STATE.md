@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Güncel sürüm: **3.0.0 / v64 / Build 64**
+- Güncel sürüm: **3.1.0 / v65 / Build 65**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -29,10 +29,11 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Oyuncu, yalnız aktif sırasındaki kendi savaş tokenını kalan hızı kadar hareket ettirebilir; yetki ve mesafe `battle_token_move_v60` RPC'sinde doğrulanır.
 - Oyuncu kendi kesesinden seçtiği parayı geri alınamayacak biçimde yok edebilir; `wallet_discard_v61` oturum ve sahipliği sunucuda doğrular.
 - Geç yüklenen `v27.js`, Kesem ekranındaki para yok etme kontrolünü artık ezmez.
-- Ganimet kataloğu yüzeysel kombinasyonları temizlenerek 2.154 tekrarsız kayda indirildi; v63 caster paketi ile 36 yeni class-özel v64 ekipmanı korunur.
+- Ganimet kataloğu yüzeysel kombinasyonları temizlenerek 2.181 tekrarsız kayda indirildi; v63 caster paketi, 36 class-özel v64 ekipmanı ve 27 tekil v65 emaneti korunur.
 - Kuşanılmış ve class şartı sağlanan `magicBonus`, Spell Attack ve Spell Save DC hesaplarına `v63SpellBonus` üzerinden eklenir.
 - `v64-data.js` 40 mantıksal yaratık, 24 boss, 36 class ekipmanı ve 30 dengeli market ürünü sağlar; `v64.js` Bosslar sayfası, NPC varlık paneli ve veri kaybetmeyen market seed v6 geçişini uygular.
 - Büyücü Dükkânı kale hizmet tierlerine bağlanır; büyü materyalleri ayrıca Genel Eşya, Simyacı ve Tapınak raflarına dağıtılır.
+- `v65-data.js`, dokuz büyü kullanan class için üçer tane olmak üzere 27 özgün isimli, attunement isteyen ve markette yalnız 1 stok bulunan emanet sağlar; market seed v7 mevcut fiyat/stokları ezmeden yalnız eksik kayıtları ekler.
 - Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
 
 ## Korunması gereken sözleşmeler

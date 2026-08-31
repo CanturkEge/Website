@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **3.0.0**
-- Build/modül sürümü: **v64 / Build 64**
-- Son paket: yaratık/eşya temizliği, ayrı Bosslar sayfası, NPC envanter/para yönetimi ve Büyücü Dükkânı
+- Ürün sürümü: **3.1.0**
+- Build/modül sürümü: **v65 / Build 65**
+- Son paket: dokuz büyü kullanan class için markette yalnız bir adet bulunan 27 özgün isimli emanet
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.
