@@ -202,7 +202,7 @@
     {id:'characters',icon:'♙',label:'Karakter & Parti',pages:['dashboard','party','partyview','inventory','skills']},
     {id:'adventure',icon:'⚔',label:'Macera & Savaş',pages:['questboard','map','encounter','encounterview','dice']},
     {id:'economy',icon:'◇',label:'Lonca & Ekonomi',pages:['guilddm','guild','treasury','market','lootgen']},
-    {id:'world',icon:'✥',label:'Dünya & Kayıtlar',pages:['world','npcs','bestiary','karma']},
+    {id:'world',icon:'✥',label:'Dünya & Kayıtlar',pages:['world','npcs','bestiary','bosses','karma']},
     {id:'social',icon:'✉',label:'Masa İletişimi',pages:['pacts','chat','notifications']},
     {id:'library',icon:'⌕',label:'Rehber & Arşiv',pages:['guide','spellbook','deities','divineorder','patchnotes']}
   ];

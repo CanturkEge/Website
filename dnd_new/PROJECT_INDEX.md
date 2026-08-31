@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v63 / uygulama v2.9.0 / Build 63**
+Güncel sürüm: **v64 / uygulama v3.0.0 / Build 64**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -17,7 +17,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Büyü hazırlama veya büyü kuralı | `v53.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js` |
 | Cleric/tanrı/domain | `v52.js`, hedef tanrı/domain için `v52-data.js` | `v49-data.js`, `v52-update.sql` |
 | Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js` | `v31.js`, `inventory-update.sql` |
-| Market/loot/eşya kataloğu | hedef veri için `v44-data.js`, `v48-data.js` veya caster eşyaları için `v63-data.js` | `v34.js`, `v44.js`; büyü bonusu için `v63.js`; oyuncu para yok etme için `expansion.js`, `v61-update.sql` |
+| Market/loot/eşya kataloğu | hedef veri için `v44-data.js`, `v48-data.js`, caster eşyaları için `v63-data.js`, temizlik/class eşya/arcane market için `v64-data.js` | `v34.js`, `v44.js`, `v64.js`; büyü bonusu için `v63.js`; oyuncu para yok etme için `expansion.js`, `v61-update.sql` |
 | Görev panosu | `v50.js`, hedef görev için `v50-data.js` | eski `state.quests` için `app.js` |
 | Harita/kale | `v32.js`, `v33.js` | `v34-data.js`, `Map.png` yalnız görsel gerekirse |
 | Yol/binek/seyahat | `v38.js`, `v38-data.js` | `v34-data.js` |
@@ -55,7 +55,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Sistem | Veri | Mantık / arayüz |
 |---|---|---|
 | 319 kayıtlık 2014 SRD büyü kataloğu | `v47-data.js` | `v47.js`, `v47.css`; karakter seçimi için `v53.js` |
-| Eşya/loot ana veri kümeleri | `v34-data.js`, `v36-data.js`, `v44-data.js`, `v48-data.js`, `v63-data.js` | `v34.js`, `v44.js`, `v63.js` |
+| Eşya/loot ana veri kümeleri | `v34-data.js`, `v36-data.js`, `v44-data.js`, `v48-data.js`, `v63-data.js`, `v64-data.js` | `v34.js`, `v44.js`, `v63.js`, `v64.js` |
 | Kuşanma, slotlar, sürekli bonuslar | — | `inventory-actions.js`, `v31.js`, `v45.js`, `v46.js` |
 | Envanter görünümü ve karakter föyü | — | `v46.js`, `v46.css` |
 
@@ -66,7 +66,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Harita ve kaleler | `v32.js`, `v33.js`, `v34-data.js` |
 | Yollar, seyahat ve binekler | `v38.js`, `v38-data.js` |
 | Taktik savaş alanı | `v38-battle.js`, `v38.css` |
-| Gelişmiş yaratık/DM müdahalesi | `v27.js`, `v41.js` |
+| Gelişmiş yaratık, Bosslar ve DM müdahalesi | `v27.js`, `v41.js`, `v64-data.js`, `v64.js` |
 | 200 görevlik görev panosu | `v50-data.js`, `v50.js`, `v50.css` |
 | Karma, adalet, alignment ve ilahi düzen | `v44.js`, `v51-data.js`, `v51.js` |
 | Sürüm notları | `v37.js`, `v37.css` |

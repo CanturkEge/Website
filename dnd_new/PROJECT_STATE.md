@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-08-30**
+Son doğrulama: **2026-08-31**
 Referans branch: `main`  
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Güncel sürüm: **2.9.0 / v63 / Build 63**
+- Güncel sürüm: **3.0.0 / v64 / Build 64**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -22,15 +22,17 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - DM susturma dönüşü: oyuncunun önceki mikrofon tercihini koruyarak permission değişiminde otomatik track yeniden yayını
 - Cleric seçim RPC'si: `character_choices_set_v52`
 - Build seçim RPC'si: `character_build_set_v30`
-- NPC lonca üyeliği ve NPC para kesesi kampanya state'inde tutulur.
+- NPC lonca üyeliği, para kesesi ve tüm özellik alanlarını koruyan envanteri kampanya state'inde tutulur.
 - Spell slot kullanımı `spellSlotsUsed` alanında tutulur; DM tablosu ve Long Rest aynı alanı kullanır.
-- Hazır taktik içerik: 51 map, 130 hazır yaratık ve genişletilmiş arazi/obje paleti.
+- Hazır taktik içerik: 51 map, rütbe kopyalarından arındırılmış yaratık kataloğu, 24 ayrı boss ve genişletilmiş arazi/obje paleti.
 - Build 59 yaratıkları ansiklopedi için eksik detay alanları güvenli varsayılanlarla tamamlanarak açılış hatasından korunur.
 - Oyuncu, yalnız aktif sırasındaki kendi savaş tokenını kalan hızı kadar hareket ettirebilir; yetki ve mesafe `battle_token_move_v60` RPC'sinde doğrulanır.
 - Oyuncu kendi kesesinden seçtiği parayı geri alınamayacak biçimde yok edebilir; `wallet_discard_v61` oturum ve sahipliği sunucuda doğrular.
 - Geç yüklenen `v27.js`, Kesem ekranındaki para yok etme kontrolünü artık ezmez.
-- Ganimet kataloğu 4.124 kayda çıktı; 124 yeni büyü kitabı, class odağı, kutsal emanet, asa/değnek ve rünlü eşya `v63-data.js` içinde tutulur.
+- Ganimet kataloğu yüzeysel kombinasyonları temizlenerek 2.154 tekrarsız kayda indirildi; v63 caster paketi ile 36 yeni class-özel v64 ekipmanı korunur.
 - Kuşanılmış ve class şartı sağlanan `magicBonus`, Spell Attack ve Spell Save DC hesaplarına `v63SpellBonus` üzerinden eklenir.
+- `v64-data.js` 40 mantıksal yaratık, 24 boss, 36 class ekipmanı ve 30 dengeli market ürünü sağlar; `v64.js` Bosslar sayfası, NPC varlık paneli ve veri kaybetmeyen market seed v6 geçişini uygular.
+- Büyücü Dükkânı kale hizmet tierlerine bağlanır; büyü materyalleri ayrıca Genel Eşya, Simyacı ve Tapınak raflarına dağıtılır.
 - Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
 
 ## Korunması gereken sözleşmeler

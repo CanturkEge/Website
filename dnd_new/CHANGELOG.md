@@ -1,5 +1,16 @@
 # Kadim Masa Defteri — Kurulum
 
+## v64 — Yaratık, Boss, NPC ve Ekonomi Temizliği
+
+- Kör rütbe üreten 100 yaratık kombinasyonu kaldırıldı; 40 ayrı isim, stat, saldırı, özellik ve karşı oyun taşıyan yaratık eklendi.
+- 24 boss için ayrı **Bosslar** sayfası; saldırı, legendary özellik, lair action, faz değişimi ve karşı oyun kartları eklendi.
+- Ganimet kataloğu yüzeysel kombinasyonlar ayıklanarak 4.124 kayıttan 2.154 tekrarsız kayda indirildi; 36 class-özel bonuslu ekipman eklendi.
+- NPC yönetimi katalogdan bütün bonus alanlarıyla eşya verme, eşyayı geri alma ve PP/GP/SP/CP ekleme-çıkarma akışında birleştirildi.
+- Ayrı **Büyücü Dükkânı** ve kalelere bağlı tierleri eklendi; materyaller Genel Eşya, Simyacı ve Tapınak raflarına da dağıtıldı.
+- 30 yeni market ürününün GP/CP değeri, tier ve stok miktarı dengelendi.
+
+SQL değişikliği yoktur. Mevcut kampanya, karakter, NPC, envanter ve para kayıtları korunur; yeni alanlar kampanya JSON state'inde geriye uyumlu biçimde tamamlanır.
+
 ## v63 — Büyücü Eşyaları ve Rünlü Ekipman
 
 - Ganimet kataloğu 4.000 kayıttan **4.124** kayda çıkarıldı.

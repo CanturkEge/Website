@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **2.9.0**
-- Build/modül sürümü: **v63 / Build 63**
-- Son paket: 124 yeni büyücü eşyası, rünlü ekipman ve çalışan Spell Attack/DC eşya bonusları
+- Ürün sürümü: **3.0.0**
+- Build/modül sürümü: **v64 / Build 64**
+- Son paket: yaratık/eşya temizliği, ayrı Bosslar sayfası, NPC envanter/para yönetimi ve Büyücü Dükkânı
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.
@@ -55,6 +55,7 @@ docs(dnd): refresh project state and module index
 ## Kaynak ve lisans notları
 
 - SRD içeriği için [`SRD-5.1-ATTRIBUTION.md`](SRD-5.1-ATTRIBUTION.md)
+- v64 içindeki SRD uyumlu yaratık/boss özetleri 2014 SRD 5.1 temel alınarak Türkçe ve oyun içi kısa referans biçiminde yeniden yazılmıştır; `Özgün Kadim Masa bossu` işaretli kayıtlar homebrew içeriğidir.
 - Tanrı kaynakları için [`DEITY-SOURCES.md`](DEITY-SOURCES.md)
 - v53 kural kaynakları için [`v53-rules-sources.md`](v53-rules-sources.md)
 
