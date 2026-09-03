@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.2.1',build:'Build 67',title:'Kutsal Sembol ve NPC Aktarım Hotfix',tag:'HOTFIX',tone:'current',
+    summary:'Eski kutsal sembollerin kuşanılması ve oyuncudan NPC’ye eşya aktarım düğmesinin görünürlüğü düzeltildi.',
+    added:[],
+    fixed:['Alanları eksik eski Kutsal Sembol ve Gezgin Kutsal Sembolü kayıtları istemci ile sunucuda büyü odağı olarak tanınır.','NPC’ye Ver düğmesi, aktif sınıflandırılmış envanter kartının işlem alanında görünür.'],
+    changed:['Mevcut eşya kayıtları yeniden yazılmaz; geriye uyumlu tanıma kuralı kullanılır.','v67 cache anahtarı düzeltilmiş envanter dosyalarını yeniden yükler.']
+  },
+  {
     version:'3.2.0',build:'Build 66',title:'Odaklar, Pazarlıklı Sepet ve NPC Transferi',tag:'MARKET',tone:'current',
     summary:'Büyü odakları kullanılabilir hâle geldi; DM onaylı sepet pazarlığı ve NPC’ye eşya/para gönderme eklendi.',
     added:['Kutsal, arcane, druidic ve çalgı odakları için kuşanma ve materyal hazır kontrolü.','Çoklu ürün sepeti, oyuncu teklifi, DM karşı teklifi ve son kabul akışı.','Oyuncudan NPC’ye bonus alanlarını koruyan eşya ve PP/GP/SP/CP aktarımı.','19 yeni odak, class ekipmanı ve bedelli büyü materyali.'],
@@ -786,7 +793,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.2.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.2.1'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -794,8 +801,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.2.0 • Build 66</h2><p>Odak kullanımı, pazarlıklı market sepeti ve NPC transferleri devrede.</p></div>
-      <div class="v37-patch-stats"><span><b>43</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Sepet</b>DM Onaylı</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.2.1 • Build 67</h2><p>Eski kutsal semboller ve oyuncudan NPC’ye eşya aktarımı düzeltildi.</p></div>
+      <div class="v37-patch-stats"><span><b>44</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Sepet</b>DM Onaylı</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -804,7 +811,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v3.2.0 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1–v3.2.1 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

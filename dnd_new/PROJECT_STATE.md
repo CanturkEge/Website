@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Güncel sürüm: **3.2.0 / v66 / Build 66**
+- Güncel sürüm: **3.2.1 / v67 / Build 67**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -37,6 +37,8 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - `v66-data.js`, kullanılabilir kutsal/arcane/druidic/instrument odakları, class pelerin/asa/cübbeleri ve bedelli büyü materyallerini market seed v8 ile ekler.
 - Oyuncu market sepetini DM'e teklif olarak yollar; DM kabul, ret veya karşı teklif verir. Para, stok ve envanter yalnız son kabulde `market_order_*_v66` RPC'leriyle atomik güncellenir.
 - Oyuncu kendi envanterinden veya kesesinden NPC'ye eşya/para gönderebilir; `npc_transfer_v66` oturum, sahiplik, adet ve bakiye doğrular.
+- v67, eski `Kutsal Sembol` ve `Gezgin Kutsal Sembolü` kayıtlarını veri taşımadan hem istemcide hem `equipment_slot_v45` RPC zincirinde büyü odağı olarak tanır.
+- NPC'ye eşya aktarımı, aktif `v46` envanter kartının işlem alanına doğrudan bağlanır; eski renderer sırası düğmeyi artık gizlemez.
 - Oyuncu büyü paneli kuşanılmış odağı ve hazırlanmış büyülerin özel materyal gereksinimlerini gösterir.
 - Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
 

@@ -7,6 +7,10 @@
   const SLOT_LIMITS={weapon:2,ring:2,wondrous:3,armor:1,shield:1,focus:1,neck:1,brooch:1,wrist:1,anklet:1,ears:1,back:1,hands:1,waist:1,feet:1,eyes:1,head:1};
 
   function v45Text(value){return String(value??'').trim().toLocaleLowerCase('tr-TR')}
+  function v45FocusLike(item={}){
+    let focusType=v45Text(item.focusType),text=v45Text(`${item.name||''} ${item.effect||''} ${item.note||''}`);
+    return ['arcane','divine','druidic','instrument','universal'].includes(focusType)||/(kutsal sembol|kutsal odak|holy symbol|arcane focus|druid odağı|druid totemi|druidic focus|component pouch|bileşen kesesi|bileşen çantası|büyü odağı|savaş büyücüsü değneği|war mage|lavta|çalgı|instrument)/u.test(text);
+  }
   function v45WearableSlot(item={}){
     let name=v45Text(item.name);
     if(['yüzük','yüzüğü','mühür','mührü'].some(word=>name.includes(word)))return 'ring';
@@ -26,8 +30,8 @@
 
   function v45EquipSlot(item={}){
     v25HydrateItem(item);
-    let category=v45Text(item.category),explicit=v45Text(item.slot),effect=v45Text(item.effect),name=v45Text(item.name);
-    if(NON_EQUIPMENT_CATEGORIES.has(category))return '';
+    let category=v45Text(item.category),explicit=v45Text(item.slot),effect=v45Text(item.effect),name=v45Text(item.name),focusLike=v45FocusLike(item);
+    if(NON_EQUIPMENT_CATEGORIES.has(category)&&!focusLike)return '';
     if(item.service||item.mount||effect.includes('mühimmat')||effect.includes('binek zırhı'))return '';
     if(category&&EQUIPMENT_CATEGORIES.has(category)){
       if(category==='weapon')return 'weapon';
@@ -36,6 +40,7 @@
       if(category==='armor')return Number.isFinite(Number(item.armorBase))&&['light','medium','heavy'].includes(v45Text(item.armorType))?'armor':'';
       let inferred=v45WearableSlot(item);
       if(inferred)return inferred;
+      if(focusLike)return 'focus';
       return explicit==='wondrous'&&!/(ayna|fener|kum saati|zar takımı)/u.test(name)?'wondrous':'';
     }
     let wearable=v45WearableSlot(item);
@@ -48,7 +53,7 @@
     if(effect.includes('kalkan'))return 'shield';
     if(effect.includes('zırh')&&Number.isFinite(Number(item.armorBase))&&['light','medium','heavy'].includes(v45Text(item.armorType)))return 'armor';
     if(effect.includes('silah'))return 'weapon';
-    if(effect.includes('büyü odağı')||effect.endsWith(' asa')||effect.includes('nadir asa')||/\b(değnek|asa)\b/u.test(name))return 'focus';
+    if(focusLike||effect.includes('büyü odağı')||effect.endsWith(' asa')||effect.includes('nadir asa')||/\b(değnek|asa)\b/u.test(name))return 'focus';
     return '';
   }
 
@@ -111,6 +116,7 @@
   window.V45_BODY_SLOTS=Object.freeze(Array.from(BODY_SLOTS));
   window.V45_SLOT_LIMITS=Object.freeze({...SLOT_LIMITS});
   window.v45WearableSlot=v45WearableSlot;
+  window.v45FocusLike=v45FocusLike;
   window.v45EquipSlot=v45EquipSlot;
   window.v45NormalizeEquipmentState=v45NormalizeEquipmentState;
   if(current){v45NormalizeEquipmentState();render()}

@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v67 — Kutsal Sembol ve NPC Aktarım Hotfix
+
+- Eski envanterlerde alanları eksik kalan `Kutsal Sembol` ve `Gezgin Kutsal Sembolü` kayıtları artık yeni eşya almadan büyü odağı olarak kuşanılabilir.
+- Odak tanıma, istemci kuşanma denetimi ile sunucudaki `equipment_slot_v45` doğrulamasında aynı geriye uyumlu kuralları kullanır.
+- **NPC’ye Ver** işlemi, oyuncunun gerçekten kullanılan v46 envanter kartına bağlandı; eşya ayrıntıları açıldığında görünür.
+- `npc_transfer_v66` eşyanın adedini oyuncudan düşürüp NPC envanterine eklemeye devam eder; hesap ve kampanya verileri değiştirilmez.
+
+Kurulumda `v67-update.sql` dosyasını Supabase'te bir kez çalıştır. Migration yalnız `equipment_slot_v45` fonksiyonunu geriye uyumlu biçimde günceller; mevcut kayıtları yeniden yazmaz veya silmez.
+
 ## v66 — Büyü Odağı, Pazarlıklı Sepet ve NPC Transferi
 
 - Kutsal sembol, kalkana işlenen sembol, arcane/druidic odak ve Bard çalgıları kuşanılabilir büyü odağı hâline getirildi.

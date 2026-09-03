@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v66 / uygulama v3.2.0 / Build 66**
+Güncel sürüm: **v67 / uygulama v3.2.1 / Build 67**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -16,7 +16,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Karakter oluşturma/stat/species/class | `v53.js`, hedef kayıt için `v53-data.js` | `v30.js`, `v31.js`, `v53-update.sql` |
 | Büyü hazırlama veya büyü kuralı | `v53.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js` |
 | Cleric/tanrı/domain | `v52.js`, hedef tanrı/domain için `v52-data.js` | `v49-data.js`, `v52-update.sql` |
-| Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js`; NPC transferi için `v66.js` | `v31.js`, `inventory-update.sql`, `v66-update.sql` |
+| Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js`; NPC transferi için `v66.js` | `v31.js`, `inventory-update.sql`, `v66-update.sql`, eski odak uyumluluğu için `v67-update.sql` |
 | Market/loot/eşya kataloğu | hedef veri için `v44-data.js`, `v48-data.js`, caster eşyaları için `v63-data.js`, temizlik/class eşya/arcane market için `v64-data.js`, tekil emanetler için `v65-data.js`, odak/materyal için `v66-data.js` | `v34.js`, `v44.js`, `v64.js`, `v65.js`, sepet/teklif için `v66.js`, `v66-update.sql`; büyü bonusu için `v63.js`; oyuncu para yok etme için `expansion.js`, `v61-update.sql` |
 | Görev panosu | `v50.js`, hedef görev için `v50-data.js` | eski `state.quests` için `app.js` |
 | Harita/kale | `v32.js`, `v33.js` | `v34-data.js`, `Map.png` yalnız görsel gerekirse |
