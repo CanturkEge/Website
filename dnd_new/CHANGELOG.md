@@ -1,5 +1,16 @@
 # Kadim Masa Defteri — Kurulum
 
+## v66 — Büyü Odağı, Pazarlıklı Sepet ve NPC Transferi
+
+- Kutsal sembol, kalkana işlenen sembol, arcane/druidic odak ve Bard çalgıları kuşanılabilir büyü odağı hâline getirildi.
+- Hazırlanmış büyüler için odakla karşılanabilen materyaller ile GP bedelli özel materyaller ayrı gösterilir.
+- Wizard, Sorcerer, Warlock, Cleric, Druid, Bard ve Paladin için yeni asa, pelerin, cübbe ve odaklar; Revivify/Raise Dead gibi büyüler için bedelli materyaller eklendi.
+- Oyuncu markette çoklu ürün sepeti oluşturup DM'e indirimli teklif gönderebilir. DM kabul, ret veya karşı teklif verebilir; karşı teklif oyuncu onayıyla tamamlanır.
+- Satış tamamlanırken para, stok ve karakter envanteri tek veritabanı işlemi içinde güncellenir.
+- Oyuncu kendi eşyasını veya PP/GP/SP/CP parasını seçilen NPC'ye gönderebilir; eşyanın bütün bonus alanları korunur.
+
+Kurulumda `v66-update.sql` dosyasını Supabase'te bir kez çalıştır. Migration mevcut hesap, kampanya, karakter, NPC, envanter ve cüzdan verilerini silmez.
+
 ## v65 — Tekil Büyü Emanetleri
 
 - Cleric, Wizard, Warlock, Druid, Sorcerer, Bard, Paladin, Ranger ve Artificer için üçer tane olmak üzere **27 özgün isimli emanet** eklendi.
