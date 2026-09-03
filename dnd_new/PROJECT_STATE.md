@@ -1,6 +1,6 @@
 # Proje Durumu
 
-Son doğrulama: **2026-08-31**
+Son doğrulama: **2026-09-03**
 Referans branch: `main`  
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
