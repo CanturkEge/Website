@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v68 / uygulama v3.3.0 / Build 68**
+Güncel sürüm: **v69 / uygulama v3.2.2 / Build 69**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -17,7 +17,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Büyü hazırlama veya büyü kuralı | `v53.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js` |
 | Cleric/tanrı/domain | `v52.js`, hedef tanrı/domain için `v52-data.js` | `v49-data.js`, `v52-update.sql` |
 | Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js`; NPC transferi için `v66.js` | `v31.js`, `inventory-update.sql`, `v66-update.sql`, eski odak uyumluluğu için `v67-update.sql` |
-| Market/loot/eşya kataloğu | hedef veri için `v44-data.js`, `v48-data.js`, caster eşyaları için `v63-data.js`, temizlik/class eşya/arcane market için `v64-data.js`, tekil emanetler için `v65-data.js`, odak/materyal için `v66-data.js` | `v34.js`, `v44.js`, `v64.js`, `v65.js`, sepet/teklif için `v66.js`, `v66-update.sql`, teklif bildirimleri için `v68-update.sql`; büyü bonusu için `v63.js`; Kesem para merkezi için `expansion.js`, `v27.js`, `v61-update.sql` |
+| Market/loot/eşya kataloğu | hedef veri için `v44-data.js`, `v48-data.js`, caster eşyaları için `v63-data.js`, temizlik/class eşya/arcane market için `v64-data.js`, tekil emanetler için `v65-data.js`, odak/materyal için `v66-data.js` | `v34.js`, `v44.js`, `v64.js`, `v65.js`, sepet/çok turlu teklif için `v66.js`, `v66-update.sql`, `v68-update.sql`, `v69-update.sql`; büyü bonusu için `v63.js`; Kesem para merkezi için `expansion.js`, `v27.js`, `v61-update.sql` |
 | Görev panosu | `v50.js`, hedef görev için `v50-data.js` | eski `state.quests` için `app.js` |
 | Harita/kale | `v32.js`, `v33.js` | `v34-data.js`, `Map.png` yalnız görsel gerekirse |
 | Yol/binek/seyahat | `v38.js`, `v38-data.js` | `v34-data.js` |
@@ -77,6 +77,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 - Güncel karakter yaratımı `character_create_player_v53`; Cleric kimliği `character_choices_set_v52`; build seçimleri `character_build_set_v30` kullanır.
 - Oyuncu savaş hareketi `battle_token_move_v60` ile sunucuda oturum, sahiplik, sıra, engel ve hız açısından doğrulanır.
 - Oyuncunun kendi parasını yok etmesi `wallet_discard_v61` ile oturum, üyelik, bakiye ve satır kilidi kullanılarak doğrulanır.
+- Çok turlu market pazarlığı, son fiyat kilidi, kapalı işlem temizliği ve DM işlem logu `v69-update.sql` içindedir.
 - `v31-update.sql` kampanya JSON birleştirme hattının esas güvenli kayıt katmanıdır; lokal özellik değişikliklerinde sebepsiz değiştirilmemelidir.
 - Yeni sürüm eklerken `config.js`, `index.html`, `README.md`, gerekirse `guide-v26.txt` ve `v37.js` sürüm numarası birlikte kontrol edilir.
 

@@ -4,11 +4,11 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
-    version:'3.3.0',build:'Build 68',title:'Market Bildirimleri ve Tek Para Merkezi',tag:'EKONOMİ',tone:'current',
-    summary:'Market teklifleri DM bildirimlerine bağlandı; bütün oyuncu para işlemleri Kesem ekranında toplandı.',
-    added:['Yeni market teklifinde kampanyanın DM hesabına kalıcı bildirim gider.','Karşı teklif, ret ve tamamlanan alışveriş oyuncuya bildirim üretir.','Kesem sayfasında oyuncuya gönderme, NPC’ye gönderme ve kalıcı silme tek Para İşlemleri alanında gösterilir.'],
-    fixed:['Eski veya eksik güvenli oturum yüzünden sessiz kalan market düğmesi artık açık hata gösterir.','NPC’ye para gönderme kontrolünün Envanter ekranında ayrı ve zor bulunur kalması giderildi.'],
-    changed:['Market bildirimleri v68 veritabanı tetikleyicisiyle güvenilir biçimde oluşturulur.','Mevcut hesap, kampanya, sipariş, cüzdan, NPC ve envanter kayıtları korunur.']
+    version:'3.2.2',build:'Build 69',title:'Market Pazarlığı ve İşlem Logu Düzeltmeleri',tag:'DÜZELTME',tone:'current',
+    summary:'Market teklif akışı çok turlu hâle getirildi; fiyat görünürlüğü, geçmiş temizliği ve sessiz DM işlem logu tamamlandı.',
+    added:['Oyuncu, DM’nin kilitlemediği karşı teklife yeniden fiyat gönderebilir; pazarlık sırayla istenen tur kadar devam eder.','DM karşı teklifini “son fiyat” olarak işaretleyebilir; oyuncu bu durumda yalnız kabul veya iptal seçebilir.','DM’ye özel İşlem Logu; alışverişi, eşya/para aktarımını, yere bırakmayı, para silmeyi ve NPC hareketlerini bildirim üretmeden kaydeder.','Tamamlanan market geçmişi ile DM işlem logu ayrı onaylarla temizlenebilir.'],
+    fixed:['Market isteğinin DM’e ulaşmaması ve güvenli oturum eksikliğinde düğmenin sessiz kalması giderildi.','Oyuncuya, NPC’ye ve yere yapılan para/eşya hareketlerinin farklı yerlerde kaybolması yerine DM için tek denetim izi oluşturuldu.','Sayı giriş alanları koyu arka plana uygun, okunaklı ve mobilde rahat kullanılabilir hâle getirildi.'],
+    changed:['DM normal liste toplamını ve ürünlerin birim değerini görür; karşı teklifi normal fiyatın altına veya üstüne yazabilir.','Kapalı teklif ve log listeleri küçültülebilir bölümlere alındı.','Patch numarası 9’da zorunlu olarak minor sürüme dönmez; örneğin 3.2.9 sonrasında 3.2.10 kullanılabilir. Minor ve major numaralar yalnız kapsam gerçekten büyüdüğünde değişir.','Mevcut hesap, kampanya, sipariş, cüzdan, NPC ve envanter kayıtları korunur.']
   },
   {
     version:'3.2.1',build:'Build 67',title:'Kutsal Sembol ve NPC Aktarım Hotfix',tag:'HOTFIX',tone:'current',
@@ -39,28 +39,28 @@ const V37_PATCH_NOTES=[
     changed:['Ganimet kataloğu 4.124 yüzeysel kombinasyondan 2.154 tekrarsız, açıklamalı kayda temizlendi.','Bosslar, normal Yaratıklar ekranından ayrı ayrıntılı bir sayfada tutulur.','SQL değişikliği yoktur; mevcut kampanya, NPC, envanter ve para verileri korunur.']
   },
   {
-    version:'2.9.0',build:'Build 63',title:'Büyücü Eşyaları ve Rünlü Ekipman',tag:'GANİMET',tone:'current',
+    version:'2.11.0',build:'Build 63',title:'Büyücü Eşyaları ve Rünlü Ekipman',tag:'GANİMET',tone:'current',
     summary:'Büyü kullanan classlar için 124 yeni eşya ve çalışan Spell Attack/DC bonusları eklendi.',
     added:['16 büyü kitabı, 52 caster eşyası, 40 rünlü ekipman ve 16 kutsal emanet.','Artificer, Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock ve Wizard için class odakları.'],
     fixed:['Kuşanılmış magicBonus artık yalnız etikette kalmaz; Spell Attack ve Spell Save DC’ye gerçekten eklenir.'],
     changed:['Ganimet kataloğu 4.124 açıklamalı kayda çıktı; SQL değişikliği gerekmez.']
   },
   {
-    version:'2.8.3',build:'Build 62',title:'Kesem Görünürlük Düzeltmesi',tag:'HOTFIX',tone:'current',
+    version:'2.10.1',build:'Build 62',title:'Kesem Görünürlük Düzeltmesi',tag:'HOTFIX',tone:'current',
     summary:'Oyuncunun Parayı Yere At kontrolünün Kesem ekranında kaybolması giderildi.',
     added:[],
     fixed:['Geç yüklenen eski Kesem şablonunun para yok etme kontrolünü ezmesi giderildi.'],
     changed:['Yeni v62 cache anahtarı tarayıcının düzeltilmiş dosyaları yeniden almasını sağlar.']
   },
   {
-    version:'2.8.2',build:'Build 61',title:'Oyuncu Para Yok Etme',tag:'EKONOMİ',tone:'current',
+    version:'2.10.0',build:'Build 61',title:'Oyuncu Para Yok Etme',tag:'EKONOMİ',tone:'current',
     summary:'Oyuncular kendi keselerindeki parayı onaylayarak kalıcı biçimde yok edebilir.',
     added:['Kesem ekranına para türü ve miktarı seçilen Parayı Yere At kontrolü eklendi.'],
     fixed:[],
     changed:['İşlem oturum, kampanya üyeliği ve bakiye açısından Supabase üzerinde doğrulanır; yerde alınabilir eşya oluşturmaz.']
   },
   {
-    version:'2.8.1',build:'Build 60',title:'Yaratık Ansiklopedisi ve Oyuncu Hareketi',tag:'HOTFIX',tone:'current',
+    version:'2.9.0',build:'Build 60',title:'Yaratık Ansiklopedisi ve Oyuncu Hareketi',tag:'SAVAŞ',tone:'combat',
     summary:'Yaratıklar ekranı onarıldı ve oyunculara hız sınırına bağlı güvenli savaş hareketi eklendi.',
     added:['Oyuncu, aktif sırasında kendi tokenını kalan hareketi kadar yürütebilir.'],
     fixed:['Build 59 yaratıklarındaki eksik detay alanlarının Yaratıklar sekmesini açarken oluşturduğu hata giderildi.'],
@@ -99,7 +99,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.7',build:'Build 56',title:'DM Kontrolleri ve Sistem Sağlığı',tag:'YÖNETİM',tone:'current',
+    version:'2.7.0',build:'Build 56',title:'DM Kontrolleri ve Sistem Sağlığı',tag:'YÖNETİM',tone:'current',
     summary:'Karakter silme güvenilir hale geldi, v53 SQL hatası düzeltildi ve DM ses moderasyonu eklendi.',
     added:[
       'DM ses paneline oyuncuyu susturma, sağırlaştırma ve bu izinleri geri açma kontrolleri eklendi.',
@@ -132,7 +132,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.6',build:'Build 54',title:'Kampanya Sesli Sohbeti',tag:'SES',tone:'current',
+    version:'2.6.0',build:'Build 54',title:'Kampanya Sesli Sohbeti',tag:'SES',tone:'current',
     summary:'Her kampanya güvenli LiveKit ses odası, mikrofon/kulaklık kontrolleri ve konuşan kişi göstergesi kazandı.',
     added:[
       'Kampanya kimliğine bağlı ses odası, katıl/ayrıl akışı, mikrofon aç/kapat ve gelen sesi susturma eklendi.',
@@ -151,7 +151,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.5',build:'Build 53',title:'Karakter Kuralları Büyük Yenilemesi',tag:'KARAKTER',tone:'current',
+    version:'2.5.0',build:'Build 53',title:'Karakter Kuralları Büyük Yenilemesi',tag:'KARAKTER',tone:'current',
     summary:'Tür/alt tür statları, 13 legacy sınıf, 113 subclass, 319 SRD büyü ve manuel ability üretimi tek denetlenmiş 2014 kural motorunda birleşti.',
     added:[
       'Karakter yaratımına sınıfa göre otomatik Standard Array, elle dağıtılan Standard Array ve gerçek maliyet tablosuyla 27 Point Buy seçenekleri eklendi.',
@@ -178,7 +178,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.4',build:'Build 52',title:'Cleric Tanrı Bağı ve 14 İlahi Alan',tag:'CLERIC',tone:'current',
+    version:'2.4.0',build:'Build 52',title:'Cleric Tanrı Bağı ve 14 İlahi Alan',tag:'CLERIC',tone:'current',
     summary:'Cleric yaratımı 30 ana Forgotten Realms tanrısı, kanonik domain uyumu ve 1–20 seviyeye göre açılan gerçek class/domain mekanikleriyle tamamlandı.',
     added:[
       'Cleric karakter yaratımına 30 ana Forgotten Realms tanrısı eklendi; tanrı seçilince yalnız portfolio alanıyla uyumlu domainler gösterilir.',
@@ -203,7 +203,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.3',build:'Build 51',title:'Adalet, Alignment ve İlahi Düzen',tag:'İLAHİ',tone:'current',
+    version:'2.3.0',build:'Build 51',title:'Adalet, Alignment ve İlahi Düzen',tag:'İLAHİ',tone:'current',
     summary:'Gizli Karma defteri ikinci bir Adalet ekseniyle birleşti; otomatik 9’lu alignment, class/species tabanlı tanrı yakınlığı, ilahi lore ansiklopedisi ve gruplanmış kısa ana menü eklendi.',
     added:[
       'DM’ye özel −100 / +100 Adalet ekseni eklendi: kaotik/keyfî tutumdan yasal, tutarlı ve hesap verebilir adalete uzanan beş açıklamalı kademe bulunur.',
@@ -229,7 +229,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.2',build:'Build 50',title:'200 Görevlik Atama Panosu',tag:'GÖREV',tone:'current',
+    version:'2.2.0',build:'Build 50',title:'200 Görevlik Atama Panosu',tag:'GÖREV',tone:'current',
     summary:'200 ayrıntılı görev; oyuncuya açık bilgi ile DM sırrını ayıran, partiye veya seçili oyunculara atama ve durum takibi yapan gerçek görev panosunda toplandı.',
     added:[
       'DM ve oyuncu sol menüsüne ayrı Görev Panosu eklendi; Rehberdeki eski 50 fikir düğmesi yeni panoya yönlenen 200 görev kısayoluyla değiştirildi.',
@@ -254,7 +254,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.1',build:'Build 49',title:'2014 Tanrılar Ansiklopedisi',tag:'REHBER',tone:'current',
+    version:'2.1.0',build:'Build 49',title:'2014 Tanrılar Ansiklopedisi',tag:'REHBER',tone:'current',
     summary:'Altı pantheon grubundaki 128 tanrı; domain, sembol, inanç yorumu, cleric karşılığı ve DM kancalarıyla aranabilir bir ansiklopedide toplandı.',
     added:[
       'DM ve oyuncu sol menüsüne ayrı Tanrılar sayfası; Rehberin üstüne de tek dokunuşluk Tanrılar Ansiklopedisi kısayolu eklendi.',
@@ -277,7 +277,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'2.0',build:'Build 48',title:'4.000 Ganimet, Büyü Materyalleri ve Gündelik Harikalar',tag:'GANİMET',tone:'current',
+    version:'2.0.0',build:'Build 48',title:'4.000 Ganimet, Büyü Materyalleri ve Gündelik Harikalar',tag:'BÜYÜK SÜRÜM',tone:'major',
     summary:'Ganimet kataloğu tam 4.000 açıklamalı kayda çıktı; büyü materyalleri, gündelik eşyalar, keyif içecekleri ve oynanabilir özel araçlar dengeli nadirlik katmanlarına yerleştirildi.',
     added:[
       'Katalog nadirlik dağılımı 900 Sıradan, 1.000 Yaygın, 750 Seyrek, 550 Nadir, 380 Çok Nadir, 310 Efsanevi ve 110 Artefakt olacak şekilde tam 4.000 kayda dengelendi.',
@@ -303,7 +303,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.9',build:'Build 47',title:'2014 Büyü Kitabı ve Gerçek Büyü Sayfaları',tag:'BÜYÜ',tone:'current',
+    version:'1.9.0',build:'Build 47',title:'2014 Büyü Kitabı ve Gerçek Büyü Sayfaları',tag:'BÜYÜ',tone:'current',
     summary:'2014 SRD büyülerinin tamamı aranabilir bir kitapta toplandı; aynı kayıtlar artık ganimet üreticide tek tek büyü sayfası olarak düşer.',
     added:[
       'DM ve oyuncu menüsüne cantrip–9. seviye 319 kayıtlık Büyü Kitabı eklendi.',
@@ -326,7 +326,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.8',build:'Build 46',title:'Karakter Föyü ve Sınıflandırılmış Envanter',tag:'GÖRSEL',tone:'current',
+    version:'1.8.0',build:'Build 46',title:'Karakter Föyü ve Sınıflandırılmış Envanter',tag:'GÖRSEL',tone:'current',
     summary:'Karakter ekranı tam bir oyun föyüne dönüştü; envanter kullanım türlerine ayrıldı ve bütün kuşanma yuvaları tek menüden görünür oldu.',
     added:[
       'Karakterim ekranına HP, aktif AC, hız, inisiyatif, proficiency, pasif Farkındalık, büyü statı/Hit Die ve ability özetleri eklendi.',
@@ -370,7 +370,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.7',build:'Build 44',title:'Gizli Karma ve Ganimet Üretici',tag:'GANİMET',tone:'system',
+    version:'1.7.0',build:'Build 44',title:'Gizli Karma ve Ganimet Üretici',tag:'GANİMET',tone:'system',
     summary:'DM’ye özel karma defteri ile fiziksel kap kurallarına uyan, 1.900’den fazla açıklamalı kayıt kullanan rastgele ganimet sistemi eklendi.',
     added:[
       'Oyuncu menülerinde görünmeyen −100 / +100 aralıklı karakter karma defteri, yedi ahlaki kademe ve DM event fikirleri eklendi.',
@@ -394,7 +394,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.6.4',build:'Build 43',title:'Hazırlanmış Büyü Görünümü Hotfix',tag:'HOTFIX',tone:'system',
+    version:'1.6.2',build:'Build 43',title:'Hazırlanmış Büyü Görünümü Hotfix',tag:'HOTFIX',tone:'system',
     summary:'DM ve oyuncu karakter ekranlarında hazırlanmış büyülerin ad, seviye ve açıklama alanlarını undefined gösteren veri biçimi çakışması giderildi.',
     added:[
       'Hazırlanmış büyüler için nesne, eski dizi, yalnız ID, yalnız ad ve eski snake_case kayıtlarını okuyabilen ortak dönüştürücü eklendi.',
@@ -411,7 +411,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.6.3',build:'Build 42',title:'Zar Seçimi Kalıcılık Hotfix',tag:'ZAR',tone:'combat',
+    version:'1.6.1',build:'Build 42',title:'Zar Seçimi Kalıcılık Hotfix',tag:'ZAR',tone:'combat',
     summary:'Zar ocağındaki seçimler günlük yenilendiğinde, bulut eşitlemesinde, sayfaya dönünce veya tarayıcı yenilenince artık sıfırlanmıyor.',
     added:[
       'Zar tercihleri oyuncu ve kampanya bazında cihazda saklanır; başka oyuncunun veya başka kampanyanın seçimiyle karışmaz.',
@@ -429,7 +429,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.6.2',build:'Build 41',title:'Efekt ve Lonca Yönetimi Düzeltmesi',tag:'YÖNETİM',tone:'system',
+    version:'1.6.0',build:'Build 41',title:'Efekt ve Lonca Yönetimi',tag:'YÖNETİM',tone:'system',
     summary:'Efektlerin kaldırılamaması giderildi; lonca, NPC eşyası ve özel yetenekler için eksik DM müdahale kontrolleri tamamlandı.',
     added:[
       'Karakter kartlarına süreli ve süresiz kayıtları birlikte gösteren Efektleri Yönet penceresi eklendi.',
@@ -452,7 +452,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.6.1',build:'Build 40',title:'Market Buton Çakışması Hotfix',tag:'HOTFIX',tone:'system',
+    version:'1.5.2',build:'Build 40',title:'Market Buton Çakışması Hotfix',tag:'HOTFIX',tone:'system',
     summary:'Market hediyesinin onay düğmesini Bonuslu Eşya Ver penceresine yönlendiren ortak veri etiketi çakışması kaldırıldı.',
     added:[],
     fixed:[
@@ -465,7 +465,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.6',build:'Build 39',title:'Market Hediye Akışı Düzeltmesi',tag:'MARKET',tone:'system',
+    version:'1.5.1',build:'Build 39',title:'Market Hediye Akışı Düzeltmesi',tag:'HOTFIX',tone:'system',
     summary:'DM artık marketteki herhangi bir eşya, hizmet veya bineği eski SQL fonksiyonuna bağlı kalmadan güvenle karaktere verebilir.',
     added:[
       'Hedef karakter, adet ve isteğe bağlı stoktan düşme seçeneği olan yeni market hediye penceresi eklendi.',
@@ -483,7 +483,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.5',build:'Build 38',title:'Yol Ağı ve Taktik Savaş Alanı',tag:'SAVAŞ',tone:'combat',
+    version:'1.5.0',build:'Build 38',title:'Yol Ağı ve Taktik Savaş Alanı',tag:'SAVAŞ',tone:'combat',
     summary:'On iki kale gerçek yol süreleriyle bağlandı; encounter sistemi sis ve görüş kullanan kareli savaş tahtasına dönüştü.',
     added:[
       'Haritadaki 12 kale arasına 23 bağlantılı yol, yol parçası süreleri, arazi/risk açıklamaları ve en kısa rota hesabı eklendi.',
@@ -507,7 +507,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.4',build:'Build 37',title:'Sürüm Notları Merkezi',tag:'ARŞİV',tone:'system',
+    version:'1.4.0',build:'Build 37',title:'Sürüm Notları Merkezi',tag:'ARŞİV',tone:'system',
     summary:'Oyunun gelişim geçmişi artık DM ve oyuncular tarafından uygulama içinden okunabilir.',
     added:[
       'Sol menüye DM ve oyuncu için ayrı Sürüm Notları sayfası eklendi.',
@@ -524,7 +524,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.3',build:'Build 34–36',title:'Kale Ekonomisi ve 380 Kayıtlık Market',tag:'İÇERİK',tone:'content',
+    version:'1.3.0',build:'Build 34–36',title:'Kale Ekonomisi ve 380 Kayıtlık Market',tag:'İÇERİK',tone:'content',
     summary:'Kaleler kendi ekonomilerine kavuştu; market yüzlerce gerçek kullanılabilir ürün ve hizmetle büyüdü.',
     added:[
       'Simyacı, Ahır ve Binekler ile Tapınak dükkânları eklendi.',
@@ -546,7 +546,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.2',build:'Build 32–33',title:'Etkileşimli Dünya Haritası ve Dolu Kale Atlası',tag:'DÜNYA',tone:'world',
+    version:'1.2.0',build:'Build 32–33',title:'Etkileşimli Dünya Haritası ve Dolu Kale Atlası',tag:'DÜNYA',tone:'world',
     summary:'12 kalelik dünya haritası sis, keşif, kale bilgisi ve DM düzenleme araçlarıyla oyuna bağlandı.',
     added:[
       'Ana menüye Map.png üzerinde çalışan 12 kalelik Harita bölümü eklendi.',
@@ -567,7 +567,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.1',build:'Build 30–31',title:'Gerçek Proficiency, ASI ve Veri Güvenilirliği',tag:'SİSTEM',tone:'system',
+    version:'1.1.0',build:'Build 30–31',title:'Gerçek Proficiency, ASI ve Veri Güvenilirliği',tag:'SİSTEM',tone:'system',
     summary:'Karakter matematiği gerçek 2014 proficiency akışına geçirildi; eşzamanlı kayıt çakışmaları güçlendirildi.',
     added:[
       '18 skill bağlı ability ve hesaplanmış bonuslarıyla karakter ekranına eklendi.',
@@ -591,7 +591,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'1.0',build:'Build 27–29',title:'Kompakt Arayüz ve Ansiklopediler',tag:'BÜYÜK SÜRÜM',tone:'major',
+    version:'1.0.0',build:'Build 27–29',title:'Kompakt Arayüz ve Ansiklopediler',tag:'BÜYÜK SÜRÜM',tone:'major',
     summary:'Uzun sayfalar açılır kartlara dönüştü; yaratık ve karakter bilgileri ansiklopedi düzenine geçti.',
     added:[
       'Yaratıklar kategori ve CR filtreli ansiklopediye dönüştürüldü.',
@@ -613,7 +613,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.9',build:'Build 26',title:'2014 Kural Temizliği ve Lonca Sistemi',tag:'KURALLAR',tone:'rules',
+    version:'0.9.0',build:'Build 26',title:'2014 Kural Temizliği ve Lonca Sistemi',tag:'KURALLAR',tone:'rules',
     summary:'Kurallar 2014 5e odağına çekildi; arayüz okunabilirliği ve ortak lonca yönetimi büyütüldü.',
     added:[
       'Lonca kurma, kodla katılma ve loncadan çıkma akışları eklendi.',
@@ -632,7 +632,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.8',build:'Build 25–25.1',title:'Akıllı Zarlar ve “Nasıl Dövüşürüm?” Kartları',tag:'SAVAŞ',tone:'combat',
+    version:'0.8.0',build:'Build 25–25.1',title:'Akıllı Zarlar ve “Nasıl Dövüşürüm?” Kartları',tag:'SAVAŞ',tone:'combat',
     summary:'Oyuncunun hangi zarı, hangi bonusla ve hangi action türüyle kullanacağı karakter üzerinden açıklanır hale geldi.',
     added:[
       'Skill seçildiğinde bağlı ability, proficiency ve Expertise bonusunu otomatik hazırlayan akıllı zar menüsü eklendi.',
@@ -653,7 +653,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.7',build:'Build 24',title:'Tam Envanter Transferi',tag:'ENVANTER',tone:'inventory',
+    version:'0.7.0',build:'Build 24',title:'Tam Envanter Transferi',tag:'ENVANTER',tone:'inventory',
     summary:'Eşyalar oyuncular, lonca ve yer arasında adet ve bütün özellikleri korunarak taşınabilir hale geldi.',
     added:[
       'Oyuncudan oyuncuya eşya gönderme eklendi.',
@@ -672,7 +672,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.6',build:'Oturum Güncellemeleri',title:'Mesajlar, Bildirimler ve Şeytanla Anlaşma',tag:'OTURUM',tone:'session',
+    version:'0.6.0',build:'Oturum Güncellemeleri',title:'Mesajlar, Bildirimler ve Şeytanla Anlaşma',tag:'OTURUM',tone:'session',
     summary:'Masa dışı iletişim, gizli DM anlaşmaları, dünya tarihi ve dinlenme işlemleri tek uygulamada toplandı.',
     added:[
       'Kampanya içi genel sohbet ve kullanıcıya özel mesajlaşma eklendi.',
@@ -690,7 +690,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.5',build:'Ekonomi Güncellemeleri',title:'Para, Kasa ve Katmanlı Market',tag:'EKONOMİ',tone:'economy',
+    version:'0.5.0',build:'Ekonomi Güncellemeleri',title:'Para, Kasa ve Katmanlı Market',tag:'EKONOMİ',tone:'economy',
     summary:'Oyuncu cüzdanları, lonca kasası ve DM kontrollü satın alma sistemi oyuna eklendi.',
     added:[
       'PP, GP, SP ve CP bakiyeleri ile otomatik para bozma sistemi eklendi.',
@@ -709,7 +709,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.4',build:'Savaş Güncellemeleri',title:'Encounter, Yaratıklar ve Kalıcı Zar Günlüğü',tag:'SAVAŞ',tone:'combat',
+    version:'0.4.0',build:'Savaş Güncellemeleri',title:'Encounter, Yaratıklar ve Kalıcı Zar Günlüğü',tag:'SAVAŞ',tone:'combat',
     summary:'DM savaş sırasını, yaratıkları, HP’yi ve efektleri tek ekrandan yönetebilir hale geldi.',
     added:[
       'Oyuncu, yaratık ve NPC’leri encounter alanına ekleme eklendi.',
@@ -728,7 +728,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.3',build:'Karakter Güncellemeleri',title:'Karakter Oluşturma ve İlerleme',tag:'KARAKTER',tone:'character',
+    version:'0.3.0',build:'Karakter Güncellemeleri',title:'Karakter Oluşturma ve İlerleme',tag:'KARAKTER',tone:'character',
     summary:'Species, class, stat, büyü ve seviye bilgileri DM onaylı karakter sistemine dönüştü.',
     added:[
       'Oyuncu karakter oluşturma ve DM onay/red akışı eklendi.',
@@ -747,7 +747,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.2',build:'Bulut Temeli',title:'Kalıcı Kampanyalar ve Canlı Eşitleme',tag:'ALTYAPI',tone:'cloud',
+    version:'0.2.0',build:'Bulut Temeli',title:'Kalıcı Kampanyalar ve Canlı Eşitleme',tag:'ALTYAPI',tone:'cloud',
     summary:'Kampanyalar tarayıcı oturumundan çıkıp Supabase üzerinde kalıcı ve paylaşılabilir hale geldi.',
     added:[
       'Kampanya state’i, üyelikler ve roller için bulut veritabanı eklendi.',
@@ -765,7 +765,7 @@ const V37_PATCH_NOTES=[
     ]
   },
   {
-    version:'0.1',build:'İlk Sürüm',title:'Kadim Masa Defteri Temeli',tag:'BAŞLANGIÇ',tone:'start',
+    version:'0.1.0',build:'İlk Sürüm',title:'Kadim Masa Defteri Temeli',tag:'BAŞLANGIÇ',tone:'start',
     summary:'Arkadaş grubunun tek bağlantı üzerinden oynayacağı DM Guidebook + Campaign Companion doğdu.',
     added:[
       'Kullanıcı adı ve şifreyle kayıt/giriş ekranı eklendi.',
@@ -800,7 +800,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.3.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.2.2'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -808,8 +808,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.3.0 • Build 68</h2><p>Market bildirimleri çalışıyor; bütün oyuncu para işlemleri Kesem’de tek yerde.</p></div>
-      <div class="v37-patch-stats"><span><b>44</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Sepet</b>DM Onaylı</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.2.2 • Build 69</h2><p>Çok turlu market pazarlığı, son fiyat kilidi ve dikkat dağıtmayan DM işlem logu.</p></div>
+      <div class="v37-patch-stats"><span><b>45</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -818,7 +818,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1–v3.3.0 oyuncuya açık kilometre taşı numaralarıdır. “Build” etiketi dağıtılan teknik geliştirme paketini gösterir.</p>
+    <p class="v37-version-note">v0.1.0–v3.2.2 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v69 — Çok Turlu Market Pazarlığı ve Sessiz DM Logu
+
+- Ürün sürümü, düzeltme ağırlıklı kapsamı doğru anlatması için **3.2.2** olarak tutuldu; teknik dosya paketi **Build 69** oldu.
+- DM ile oyuncu karşı tekliflere sırayla yeniden karşılık verebilir. DM isterse teklifi **son fiyat** olarak kilitler; oyuncu bu durumda geri teklif gönderemez.
+- Ürünlerin normal birim ve sepet değerleri teklif kartında görünür. DM teklifi normal toplamın altına da üstüne de çekebilir.
+- Tamamlanan/reddedilen/iptal edilen market kayıtları küçültülebilir geçmiş alanında tutulur ve DM tarafından temizlenebilir.
+- Yalnız DM'in gördüğü İşlem Logu; tamamlanan satın alımları, ödenen bedeli, oyuncular arası para/eşya aktarımını, yere bırakılan/alınan eşyayı, silinen parayı ve NPC hareketlerini kaydeder.
+- İşlem Logu bildirim üretmez; liste küçültülebilir ve DM tarafından temizlenebilir.
+- Sayı girişleri tema ile uyumlu hâle getirildi; mobil yerleşimleri sıkıştırıldı.
+- Sürüm kuralı netleştirildi: patch segmenti 9'dan sonra 10 diye devam eder. Minor/major artışı sayı devrinden değil, özellik kapsamından doğar.
+
+Kurulumda `v69-update.sql` dosyasını Supabase'te bir kez çalıştır. Migration mevcut hesap, kampanya, karakter, NPC, cüzdan, envanter ve market kayıtlarını korur; teklif geçmişi alanlarını ve DM işlem logunu ekler.
+
 ## v68 — Market Bildirimleri ve Tek Para Merkezi
 
 - Oyuncunun gönderdiği yeni market teklifi kampanyadaki DM hesaplarına kalıcı bildirim üretir.
