@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-09-03**
+Son doğrulama: **2026-09-04**
 Referans branch: `main`  
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Güncel sürüm: **3.2.1 / v67 / Build 67**
+- Güncel sürüm: **3.3.0 / v68 / Build 68**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -36,7 +36,8 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - `v65-data.js`, dokuz büyü kullanan class için üçer tane olmak üzere 27 özgün isimli, attunement isteyen ve markette yalnız 1 stok bulunan emanet sağlar; market seed v7 mevcut fiyat/stokları ezmeden yalnız eksik kayıtları ekler.
 - `v66-data.js`, kullanılabilir kutsal/arcane/druidic/instrument odakları, class pelerin/asa/cübbeleri ve bedelli büyü materyallerini market seed v8 ile ekler.
 - Oyuncu market sepetini DM'e teklif olarak yollar; DM kabul, ret veya karşı teklif verir. Para, stok ve envanter yalnız son kabulde `market_order_*_v66` RPC'leriyle atomik güncellenir.
-- Oyuncu kendi envanterinden veya kesesinden NPC'ye eşya/para gönderebilir; `npc_transfer_v66` oturum, sahiplik, adet ve bakiye doğrular.
+- `market_order_notify_v68` tetikleyicisi yeni teklifi DM'e; karşı teklif, ret ve tamamlanmayı ilgili oyuncuya kalıcı kampanya bildirimi olarak iletir.
+- Oyuncu kendi envanterinden NPC'ye eşya gönderebilir; bütün para işlemleri Kesem'deki tek Para İşlemleri alanında toplanır. `npc_transfer_v66` oturum, sahiplik, adet ve bakiye doğrular.
 - v67, eski `Kutsal Sembol` ve `Gezgin Kutsal Sembolü` kayıtlarını veri taşımadan hem istemcide hem `equipment_slot_v45` RPC zincirinde büyü odağı olarak tanır.
 - NPC'ye eşya aktarımı, aktif `v46` envanter kartının işlem alanına doğrudan bağlanır; eski renderer sırası düğmeyi artık gizlemez.
 - Oyuncu büyü paneli kuşanılmış odağı ve hazırlanmış büyülerin özel materyal gereksinimlerini gösterir.

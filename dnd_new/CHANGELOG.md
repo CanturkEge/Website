@@ -1,5 +1,15 @@
 # Kadim Masa Defteri — Kurulum
 
+## v68 — Market Bildirimleri ve Tek Para Merkezi
+
+- Oyuncunun gönderdiği yeni market teklifi kampanyadaki DM hesaplarına kalıcı bildirim üretir.
+- DM karşı teklif verdiğinde, teklifi reddettiğinde veya alışveriş tamamlandığında oyuncuya bildirim gider.
+- Eski güvenli oturum bilgisi bulunmayan tarayıcıda market artık sessizce durmaz; yeniden giriş gerektiğini açıkça gösterir.
+- Oyuncuya para gönderme, NPC’ye para gönderme ve keseden kalıcı silme kontrolleri **Kesem → Para İşlemleri** altında birleştirildi; NPC para kontrolü Envanter ekranından kaldırıldı.
+- Market teklifi ve üç para işlemi canlı Supabase üzerinde tek transaction içinde test edilip geri alındı; test hesabı veya kampanya verisi bırakılmadı.
+
+Kurulumda `v68-update.sql` dosyasını Supabase'te bir kez çalıştır. Migration yalnız market siparişi bildirim tetikleyicisini ekler; mevcut hesap, kampanya, sipariş, cüzdan, NPC ve envanter kayıtlarını değiştirmez.
+
 ## v67 — Kutsal Sembol ve NPC Aktarım Hotfix
 
 - Eski envanterlerde alanları eksik kalan `Kutsal Sembol` ve `Gezgin Kutsal Sembolü` kayıtları artık yeni eşya almadan büyü odağı olarak kuşanılabilir.
