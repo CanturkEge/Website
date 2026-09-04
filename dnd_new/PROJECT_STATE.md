@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Güncel sürüm: **3.2.2 / v69 / Build 69**
+- Güncel sürüm: **3.2.3 / v70 / Build 70**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -36,7 +36,9 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - `v65-data.js`, dokuz büyü kullanan class için üçer tane olmak üzere 27 özgün isimli, attunement isteyen ve markette yalnız 1 stok bulunan emanet sağlar; market seed v7 mevcut fiyat/stokları ezmeden yalnız eksik kayıtları ekler.
 - `v66-data.js`, kullanılabilir kutsal/arcane/druidic/instrument odakları, class pelerin/asa/cübbeleri ve bedelli büyü materyallerini market seed v8 ile ekler.
 - Oyuncu market sepetini DM'e teklif olarak yollar; oyuncu ile DM kilitlenmemiş karşı tekliflere sırayla yanıt verebilir. DM normal fiyatın üstünde/altında teklif verebilir ve fiyatı pazarlığa kapatabilir. Para, stok ve envanter yalnız son kabulde atomik güncellenir.
-- `market_order_notify_v68` tetikleyicisi v69 teklif turlarını izler; yeni oyuncu teklifini DM'e, DM teklifini ve sonucu ilgili oyuncuya kalıcı kampanya bildirimi olarak iletir.
+- Market karşı teklif ve sepet taslakları otomatik yenilemede korunur; aktif alan düzenlenirken çizim ertelenir, cüzdan/teklif sonucu değişmediyse gereksiz yeniden çizim yapılmaz.
+- `v70-update.sql`, market pazarlığı bildirim tetikleyicisini kaldırır. Market teklifi, karşı teklif, kabul, ret ve iptal bildirim üretmeden Market sayfasından izlenir.
+- `market_order_clear_history_v70` DM için kampanyadaki tüm, oyuncu için yalnız kendine ait kapanmış teklif kayıtlarını temizler.
 - `campaign_audit_log_v69` yalnız DM'in okuyabildiği, bildirim üretmeyen işlem geçmişini tutar. Market alımı, para/eşya aktarımı, yere bırakma/alma, para silme, NPC ve ganimet hareketleri kaydedilir; DM listeyi temizleyebilir.
 - Oyuncu kendi envanterinden NPC'ye eşya gönderebilir; bütün para işlemleri Kesem'deki tek Para İşlemleri alanında toplanır. `npc_transfer_v66` oturum, sahiplik, adet ve bakiye doğrular.
 - v67, eski `Kutsal Sembol` ve `Gezgin Kutsal Sembolü` kayıtlarını veri taşımadan hem istemcide hem `equipment_slot_v45` RPC zincirinde büyü odağı olarak tanır.

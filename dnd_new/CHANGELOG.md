@@ -1,5 +1,16 @@
 # Kadim Masa Defteri — Kurulum
 
+## v70 — Market Taslak ve Geçmiş Hotfix
+
+- Ürün sürümü **3.2.3**, teknik paket **Build 70** oldu.
+- DM ve oyuncu karşı teklif alanlarında yazılan değer, imleç ve DM'nin **son fiyat** işareti otomatik yenilemede korunur.
+- Sepetteki ilk teklif taslağı da arka plan yenilemeleri sırasında eski toplam değere dönmez.
+- Teklif ve cüzdan sorguları sonuç değişmediyse Market ekranını yeniden çizmez.
+- Yeni teklif, karşı teklif, kabul, ret ve iptal market bildirimi üretmez; işlem durumu Market ekranında görünmeye devam eder.
+- Oyuncu yalnız kendi kapanmış market geçmişini, DM kampanyadaki tüm kapanmış market geçmişini temizleyebilir.
+
+Kurulumda `v70-update.sql` dosyasını Supabase'te bir kez çalıştır. Migration market bildirim tetikleyicisini kaldırır ve role göre sınırlandırılmış geçmiş temizleme RPC'sini ekler; mevcut hesap, kampanya, teklif, cüzdan, stok ve envanter kayıtlarını değiştirmez.
+
 ## v69 — Çok Turlu Market Pazarlığı ve Sessiz DM Logu
 
 - Ürün sürümü, düzeltme ağırlıklı kapsamı doğru anlatması için **3.2.2** olarak tutuldu; teknik dosya paketi **Build 69** oldu.

@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **3.2.2**
-- Build/modül sürümü: **v69 / Build 69**
-- Son paket: çok turlu market pazarlığı, son fiyat kilidi ve sessiz DM işlem logu
+- Ürün sürümü: **3.2.3**
+- Build/modül sürümü: **v70 / Build 70**
+- Son paket: kaybolmayan market taslakları, sessiz pazarlık ve iki taraflı geçmiş temizleme
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.
@@ -16,7 +16,7 @@ Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevde
 1. `config.js` içindeki Supabase ayarlarının hedef ortamı gösterdiğini doğrula.
 2. Klasörü statik bir web sunucusuyla aç. Dosyayı doğrudan `file://` ile açmak yerine localhost kullan.
 3. Yeni kurulumda `supabase-setup.sql` dosyasını, ardından gereken sürümlü SQL güncellemelerini sırayla çalıştır.
-4. Güncel kurulum için `v53-update.sql`, `v56-update.sql`, `v59-update.sql`, `v60-update.sql`, `v61-update.sql`, `v66-update.sql`, `v67-update.sql`, `v68-update.sql`, `v69-update.sql`, `livekit-token` ve `kadim-admin` Edge Function'larını kontrol et.
+4. Güncel kurulum için `v53-update.sql`, `v56-update.sql`, `v59-update.sql`, `v60-update.sql`, `v61-update.sql`, `v66-update.sql`, `v67-update.sql`, `v68-update.sql`, `v69-update.sql`, `v70-update.sql`, `livekit-token` ve `kadim-admin` Edge Function'larını kontrol et.
 5. Tarayıcı önbelleği eski dosyaları tutuyorsa `Ctrl + Shift + R` yap.
 
 > SQL dosyalarını tekrar çalıştırmadan önce içeriğini ve hedef Supabase projesini kontrol et. Canlı veriye karşı körlemesine SQL çalıştırma.

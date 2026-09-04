@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.2.3',build:'Build 70',title:'Market Taslak ve Geçmiş Hotfix',tag:'HOTFIX',tone:'current',
+    summary:'Otomatik yenilemenin pazarlık alanlarını sıfırlaması giderildi; market bildirimleri kapatıldı ve iki role de geçmiş temizleme eklendi.',
+    added:['Oyuncu, tamamlanmış/reddedilmiş/iptal edilmiş yalnız kendi market geçmişini temizleyebilir.','DM, kampanyadaki tüm kapanmış market tekliflerini tek onayla temizlemeye devam eder.'],
+    fixed:['Sekiz saniyelik teklif yenilemesi ve yedi saniyelik cüzdan yenilemesi artık yazılan karşı teklifi eski değere döndürmez.','DM’nin “son fiyat” işareti otomatik yenilemede kaybolmaz; aktif alan, imleç ve yazılmakta olan değer korunur.','Sepetteki ilk teklif taslağı da arka plan yenilemelerinde sıfırlanmaz.'],
+    changed:['Yeni teklif, karşı teklif, kabul, ret ve iptal market bildirimi üretmez; güncel durum Market sayfasından sessizce izlenir.','Cüzdan ve teklif listesi yalnız sunucudaki veri gerçekten değiştiğinde yeniden çizilir.','Mevcut hesap, kampanya, açık/kapalı sipariş, para, stok ve envanter kayıtları korunur.']
+  },
+  {
     version:'3.2.2',build:'Build 69',title:'Market Pazarlığı ve İşlem Logu Düzeltmeleri',tag:'DÜZELTME',tone:'current',
     summary:'Market teklif akışı çok turlu hâle getirildi; fiyat görünürlüğü, geçmiş temizliği ve sessiz DM işlem logu tamamlandı.',
     added:['Oyuncu, DM’nin kilitlemediği karşı teklife yeniden fiyat gönderebilir; pazarlık sırayla istenen tur kadar devam eder.','DM karşı teklifini “son fiyat” olarak işaretleyebilir; oyuncu bu durumda yalnız kabul veya iptal seçebilir.','DM’ye özel İşlem Logu; alışverişi, eşya/para aktarımını, yere bırakmayı, para silmeyi ve NPC hareketlerini bildirim üretmeden kaydeder.','Tamamlanan market geçmişi ile DM işlem logu ayrı onaylarla temizlenebilir.'],
@@ -800,7 +807,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.2.2'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.2.3'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -808,8 +815,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.2.2 • Build 69</h2><p>Çok turlu market pazarlığı, son fiyat kilidi ve dikkat dağıtmayan DM işlem logu.</p></div>
-      <div class="v37-patch-stats"><span><b>45</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.2.3 • Build 70</h2><p>Kaybolmayan market taslakları, sessiz pazarlık ve iki taraflı geçmiş temizleme.</p></div>
+      <div class="v37-patch-stats"><span><b>46</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -818,7 +825,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1.0–v3.2.2 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
+    <p class="v37-version-note">v0.1.0–v3.2.3 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }
