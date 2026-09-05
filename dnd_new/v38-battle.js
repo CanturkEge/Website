@@ -11,6 +11,9 @@ let v38FogPaintKey='';
 let v38SaveTimer=null;
 let v38EnsureSaveQueued=false;
 let v38PlayerMovePending=false;
+let v38BattleZoom=1.12;
+let v38TokenDrag=null;
+let v38SuppressTokenClick='';
 const v38VisionCache=new WeakMap();
 
 function v38BattleBlank(){
@@ -90,7 +93,7 @@ function v38EnsureBattle(mutate=current?.role==='dm'){
   let b=state.battleMap,changed=created;
   let defaults=v38BattleBlank();for(let [key,value] of Object.entries(defaults)){if(b[key]==null){b[key]=Array.isArray(value)?[]:value;changed=true}}
   if(!mutate){v38ClampBattle(b);return b}
-  if(v38BattleCampaign!==current?.id){v38BattleCampaign=current?.id||null;v38BattlePreview=false;v38BattleTool='select';v38PaletteSelection=null;v38SelectedTokenId=null;v38SelectedPropId=null;v38MonsterQuery=''}
+  if(v38BattleCampaign!==current?.id){v38BattleCampaign=current?.id||null;v38BattlePreview=false;v38BattleTool='select';v38PaletteSelection=null;v38SelectedTokenId=null;v38SelectedPropId=null;v38MonsterQuery='';v38BattleZoom=1.12}
   for(let fighter of state.encounter||[]){if(!fighter.id){fighter.id=uid();changed=true}}
   let ids=new Set((state.encounter||[]).map(row=>row.id)),before=(b.tokens||[]).length;
   b.tokens=(b.tokens||[]).filter(token=>!token.combatantId||ids.has(token.combatantId));if(b.tokens.length!==before)changed=true;
@@ -155,10 +158,12 @@ function v38FogCellsHtml(b,playerMode){
   let cells=[];for(let y=0;y<b.rows;y++)for(let x=0;x<b.cols;x++)if(v38CellIsHidden(b,x,y,playerMode))cells.push(`<i data-v38-fog-cell="${x},${y}" style="grid-column:${x+1};grid-row:${y+1}"></i>`);return cells.join('');
 }
 
+function v38DisplayCell(b){return Math.round(Math.max(34,Math.min(84,b.cellSize*v38BattleZoom)))}
+
 function v38PropHtml(b,prop,playerMode){
   let def=V38_PROP_DEFS[prop.type]||V38_PROP_DEFS.difficult,hidden=playerMode&&!v38PropCells(prop).some(key=>{let [x,y]=key.split(',').map(Number);return !v38CellIsHidden(b,x,y,true)});
   if(hidden||playerMode&&prop.zone)return '';
-  let style=`left:${prop.x*b.cellSize}px;top:${prop.y*b.cellSize}px;width:${prop.w*b.cellSize}px;height:${prop.h*b.cellSize}px`;
+  let style=`left:${prop.x/b.cols*100}%;top:${prop.y/b.rows*100}%;width:${prop.w/b.cols*100}%;height:${prop.h/b.rows*100}%`;
   return `<button class="v38-prop type-${esc(prop.type)} kind-${esc(def.kind||'object')} ${prop.id===v38SelectedPropId?'selected':''}" style="${style}" data-v38-prop="${esc(prop.id)}" title="${esc(prop.label||def.label)}${prop.blocksVision?' • görüşü keser':''}${prop.blocksMove?' • geçilemez':''}"><span>${esc(def.icon)}</span><small>${esc(prop.label||def.label)}</small></button>`;
 }
 
@@ -166,34 +171,50 @@ function v38TokenHtml(b,token,playerMode){
   let fighter=v38Combatant(token);if(!fighter)return '';
   let partyToken=token.kind==='player',owned=playerMode&&v38PlayerOwnsToken(token),movable=owned&&v38PlayerCanMoveToken(token),cellVisible=!v38CellIsHidden(b,token.x,token.y,true);
   if(playerMode&&(!partyToken&&(token.hidden||!cellVisible)))return '';
-  let style=`--token:${esc(token.color||'#9b5f25')};left:${token.x*b.cellSize}px;top:${token.y*b.cellSize}px;width:${token.size*b.cellSize}px;height:${token.size*b.cellSize}px`;
+  let style=`--token:${esc(token.color||'#9b5f25')};left:${token.x/b.cols*100}%;top:${token.y/b.rows*100}%;width:${token.size/b.cols*100}%;height:${token.size/b.rows*100}%`;
   let remaining=Math.max(0,(+token.speed||0)-(+token.movedFeet||0));
-  return `<button class="v38-token kind-${esc(token.kind)} ${fighter.turn?'active-turn':''} ${token.id===v38SelectedTokenId?'selected':''} ${token.movedFeet>token.speed?'over-speed':''} ${(partyToken||!playerMode)?'above-fog':''} ${movable?'player-movable':''}" style="${style}" data-v38-token="${esc(token.id)}" ${!playerMode?'draggable="true"':''} title="${esc(fighter.name)} • HP ${fighter.hp}/${fighter.maxHp||fighter.hp} • AC ${fighter.ac} • Hız ${token.speed} ft${owned?` • Kalan ${remaining} ft`:''}"><b>${esc(String(fighter.name||'?').slice(0,2).toUpperCase())}</b><span>${esc(fighter.name)}</span><small>${owned?`${remaining} ft kaldı`:`${token.speed} ft${token.movedFeet?` • ${token.movedFeet} ft`:''}`}</small></button>`;
+  return `<button class="v38-token kind-${esc(token.kind)} ${fighter.turn?'active-turn':''} ${token.id===v38SelectedTokenId?'selected':''} ${token.movedFeet>token.speed?'over-speed':''} ${(partyToken||!playerMode)?'above-fog':''} ${movable?'player-movable':''}" style="${style}" data-v38-token="${esc(token.id)}" title="${esc(fighter.name)} • HP ${fighter.hp}/${fighter.maxHp||fighter.hp} • AC ${fighter.ac} • Hız ${token.speed} ft${owned?` • Kalan ${remaining} ft`:''}"><b>${esc(String(fighter.name||'?').slice(0,2).toUpperCase())}</b><span>${esc(fighter.name)}</span><small>${owned?`${remaining} ft kaldı`:`${token.speed} ft${token.movedFeet?` • ${token.movedFeet} ft`:''}`}</small></button>`;
 }
 
 function v38BattleBoard(b,playerMode=false){
-  let readOnly=playerMode||v38BattlePreview,style=`--cols:${b.cols};--rows:${b.rows};--cell:${b.cellSize}px;width:${b.cols*b.cellSize}px;height:${b.rows*b.cellSize}px`;
-  return `<div class="v38-board-scroll"><div class="v38-board theme-${esc(b.theme)} ${readOnly?'readonly':''}" data-v38-board="1" style="${style}"><div class="v38-prop-layer">${(b.props||[]).map(prop=>v38PropHtml(b,prop,readOnly)).join('')}</div><div class="v38-token-layer">${(b.tokens||[]).map(token=>v38TokenHtml(b,token,readOnly)).join('')}</div><div class="v38-fog-layer ${readOnly?'player-fog':'dm-fog'}" style="grid-template-columns:repeat(${b.cols},${b.cellSize}px);grid-template-rows:repeat(${b.rows},${b.cellSize}px)">${v38FogCellsHtml(b,readOnly)}</div></div></div>`;
+  let readOnly=playerMode||v38BattlePreview,cellSize=v38DisplayCell(b),style=`--cols:${b.cols};--rows:${b.rows};--cell-x:${100/b.cols}%;--cell-y:${100/b.rows}%;width:100%;min-width:${b.cols*cellSize}px;aspect-ratio:${b.cols}/${b.rows}`;
+  return `<div class="v38-board-frame"><div class="v38-board-toolbar"><span><b>${playerMode?'Savaş alanı':'Harita kontrolü'}</b><small>Boş alanda kaydır • Tokenı tutup taşı</small></span><div><button class="ghost" data-v38-zoom="-0.12" aria-label="Uzaklaştır">−</button><button class="ghost v38-zoom-reset" data-v38-zoom="reset">%${Math.round(v38BattleZoom*100)}</button><button class="ghost" data-v38-zoom="0.12" aria-label="Yakınlaştır">+</button></div></div><div class="v38-board-scroll"><div class="v38-board theme-${esc(b.theme)} ${readOnly?'readonly':''}" data-v38-board="1" style="${style}"><div class="v38-prop-layer">${(b.props||[]).map(prop=>v38PropHtml(b,prop,readOnly)).join('')}</div><div class="v38-token-layer">${(b.tokens||[]).map(token=>v38TokenHtml(b,token,readOnly)).join('')}</div><div class="v38-fog-layer ${readOnly?'player-fog':'dm-fog'}" style="grid-template-columns:repeat(${b.cols},minmax(0,1fr));grid-template-rows:repeat(${b.rows},minmax(0,1fr))">${v38FogCellsHtml(b,readOnly)}</div></div></div></div>`;
 }
 
 function v38InitiativeStrip(b,playerMode=false){
-  let rows=(state.encounter||[]).map(fighter=>{let token=b.tokens.find(row=>row.combatantId===fighter.id),kind=token?.kind||v38FighterKind(fighter),hidden=playerMode&&kind!=='player'&&(!token||token.hidden||v38CellIsHidden(b,token.x,token.y,true));if(hidden)return '';return `<button class="${fighter.turn?'active':''}" data-v38-select-token="${esc(token?.id||'')}" ${playerMode?'disabled':''}><i style="--token:${esc(token?.color||'#8a633c')}"></i><span><b>${esc(fighter.name)}</b><small>Init ${+fighter.init||0} • HP ${fighter.hp}/${fighter.maxHp||fighter.hp} • AC ${fighter.ac}</small></span><strong>${token?.speed||v38FighterSpeed(fighter)} ft</strong>${token?.movedFeet?`<em>${token.movedFeet} ft gitti</em>`:''}</button>`}).join('');
+  let rows=(state.encounter||[]).map(fighter=>{let token=b.tokens.find(row=>row.combatantId===fighter.id),kind=token?.kind||v38FighterKind(fighter),hidden=playerMode&&kind!=='player'&&(!token||token.hidden||v38CellIsHidden(b,token.x,token.y,true)),owned=!!(playerMode&&token&&v38PlayerOwnsToken(token));if(hidden)return '';return `<button class="${fighter.turn?'active':''} ${owned?'own-token':''}" data-v38-select-token="${esc(token?.id||'')}" ${playerMode&&!owned?'disabled':''}><i style="--token:${esc(token?.color||'#8a633c')}"></i><span><b>${esc(fighter.name)}</b><small>Init ${+fighter.init||0} • HP ${fighter.hp}/${fighter.maxHp||fighter.hp} • AC ${fighter.ac}</small></span><strong>${token?.speed||v38FighterSpeed(fighter)} ft</strong>${token?.movedFeet?`<em>${token.movedFeet} ft gitti</em>`:''}</button>`}).join('');
   return `<div class="v38-initiative">${rows||'<div class="empty">Henüz katılımcı yok.</div>'}</div>`;
 }
 
-function v38MonsterPaletteHtml(){
-  let needle=v37Fold(v38MonsterQuery),rows=allMonsters().filter(row=>!needle||v37Fold(`${row.name} ${row.category||''} ${row.cr||''}`).includes(needle)).slice(0,80);
-  return `<div class="v38-monster-search"><input id="v38MonsterSearch" value="${esc(v38MonsterQuery)}" placeholder="Yaratık veya CR ara…"><small>${rows.length} sonuç</small></div><div class="v38-palette-list">${rows.map(row=>`<button draggable="true" data-v38-palette-type="monster" data-v38-palette-id="${esc(row.id)}"><span>${esc(row.name)}</span><small>CR ${esc(row.cr||'?')} • HP ${row.hp} • AC ${row.ac} • ${row.speed} ft</small></button>`).join('')||'<div class="empty">Eşleşen yaratık yok.</div>'}</div>`;
+function v38PaletteRow(type,id,name,detail){
+  return `<div class="v38-palette-row"><button draggable="true" data-v38-palette-type="${esc(type)}" data-v38-palette-id="${esc(id)}"><span>${esc(name)}</span><small>${detail}</small></button><button class="v38-quick-add" data-v38-add-now="${esc(type)}" data-v38-add-id="${esc(id)}" title="Doğrudan boş bir kareye ekle" aria-label="${esc(name)} ekle">+</button></div>`;
 }
 
-function v38Palette(){
+function v38MonsterRows(){
+  let needle=v37Fold(v38MonsterQuery);return allMonsters().filter(row=>!needle||v37Fold(`${row.name} ${row.category||''} ${row.cr||''}`).includes(needle)).slice(0,80);
+}
+
+function v38MonsterListHtml(rows=v38MonsterRows()){
+  return rows.map(row=>v38PaletteRow('monster',row.id,row.name,`CR ${esc(row.cr||'?')} • HP ${row.hp} • AC ${row.ac} • ${row.speed} ft`)).join('')||'<div class="empty">Eşleşen yaratık yok.</div>';
+}
+
+function v38MonsterPaletteHtml(){
+  let rows=v38MonsterRows();return `<div class="v38-monster-search"><input id="v38MonsterSearch" value="${esc(v38MonsterQuery)}" placeholder="Yaratık veya CR ara…"><small id="v38MonsterCount">${rows.length} sonuç</small></div><div id="v38MonsterList" class="v38-palette-list">${v38MonsterListHtml(rows)}</div>`;
+}
+
+function v38RosterHtml(b){
+  let rows=(state.encounter||[]).map(fighter=>{let token=b.tokens.find(row=>row.combatantId===fighter.id);if(!token)return '';return `<div class="v38-roster-row ${token.id===v38SelectedTokenId?'selected':''}"><button data-v38-roster-select="${esc(token.id)}"><i style="--token:${esc(token.color||'#8a633c')}"></i><span><b>${esc(fighter.name)}</b><small>HP ${fighter.hp}/${fighter.maxHp||fighter.hp} • Init ${+fighter.init||0} • (${token.x+1}, ${token.y+1})</small></span></button><button class="danger" data-v38-delete-token="${esc(token.id)}" aria-label="${esc(fighter.name)} sil">×</button></div>`}).join('');
+  return rows||'<div class="empty">Henüz savaşçı yok.</div>';
+}
+
+function v38Palette(b){
   let characters=(state.characters||[]).filter(row=>row.approvalStatus!=='pending'),npcs=state.npcs||[];
-  return `<aside class="v38-palette"><details open><summary>Oyuncular ve NPC’ler</summary><div class="v38-palette-list">${characters.map(row=>`<button draggable="true" data-v38-palette-type="character" data-v38-palette-id="${esc(row.id)}"><span>${esc(row.name)}</span><small>Lv ${row.level} ${esc(row.className||'')} • HP ${row.hp}/${row.maxHp} • ${row.speed||30} ft</small></button>`).join('')||'<small>Onaylı karakter yok.</small>'}${npcs.map(row=>`<button draggable="true" data-v38-palette-type="npc" data-v38-palette-id="${esc(row.id)}"><span>${esc(row.name)}</span><small>NPC • HP ${row.hp}/${row.maxHp} • AC ${row.ac}</small></button>`).join('')}</div></details><details><summary>Hazır Yaratıklar</summary><div id="v38MonsterPalette">${v38MonsterPaletteHtml()}</div></details><details><summary>Arazi ve Objeler</summary><div class="v38-prop-palette">${Object.entries(V38_PROP_DEFS).map(([id,row])=>`<button draggable="true" data-v38-palette-type="prop" data-v38-palette-id="${id}" title="${row.blocksVision?'Görüşü keser. ':''}${row.blocksMove?'Üzerinden geçilemez. ':''}${row.difficult?'Zor arazi. ':''}"><b>${esc(row.icon)}</b><span>${esc(row.label)}</span></button>`).join('')}</div></details><p class="v38-palette-help">Masaüstü: sürükleyip kareye bırak. Telefon: öğeye dokun, sonra hedef kareye dokun.</p></aside>`;
+  return `<aside class="v38-palette"><details open><summary>Savaşçılar (${(state.encounter||[]).length})</summary><div class="v38-roster-list">${v38RosterHtml(b)}</div></details><details open><summary>Hazır Yaratıklar</summary><div id="v38MonsterPalette">${v38MonsterPaletteHtml()}</div></details><details><summary>Oyuncular ve NPC’ler</summary><div class="v38-palette-list">${characters.map(row=>v38PaletteRow('character',row.id,row.name,`Lv ${row.level} ${esc(row.className||'')} • HP ${row.hp}/${row.maxHp} • ${row.speed||30} ft`)).join('')||'<small>Onaylı karakter yok.</small>'}${npcs.map(row=>v38PaletteRow('npc',row.id,row.name,`NPC • HP ${row.hp}/${row.maxHp} • AC ${row.ac}`)).join('')}</div></details><details><summary>Arazi ve Objeler</summary><div class="v38-prop-palette">${Object.entries(V38_PROP_DEFS).map(([id,row])=>`<button draggable="true" data-v38-palette-type="prop" data-v38-palette-id="${id}" title="${row.blocksVision?'Görüşü keser. ':''}${row.blocksMove?'Üzerinden geçilemez. ':''}${row.difficult?'Zor arazi. ':''}"><b>${esc(row.icon)}</b><span>${esc(row.label)}</span></button>`).join('')}</div></details><p class="v38-palette-help">+ ile boş kareye hemen ekle. Masaüstünde öğeyi veya tokenı tutup sürükle; telefonda önce öğeye, sonra hedef kareye dokun.</p></aside>`;
 }
 
 function v38TokenInspector(b,token){
   let fighter=v38Combatant(token);if(!fighter)return '';
-  return `<div class="v38-inspector-card"><div class="v38-inspector-title"><i style="--token:${esc(token.color)}"></i><div><small>${token.kind==='player'?'OYUNCU':token.kind==='npc'?'NPC':'YARATIK'}</small><h3>${esc(fighter.name)}</h3></div></div><div class="v38-vitals"><span><b>${fighter.hp}/${fighter.maxHp||fighter.hp}</b>HP</span><span><b>${fighter.ac}</b>AC</span><span><b>${+fighter.init||0}</b>Init</span></div><div class="v38-hp-tools"><button data-v38-hp="-5">−5 HP</button><button data-v38-hp="-1">−1</button><button data-v38-hp="1">+1</button><button data-v38-hp="5">+5 HP</button></div><div class="v38-two-input"><label>Initiative<input id="v38TokenInit" type="number" value="${+fighter.init||0}"></label><label>AC<input id="v38TokenAc" type="number" min="0" max="40" value="${+fighter.ac||10}"></label></div><label>Hız (ft)<input id="v38TokenSpeed" type="number" min="5" max="200" value="${token.speed}"></label><label>Normal görüş (ft)<input id="v38TokenVision" type="number" min="0" max="300" step="5" value="${token.vision}"></label><label>Darkvision (ft)<input id="v38TokenDarkvision" type="number" min="0" max="300" step="5" value="${token.darkvision}"></label><label>Boyut (kare)<input id="v38TokenSize" type="number" min="1" max="4" value="${token.size}"></label><label>Token rengi<input id="v38TokenColor" type="color" value="${esc(token.color||'#a83e38')}"></label><label class="check"><input id="v38TokenHidden" type="checkbox" ${token.hidden?'checked':''}> Oyuncudan gizle</label><button id="v38SaveToken" class="primary">Tokeni Kaydet</button><button id="v38MakeTurn" class="ghost">Sırayı Buna Ver</button><div class="v38-attack-info"><b>Saldırılar / Özellikler</b><p>${esc(fighter.attacks||fighter.note||fighter.traits||'Karakter saldırı bonusları karakterin Yetenekler sayfasındaki Fight kartında görünür.')}</p>${fighter.traits&&fighter.traits!==fighter.note?`<small>${esc(fighter.traits)}</small>`:''}<div><button id="v38AttackRoll" class="ghost">d20 Saldırı At</button><button id="v38DamageRoll" class="ghost">Hasar At</button></div></div><button id="v38DeleteToken" class="danger">Savaşçı + Tokeni Sil</button></div>`;
+  return `<div class="v38-inspector-card"><div class="v38-inspector-title"><i style="--token:${esc(token.color)}"></i><div><small>${token.kind==='player'?'OYUNCU':token.kind==='npc'?'NPC':'YARATIK'}${fighter.turn?' • AKTİF SIRA':''}</small><h3>${esc(fighter.name)}</h3><p>Kare ${token.x+1}, ${token.y+1} • ${token.movedFeet||0}/${token.speed} ft hareket</p></div></div><div class="v38-vitals"><span><b>${fighter.hp}/${fighter.maxHp||fighter.hp}</b>HP</span><span><b>${fighter.ac}</b>AC</span><span><b>${+fighter.init||0}</b>Initiative</span></div><h4 class="v38-inspector-section">Can ve sıra</h4><div class="v38-hp-tools"><button data-v38-hp="-5">−5 HP</button><button data-v38-hp="-1">−1 HP</button><button data-v38-hp="1">+1 HP</button><button data-v38-hp="5">+5 HP</button></div><h4 class="v38-inspector-section">Konum ve savaş değerleri</h4><div class="v38-two-input"><label>Initiative<input id="v38TokenInit" type="number" value="${+fighter.init||0}"></label><label>Zırh sınıfı (AC)<input id="v38TokenAc" type="number" min="0" max="40" value="${+fighter.ac||10}"></label></div><div class="v38-two-input"><label>Sütun (X)<input id="v38TokenX" type="number" min="1" max="${b.cols}" value="${token.x+1}"></label><label>Satır (Y)<input id="v38TokenY" type="number" min="1" max="${b.rows}" value="${token.y+1}"></label></div><label>Hız (ft)<input id="v38TokenSpeed" type="number" min="5" max="200" value="${token.speed}"></label><label>Boyut (kare)<input id="v38TokenSize" type="number" min="1" max="4" value="${token.size}"></label><h4 class="v38-inspector-section">Görüş ve görünüm</h4><label>Normal görüş (ft)<input id="v38TokenVision" type="number" min="0" max="300" step="5" value="${token.vision}"></label><label>Darkvision (ft)<input id="v38TokenDarkvision" type="number" min="0" max="300" step="5" value="${token.darkvision}"></label><label>Token rengi<input id="v38TokenColor" type="color" value="${esc(token.color||'#a83e38')}"></label><label class="check"><input id="v38TokenHidden" type="checkbox" ${token.hidden?'checked':''}> Oyuncudan gizle</label><div class="v38-inspector-actions"><button id="v38SaveToken" class="primary">Değişiklikleri Kaydet</button><button id="v38MakeTurn" class="ghost">Sırayı Buna Ver</button></div><div class="v38-attack-info"><b>Saldırılar / Özellikler</b><p>${esc(fighter.attacks||fighter.note||fighter.traits||'Karakter saldırı bonusları karakterin Yetenekler sayfasındaki Fight kartında görünür.')}</p>${fighter.traits&&fighter.traits!==fighter.note?`<small>${esc(fighter.traits)}</small>`:''}<div><button id="v38AttackRoll" class="ghost">d20 Saldırı At</button><button id="v38DamageRoll" class="ghost">Hasar At</button></div></div><button id="v38DeleteToken" class="danger v38-delete-combatant">Savaşçı ve Tokenı Sil</button></div>`;
 }
 
 function v38PropInspector(prop){
@@ -203,7 +224,7 @@ function v38PropInspector(prop){
 
 function v38Inspector(b){
   let token=b.tokens.find(row=>row.id===v38SelectedTokenId),prop=b.props.find(row=>row.id===v38SelectedPropId);
-  return `<aside class="v38-inspector">${token?v38TokenInspector(b,token):prop?v38PropInspector(prop):`<div class="v38-inspector-empty"><b>Bir token veya obje seç</b><p>HP, hız, görüş, darkvision, boyut, saldırı ve engel ayarları burada açılır.</p><ul><li>1 kare = 5 ft</li><li>Hız 30 ft = turda 6 kare</li><li>Sütun ve duvar görüşü keser</li><li>Çalılık ve moloz zor arazidir</li></ul></div>`}</aside>`;
+  return `<aside class="v38-inspector" aria-label="Seçili öğe detayları">${token?v38TokenInspector(b,token):prop?v38PropInspector(prop):`<div class="v38-inspector-empty"><small>SEÇİLİ ÖĞE DETAYLARI</small><b>Bir token veya obje seç</b><p>Savaşçı listesinden veya haritadan seçim yap. Can, sıra, koordinat, hız, görüş ve saldırı araçları burada okunabilir tek panelde açılır.</p><ul><li>1 kare = 5 ft</li><li>Hız 30 ft = turda 6 kare</li><li>Sütun ve duvar görüşü keser</li><li>Çalılık ve moloz zor arazidir</li></ul></div>`}</aside>`;
 }
 
 function v38BattleTools(b){
@@ -218,7 +239,7 @@ function v38BattlePage(playerMode=false){
   let b=v38EnsureBattle(!playerMode&&current.role==='dm');
   if(playerMode&&!b.published)return `<section class="card v38-battle-locked"><span>⚔</span><div><small>TAKTİK SAVAŞ ALANI</small><h2>DM henüz savaş haritasını açmadı</h2><p>Hazırlık, gizli yaratıklar ve arazi oyunculara kapalı. DM “Oyuncuya Aç” veya “Savaşı Başlat” dediğinde tahta burada görünecek.</p></div></section>`;
   let active=(state.encounter||[]).find(row=>row.turn);
-  return `<section class="v38-battle-shell ${playerMode?'player-mode':''}"><div class="v38-battle-head"><div><span class="v26-kicker">KARELİ TAKTİK SAVAŞ</span><h2>${esc(b.name)}</h2><p>${b.cols}×${b.rows} kare • 1 kare = 5 ft • ${b.lighting==='bright'?'Parlak':b.lighting==='dim'?'Loş':'Karanlık'}${b.fogEnabled?' • Sis açık':' • Sis kapalı'}</p></div><div class="v38-round"><small>${state.encounterActive?'AKTİF SAVAŞ':'HAZIRLIK'}</small><b>Tur ${state.encounterRound||1}</b><span>${active?`Sıra: ${esc(active.name)}`:'Sıra başlamadı'}</span></div></div>${playerMode?'':v38BattleTools(b)}${v38InitiativeStrip(b,playerMode||v38BattlePreview)}<div class="v38-battle-layout">${playerMode?'':v38Palette()}<main>${v38BattleBoard(b,playerMode)}</main>${playerMode?'':v38Inspector(b)}</div>${playerMode?'<p class="v38-player-help">Sıran geldiğinde parlayan kendi tokenına, ardından gideceğin kareye dokun. Hız sınırı ve zor arazi maliyeti sunucuda doğrulanır.</p>':''}${v38BattleHelp(playerMode)}</section>`;
+  return `<section class="v38-battle-shell ${playerMode?'player-mode':''}"><div class="v38-battle-head"><div><span class="v26-kicker">KARELİ TAKTİK SAVAŞ</span><h2>${esc(b.name)}</h2><p>${b.cols}×${b.rows} kare • 1 kare = 5 ft • ${b.lighting==='bright'?'Parlak':b.lighting==='dim'?'Loş':'Karanlık'}${b.fogEnabled?' • Sis açık':' • Sis kapalı'}</p></div><div class="v38-round"><small>${state.encounterActive?'AKTİF SAVAŞ':'HAZIRLIK'}</small><b>Tur ${state.encounterRound||1}</b><span>${active?`Sıra: ${esc(active.name)}`:'Sıra başlamadı'}</span></div></div>${playerMode?'':v38BattleTools(b)}${v38InitiativeStrip(b,playerMode||v38BattlePreview)}<div class="v38-battle-layout">${playerMode?'':`<div class="v38-dm-rail">${v38Palette(b)}${v38Inspector(b)}</div>`}<div class="v38-board-stage">${v38BattleBoard(b,playerMode)}</div></div>${playerMode?'<p class="v38-player-help">Kendi savaşçını üstteki sıra şeridinden veya tahtadan seç. Sıran geldiğinde hedef kareye dokun; hız ve zor arazi sunucuda doğrulanır.</p>':''}${v38BattleHelp(playerMode)}</section>`;
 }
 
 function v38InjectBattle(html,battle){let end=html.indexOf('</section>');return end<0?`${battle}${html}`:`${html.slice(0,end+10)}${battle}${html.slice(end+10)}`}
@@ -245,7 +266,7 @@ function v38AddCombatant(type,id,point){
   if(current?.role!=='dm')return;let b=v38EnsureBattle(),fighter;
   if(type==='character'){
     let c=(state.characters||[]).find(row=>row.id===id);if(!c)return;
-    let existing=(state.encounter||[]).find(row=>row.characterId===c.id||row.userId&&row.userId===c.userId);if(existing){let token=b.tokens.find(row=>row.combatantId===existing.id);if(token){v38MoveToken(token,point,b);v38SelectedTokenId=token.id;save();render();return}}
+    let existing=(state.encounter||[]).find(row=>row.characterId===c.id||row.userId&&row.userId===c.userId);if(existing){let token=b.tokens.find(row=>row.combatantId===existing.id);if(token){if(point)v38MoveToken(token,point,b);v38SelectedTokenId=token.id;save();render();return}}
     fighter={id:uid(),characterId:c.id,userId:c.userId,name:c.name,init:0,hp:c.hp,maxHp:c.maxHp,ac:c.ac,effects:[...(c.effects||[])],turn:false,kind:'player',speed:c.speed||30,note:`Lv ${c.level} ${c.className||''}`};
   }else if(type==='npc'){
     let n=(state.npcs||[]).find(row=>row.id===id);if(!n)return;fighter={...n,id:uid(),sourceNpcId:n.id,init:0,turn:false,kind:'npc',speed:n.speed||30,effects:[...(n.effects||[])]};
@@ -269,6 +290,12 @@ function v38MoveToken(token,point,b=v38EnsureBattle(),enforceSpeed=false){
   let move=v38MoveAssessment(token,point,b);if(move.blocked){toast('Bu karede geçilemez bir obje var');return false}if(enforceSpeed&&move.nextMoved>token.speed){toast(`Bu tur yalnız ${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`,true);return false}
   let {x,y,distance}=move;
   token.movedFeet=(+token.movedFeet||0)+distance;token.x=x;token.y=y;if(token.movedFeet>token.speed)toast(`${v38Combatant(token)?.name||'Token'} hız sınırını aştı: ${token.movedFeet}/${token.speed} ft`);return true;
+}
+
+function v38DeleteCombatantToken(tokenId){
+  if(current?.role!=='dm'||v38BattlePreview)return false;
+  let b=v38EnsureBattle(),token=b.tokens.find(row=>row.id===tokenId),fighter=v38Combatant(token);if(!token||!confirm(`${fighter?.name||'Bu savaşçı'} encounter ve haritadan silinsin mi?`))return false;
+  b.tokens=b.tokens.filter(row=>row.id!==token.id);state.encounter=state.encounter.filter(row=>row.id!==token.combatantId);if(v38SelectedTokenId===token.id)v38SelectedTokenId=null;save();render();return true;
 }
 
 async function v38MovePlayerToken(token,point,b=v38EnsureBattle(false)){
@@ -301,7 +328,7 @@ async function v38RecordRoll(fighter,formula,values,bonus,total){
 }
 
 document.addEventListener('input',event=>{
-  if(event.target.id!=='v38MonsterSearch')return;v38MonsterQuery=event.target.value;let box=$('#v38MonsterPalette');if(box)box.innerHTML=v38MonsterPaletteHtml();
+  if(event.target.id!=='v38MonsterSearch')return;v38MonsterQuery=event.target.value;let rows=v38MonsterRows(),list=$('#v38MonsterList'),count=$('#v38MonsterCount');if(list)list.innerHTML=v38MonsterListHtml(rows);if(count)count.textContent=`${rows.length} sonuç`;
 });
 
 document.addEventListener('change',event=>{
@@ -323,28 +350,47 @@ document.addEventListener('drop',event=>{
   if(raw){try{let data=JSON.parse(raw);data.type==='prop'?v38AddProp(data.id,point):v38AddCombatant(data.type,data.id,point)}catch(error){console.warn('Battle drop ignored',error)}}
 });
 
+document.addEventListener('pointerdown',event=>{
+  let element=event.target.closest('[data-v38-token]');if(!element||event.button!==0||current?.role!=='dm'||v38BattlePreview||v38BattleTool!=='select')return;
+  let board=element.closest('[data-v38-board]'),token=v38EnsureBattle().tokens.find(row=>row.id===element.dataset.v38Token);if(!board||!token)return;
+  v38SelectedTokenId=token.id;v38SelectedPropId=null;v38PaletteSelection=null;v38TokenDrag={pointerId:event.pointerId,element,board,tokenId:token.id,startX:event.clientX,startY:event.clientY,moved:false};element.setPointerCapture?.(event.pointerId);element.classList.add('selected');event.preventDefault();
+});
 document.addEventListener('pointerdown',event=>{if(!event.target.closest('[data-v38-board]')||!['reveal','hide'].includes(v38BattleTool))return;v38FogPainting=true;v38FogPaintKey='';v38PaintFog(event);event.preventDefault()});
-document.addEventListener('pointermove',event=>{if(v38FogPainting)v38PaintFog(event)});
+document.addEventListener('pointermove',event=>{
+  if(v38TokenDrag?.pointerId===event.pointerId){let distance=Math.hypot(event.clientX-v38TokenDrag.startX,event.clientY-v38TokenDrag.startY);if(distance>6){v38TokenDrag.moved=true;v38TokenDrag.element.classList.add('dragging');event.preventDefault()}return}
+  if(v38FogPainting)v38PaintFog(event);
+});
+function v38FinishTokenDrag(event,cancel=false){
+  let drag=v38TokenDrag;if(!drag||event?.pointerId!=null&&drag.pointerId!==event.pointerId)return;v38TokenDrag=null;drag.element.classList.remove('dragging');drag.element.releasePointerCapture?.(drag.pointerId);
+  if(cancel||!drag.moved)return;
+  v38SuppressTokenClick=drag.tokenId;setTimeout(()=>{if(v38SuppressTokenClick===drag.tokenId)v38SuppressTokenClick=''},0);
+  let rect=drag.board.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)return render();
+  let b=v38EnsureBattle(),token=b.tokens.find(row=>row.id===drag.tokenId);if(token&&v38MoveToken(token,v38Point(drag.board,event,b),b)){v38SelectedTokenId=token.id;save()}render();event.preventDefault();
+}
 function v38FinishFogPaint(){if(!v38FogPainting)return;v38FogPainting=false;v38FogPaintKey='';clearTimeout(v38SaveTimer);save();render()}
-document.addEventListener('pointerup',v38FinishFogPaint);
-document.addEventListener('pointercancel',v38FinishFogPaint);
-window.addEventListener?.('blur',v38FinishFogPaint);
+document.addEventListener('pointerup',event=>{v38FinishTokenDrag(event);v38FinishFogPaint()});
+document.addEventListener('pointercancel',event=>{v38FinishTokenDrag(event,true);v38FinishFogPaint()});
+window.addEventListener?.('blur',()=>{v38FinishTokenDrag(null,true);v38FinishFogPaint()});
 
 document.addEventListener('click',async event=>{
   let button=event.target.closest('button');if(!button||!current)return;
+  if(button.dataset.v38Zoom){v38BattleZoom=button.dataset.v38Zoom==='reset'?1.12:Math.max(.72,Math.min(1.6,v38BattleZoom+(+button.dataset.v38Zoom||0)));render();return}
+  if(button.dataset.v38AddNow){if(current.role!=='dm'||v38BattlePreview)return;v38AddCombatant(button.dataset.v38AddNow,button.dataset.v38AddId,null);return}
+  if(button.dataset.v38DeleteToken){v38DeleteCombatantToken(button.dataset.v38DeleteToken);return}
+  if(button.dataset.v38RosterSelect){if(current.role!=='dm'||v38BattlePreview)return;v38SelectedTokenId=button.dataset.v38RosterSelect;v38SelectedPropId=null;v38PaletteSelection=null;v38BattleTool='select';render();return}
   if(button.dataset.v38Tool){v38BattleTool=button.dataset.v38Tool;v38PaletteSelection=null;render();return}
   if(button.dataset.v38PaletteType){v38PaletteSelection={type:button.dataset.v38PaletteType,id:button.dataset.v38PaletteId};v38BattleTool='place';document.querySelectorAll('[data-v38-palette-type]').forEach(row=>row.classList.toggle('selected',row===button));toast('Şimdi savaş alanında hedef kareye dokun');return}
   if(button.dataset.v38Token){
+    if(v38SuppressTokenClick===button.dataset.v38Token){v38SuppressTokenClick='';return}
     let token=v38EnsureBattle(false).tokens.find(row=>row.id===button.dataset.v38Token);
     if(current.role==='player'){
       if(!v38PlayerOwnsToken(token))return toast('Yalnız kendi tokenını seçebilirsin',true);
-      if(!v38PlayerCanMoveToken(token))return toast(v38Combatant(token)?.turn?'Savaş henüz aktif değil':'Şu an sıra sende değil',true);
-      v38SelectedTokenId=token.id;v38SelectedPropId=null;render();toast(`${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`);return;
+      v38SelectedTokenId=token.id;v38SelectedPropId=null;render();if(!v38PlayerCanMoveToken(token))return toast(v38Combatant(token)?.turn?'Savaş henüz aktif değil':'Şu an sıra sende değil',true);toast(`${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`);return;
     }
     if(current.role!=='dm'||v38BattlePreview)return;v38SelectedTokenId=button.dataset.v38Token;v38SelectedPropId=null;v38PaletteSelection=null;v38BattleTool='select';render();return;
   }
   if(button.dataset.v38Prop){if(current.role!=='dm'||v38BattlePreview)return;v38SelectedPropId=button.dataset.v38Prop;v38SelectedTokenId=null;v38PaletteSelection=null;render();return}
-  if(button.dataset.v38SelectToken&&button.dataset.v38SelectToken){v38SelectedTokenId=button.dataset.v38SelectToken;v38SelectedPropId=null;render();return}
+  if(button.dataset.v38SelectToken){let token=v38EnsureBattle(false).tokens.find(row=>row.id===button.dataset.v38SelectToken);if(!token)return;if(current.role==='player'&&!v38PlayerOwnsToken(token))return toast('Yalnız kendi tokenını seçebilirsin',true);v38SelectedTokenId=token.id;v38SelectedPropId=null;render();if(current.role==='player')toast(v38PlayerCanMoveToken(token)?`${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`:'Şu an sıra sende değil',!v38PlayerCanMoveToken(token));return}
   if(button.id==='v38PublishBattle'){let b=v38EnsureBattle();b.published=true;save();render();toast('Savaş alanı oyunculara açıldı');return}
   if(button.id==='v38HideBattle'){let b=v38EnsureBattle();b.published=false;save();render();toast('Savaş alanı oyunculardan gizlendi');return}
   if(button.id==='v38PreviewBattle'){v38BattlePreview=!v38BattlePreview;render();return}
@@ -361,14 +407,14 @@ document.addEventListener('click',async event=>{
     let b=v38EnsureBattle();b.cols=+$('#v38Cols').value;b.rows=+$('#v38Rows').value;b.cellSize=+$('#v38CellSize').value;v38ClampBattle(b);save();render();return;
   }
   if(button.id==='v38SaveToken'){
-    let b=v38EnsureBattle(),token=v38SelectedToken();if(!token)return;token.speed=+$('#v38TokenSpeed').value;token.vision=+$('#v38TokenVision').value;token.darkvision=+$('#v38TokenDarkvision').value;token.size=+$('#v38TokenSize').value;token.color=$('#v38TokenColor').value;token.hidden=$('#v38TokenHidden').checked;let fighter=v38Combatant(token);if(fighter){fighter.speed=token.speed;fighter.init=+$('#v38TokenInit').value||0;fighter.ac=Math.max(0,+$('#v38TokenAc').value||0)}v38ClampBattle(b);save();render();return;
+    let b=v38EnsureBattle(),token=v38SelectedToken();if(!token)return;token.x=(+$('#v38TokenX').value||1)-1;token.y=(+$('#v38TokenY').value||1)-1;token.speed=+$('#v38TokenSpeed').value;token.vision=+$('#v38TokenVision').value;token.darkvision=+$('#v38TokenDarkvision').value;token.size=+$('#v38TokenSize').value;token.color=$('#v38TokenColor').value;token.hidden=$('#v38TokenHidden').checked;let fighter=v38Combatant(token);if(fighter){fighter.speed=token.speed;fighter.init=+$('#v38TokenInit').value||0;fighter.ac=Math.max(0,+$('#v38TokenAc').value||0)}v38ClampBattle(b);save();render();return;
   }
   if(button.id==='v38MakeTurn'){
     let token=v38SelectedToken(),fighter=v38Combatant(token);if(!fighter)return;(state.encounter||[]).forEach(row=>row.turn=false);fighter.turn=true;state.encounterActive=true;token.movedFeet=0;token.turnStartX=token.x;token.turnStartY=token.y;save();render();return;
   }
   if(button.dataset.v38Hp){let token=v38SelectedToken(),fighter=v38Combatant(token);if(!fighter)return;fighter.hp=Math.max(0,Math.min(+fighter.maxHp||99999,(+fighter.hp||0)+(+button.dataset.v38Hp)));window.v31SyncCharacterFromEncounter?.(fighter,{hp:true});save();render();return}
   if(button.id==='v38DeleteToken'){
-    let b=v38EnsureBattle(),token=v38SelectedToken(),fighter=v38Combatant(token);if(!token||!confirm(`${fighter?.name||'Bu savaşçı'} encounter ve haritadan silinsin mi?`))return;b.tokens=b.tokens.filter(row=>row.id!==token.id);state.encounter=state.encounter.filter(row=>row.id!==token.combatantId);v38SelectedTokenId=null;save();render();return;
+    v38DeleteCombatantToken(v38SelectedTokenId);return;
   }
   if(button.id==='v38SaveProp'){
     let b=v38EnsureBattle(),prop=v38SelectedProp();if(!prop)return;prop.label=$('#v38PropLabel').value.trim()||prop.label;prop.w=+$('#v38PropW').value;prop.h=+$('#v38PropH').value;prop.blocksMove=$('#v38PropMove').checked;prop.blocksVision=$('#v38PropVision').checked;prop.difficult=$('#v38PropDifficult').checked;prop.light=+$('#v38PropLight').value;v38ClampBattle(b);save();render();return;

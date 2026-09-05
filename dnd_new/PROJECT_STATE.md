@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-09-04**
-Referans branch: `main`  
+Son doğrulama: **2026-09-05**
+Referans branch: `dnd_test`
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Güncel sürüm: **3.2.4 / v71 / Build 71**
+- Güncel sürüm: **3.3.1 / v73 / Build 73**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -27,6 +27,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Hazır taktik içerik: 51 map, rütbe kopyalarından arındırılmış yaratık kataloğu, 24 ayrı boss ve genişletilmiş arazi/obje paleti.
 - Build 59 yaratıkları ansiklopedi için eksik detay alanları güvenli varsayılanlarla tamamlanarak açılış hatasından korunur.
 - Oyuncu, yalnız aktif sırasındaki kendi savaş tokenını kalan hızı kadar hareket ettirebilir; yetki ve mesafe `battle_token_move_v60` RPC'sinde doğrulanır.
+- Taktik savaş alanı panel genişliğini kare oranını koruyarak doldurur; DM paleti ve okunabilir savaşçı detayları masaüstünde üstte yan yana, tahta altta tam genişliktedir. Hızlı ekleme/silme, pointer tabanlı sürükleme, koordinat düzenleme ve cihaz yerel zoom kullanılır; oyuncu görünümünde DM araçları üretilmez.
 - Oyuncu kendi kesesinden seçtiği parayı geri alınamayacak biçimde yok edebilir; `wallet_discard_v61` oturum ve sahipliği sunucuda doğrular.
 - Geç yüklenen `v27.js`, Kesem ekranındaki para yok etme kontrolünü artık ezmez.
 - Ganimet kataloğu yüzeysel kombinasyonları temizlenerek 2.181 tekrarsız kayda indirildi; v63 caster paketi, 36 class-özel v64 ekipmanı ve 27 tekil v65 emaneti korunur.
