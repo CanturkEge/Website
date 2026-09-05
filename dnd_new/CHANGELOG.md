@@ -1,5 +1,13 @@
 # Kadim Masa Defteri — Kurulum
 
+## v72 — Ayarlanabilir Savaş Masası
+
+- Ürün sürümü **3.3.0**, teknik paket **Build 72** oldu.
+- DM yaratık paleti ile seçili token/obje detayları soldaki tek kaydırılabilir yönetim rayında üst üste gösterilir.
+- Savaş tahtası sağdaki kullanılabilir genişliği doldurur; tarayıcı büyüdükçe kareler, tokenlar, objeler ve sis birlikte ölçeklenir.
+- Yerel `− / %100 / +` zoom kontrolleri kampanya verisini değiştirmeden görünümü ayarlar.
+- Dar ekranlarda tahta önce, DM rayı sonra gösterilir; mevcut Supabase state, realtime ve oyuncu hareket yetkileri korunur.
+
 ## v71 — Merkezi UI / Realtime State Senkronizasyonu
 
 - Input, textarea, select, checkbox ve contenteditable taslakları için ortak dirty/active-editing takibi eklendi.
