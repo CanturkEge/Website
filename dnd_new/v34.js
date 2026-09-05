@@ -110,7 +110,7 @@ exItemCard=function(item){
   let kind=item.service?'Hizmet':item.mount?'Binek':item.effect||'Eşya';
   let buyLabel=item.service?'Hizmeti Al':item.mount?'Bineği Satın Al':'Satın Al';
   let stockLabel=item.service?'Kapasite':'Stok';
-  return `<details class="shop-item ${item.active===false?'disabled':''}" data-v34-market-card="${esc(v34Fold(`${item.name} ${item.note} ${item.effect}`))}"><summary><div class="v27-compact-head"><b>${esc(item.name)}</b><span class="tier">T${item.tier}</span></div><small>${esc(EX_SHOPS[item.shop]||item.shop)} • ${esc(kind)}</small><div class="between row"><div>${exMoney(price)}</div><b>${stockLabel} ${item.stock}</b></div></summary><div class="v27-shop-body"><p>${esc(item.note||'Açıklama yok.')}</p>${item.service?'<p class="v34-delivery-note">Satın alınınca karakter envanterine hizmet kaydı düşer; DM hizmet uygulanınca kaydı silebilir.</p>':''}${current.role==='dm'?`<div class="shop-admin"><button data-v25-market-give="${item.id}" class="primary">${item.service?'Hizmet Tanımla':'Oyuncuya Ver'}</button><button data-item-toggle="${item.id}" class="ghost">${item.active===false?'Göster':'Gizle'}</button><button data-item-price="${item.id}" class="ghost">Fiyat</button><button data-item-stock="${item.id}" class="ghost">${stockLabel}</button>${item.custom?`<button data-item-delete="${item.id}" class="danger">Sil</button>`:''}</div>`:`<button data-buy-item="${item.id}" class="primary buy-button" ${canBuy?'':'disabled'}>${item.stock>0?buyLabel:'Tükendi'}</button>`}</div></details>`;
+  return `<details class="shop-item ${item.active===false?'disabled':''}" data-entity-id="${esc(item.id)}" data-v34-market-card="${esc(v34Fold(`${item.name} ${item.note} ${item.effect}`))}"><summary><div class="v27-compact-head"><b>${esc(item.name)}</b><span class="tier">T${item.tier}</span></div><small>${esc(EX_SHOPS[item.shop]||item.shop)} • ${esc(kind)}</small><div class="between row"><div>${exMoney(price)}</div><b>${stockLabel} ${item.stock}</b></div></summary><div class="v27-shop-body"><p>${esc(item.note||'Açıklama yok.')}</p>${item.service?'<p class="v34-delivery-note">Satın alınınca karakter envanterine hizmet kaydı düşer; DM hizmet uygulanınca kaydı silebilir.</p>':''}${current.role==='dm'?`<div class="shop-admin"><button data-v25-market-give="${item.id}" class="primary">${item.service?'Hizmet Tanımla':'Oyuncuya Ver'}</button><button data-item-toggle="${item.id}" class="ghost">${item.active===false?'Göster':'Gizle'}</button><button data-item-price="${item.id}" class="ghost">Fiyat</button><button data-item-stock="${item.id}" class="ghost">${stockLabel}</button>${item.custom?`<button data-item-delete="${item.id}" class="danger">Sil</button>`:''}</div>`:`<button data-buy-item="${item.id}" class="primary buy-button" ${canBuy?'':'disabled'}>${item.stock>0?buyLabel:'Tükendi'}</button>`}</div></details>`;
 };
 
 function v34MarketGridHtml(){
@@ -162,11 +162,11 @@ dmPages.guide=v26Guide;
 playerPages.guide=v26Guide;
 
 function v34RefreshMarketGrid(){
-  let grid=$('#v34MarketGrid');if(grid)grid.innerHTML=v34MarketGridHtml();
+  let grid=$('#v34MarketGrid');if(grid){let update=()=>grid.innerHTML=v34MarketGridHtml();window.kadimUiState?.safeUpdate(grid,update)??update()}
   let count=$('#v34MarketCount');if(count)count.textContent=`${v34VisibleMarketItems().length} sonuç`;
 }
 function v34RefreshQuestList(){
-  let body=$('#v34QuestBody');if(body)body.innerHTML=v34QuestCards();
+  let body=$('#v34QuestBody');if(body){let update=()=>body.innerHTML=v34QuestCards();window.kadimUiState?.safeUpdate(body,update)??update()}
   let count=$('#v34QuestCount');if(count)count.textContent=`${v34QuestRows().length}/50`;
 }
 

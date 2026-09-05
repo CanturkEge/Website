@@ -279,10 +279,16 @@ async function v38MovePlayerToken(token,point,b=v38EnsureBattle(false)){
   if(!auth?.sessionToken)return toast('Güvenli hareket için çıkış yapıp yeniden giriş yap',true);
   let move=v38MoveAssessment(token,point,b);if(move.blocked)return toast('Bu karede geçilemez bir obje var',true);if(move.nextMoved>token.speed)return toast(`Bu tur yalnız ${Math.max(0,token.speed-(+token.movedFeet||0))} ft hareketin kaldı`,true);
   v38PlayerMovePending=true;toast('Hareket doğrulanıyor…');
-  let data,error;try{({data,error}=await db.rpc('battle_token_move_v60',{p_session_token:auth.sessionToken,p_campaign:current.id,p_token_id:token.id,p_x:move.x,p_y:move.y}))}catch(failure){v38PlayerMovePending=false;return toast('Hareket isteği gönderilemedi: '+failure.message,true)}v38PlayerMovePending=false;
-  if(error)return toast('Hareket reddedildi: '+error.message,true);
+  let previous={x:token.x,y:token.y,movedFeet:token.movedFeet},data;
+  try{
+    data=await window.kadimUiState.optimistic(`battle-token:${token.id}`,{
+      apply(){token.x=move.x;token.y=move.y;token.movedFeet=move.nextMoved;v38SelectedTokenId=token.id;render();return ()=>{Object.assign(token,previous);render()}},
+      async commit(){let result=await db.rpc('battle_token_move_v60',{p_session_token:auth.sessionToken,p_campaign:current.id,p_token_id:token.id,p_x:move.x,p_y:move.y});if(result.error)throw result.error;return result.data}
+    });
+  }catch(failure){v38PlayerMovePending=false;return toast('Hareket reddedildi: '+failure.message,true)}
+  v38PlayerMovePending=false;
   token.x=+data.x;token.y=+data.y;token.movedFeet=+data.movedFeet;v38SelectedTokenId=token.id;
-  if(realtimeChannel&&realtimeCampaignId===current.id)try{await realtimeChannel.send({type:'broadcast',event:'campaign-changed',payload:{campaignId:current.id,at:Date.now()}})}catch(failure){console.warn('Battle movement broadcast failed',failure)}
+  if(realtimeChannel&&realtimeCampaignId===current.id)try{await realtimeChannel.send({type:'broadcast',event:'campaign-changed',payload:window.kadimUiState?.realtimePayload({campaignId:current.id})||{campaignId:current.id,at:Date.now()}})}catch(failure){console.warn('Battle movement broadcast failed',failure)}
   await syncFromServer(false);render();toast(`${data.remaining} ft hareket kaldı`);
 }
 

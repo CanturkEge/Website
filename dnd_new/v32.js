@@ -218,7 +218,7 @@ function v32MapPointFromEvent(event,canvas){
 }
 
 function v32BroadcastCampaign(){
-  if(realtimeChannel&&realtimeCampaignId===current?.id)return realtimeChannel.send({type:'broadcast',event:'campaign-changed',payload:{campaignId:current.id,at:Date.now()}});
+  if(realtimeChannel&&realtimeCampaignId===current?.id)return realtimeChannel.send({type:'broadcast',event:'campaign-changed',payload:window.kadimUiState?.realtimePayload({campaignId:current.id})||{campaignId:current.id,at:Date.now()}});
 }
 
 async function v32LoadGuildActivity(force=false){
@@ -227,14 +227,14 @@ async function v32LoadGuildActivity(force=false){
   let member=current.role==='dm'||!!guild?.members?.includes(auth.id);
   if(!guild||!member){v32GuildActivity=[];v32GuildActivityCampaign=current.id;v32GuildActivityError='';return}
   v32GuildActivityLoading=true;
-  let campaignId=current.id;
+  let campaignId=current.id,before=JSON.stringify([v32GuildActivity,v32GuildActivityCampaign,v32GuildActivityError]);
   let {data,error}=await db.rpc('guild_activity_list_v32',{p_user:auth.id,p_campaign:campaignId});
   v32GuildActivityLoading=false;
   if(current?.id!==campaignId)return;
   v32GuildActivityCampaign=campaignId;
   v32GuildActivityError=error?error.message:'';
   v32GuildActivity=error?[]:(data||[]);
-  if(page==='guild'||page==='guilddm')render();
+  if(before!==JSON.stringify([v32GuildActivity,v32GuildActivityCampaign,v32GuildActivityError])&&(page==='guild'||page==='guilddm'))render();
 }
 
 function v32ActivityDate(value){

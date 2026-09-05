@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.2.4',build:'Build 71',title:'Kesintisiz Realtime Arayüzü',tag:'ALTYAPI',tone:'current',
+    summary:'Supabase yenilemeleri artık kullanıcının yazdığı taslağı, açık panelleri ve seçili kontrolleri sıfırlamıyor.',
+    added:['Input, textarea, select, checkbox ve contenteditable için merkezi dirty/active-editing koruması.','Realtime deduplication, subscription cleanup ve optimistic rollback API’si.'],
+    fixed:['Alakasız campaign değişikliklerinin bütün aktif sayfayı yeniden kurması engellendi.','Açık details, modal, sekme, focus ve scroll durumunun yenilemede kaybolması giderildi.'],
+    changed:['Eski sayfa bazlı focus/details/scroll yamaları ortak UI state manager ile değiştirildi.','Build 70 market, cüzdan, odak ve NPC aktarım davranışları korunarak güncel main üzerine taşındı.','SQL veya Supabase schema değişikliği yoktur.']
+  },
+  {
     version:'3.2.3',build:'Build 70',title:'Market Taslak ve Geçmiş Hotfix',tag:'HOTFIX',tone:'current',
     summary:'Otomatik yenilemenin pazarlık alanlarını sıfırlaması giderildi; market bildirimleri kapatıldı ve iki role de geçmiş temizleme eklendi.',
     added:['Oyuncu, tamamlanmış/reddedilmiş/iptal edilmiş yalnız kendi market geçmişini temizleyebilir.','DM, kampanyadaki tüm kapanmış market tekliflerini tek onayla temizlemeye devam eder.'],
@@ -807,7 +814,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.2.3'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.2.4'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -815,8 +822,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.2.3 • Build 70</h2><p>Kaybolmayan market taslakları, sessiz pazarlık ve iki taraflı geçmiş temizleme.</p></div>
-      <div class="v37-patch-stats"><span><b>46</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.2.4 • Build 71</h2><p>Güncel market akışıyla uyumlu realtime yenilemelerinde taslak ve açık arayüz durumu korunuyor.</p></div>
+      <div class="v37-patch-stats"><span><b>47</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -825,7 +832,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1.0–v3.2.3 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
+    <p class="v37-version-note">v0.1.0–v3.2.4 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

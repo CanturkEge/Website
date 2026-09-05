@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v71 — Merkezi UI / Realtime State Senkronizasyonu
+
+- Input, textarea, select, checkbox ve contenteditable taslakları için ortak dirty/active-editing takibi eklendi.
+- Realtime ve polling kaynaklı render'larda focus, seçim, açık details/modal/sekme ve scroll state'i ortak snapshot/restore katmanıyla korunur.
+- Campaign state değişiklikleri sayfa bağımlılıklarına göre filtrelenir; alakasız root değişiklikleri mevcut görünümü yeniden kurmaz.
+- Realtime event kimliği/deduplication ve tekil campaign subscription cleanup ortak yönetime taşındı.
+- Taktik savaş oyuncu hareketi optimistic uygulanır; RPC reddinde güvenli biçimde geri alınır.
+- Eski `v27` details/scroll ve `v25` focus-bekletme yamaları kaldırıldı.
+- Uygulama güncel Build 70 market, cüzdan, odak ve NPC aktarım davranışları korunarak yeniden bazlandı.
+
+SQL veya Supabase schema değişikliği yoktur. Mevcut `v31` üç yönlü server-state birleştirmesi ve Build 70 market akışı korunur.
+
 ## v70 — Market Taslak ve Geçmiş Hotfix
 
 - Ürün sürümü **3.2.3**, teknik paket **Build 70** oldu.

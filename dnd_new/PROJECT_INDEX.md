@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v70 / uygulama v3.2.3 / Build 70**
+Güncel sürüm: **v71 / uygulama v3.2.4 / Build 71**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -33,7 +33,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 
 | Sistem | Ana dosyalar | Doğrudan bağımlılıklar |
 |---|---|---|
-| Başlangıç, hesap, kampanya state'i, ana sayfalar | `index.html`, `config.js`, `app.js` | Supabase JS, sürüm scriptleri |
+| Başlangıç, hesap, kampanya state'i, ana sayfalar | `index.html`, `config.js`, `app.js` | `ui-state-manager.js`, `UI_STATE.md`, Supabase JS, sürüm scriptleri |
 | Temel market/dükkân/dünya genişletmesi | `expansion.js`, `expansion.css` | `app.js` |
 | Karakter gelişimi, temel class/species/stat/spell akışı | `progression.js`, `progression.css` | `app.js` |
 | Admin | `admin.js`, `admin.css`, `admin-update.sql` | kampanya RPC'leri |

@@ -6,9 +6,9 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Güncel sürüm: **3.2.3 / v70 / Build 70**
+- Güncel sürüm: **3.2.4 / v71 / Build 71**
 - Giriş noktası: `index.html`
-- İlk yüklenen çekirdek: `config.js`, ardından `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
+- İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
 - Veri katmanı: Supabase RPC + kampanya JSON state'i
 - Ana kayıt güvenliği: `v31.js` ve `v31-update.sql` birleştirme hattı
@@ -45,6 +45,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - NPC'ye eşya aktarımı, aktif `v46` envanter kartının işlem alanına doğrudan bağlanır; eski renderer sırası düğmeyi artık gizlemez.
 - Oyuncu büyü paneli kuşanılmış odağı ve hazırlanmış büyülerin özel materyal gereksinimlerini gösterir.
 - Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
+- `ui-state-manager.js`, Supabase yenilemeleri sırasında dirty/aktif alanları, açık details/modal/sekme durumunu ve scroll konumunu korur; sayfa bağımlılıkları alakasız server-state değişikliklerinde full render'ı engeller.
 
 ## Korunması gereken sözleşmeler
 

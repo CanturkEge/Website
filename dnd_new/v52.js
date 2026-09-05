@@ -206,7 +206,7 @@
       button.disabled=true;button.textContent='Kutsal bağ kaydediliyor…';
       const {error}=await db.rpc('character_choices_set_v52',{p_user:auth.id,p_campaign:current.id,p_subclass:domain,p_subspecies:character.subspecies||'',p_spells:Array.isArray(character.preparedSpells)?character.preparedSpells:[],p_deity_id:deityId});
       if(error){button.disabled=false;button.textContent='Kutsal Bağı Kaydet';return alert('v52-update.sql dosyasını Supabase SQL Editor’da bir kez çalıştır:\n'+error.message)}
-      await syncFromServer(true);render();toast('Tanrı ve domain seçimi mühürlendi');return;
+      window.kadimUiState?.clearWithin($('#view'));await syncFromServer(true);toast('Tanrı ve domain seçimi mühürlendi');return;
     }
     if(button.dataset.v52DeityOpen){
       page='deities';render();setTimeout(()=>{const safe=globalThis.CSS?.escape?CSS.escape(button.dataset.v52DeityOpen):button.dataset.v52DeityOpen.replace(/[^a-z0-9_-]/gi,''),card=document.querySelector(`#v49-deity-${safe}`);if(card){card.open=true;card.scrollIntoView?.({behavior:'smooth',block:'start'})}},0);return;

@@ -119,6 +119,7 @@ async function v31Commit(job){
   v31BaselineCampaign=job.campaignId;
   v31SaveFailed=false;
   v31RetryDelay=2500;
+  window.kadimUiState?.finishCommit(job.uiCommit);
   if(current?.id===job.campaignId){
     let before=JSON.stringify(state);
     state=normalized(v31Merge(base,state,merged));
@@ -126,10 +127,9 @@ async function v31Commit(job){
     if(typeof prEnsure==='function')prEnsure();
     let hasDerivedChanges=!v31Equal(state,merged);
     if(v31PendingSave?.campaignId===job.campaignId)v31PendingSave.snapshot=v31Clone(state);
-    let active=document.activeElement,draft=active&&/^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)&&!active.disabled;
-    if(!draft&&JSON.stringify(state)!==before&&page!=='guide')render();
+    if(JSON.stringify(state)!==before&&page!=='guide')render();
     toast('Buluta kaydedildi');
-    if(realtimeChannel&&realtimeCampaignId===job.campaignId)await realtimeChannel.send({type:'broadcast',event:'campaign-changed',payload:{campaignId:job.campaignId,at:Date.now()}});
+    if(realtimeChannel&&realtimeCampaignId===job.campaignId)await realtimeChannel.send({type:'broadcast',event:'campaign-changed',payload:window.kadimUiState?.realtimePayload({campaignId:job.campaignId})||{campaignId:job.campaignId,at:Date.now()}});
     if(hasDerivedChanges&&!v31PendingSave&&current.role==='dm')save();
   }
   return true;
@@ -142,7 +142,7 @@ function v31QueuePending(){
   v31SaveChain=v31SaveChain.then(async()=>{v31SaveActive=true;try{return await v31Commit(job)}finally{v31SaveActive=false}}).catch(error=>{
     v31SaveFailed=true;
     if(current?.id===job.campaignId&&current.role==='dm'){
-      v31PendingSave={campaignId:job.campaignId,revision:v31Revision,snapshot:v31Clone(state),base:v31Clone(v31Baseline||job.base||{})};
+      v31PendingSave={campaignId:job.campaignId,revision:v31Revision,snapshot:v31Clone(state),base:v31Clone(v31Baseline||job.base||{}),uiCommit:window.kadimUiState?.beginCommit($('#view'))};
       clearTimeout(saveTimer);
       saveTimer=setTimeout(v31QueuePending,v31RetryDelay);
       v31RetryDelay=Math.min(30000,v31RetryDelay*2);
@@ -173,7 +173,7 @@ save=function(){
   if(!current||current.role!=='dm')return Promise.resolve(false);
   v31NormalizeIds(state);
   v31Revision++;
-  v31PendingSave={campaignId:current.id,revision:v31Revision,snapshot:v31Clone(state),base:v31Clone(v31Baseline||state)};
+  v31PendingSave={campaignId:current.id,revision:v31Revision,snapshot:v31Clone(state),base:v31Clone(v31Baseline||state),uiCommit:window.kadimUiState?.beginCommit($('#view'))};
   v31SaveFailed=false;
   clearTimeout(saveTimer);
   saveTimer=setTimeout(v31QueuePending,350);
@@ -199,8 +199,6 @@ function v31ResetCampaignCaches(){
   if(typeof v27MonsterCategory!=='undefined')v27MonsterCategory='all';
   if(typeof v27MonsterCr!=='undefined')v27MonsterCr='all';
   if(typeof v27MonsterQuery!=='undefined')v27MonsterQuery='';
-  if(typeof v271OpenDetails!=='undefined')v271OpenDetails.clear();
-  if(typeof v271ScrollState!=='undefined')v271ScrollState.clear();
   window.kadimSyncQueued=false;
 }
 
@@ -220,9 +218,6 @@ function v31AdoptLoadedCampaign(){
 const v31RenderBase=render;
 render=function(){
   if(current&&v31BaselineCampaign!==current.id){
-    if(typeof v271OpenDetails!=='undefined')v271OpenDetails.clear();
-    if(typeof v271ScrollState!=='undefined')v271ScrollState.clear();
-    if(typeof v271RenderedPage!=='undefined')v271RenderedPage='__campaign_switch__';
     let oldView=$('#view');if(oldView)oldView.innerHTML='';
     v31AdoptLoadedCampaign();
   }
@@ -241,9 +236,8 @@ loadCampaign=async function(id){
 const v31SyncBase=syncFromServer;
 syncFromServer=async function(showStatus=false){
   if(document.hidden&&!showStatus)return;
-  if(syncLoading||!current)return;
-  let active=document.activeElement,draft=active&&/^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)&&!active.disabled;
-  if(draft)return v31SyncBase(showStatus);
+  if(!current)return;
+  if(syncLoading){window.kadimSyncQueued=true;return}
   if(current.role==='dm'&&!(await flushSave()))return toast('Bulut eşitleme bekletildi; yerel kayıt korunuyor',true);
   let campaignId=current.id;
   await v31SyncBase(showStatus);

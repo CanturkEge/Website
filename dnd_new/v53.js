@@ -343,7 +343,7 @@
     const options=prSpellOptions(character),selected=[...document.querySelectorAll('[data-pr-spell]:checked')].map(input=>options.find(row=>row.id===input.dataset.prSpell)).filter(Boolean);if(!v53ValidateSpellSelection(character,selected,true))return;
     const newSubclass=character.subclass||$('#prPlayerSubclass')?.value||'',unlock=prSubclassLevel(character.className);if(character.level>=unlock&&!character.subclass&&!newSubclass&&character.className!=='Cleric')return alert('Önce subclass seç. Bu seçim kaydedilince kilitlenecek.');
     const spells=selected.map(row=>({id:row.id,name:row.name,nameTr:row.nameTr,spellLevel:row.spellLevel,note:row.note}));button.disabled=true;button.textContent='Büyü ve seçimler kaydediliyor…';
-    const {error}=await db.rpc('character_choices_set',{p_user:auth.id,p_campaign:current.id,p_subclass:newSubclass,p_subspecies:character.subspecies||'',p_spells:spells});if(error){button.disabled=false;button.textContent='Seçimlerimi Kaydet';return alert(error.message)}await syncFromServer(true);render();toast('Cantrip, büyü ve subclass seçimleri kaydedildi');
+    const {error}=await db.rpc('character_choices_set',{p_user:auth.id,p_campaign:current.id,p_subclass:newSubclass,p_subspecies:character.subspecies||'',p_spells:spells});if(error){button.disabled=false;button.textContent='Seçimlerimi Kaydet';return alert(error.message)}window.kadimUiState?.clearWithin($('#view'));await syncFromServer(true);toast('Cantrip, büyü ve subclass seçimleri kaydedildi');
   },true);
 
   window.v53SpeciesBonus=v53SpeciesBonus;
