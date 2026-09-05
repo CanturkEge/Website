@@ -1,16 +1,5 @@
 # Kadim Masa Defteri — Kurulum
 
-## v73 — Tam Genişlik DM Savaş Masası
-
-- Ürün sürümü **3.3.1**, teknik paket **Build 73** oldu.
-- Savaş tahtasını daraltan iç içe `main` yerleşimi kaldırıldı; tahta boşluk bırakmadan panel genişliğini doldurur, kare oranını korur ve laptopta tam genişlikli responsive düzen kullanır.
-- DM savaşçı listesi, hızlı yaratık ekleme/silme, odak kaybetmeyen arama ve daha büyük tıklama alanları eklendi.
-- Token taşıma fare ve dokunmatik için pointer tabanlıdır; tahta dışına bırakma hareketi iptal eder. Seçili ve sürüklenen token daha belirgindir.
-- Zoom yerel arayüz tercihidir; kampanya state'ini veya diğer kullanıcıların görünümünü değiştirmez.
-- Oyuncu yalnız kendi tokenını sıra şeridinden seçebilir; DM paleti, inspector ve harita yönetim araçları oyuncu çıktısında bulunmaz.
-- Seçilen savaşçının can, sıra, koordinat, hız, görüş, görünüm ve saldırı araçları geniş ve başlıklı bir detay panelinde birlikte gösterilir.
-- `battle_token_move_v60`, Supabase Realtime/Broadcast, encounter state'i ve `v31` kayıt/birleştirme hattı korunur. Yeni SQL veya schema değişikliği yoktur.
-
 ## v71 — Merkezi UI / Realtime State Senkronizasyonu
 
 - Input, textarea, select, checkbox ve contenteditable taslakları için ortak dirty/active-editing takibi eklendi.
