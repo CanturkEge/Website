@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v72 / uygulama v3.3.0 / Build 72**
+Güncel sürüm: **v73 / uygulama v3.4.0 / Build 73**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -28,6 +28,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Veritabanı sağlık kontrolü | `health-check-v56.sql`, `v56-update.sql` | `v53-update.sql` |
 | Admin girişi ve kampanya yönetimi | `admin.js`, `admin-update.sql` | `supabase/functions/kadim-admin/index.ts` |
 | Sürüm notları | `CHANGELOG.md`, `v37.js` | `config.js`, `PROJECT_STATE.md` |
+| Başarımlar / hatıralar | `v73.js`, `v73.css` | `v73-update.sql`, `config.js` |
 
 ## Çekirdek
 
@@ -70,6 +71,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | 200 görevlik görev panosu | `v50-data.js`, `v50.js`, `v50.css` |
 | Karma, adalet, alignment ve ilahi düzen | `v44.js`, `v51-data.js`, `v51.js` |
 | Sürüm notları | `v37.js`, `v37.css` |
+| Başarımlar ve oyuncu hatıraları | `v73.js`, `v73.css`, `v73-update.sql` |
 
 ## SQL sırası ve veri güvenliği
 
@@ -78,6 +80,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 - Oyuncu savaş hareketi `battle_token_move_v60` ile sunucuda oturum, sahiplik, sıra, engel ve hız açısından doğrulanır.
 - Oyuncunun kendi parasını yok etmesi `wallet_discard_v61` ile oturum, üyelik, bakiye ve satır kilidi kullanılarak doğrulanır.
 - Çok turlu market pazarlığı, son fiyat kilidi ve DM işlem logu `v69-update.sql`; sessiz pazarlık bildirimi ile iki taraflı kapalı geçmiş temizliği `v70-update.sql` içindedir.
+- Oyuncuya özel, mekanik etkisiz başarımlar `campaign_achievements_v73` tablosunda; token doğrulamalı liste/verme/geri alma akışı `v73-update.sql` içindedir.
 - `v31-update.sql` kampanya JSON birleştirme hattının esas güvenli kayıt katmanıdır; lokal özellik değişikliklerinde sebepsiz değiştirilmemelidir.
 - Yeni sürüm eklerken `config.js`, `index.html`, `README.md`, gerekirse `guide-v26.txt` ve `v37.js` sürüm numarası birlikte kontrol edilir.
 

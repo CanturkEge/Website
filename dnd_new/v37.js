@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.4.0',build:'Build 73',title:'Başarımlar ve Hatıra Arşivi',tag:'HATIRA',tone:'current',
+    summary:'DM, seçtiği oyunculara oyuna mekanik etkisi olmayan kalıcı başarımlar verebilir; oyuncular kendi macera hatıralarını ayrı sayfada görür.',
+    added:['DM ve oyuncu menülerine ayrı Başarımlar sayfası.','Başarım adı, açıklaması ve bir veya birden fazla oyuncu seçimi.','Tarih, veren DM ve alıcılarla süslenen kalıcı hatıra kartları.'],
+    fixed:[],
+    changed:['Başarımlar karakter istatistiklerini, zarları veya diğer oyun sistemlerini etkilemez.','Oyuncu yalnız kendi başarımlarını görür; DM kampanyadaki tüm arşivi görür ve hatalı kaydı geri alabilir.','Mevcut kampanya state’i ve hesaplar değiştirilmeden ayrı, RLS korumalı Supabase tablosunda saklanır.']
+  },
+  {
     version:'3.3.0',build:'Build 72',title:'Ayarlanabilir Savaş Masası',tag:'SAVAŞ',tone:'current',
     summary:'Savaş alanı kullanılabilir genişliği dolduruyor; DM paleti ve detaylar soldaki kaydırılabilir yönetim rayında birleşiyor.',
     added:['Savaş alanına cihaz yerel yakınlaştırma ve uzaklaştırma kontrolleri.','Solda yaratık paleti altında seçili token veya obje detay paneli.'],
@@ -821,7 +828,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.3.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.4.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -829,8 +836,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.3.0 • Build 72</h2><p>Büyüyen savaş tahtası ve solda birleşen kaydırılabilir DM yönetim paneli.</p></div>
-      <div class="v37-patch-stats"><span><b>47</b>Sürüm</span><span><b>19</b>Yeni Eşya</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.4.0 • Build 73</h2><p>Oyuna etkisi olmayan, oyuncuya özel kalıcı Başarımlar ve Hatıra Arşivi.</p></div>
+      <div class="v37-patch-stats"><span><b>48</b>Sürüm</span><span><b>Hatıra</b>Başarımlar</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -839,7 +846,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1.0–v3.3.0 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
+    <p class="v37-version-note">v0.1.0–v3.4.0 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

@@ -1,5 +1,15 @@
 # Kadim Masa Defteri — Kurulum
 
+## v73 — Başarımlar ve Hatıra Arşivi
+
+- Ürün sürümü **3.4.0**, teknik paket **Build 73** oldu.
+- DM, başarım adı ve açıklaması yazarak kampanyadaki bir veya birden fazla oyuncuya aynı anda başarım verebilir.
+- DM kampanyadaki bütün hatıraları; oyuncu yalnız kendi başarımlarını görür.
+- Hatıra kartlarında tarih, veren DM ve ilgili oyuncular gösterilir; hatalı bir kayıt DM tarafından geri alınabilir.
+- Başarımlar oyuna mekanik bonus vermez ve mevcut karakter/kampanya state’ini değiştirmez.
+
+Kurulumda `v73-update.sql` dosyasını Supabase'te bir kez çalıştır. Migration ayrı, RLS korumalı başarım tablosu ile token doğrulamalı liste/verme/geri alma RPC’lerini ekler; mevcut hesap, kampanya, karakter, envanter ve geçmiş kayıtları korunur.
+
 ## v72 — Ayarlanabilir Savaş Masası
 
 - Ürün sürümü **3.3.0**, teknik paket **Build 72** oldu.

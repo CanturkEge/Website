@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-09-05**
+Son doğrulama: **2026-09-06**
 Referans branch: `main`  
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Güncel sürüm: **3.3.0 / v72 / Build 72**
+- Güncel sürüm: **3.4.0 / v73 / Build 73**
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -47,6 +47,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Oyuncu büyü paneli kuşanılmış odağı ve hazırlanmış büyülerin özel materyal gereksinimlerini gösterir.
 - Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
 - `ui-state-manager.js`, Supabase yenilemeleri sırasında dirty/aktif alanları, açık details/modal/sekme durumunu ve scroll konumunu korur; sayfa bağımlılıkları alakasız server-state değişikliklerinde full render'ı engeller.
+- `v73.js`, DM’in bir veya birden fazla oyuncuya verdiği mekanik etkisiz başarımları ayrı Hatıra Arşivi sayfasında gösterir. `v73-update.sql`, oyuncunun yalnız kendi kayıtlarını görebildiği token doğrulamalı RPC’leri ve RLS korumalı ayrı tabloyu sağlar.
 
 ## Korunması gereken sözleşmeler
 
