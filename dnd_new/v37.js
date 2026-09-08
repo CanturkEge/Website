@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.5.0',build:'Build 74',title:'Savaş Araçları ve Macera Defteri',tag:'MACERA',tone:'current',
+    summary:'Savaş ekranından büyü kullanımı, süreli etkiler ve konsantrasyon; DM zar istekleri, seçili oyunculara belgeler, topluluk itibarı ve dinlenme faaliyetleri.',
+    added:['Oyuncu savaş ekranında Harita & hareket / Büyüler & sınıf sekmeleri; büyü arama, seviye ve seçili/katalog filtreleri.','13 sınıf için kaynak/özellik görünümü; hazırlanmış, öğrenilmiş ve otomatik domain büyülerini hedef ve slot seçerek kullanma.','Süreli etkiler, tek konsantrasyon, HP kaybında CON atışı ve kaynak sırasıyla ilerleyen süre.','DM’den seçilen karakterlere normal/avantajlı/dezavantajlı atış isteği; yalnız DM’ye sonuç seçeneği.','Mektup, kitap, harita ve ipuçlarını taslak tutma veya seçilen oyunculara yayınlama.','Grup ve kişisel topluluk itibarı; gerekçeli değişim geçmişi ve gizli DM notları.','Üretim, araştırma, eğitim ve çalışma faaliyetleri; DM onayı, gün ilerletme, atomik maliyet/malzeme tüketimi ve ödül teslimi.'],
+    fixed:['Artificer 1. seviye slotları ortak kurala bağlandı.','Mobil menünün savaş paleti ve token detay paneliyle üst üste binmesi giderildi.','Tekrar gönderilen kullanım veya teslim isteği iki kez slot, para ya da eşya harcamaz.','Belge ve atış verileri hesap/kampanya değişiminde temizlenir; form taslakları arka plan yenilemelerinde korunur.'],
+    changed:['DM slot tablosu, oyuncu savaş araçları ve dinlenme aynı slot alanını paylaşır; Warlock pact ve Mystic Arcanum ayrıdır.','Hasar/şifa, isabet, aksiyon ekonomisi ve pahalı bileşen tüketimi DM tarafından çözümlenir; kullanım kaydı bunları kendiliğinden uygulamaz.','Yeni ekranlar telefon için tek sütun, okunur alanlar ve geniş dokunma hedefleri kullanır.','Yeni RPC ve tetikleyiciler v74-update.sql içindedir. Hesap, karakter ve mevcut envanter kimlikleri korunur.']
+  },
+  {
     version:'3.4.0',build:'Build 73',title:'Başarımlar ve Hatıra Arşivi',tag:'HATIRA',tone:'current',
     summary:'DM, seçtiği oyunculara oyuna mekanik etkisi olmayan kalıcı başarımlar verebilir; oyuncular kendi macera hatıralarını ayrı sayfada görür.',
     added:['DM ve oyuncu menülerine ayrı Başarımlar sayfası.','Başarım adı, açıklaması ve bir veya birden fazla oyuncu seçimi.','Tarih, veren DM ve alıcılarla süslenen kalıcı hatıra kartları.'],
@@ -828,7 +835,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.4.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.5.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -836,8 +843,8 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.4.0 • Build 73</h2><p>Oyuna etkisi olmayan, oyuncuya özel kalıcı Başarımlar ve Hatıra Arşivi.</p></div>
-      <div class="v37-patch-stats"><span><b>48</b>Sürüm</span><span><b>Hatıra</b>Başarımlar</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.5.0 • Build 74</h2><p>Savaşta büyü kullanımı, etkiler, atış istekleri ve macera boyunca tutulan belgeler, ilişkiler, faaliyetler.</p></div>
+      <div class="v37-patch-stats"><span><b>${V37_PATCH_NOTES.length}</b>Sürüm</span><span><b>Hatıra</b>Başarımlar</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
       <input id="v37PatchSearch" class="input" value="${esc(v37PatchQuery)}" placeholder="Sürüm veya özellik ara…">
@@ -846,7 +853,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1.0–v3.4.0 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
+    <p class="v37-version-note">v0.1.0–v3.5.0 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

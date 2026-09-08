@@ -200,11 +200,11 @@
 
   const v51NavGroups=[
     {id:'characters',icon:'♙',label:'Karakter & Parti',pages:['dashboard','party','partyview','inventory','skills']},
-    {id:'adventure',icon:'⚔',label:'Macera & Savaş',pages:['questboard','map','encounter','encounterview','dice']},
-    {id:'economy',icon:'◇',label:'Lonca & Ekonomi',pages:['guilddm','guild','treasury','market','lootgen']},
+    {id:'adventure',icon:'⚔',label:'Macera & Savaş',pages:['questboard','map','encounter','encounterview','dice','factions']},
+    {id:'economy',icon:'◇',label:'Lonca & Ekonomi',pages:['guilddm','guild','treasury','market','lootgen','downtime']},
     {id:'world',icon:'✥',label:'Dünya & Kayıtlar',pages:['world','npcs','bestiary','bosses','karma']},
     {id:'social',icon:'✉',label:'Masa İletişimi',pages:['pacts','chat','notifications']},
-    {id:'library',icon:'⌕',label:'Rehber & Arşiv',pages:['guide','spellbook','deities','divineorder','patchnotes']}
+    {id:'library',icon:'⌕',label:'Rehber & Arşiv',pages:['guide','spellbook','deities','divineorder','handouts','achievements','patchnotes']}
   ];
   function v51NavStorageKey(){return `kadim-v51-nav-${current?.id||'none'}-${current?.role||'none'}`}
   function v51ReadOpenGroups(){try{return new Set(JSON.parse(localStorage.getItem(v51NavStorageKey())||'[]'))}catch{return new Set()}}

@@ -1,5 +1,21 @@
 # Kadim Masa Defteri — Kurulum
 
+## v74 — Savaş Araçları ve Macera Defteri
+
+- Ürün sürümü **3.5.0**, teknik paket **Build 74**.
+- Oyuncu savaş ekranı Harita & hareket / Büyüler & sınıf sekmelerine ayrılır. Seçili ve otomatik domain büyüleri hedef/slot seçerek kullanılabilir; sınıf kataloğu, arama ve seviye filtreleri eklenir.
+- 13 sınıfın özellikleri ve sınırlı kaynakları gösterilir. DM slot tablosu ile ortak slot alanı, doğru Artificer 1. seviye slotları, Warlock Pact Magic ve ayrı Mystic Arcanum kullanımı vardır.
+- Süreli etkiler ve tek konsantrasyon takip edilir; kaynak sırası süreyi azaltır, HP/temp HP kaybı CON isteği açar. Başarısız atış, 0 HP ve incapacitating durumlar konsantrasyonu bitirir.
+- DM seçili karakterlerden normal/avantajlı/dezavantajlı atış isteyebilir; sonuç yalnız DM’ye gösterilebilir. Atışlar sunucuda bir kez üretilir.
+- Belgeler sayfasında DM mektup, kitap, ipucu ve HTTPS harita görseli hazırlar; taslak, tüm oyuncular veya seçili alıcılar kullanır. DM notu oyuncuya gönderilmez.
+- Topluluklar sayfasında grup/kişisel itibar, −100…+100 sınırı ve gerekçeli geçmiş bulunur. Oyuncu yalnız kendi ve grup değerini görür.
+- Dinlenme faaliyetleri üretim/araştırma/eğitim/çalışma, maliyet, malzeme ve gün içerir. DM onayı ve gün ilerlemesinden sonra tek atomik işlem bedeli/malzemeyi düşürüp ödülü verir; iptal tüketim yapmaz.
+- Telefon görünümü, yeni menü grupları ve ortak taslak koruma katmanına bağlı formlar eklendi.
+- Ana menü stilleri yalnız uygulama kenar menüsüne sınırlandı; mobilde savaş paleti ve seçili token panelinin menüyü kapatması giderildi.
+- Kullanım kaydı slot/kaynak ve etkiyi işler. İsabet, hasar/şifa, aksiyon ekonomisi ve pahalı bileşen tüketimi DM çözümlemesinde kalır.
+
+`v74-update.sql` veya aynı içerikli CLI migration gerekir. Değişiklik eklemelidir; eski hesap/karakter/eşya ID’leri korunur. Canlı uygulama ve geri dönüş sırası `RELEASE_V74.md` içindedir. Canlı SQL, otomatik onay incelemesinin açık onay istemesi nedeniyle henüz uygulanmadı; bu paket özellik branch’inde doğrulanmıştır.
+
 ## v73 — Başarımlar ve Hatıra Arşivi
 
 - Ürün sürümü **3.4.0**, teknik paket **Build 73** oldu.

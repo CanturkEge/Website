@@ -4,8 +4,8 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **3.4.0**
-- Build/modül sürümü: **v73 / Build 73**
+- Ürün sürümü: **3.5.0**
+- Build/modül sürümü: **v74 / Build 74** (özellik branch’i; canlıya alma için `RELEASE_V74.md`)
 - Son paket: DM tarafından oyunculara verilen, oyuna etkisi olmayan kalıcı Başarımlar ve Hatıra Arşivi
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
@@ -16,7 +16,7 @@ Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevde
 1. `config.js` içindeki Supabase ayarlarının hedef ortamı gösterdiğini doğrula.
 2. Klasörü statik bir web sunucusuyla aç. Dosyayı doğrudan `file://` ile açmak yerine localhost kullan.
 3. Yeni kurulumda `supabase-setup.sql` dosyasını, ardından gereken sürümlü SQL güncellemelerini sırayla çalıştır.
-4. Güncel kurulum için `v53-update.sql`, `v56-update.sql`, `v59-update.sql`, `v60-update.sql`, `v61-update.sql`, `v66-update.sql`, `v67-update.sql`, `v68-update.sql`, `v69-update.sql`, `v70-update.sql`, `v73-update.sql`, `livekit-token` ve `kadim-admin` Edge Function'larını kontrol et.
+4. Güncel kurulum için `v53-update.sql`, `v56-update.sql`, `v59-update.sql`, `v60-update.sql`, `v61-update.sql`, `v66-update.sql`, `v67-update.sql`, `v68-update.sql`, `v69-update.sql`, `v70-update.sql`, `v73-update.sql`, `v74-update.sql`, `livekit-token` ve `kadim-admin` Edge Function'larını kontrol et.
 5. Tarayıcı önbelleği eski dosyaları tutuyorsa `Ctrl + Shift + R` yap.
 
 > SQL dosyalarını tekrar çalıştırmadan önce içeriğini ve hedef Supabase projesini kontrol et. Canlı veriye karşı körlemesine SQL çalıştırma.
@@ -62,3 +62,7 @@ docs(dnd): refresh project state and module index
 - v53 kural kaynakları için [`v53-rules-sources.md`](v53-rules-sources.md)
 
 Bu depo içindeki homebrew içerikler resmî D&D kuralı olarak değerlendirilmemelidir.
+
+## Geliştirme testleri
+
+`npm ci` ardından `npm test` çalıştırılır. SQL testleri PGlite ile izole bellekteki PostgreSQL’de çalışır; gerçek hesap veya kampanyaya bağlanmaz. Tarayıcı denemesi için `npm run dev` yalnız sentetik test masasını açar. Üretimde Node/PGlite gerekmez; site statik kalır.

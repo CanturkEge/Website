@@ -2,7 +2,7 @@ body:not(.landing-mode){display:block!important;width:100%;min-height:100vh}body
 /* Masaüstü: geniş ve sabit kumanda paneli */
 @media (min-width:901px){
   #appShell{display:grid!important;grid-template-columns:280px minmax(0,1fr)!important}
-  aside{width:280px;padding:28px 20px}
+  #appShell>aside{width:280px;padding:28px 20px}
   main{max-width:1500px;width:100%;margin-inline:auto;padding-inline:42px}
   .card{padding:24px}.chargrid{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
   header{height:112px}.catalog{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
@@ -16,10 +16,10 @@ body:not(.landing-mode){display:block!important;width:100%;min-height:100vh}body
   header{position:sticky;top:0;z-index:6;height:70px!important;margin:0 -12px 14px;padding:0 12px;background:#0b0807f2;backdrop-filter:blur(12px);border-bottom:1px solid #9b6b3444}
   header h1{font-size:21px;margin-top:2px}header p{font-size:8px}.header-actions{gap:6px}.header-actions button{padding:10px 12px}
   #menu{display:block!important;font-size:0;width:44px;height:42px;border-radius:8px}#menu:after{content:'☰';font-size:20px}
-  aside{display:flex!important;position:fixed!important;inset:0 auto 0 0;z-index:30;width:min(86vw,320px)!important;height:100dvh!important;max-height:100dvh;overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:20px 16px 28px!important;transform:translateX(-105%);transition:transform .22s ease;box-shadow:16px 0 45px #000c}
-  body.menu aside{transform:translateX(0)!important}
+  #appShell>aside{display:flex!important;position:fixed!important;inset:0 auto 0 0;z-index:30;width:min(86vw,320px)!important;height:100dvh!important;max-height:100dvh;overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:20px 16px 28px!important;transform:translateX(-105%);transition:transform .22s ease;box-shadow:16px 0 45px #000c}
+  body.menu #appShell>aside{transform:translateX(0)!important}
   body.menu:after{content:'';position:fixed;inset:0;z-index:20;background:#0009;backdrop-filter:blur(2px)}
-  aside .logo{flex:0 0 auto;margin-bottom:16px}.campaign{flex:0 0 auto;padding:12px}nav{flex:0 0 auto;margin-top:12px;gap:3px}nav button{min-height:44px;padding:10px 12px;font-size:14px}.sidefoot{position:static!important;flex:0 0 auto;margin-top:18px!important;padding-bottom:18px}
+  #appShell>aside .logo{flex:0 0 auto;margin-bottom:16px}.campaign{flex:0 0 auto;padding:12px}nav{flex:0 0 auto;margin-top:12px;gap:3px}nav button{min-height:44px;padding:10px 12px;font-size:14px}.sidefoot{position:static!important;flex:0 0 auto;margin-top:18px!important;padding-bottom:18px}
   .grid{display:block}.card{margin-bottom:12px;padding:16px;border-radius:8px}.span4,.span6,.span8,.span12{width:100%}
   .row{flex-wrap:wrap}.row>.input{min-width:0;flex:1 1 130px}.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:7px}.toolbar .input{min-width:0;grid-column:1/-1}.toolbar button{width:100%}
   .chargrid,.catalog{grid-template-columns:1fr}.sheet{padding:14px}.sheet .toolbar{grid-template-columns:1fr 1fr}

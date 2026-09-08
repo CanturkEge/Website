@@ -1,0 +1,3 @@
+/* Served only by the local fixture server; never in production config. */
+localStorage.removeItem('kadim-auth');
+window.supabase={createClient:()=>({rpc:async(name,args={})=>{const result=await fetch('/rpc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,args,role:new URLSearchParams(location.search).get('role')||'player'})}).then(r=>r.json());if(name==='tools_action_v74'){let out=document.querySelector('#fixture-result');if(out)out.textContent=result.error?'Hata: '+result.error.message:'Kaydedildi: '+args.p_action;}return result;},channel:()=>{const ch={on:()=>ch,subscribe:()=>ch,send:async()=>{},unsubscribe:()=>{}};return ch;},removeChannel:async()=>{},getChannels:()=>[]})};
