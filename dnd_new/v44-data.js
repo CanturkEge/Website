@@ -92,16 +92,16 @@
     pouch:{label:'Kemer Çantası',icon:'◒',maxSize:'small',allowed:['gem','trinket','accessory','component','document','consumable','scroll','ammunition','tool','junk'],nativeThemes:[],itemMin:0,itemMax:3,moneyOnly:.30,itemOnly:.16,coinScale:.52,rule:'Küçük iksir, parşömen, yüzük, bileşen ve el aleti sığar; gürz, yay veya zırh sığmaz.'},
     alchemySatchel:{label:'Simyacı Çantası',icon:'⚗',maxSize:'small',allowed:['component','consumable','tool','document','gem','junk'],nativeThemes:['alchemy'],itemMin:1,itemMax:5,moneyOnly:.04,itemOnly:.62,coinScale:.25,rule:'Şişe, iksir, reaktif, kömür ve küçük laboratuvar artığı üretir; savaş teçhizatı üretmez.'},
     hunterPack:{label:'Avcı Heybesi',icon:'⌁',maxSize:'medium',allowed:['ammunition','tool','component','consumable','weapon','document','trinket','junk'],nativeThemes:['nature'],itemMin:1,itemMax:5,moneyOnly:.06,itemOnly:.55,coinScale:.32,rule:'Ok, tuzak, bitki, yiyecek ve en fazla 1 orta boy av silahı; ağır zırh çıkmaz.'},
-    lockbox:{label:'Küçük Kilitli Kutu',icon:'▣',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','focus','tool','ammunition','weapon','junk'],nativeThemes:[],itemMin:1,itemMax:4,moneyOnly:.18,itemOnly:.17,coinScale:.85,rule:'Değerli ve orta boy eşyalar; en fazla 1 küçük/orta silah, zırh veya büyük silah yok.'},
-    jewelryBox:{label:'Soylu Mücevher Kutusu',icon:'◇',maxSize:'small',allowed:['gem','trinket','accessory','document','junk'],nativeThemes:['noble'],itemMin:1,itemMax:5,moneyOnly:.12,itemOnly:.22,coinScale:1.1,rule:'Mücevher, mühür, ince belge ve küçük hatıralar; silah, zırh veya iksir yok.'},
-    thiefStash:{label:'Hırsız Zulası',icon:'⌕',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','ammunition','tool','weapon','junk'],nativeThemes:['rogue'],itemMin:1,itemMax:6,moneyOnly:.16,itemOnly:.18,coinScale:1.05,rule:'Çalıntı değerli, alet ve en fazla 1 saklanabilir silah; kalanlar para, taş, belge veya ıvır zıvır olabilir.'},
-    chest:{label:'Macera Sandığı',icon:'▤',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:1,itemMax:6,moneyOnly:.10,itemOnly:.17,coinScale:1,rule:'En fazla 2 silah, 1 zırh ve toplam 3 kuşanılabilir eşya; kalan yuvalar para, taş, malzeme, belge veya ıvır zıvırdan seçilir.'},
-    reinforced:{label:'Büyük Takviyeli Sandık',icon:'▥',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:2,itemMax:9,moneyOnly:.05,itemOnly:.12,coinScale:1.8,rule:'Kalabalık ganimet üretir ama en fazla 2 silah, 1 zırh, 1 kalkan ve toplam 4 kuşanılabilir eşya verir.'},
-    wizardChest:{label:'Büyücü Sandığı',icon:'✦',maxSize:'large',allowed:['focus','scroll','component','consumable','accessory','document','gem','trinket','weapon','armor','junk'],nativeThemes:['arcane'],itemMin:1,itemMax:6,moneyOnly:.04,itemOnly:.50,coinScale:.8,rule:'Parşömen, bileşen ve gizemli artık ağırlıklı; en fazla 1 silah, 1 zırh ve toplam 3 kuşanılabilir eşya.'},
-    warriorCache:{label:'Savaşçı Teçhizat Kasası',icon:'⚔',maxSize:'large',allowed:['weapon','armor','shield','ammunition','tool','consumable','junk'],nativeThemes:['martial'],itemMin:2,itemMax:7,moneyOnly:.02,itemOnly:.72,coinScale:.45,rule:'Savaş ağırlıklıdır ama en fazla 2 silah, 1 zırh ve 1 kalkan; kalanlar mühimmat, bakım aleti, tüketim veya hurda olur.'},
-    reliquary:{label:'Tapınak Emanet Sandığı',icon:'✧',maxSize:'medium',allowed:['accessory','focus','consumable','scroll','component','document','gem','trinket','weapon','junk'],nativeThemes:['sacred'],itemMin:1,itemMax:5,moneyOnly:.08,itemOnly:.46,coinScale:.75,rule:'Kutsal yadigâr, şifa, sembol ve bağış parası; en fazla 1 silah ve toplam 2 kuşanılabilir eşya.'},
-    lair:{label:'Yaratık İni Ganimeti',icon:'☠',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:0,itemMax:8,moneyOnly:.15,itemOnly:.10,coinScale:1.35,rule:'Yutulmuş ve kırılmış ganimet ağırlıklı; en fazla 2 silah, 1 zırh ve toplam 3 kuşanılabilir eşya.'},
-    cursedChest:{label:'Lanetli Sandık',icon:'♱',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','document','junk'],nativeThemes:['cursed'],itemMin:1,itemMax:5,moneyOnly:.04,itemOnly:.54,coinScale:.95,rule:'Bedelli güç ve uğursuz artıklar; en fazla 2 silah, 1 zırh ve toplam 3 kuşanılabilir eşya.'}
+    lockbox:{label:'Küçük Kilitli Kutu',icon:'▣',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','focus','tool','ammunition','weapon','junk'],nativeThemes:[],itemMin:2,itemMax:4,moneyOnly:0,itemOnly:.17,coinScale:.85,rule:'En az 1 kaliteli ödül içerir; değerli ve orta boy eşyalar arasından en fazla 1 küçük/orta silah seçer.'},
+    jewelryBox:{label:'Soylu Mücevher Kutusu',icon:'◇',maxSize:'small',allowed:['gem','trinket','accessory','document','junk'],nativeThemes:['noble'],itemMin:2,itemMax:5,moneyOnly:0,itemOnly:.22,coinScale:1.1,rule:'En az 1 kaliteli ödül içerir; mücevher, mühür, ince belge ve küçük hatıralar verir.'},
+    thiefStash:{label:'Hırsız Zulası',icon:'⌕',maxSize:'medium',allowed:['gem','trinket','accessory','component','document','consumable','scroll','ammunition','tool','weapon','junk'],nativeThemes:['rogue'],itemMin:2,itemMax:6,moneyOnly:0,itemOnly:.18,coinScale:1.05,rule:'En az 1 kaliteli ödül içerir; çalıntı değerli, alet ve en fazla 1 saklanabilir silah verir.'},
+    chest:{label:'Macera Sandığı',icon:'▤',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:2,itemMax:6,moneyOnly:0,itemOnly:.17,coinScale:1,rule:'Her zaman eşya ve en az 1 kaliteli ödül verir; en fazla 2 silah, 1 zırh ve toplam 3 kuşanılabilir eşya seçer.'},
+    reinforced:{label:'Büyük Takviyeli Sandık',icon:'▥',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:3,itemMax:9,moneyOnly:0,itemOnly:.12,coinScale:1.8,rule:'Her zaman en az 2 eşya ve 1 kaliteli ödül verir; en fazla 2 silah, 1 zırh, 1 kalkan ve toplam 4 kuşanılabilir eşya seçer.'},
+    wizardChest:{label:'Büyücü Sandığı',icon:'✦',maxSize:'large',allowed:['focus','scroll','component','consumable','accessory','document','gem','trinket','weapon','armor','junk'],nativeThemes:['arcane'],itemMin:2,itemMax:6,moneyOnly:0,itemOnly:.50,coinScale:.8,rule:'Her zaman eşya ve en az 1 kaliteli ödül verir; parşömen, bileşen, odak ve büyülü aksesuar ağırlıklıdır.'},
+    warriorCache:{label:'Savaşçı Teçhizat Kasası',icon:'⚔',maxSize:'large',allowed:['weapon','armor','shield','ammunition','tool','consumable','junk'],nativeThemes:['martial'],itemMin:3,itemMax:7,moneyOnly:0,itemOnly:.72,coinScale:.45,rule:'Her zaman en az 2 eşya ve 1 kaliteli ödül verir; silah, zırh, kalkan ve savaş tüketimleri ağırlıklıdır.'},
+    reliquary:{label:'Tapınak Emanet Sandığı',icon:'✧',maxSize:'medium',allowed:['accessory','focus','consumable','scroll','component','document','gem','trinket','weapon','junk'],nativeThemes:['sacred'],itemMin:2,itemMax:5,moneyOnly:0,itemOnly:.46,coinScale:.75,rule:'Her zaman eşya ve en az 1 kaliteli ödül verir; kutsal yadigâr, şifa, sembol ve bağış parası ağırlıklıdır.'},
+    lair:{label:'Yaratık İni Ganimeti',icon:'☠',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','tool','ammunition','document','junk'],nativeThemes:[],itemMin:2,itemMax:8,moneyOnly:0,itemOnly:.10,coinScale:1.35,rule:'Her zaman eşya ve en az 1 kaliteli ödül verir; yanında yutulmuş, kırılmış veya hikâyesel artıklar bulunabilir.'},
+    cursedChest:{label:'Lanetli Sandık',icon:'♱',maxSize:'large',allowed:['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','trinket','document','junk'],nativeThemes:['cursed'],itemMin:2,itemMax:5,moneyOnly:0,itemOnly:.54,coinScale:.95,rule:'Her zaman eşya ve en az 1 kaliteli ödül verir; bedelli güç ve uğursuz artıklar ağırlıklıdır.'}
   };
 
   const quality={
@@ -349,12 +349,12 @@
     if(ultra<1.1e-7)return 'legendary';          // next 1 / 10,000,000
     let tier=clamp(Math.round(+level||1)+(quality[qualityKey]?.shift||0),1,14);
     let weights;
-    if(tier<=1)weights=[55,37,7.51,.49,0,0,0];
-    else if(tier<=3)weights=[27,46,23,3.85,.15,0,0];
-    else if(tier<=5)weights=[10,35,38,15.5,1.45,.05,0];
-    else if(tier<=7)weights=[3,17,38,32,9.5,.49,.01];
-    else if(tier<=9)weights=[1,8,25,38,24,3.9,.1];
-    else weights=[.4,3.6,13,32,38,12.5,.5];
+    if(tier<=1)weights=[25,45,25,5,0,0,0];
+    else if(tier<=3)weights=[12,38,38,11.5,.5,0,0];
+    else if(tier<=5)weights=[4,22,38,31,4.8,.2,0];
+    else if(tier<=7)weights=[1,8,25,43,21.5,1.45,.05];
+    else if(tier<=9)weights=[0,3,12,37,39,8.9,.1];
+    else weights=[0,1,6,25,45,22.75,.25];
     let roll=rng()*weights.reduce((a,b)=>a+b,0),sum=0;
     for(let i=0;i<weights.length;i++){sum+=weights[i];if(roll<sum)return rarityOrder[i]}
     return 'common';
@@ -376,32 +376,41 @@
     let key=`${item.rarity}|${item.category}`;(catalogueByRarityCategory[key]??=[]).push(item);
   }
   const majorLootCategories=new Set(['weapon','armor','shield','accessory','focus']);
-  const defaultCategoryWeights={junk:22,trinket:13,component:12,gem:11,document:9,consumable:12,scroll:6,tool:6,ammunition:6,accessory:5,focus:3,weapon:5,armor:3,shield:2};
+  const rewardCategories=new Set(['weapon','armor','shield','accessory','focus','consumable','scroll','component','gem','tool','ammunition']);
+  const guaranteedTreasureContainers=new Set(['lockbox','jewelryBox','thiefStash','chest','reinforced','wizardChest','warriorCache','reliquary','lair','cursedChest']);
+  const defaultCategoryWeights={junk:7,trinket:8,component:11,gem:11,document:6,consumable:14,scroll:10,tool:7,ammunition:7,accessory:8,focus:6,weapon:9,armor:5,shield:3};
   const lootProfiles={
     purse:{major:1,limits:{accessory:1},weights:{gem:25,trinket:22,junk:25,component:12,document:10,accessory:6}},
-    pouch:{major:1,limits:{accessory:1},weights:{junk:20,consumable:14,component:14,trinket:14,gem:10,document:8,tool:8,scroll:6,ammunition:4,accessory:2}},
-    alchemySatchel:{major:0,limits:{},weights:{component:32,consumable:30,junk:22,tool:8,document:5,gem:3}},
-    hunterPack:{major:1,limits:{weapon:1},weights:{ammunition:25,component:18,junk:20,tool:12,consumable:10,weapon:7,document:4,trinket:4}},
-    lockbox:{major:2,limits:{weapon:1,focus:1,accessory:1},weights:{gem:20,trinket:16,document:13,component:10,junk:10,consumable:8,scroll:7,accessory:6,focus:4,weapon:3,tool:2,ammunition:1}},
-    jewelryBox:{major:2,limits:{accessory:2},weights:{gem:35,accessory:20,trinket:20,document:10,junk:15}},
-    thiefStash:{major:2,limits:{weapon:1,accessory:1},weights:{junk:16,gem:14,trinket:13,tool:12,document:11,component:9,consumable:8,ammunition:6,scroll:5,accessory:4,weapon:2}},
+    pouch:{major:1,limits:{accessory:1},weights:{junk:12,consumable:18,component:17,trinket:12,gem:11,document:7,tool:9,scroll:8,ammunition:4,accessory:2}},
+    alchemySatchel:{major:0,limits:{},weights:{component:38,consumable:34,junk:10,tool:10,document:4,gem:4}},
+    hunterPack:{major:1,limits:{weapon:1},weights:{ammunition:27,component:20,junk:10,tool:14,consumable:13,weapon:9,document:3,trinket:4}},
+    lockbox:{major:2,limits:{weapon:1,focus:1,accessory:1},weights:{gem:22,trinket:10,document:6,component:10,junk:4,consumable:10,scroll:10,accessory:9,focus:7,weapon:5,tool:4,ammunition:3}},
+    jewelryBox:{major:2,limits:{accessory:2},weights:{gem:38,accessory:25,trinket:20,document:12,junk:5}},
+    thiefStash:{major:2,limits:{weapon:1,accessory:1},weights:{junk:7,gem:17,trinket:10,tool:14,document:7,component:10,consumable:11,ammunition:7,scroll:8,accessory:6,weapon:3}},
     chest:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{...defaultCategoryWeights}},
-    reinforced:{major:4,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{...defaultCategoryWeights,weapon:7,armor:4,shield:3}},
-    wizardChest:{major:3,limits:{weapon:1,armor:1,accessory:1,focus:1},weights:{scroll:24,component:20,junk:15,consumable:12,document:9,gem:7,focus:6,accessory:3,weapon:2,armor:2,trinket:8}},
-    warriorCache:{major:4,limits:{weapon:2,armor:1,shield:1},weights:{ammunition:24,tool:16,consumable:12,junk:22,weapon:12,armor:8,shield:6}},
-    reliquary:{major:2,limits:{weapon:1,accessory:1,focus:1},weights:{consumable:20,component:18,document:15,junk:14,scroll:10,gem:8,trinket:6,accessory:4,focus:3,weapon:2}},
-    lair:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{junk:30,component:12,trinket:11,gem:10,document:8,consumable:8,ammunition:6,tool:5,weapon:4,accessory:3,armor:1,shield:1,focus:1}},
-    cursedChest:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{junk:22,component:16,trinket:12,document:10,consumable:9,gem:8,scroll:7,accessory:5,weapon:4,focus:3,armor:2,shield:2}}
+    reinforced:{major:4,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{...defaultCategoryWeights,weapon:12,armor:8,shield:5}},
+    wizardChest:{major:3,limits:{weapon:1,armor:1,accessory:1,focus:1},weights:{scroll:26,component:20,junk:5,consumable:14,document:5,gem:8,focus:10,accessory:5,weapon:2,armor:1,trinket:4}},
+    warriorCache:{major:4,limits:{weapon:2,armor:1,shield:1},weights:{ammunition:25,tool:15,consumable:14,junk:8,weapon:18,armor:12,shield:8}},
+    reliquary:{major:2,limits:{weapon:1,accessory:1,focus:1},weights:{consumable:22,component:18,document:7,junk:5,scroll:14,gem:9,trinket:5,accessory:8,focus:8,weapon:4}},
+    lair:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{junk:14,component:12,trinket:7,gem:13,document:5,consumable:11,ammunition:8,tool:6,weapon:8,accessory:6,armor:3,shield:3,focus:4}},
+    cursedChest:{major:3,limits:{weapon:2,armor:1,shield:1,accessory:2,focus:1},weights:{junk:8,component:17,trinket:7,document:6,consumable:12,gem:10,scroll:11,accessory:8,weapon:6,focus:6,armor:4,shield:4}}
   };
+
+  function guaranteedRewardRarity(level,qualityKey){
+    if(qualityKey==='poor')return 'common';
+    if(qualityKey==='royal')return level>=9?'legendary':'veryRare';
+    if(qualityKey==='rich')return level>=8?'veryRare':'rare';
+    return level>=7?'rare':'uncommon';
+  }
 
   function exactThemeMatch(item,containerKey,themeKey){
     let target=effectiveTheme(containerKey,themeKey);
     return target==='mixed'||item.themes.includes(target);
   }
   function itemCandidates(options,rarity,category='',excluded=new Set(),strictTheme=true){
-    let level=clamp(+options.level||1,1,10),containerKey=containers[options.container]?options.container:'chest',themeKey=themes[options.theme]?options.theme:'mixed';
+    let level=clamp(+options.level||1,1,10),containerKey=containers[options.container]?options.container:'chest',themeKey=themes[options.theme]?options.theme:'mixed',qualityKey=quality[options.quality]?options.quality:'standard',forced=rarities[options.rarity],effectiveLevel=clamp(level+(quality[qualityKey]?.shift||0),1,10);
     let source=category?(catalogueByRarityCategory[`${rarity}|${category}`]||[]):(catalogueByRarity[rarity]||[]);
-    return source.filter(item=>compatible(item,containerKey,'mixed')&&(!strictTheme||exactThemeMatch(item,containerKey,themeKey))&&(item.minLevel<=level+1||rarities[rarity].rank>=5)&&!excluded.has(item.id));
+    return source.filter(item=>compatible(item,containerKey,'mixed')&&(!strictTheme||exactThemeMatch(item,containerKey,themeKey))&&(forced||item.minLevel<=effectiveLevel+1||rarities[rarity].rank>=5)&&!excluded.has(item.id));
   }
   function itemFor(options,rarity,rng=Math.random,category='',excluded=new Set()){
     let candidates=itemCandidates(options,rarity,category,excluded,true);
@@ -415,11 +424,12 @@
     for(let entry of entries){roll-=Math.max(0,+entry.weight||0);if(roll<0)return entry.value}
     return entries[entries.length-1]?.value||null;
   }
-  function categoryFor(options,rarity,counts,excluded,rng=Math.random){
+  function categoryFor(options,rarity,counts,excluded,rng=Math.random,rewardOnly=false){
     let containerKey=containers[options.container]?options.container:'chest',container=containers[containerKey],profile=lootProfiles[containerKey]||lootProfiles.chest;
     let majorCount=Object.entries(counts).reduce((sum,[category,count])=>sum+(majorLootCategories.has(category)?count:0),0);
     let choices=[];
     for(let category of container.allowed){
+      if(rewardOnly&&!rewardCategories.has(category))continue;
       let used=counts[category]||0,limit=majorLootCategories.has(category)?(profile.limits[category]??0):Infinity;
       if(used>=limit||majorLootCategories.has(category)&&majorCount>=profile.major)continue;
       if(!itemFor(options,rarity,()=>0,category,excluded))continue;
@@ -432,18 +442,19 @@
   function generateLoot(options={},rng=Math.random){
     let level=clamp(+options.level||1,1,10),containerKey=containers[options.container]?options.container:'chest',themeKey=themes[options.theme]?options.theme:'mixed',qualityKey=quality[options.quality]?options.quality:'standard',forced=options.rarity||'auto';
     let container=containers[containerKey],q=quality[qualityKey],mode=rng(),moneyOnly=mode<container.moneyOnly,itemOnly=!moneyOnly&&mode<container.moneyOnly+container.itemOnly;
-    let min=Math.max(0,container.itemMin+q.count),max=Math.max(min,container.itemMax+q.count),count=moneyOnly?0:randomInt(min,max,rng);
+    let guaranteed=guaranteedTreasureContainers.has(containerKey),min=Math.max(guaranteed?1:0,container.itemMin+q.count),max=Math.max(min,container.itemMax+q.count),count=moneyOnly?0:randomInt(min,max,rng);
     if(!moneyOnly&&count===0&&itemOnly)count=1;
     let items=[],counts={},excluded=new Set();
     for(let i=0;i<count;i++){
-      let rarity=null,category=null,source=null;
+      let rarity=null,category=null,source=null,rewardSlot=guaranteed&&forced==='auto'&&i===0;
       for(let attempt=0;attempt<6&&!source;attempt++){
         rarity=rollRarity(level,qualityKey,rng,forced);
-        category=categoryFor({level,container:containerKey,theme:themeKey},rarity,counts,excluded,rng);
-        if(category)source=itemFor({level,container:containerKey,theme:themeKey},rarity,rng,category,excluded);
+        if(rewardSlot&&rarities[rarity].rank<rarities[guaranteedRewardRarity(level,qualityKey)].rank)rarity=guaranteedRewardRarity(level,qualityKey);
+        category=categoryFor({level,container:containerKey,theme:themeKey,quality:qualityKey,rarity:forced},rarity,counts,excluded,rng,rewardSlot);
+        if(category)source=itemFor({level,container:containerKey,theme:themeKey,quality:qualityKey,rarity:forced},rarity,rng,category,excluded);
         if(forced!=='auto')break;
       }
-      if(!source)break;
+      if(!source)continue;
       let qty=source.qtyMax>1&&rng()<.22?randomInt(2,Math.min(source.qtyMax,4),rng):1;
       items.push({...source,sourceId:source.id,instanceId:`loot-${Date.now().toString(36)}-${i}-${Math.floor(rng()*1e9).toString(36)}`,qty});
       excluded.add(source.id);counts[category]=(counts[category]||0)+1;

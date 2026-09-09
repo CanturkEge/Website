@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v79 — Cömert Ganimet Dengesi
+
+- Ürün sürümü **3.8.1**, teknik paket **Build 79**.
+- Kilitli kutu, mücevher kutusu, hırsız zulası, bütün ana sandıklar/kasalar, tapınak emaneti ve yaratık ini artık yalnız para vermez; her sonuç en az bir eşya içerir.
+- İlk eşya çöp veya belge olamaz. Yıpranmış kalite en az Yaygın, Standart en az Seyrek, Zengin en az Nadir, Efsane Hazinesi en az Çok Nadir ödül verir; yüksek ganimet seviyesi bu tabanı ayrıca yükseltir.
+- Otomatik zarların Seyrek, Nadir, Çok Nadir ve Efsanevi ağırlıkları artırıldı; seviye 10 hâlâ seviye 1’den belirgin biçimde daha güçlü sonuç üretir.
+- Sandıklardaki ıvır zıvır/belge ağırlığı azaltıldı; silah, zırh, kalkan, aksesuar, büyü odağı, parşömen, tüketim, değerli taş ve classa yarayan ödüller artırıldı.
+- Zengin/Efsane Hazinesi kalite artışının yalnız nadirlik zarına uygulanıp aday eşya seviyesine uygulanmaması yüzünden yüksek sonuçların kaybolması düzeltildi.
+- DM’in düşük ganimet seviyesinde zorladığı Nadir–Artefakt sonuçlarının uygun aday bulamayıp boş dönmesi düzeltildi; zorlanan nadirlik artık tam olarak korunur.
+- Tek bir başarısız eşya adayının kalan sandık yuvalarını iptal etmesi engellendi.
+- Mevcut eşya ID’leri, karakter envanterleri, ganimet geçmişi, para kayıtları ve Supabase verileri değişmez. Yeni SQL gerekmez.
+
 ## v78 — XP Tabanlı Karakter İlerlemesi
 
 - Ürün sürümü **3.8.0**, teknik paket **Build 78**.

@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.8.1',build:'Build 79',title:'Cömert Ganimet Dengesi',tag:'GANİMET',tone:'current',
+    summary:'Sandıklar artık eşya ve kaliteye uygun gerçek bir ödül garanti eder; nadirlik eğrisi oyuncular lehine dengelendi.',
+    added:['Kilitli kutu, mücevher kutusu, hırsız zulası, macera/takviyeli/büyücü/lanetli sandık, savaşçı kasası, tapınak emaneti ve yaratık ini için eşya garantisi.','İlk ödülde kalite tabanı: Yıpranmış Yaygın, Standart Seyrek, Zengin Nadir, Efsane Hazinesi Çok Nadir; yüksek ganimet seviyelerinde taban bir kademe daha yükselir.','Nadirlik açıklamasına sandık garantilerini ve korunan uç jackpot ihtimallerini gösteren açık tablo.'],
+    fixed:['Kalite artışı nadirlik zarını yükseltirken eşya aday seviyesini yükseltmediği için bazı yüksek sonuçların eşya bulamadan kaybolması giderildi.','Başarısız tek bir eşya seçiminin sandıktaki kalan bütün eşya yuvalarını iptal etmesi engellendi.','DM’in düşük ganimet seviyesinde zorladığı yüksek nadirliğin aday bulamayıp boş sonuç vermesi giderildi.','Gerçek sandıkların yalnız para veya ağırlıklı olarak ıvır zıvır üretip oyuncuyu ödülsüz bırakması giderildi.'],
+    changed:['Bütün otomatik nadirlik kademelerinde Seyrek, Nadir, Çok Nadir ve Efsanevi olasılıkları yükseltildi; yüksek seviye hâlâ belirgin biçimde daha güçlüdür.','Sandık türlerinde çöp/belge ağırlığı azaltıldı; ekipman, büyü odağı, parşömen, tüketim, değerli taş ve classa yarayan ödüllerin payı artırıldı.','Mevcut eşya ID’leri, envanterler, ganimet geçmişi ve para kayıtları değişmez; yeni SQL gerekmez.']
+  },
+  {
     version:'3.8.0',build:'Build 78',title:'XP Tabanlı Karakter İlerlemesi',tag:'KARAKTER',tone:'current',
     summary:'Milestone yerine toplam XP; ayrıntılı ilerleme göstergesi, otomatik seviye ve DM ödül/geçmiş araçları.',
     added:['Oyuncu karakter föyünde toplam XP, seviye içi ilerleme, sonraki eşik, kalan XP ve görsel ilerleme çubuğu.','1–20 XP eşik tablosu ile neden, tarih, önceki/sonraki XP ve seviye değişimini gösteren işlem geçmişi.','DM için hızlı XP, özel ekleme/çıkarma/toplam düzeltme, son işlemi geri alma ve seçili karakterlere toplu kişi başı XP ödülü.'],

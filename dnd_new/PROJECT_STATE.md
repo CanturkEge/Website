@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Canlı hedef: **3.8.0 / v78 / Build 78**; Build 77’nin güncel `main` commit’i temel alınmıştır.
+- Canlı hedef: **3.8.1 / v79 / Build 79**; Build 78’in güncel `main` commit’i temel alınmıştır.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -53,6 +53,14 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Karakter seviyesi milestone veya elle seviye düğmesi yerine toplam `xp` değerinden 1–20 eşiklerine göre otomatik belirlenir.
 - Eski, XP alanı bulunmayan karakterler mevcut seviyelerinin taban XP’siyle açılır; `xpHistory` son 50 gerekçeli DM işlemini kampanya state’inde tutar.
 - Sürüm Notları üst özeti, aralık metni ve açık kartı `V37_PATCH_NOTES` içindeki en yüksek sürümden otomatik belirlenir; Build 78 görünüm hotfix’i `v78.1` cache anahtarıyla dağıtılır.
+- Ganimet sandıkları yalnız para vermez; ilk eşya kalite tabanına ve ödül kategorisine bağlıdır. Kalite artışı aday eşya seviyesine de uygulanır, çöp ağırlığı azaltılır ve nadirlik eğrisi oyuncu lehine yükseltilir.
+
+## Build 79 çalışma rotası
+
+- `v44-data.js`: sandık eşya garantisi, ilk kaliteli ödül tabanı, kaliteyle genişleyen aday havuzu, yeni nadirlik ve kategori ağırlıkları.
+- `v44.js`: DM’e hangi kalitenin hangi asgari nadirliği garanti ettiğini gösteren güncel açıklama.
+- `tests/v79-loot-balance.test.cjs`: bütün gerçek sandık türleri ve kalite seviyelerinde deterministik eşya/ödül garantisi, nadirlik ilerlemesi, zorlanmış DM ödülü ve cache zinciri testleri.
+- Mevcut eşya ID’leri, envanterler, geçmiş kayıtları ve cüzdanlar korunur; yeni SQL gerekmez.
 
 ## Build 78 çalışma rotası
 
