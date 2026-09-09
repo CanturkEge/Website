@@ -1,5 +1,16 @@
 # Kadim Masa Defteri — Kurulum
 
+## v78 — XP Tabanlı Karakter İlerlemesi
+
+- Ürün sürümü **3.8.0**, teknik paket **Build 78**.
+- Milestone ile elle seviye değiştirme kaldırıldı; karakter seviyesi toplam XP’den 1–20 eşiklerine göre otomatik hesaplanır.
+- Oyuncu karakter föyünde toplam XP, mevcut seviye içindeki ilerleme, sonraki seviye eşiği, kalan XP ve ilerleme çubuğu görünür.
+- Yetenek/ilerleme ekranında bütün seviye eşikleri ile son XP işlemlerinin nedeni, tarihi ve önceki/sonraki değeri açılabilir bölümlerde gösterilir.
+- DM karaktere hızlı veya özel miktarda XP ekleyebilir, çıkarabilir, toplamı düzeltebilir ve son işlemi geri alabilir.
+- DM seçili karakterlerin tümüne kişi başı aynı XP’yi tek işlemde verebilir. Eşik aşılırsa HP/stat/AC gibi seviyeye bağlı hesaplar mevcut kurallarla yenilenir.
+- XP’si bulunmayan eski karakterler mevcut seviyelerinin taban XP’sinden başlatılır; karakterler geriye düşmez ve kimlik/envanter/büyü verileri korunur.
+- XP ve en fazla 50 işlem geçmişi mevcut kampanya JSON state’inde, `campaign_save_v31` birleşme hattıyla saklanır. Yeni SQL gerekmez.
+
 ## v77 — Kadim Şans Salonu
 
 - Ürün sürümü **3.7.0**, teknik paket **Build 77**.

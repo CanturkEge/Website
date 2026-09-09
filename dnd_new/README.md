@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **3.7.0**
-- Build/modül sürümü: **v77 / Build 77**
-- Son paket: DM kontrollü, tek ve çok oyunculu Kadim Şans Salonu
+- Ürün sürümü: **3.8.0**
+- Build/modül sürümü: **v78 / Build 78**
+- Son paket: milestone yerine ayrıntılı XP tabanlı karakter ilerlemesi
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.

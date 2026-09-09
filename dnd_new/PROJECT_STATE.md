@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Canlı hedef: **3.7.0 / v77 / Build 77**; Build 76’nın güncel `main` commit’i temel alınmıştır.
+- Canlı hedef: **3.8.0 / v78 / Build 78**; Build 77’nin güncel `main` commit’i temel alınmıştır.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -50,6 +50,15 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - `v73.js`, DM’in bir veya birden fazla oyuncuya verdiği mekanik etkisiz başarımları ayrı Hatıra Arşivi sayfasında gösterir. `v73-update.sql`, oyuncunun yalnız kendi kayıtlarını görebildiği token doğrulamalı RPC’leri ve RLS korumalı ayrı tabloyu sağlar.
 - `v77.js`, DM’in açıp kapattığı Kadim Şans Salonu’nda dört tek kişilik ve iki çok oyunculu varsayılan oyun sunar. DM bahis sınırı, çarpan, çark dilimi, kasa payı ve masa kapasitesini düzenleyebilir.
 - Kumarhane bahisleri `campaign_wallets` ile atomik çalışır; aynı işlem kimliği iki kez ücretlendirilmez. Ortak masa iptali bütün bekleyen bahisleri aynı transaction içinde iade eder.
+- Karakter seviyesi milestone veya elle seviye düğmesi yerine toplam `xp` değerinden 1–20 eşiklerine göre otomatik belirlenir.
+- Eski, XP alanı bulunmayan karakterler mevcut seviyelerinin taban XP’siyle açılır; `xpHistory` son 50 gerekçeli DM işlemini kampanya state’inde tutar.
+
+## Build 78 çalışma rotası
+
+- `v78-core.js`: 1–20 XP eşikleri, eski karakter normalizasyonu, ilerleme hesabı ve saf XP işlem/geçmiş kuralları.
+- `v78.js`, `v78.css`: oyuncu XP göstergesi; DM ekleme/çıkarma/ayarlama/geri alma ve toplu parti ödülü; telefon görünümü.
+- `tests/v78-*.cjs`: eşik sınırları, geriye uyumluluk, seviye değişimi ve rol bazlı arayüz bağları.
+- XP mevcut karakter nesnesinde ve `campaign_save_v31` hattında saklanır; yeni SQL veya ayrı tablo gerekmez.
 
 ## Build 77 çalışma rotası
 
@@ -96,7 +105,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Uygulama, çok sayıda global ve sıralı yüklenen sürüm dosyasına dayanıyor.
 - README geçmişte sürüm günlüğü olarak kullanıldığı için büyümüştü; ayrıntılar artık `CHANGELOG.md` içinde.
 - Aynı sistemin davranışı eski temel dosya ile daha yeni patch dosyaları arasında dağılmış olabilir.
-- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları, v75 ilişki kuralları, v76 yedek doğrulaması, v77 kumarhane kuralları/arayüzü ve izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
+- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları, v75 ilişki kuralları, v76 yedek doğrulaması, v77 kumarhane ve v78 XP kuralları/arayüzü ile izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
 - `config.js` içindeki Supabase publishable/anon anahtarı istemci anahtarıdır; güvenlik RLS politikalarına bağlıdır. Service-role anahtarı repoya konmamalıdır.
 
 ## Sonraki çalışma kuralı

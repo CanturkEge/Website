@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v77 / uygulama v3.7.0 / Build 77**
+Güncel sürüm: **v78 / uygulama v3.8.0 / Build 78**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -14,6 +14,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Giriş, hesap, lobi, kampanya | `app.js` içinde hedef sembol | `supabase-setup.sql`, ilgili RPC SQL'i |
 | Mobil menü veya genel görünüm | ilgili CSS + DOM id'si | `mobile.css`, `style.css`, sürüm CSS'i |
 | Karakter oluşturma/stat/species/class | `v53.js`, hedef kayıt için `v53-data.js` | `v30.js`, `v31.js`, `v53-update.sql` |
+| XP, seviye göstergesi ve DM ilerleme yönetimi | `v78.js`, `v78-core.js`, `v78.css` | `progression.js`, güvenli kampanya kaydı için `v31.js` |
 | Büyü hazırlama veya büyü kuralı | `v53.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js` |
 | Cleric/tanrı/domain | `v52.js`, hedef tanrı/domain için `v52-data.js` | `v49-data.js`, `v52-update.sql` |
 | Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js`; NPC transferi için `v66.js` | `v31.js`, `inventory-update.sql`, `v66-update.sql`, eski odak uyumluluğu için `v67-update.sql` |
@@ -78,6 +79,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Sürüm notları | `v37.js`, `v37.css` |
 | Başarımlar ve oyuncu hatıraları | `v73.js`, `v73.css`, `v73-update.sql` |
 | Kadim Şans Salonu | `v77.js`, `v77-core.js`, `v77.css`, `v77-update.sql` |
+| XP tabanlı karakter ilerlemesi | `v78.js`, `v78-core.js`, `v78.css` |
 
 ## SQL sırası ve veri güvenliği
 
@@ -88,6 +90,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 - Çok turlu market pazarlığı, son fiyat kilidi ve DM işlem logu `v69-update.sql`; sessiz pazarlık bildirimi ile iki taraflı kapalı geçmiş temizliği `v70-update.sql` içindedir.
 - Oyuncuya özel, mekanik etkisiz başarımlar `campaign_achievements_v73` tablosunda; token doğrulamalı liste/verme/geri alma akışı `v73-update.sql` içindedir.
 - Kumarhane ayarları, oyunlar, masalar ve bahisler kampanya JSON’undan ayrı v77 tablolarındadır. `casino_action_v77` oturumu/rolü doğrular; cüzdan çekimi, ödeme ve iptal iadesini kilitli ve tekrar gönderim korumalı transaction ile yapar.
+- XP, karakterin kampanya JSON nesnesindeki `xp` ve `xpHistory` alanlarında tutulur; yalnız DM arayüzü mevcut `campaign_save_v31` hattı üzerinden kalıcı değişiklik yapar. Yeni SQL gerekmez.
 - `v31-update.sql` kampanya JSON birleştirme hattının esas güvenli kayıt katmanıdır; lokal özellik değişikliklerinde sebepsiz değiştirilmemelidir.
 - Yeni sürüm eklerken `config.js`, `index.html`, `README.md`, gerekirse `guide-v26.txt` ve `v37.js` sürüm numarası birlikte kontrol edilir.
 

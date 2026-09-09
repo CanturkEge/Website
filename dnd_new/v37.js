@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.8.0',build:'Build 78',title:'XP Tabanlı Karakter İlerlemesi',tag:'KARAKTER',tone:'current',
+    summary:'Milestone yerine toplam XP; ayrıntılı ilerleme göstergesi, otomatik seviye ve DM ödül/geçmiş araçları.',
+    added:['Oyuncu karakter föyünde toplam XP, seviye içi ilerleme, sonraki eşik, kalan XP ve görsel ilerleme çubuğu.','1–20 XP eşik tablosu ile neden, tarih, önceki/sonraki XP ve seviye değişimini gösteren işlem geçmişi.','DM için hızlı XP, özel ekleme/çıkarma/toplam düzeltme, son işlemi geri alma ve seçili karakterlere toplu kişi başı XP ödülü.'],
+    fixed:['XP alanı olmayan eski karakterler mevcut seviyelerinin taban XP’sine güvenli taşınır; kimse kendiliğinden 1. seviyeye düşmez.','XP eşiği geçildiğinde seviye ve seviyeye bağlı otomatik HP/stat/AC hesapları birlikte yenilenir.'],
+    changed:['Elle milestone/seviye düğmesi XP Yönet ile değiştirildi; karakter düzenleyicisindeki seviye alanı salt okunur oldu.','XP ve en fazla 50 işlem kaydı mevcut kampanya state’inde v31 güvenli birleşme hattıyla saklanır; yeni SQL gerekmez.','Telefon görünümü tek sütun bilgi kartları, taşmayan eşik tablosu ve geniş dokunma hedefleri kullanır.']
+  },
+  {
     version:'3.7.0',build:'Build 77',title:'Kadim Şans Salonu',tag:'KUMARHANE',tone:'current',
     summary:'DM kontrollü salon; dört tek kişilik şans oyunu, iki ortak pot masası ve Kesem ile atomik bahis ödemeleri.',
     added:['DM ve oyuncu menülerine telefon uyumlu Kumarhane sayfası.','Taç mı Kılıç mı, Kemik Zar Kehaneti, Kupa Altındaki Aytaşı ve Ejderha Çarkı.','Yüksek Zar Masası ile Altı Mühür Çekilişi; oyuncular aynı masaya bahis koyar, DM sunucu zarını atar.','DM için salon adı/açıklaması, oyun görünürlüğü, bahis sınırı, çarpan, çark dilimi, kasa payı ve masa kapasitesi ayarları.','Oyuncuya kişisel, DM’ye kampanya geneli oyun geçmişi.'],
