@@ -7,7 +7,7 @@ const V37_PATCH_NOTES=[
     version:'3.8.0',build:'Build 78',title:'XP Tabanlı Karakter İlerlemesi',tag:'KARAKTER',tone:'current',
     summary:'Milestone yerine toplam XP; ayrıntılı ilerleme göstergesi, otomatik seviye ve DM ödül/geçmiş araçları.',
     added:['Oyuncu karakter föyünde toplam XP, seviye içi ilerleme, sonraki eşik, kalan XP ve görsel ilerleme çubuğu.','1–20 XP eşik tablosu ile neden, tarih, önceki/sonraki XP ve seviye değişimini gösteren işlem geçmişi.','DM için hızlı XP, özel ekleme/çıkarma/toplam düzeltme, son işlemi geri alma ve seçili karakterlere toplu kişi başı XP ödülü.'],
-    fixed:['XP alanı olmayan eski karakterler mevcut seviyelerinin taban XP’sine güvenli taşınır; kimse kendiliğinden 1. seviyeye düşmez.','XP eşiği geçildiğinde seviye ve seviyeye bağlı otomatik HP/stat/AC hesapları birlikte yenilenir.'],
+    fixed:['XP alanı olmayan eski karakterler mevcut seviyelerinin taban XP’sine güvenli taşınır; kimse kendiliğinden 1. seviyeye düşmez.','XP eşiği geçildiğinde seviye ve seviyeye bağlı otomatik HP/stat/AC hesapları birlikte yenilenir.','Sürüm Notları üst özeti, sürüm aralığı ve varsayılan açık kart artık en yeni sürüm kaydından otomatik belirlenir.'],
     changed:['Elle milestone/seviye düğmesi XP Yönet ile değiştirildi; karakter düzenleyicisindeki seviye alanı salt okunur oldu.','XP ve en fazla 50 işlem kaydı mevcut kampanya state’inde v31 güvenli birleşme hattıyla saklanır; yeni SQL gerekmez.','Telefon görünümü tek sütun bilgi kartları, taşmayan eşik tablosu ve geniş dokunma hedefleri kullanır.']
   },
   {
@@ -850,11 +850,20 @@ function v37Fold(value){
   return String(value||'').toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 }
 
+function v37CompareVersions(a,b){
+  let aa=String(a).split('.').map(Number),bb=String(b).split('.').map(Number),length=Math.max(aa.length,bb.length);
+  for(let i=0;i<length;i++){let diff=(aa[i]||0)-(bb[i]||0);if(diff)return diff}
+  return 0;
+}
+
+function v37LatestNote(){
+  return V37_PATCH_NOTES.reduce((latest,note)=>v37CompareVersions(note.version,latest.version)>0?note:latest,V37_PATCH_NOTES[0]);
+}
+
 function v37PatchRows(){
   let needle=v37Fold(v37PatchQuery.trim());
   let rows=V37_PATCH_NOTES.filter(note=>!needle||v37Fold(`${note.version} ${note.build} ${note.title} ${note.tag} ${note.summary} ${note.added.join(' ')} ${note.fixed.join(' ')} ${note.changed.join(' ')}`).includes(needle));
-  let compare=(a,b)=>{let aa=String(a).split('.').map(Number),bb=String(b).split('.').map(Number),length=Math.max(aa.length,bb.length);for(let i=0;i<length;i++){let diff=(aa[i]||0)-(bb[i]||0);if(diff)return diff}return 0};
-  return rows.slice().sort((a,b)=>v37PatchOrder==='asc'?compare(a.version,b.version):compare(b.version,a.version));
+  return rows.slice().sort((a,b)=>v37PatchOrder==='asc'?v37CompareVersions(a.version,b.version):v37CompareVersions(b.version,a.version));
 }
 
 function v37PatchGroup(kind,title,items){
@@ -863,15 +872,17 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.7.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  let latest=v37LatestNote();
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version===latest.version?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
   let rows=v37PatchRows();
+  let latest=v37LatestNote();
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.7.0 • Build 77</h2><p>DM kontrollü, tek kişilik ve ortak masalı Kadim Şans Salonu.</p></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v${esc(latest.version)} • ${esc(latest.build)}</h2><p>${esc(latest.summary)}</p></div>
       <div class="v37-patch-stats"><span><b>${V37_PATCH_NOTES.length}</b>Sürüm</span><span><b>6</b>Şans Oyunu</span><span><b>Atomik</b>Bahis</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
@@ -881,7 +892,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1.0–v3.7.0 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
+    <p class="v37-version-note">v0.1.0–v${esc(latest.version)} oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

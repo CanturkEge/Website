@@ -10,6 +10,8 @@
 - DM seçili karakterlerin tümüne kişi başı aynı XP’yi tek işlemde verebilir. Eşik aşılırsa HP/stat/AC gibi seviyeye bağlı hesaplar mevcut kurallarla yenilenir.
 - XP’si bulunmayan eski karakterler mevcut seviyelerinin taban XP’sinden başlatılır; karakterler geriye düşmez ve kimlik/envanter/büyü verileri korunur.
 - XP ve en fazla 50 işlem geçmişi mevcut kampanya JSON state’inde, `campaign_save_v31` birleşme hattıyla saklanır. Yeni SQL gerekmez.
+- Sürüm Notları üst özeti, sürüm aralığı ve varsayılan açık kart artık en yüksek sürüm kaydından otomatik belirlenir; v3.8.0’ın altta kalması giderildi.
+- Build 78 görünüm düzeltmesi için tarayıcı cache anahtarı `v78.1` olarak yenilendi; ürün sürümü yine 3.8.0 / Build 78’dir.
 
 ## v77 — Kadim Şans Salonu
 

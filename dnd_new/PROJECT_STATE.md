@@ -52,12 +52,14 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Kumarhane bahisleri `campaign_wallets` ile atomik çalışır; aynı işlem kimliği iki kez ücretlendirilmez. Ortak masa iptali bütün bekleyen bahisleri aynı transaction içinde iade eder.
 - Karakter seviyesi milestone veya elle seviye düğmesi yerine toplam `xp` değerinden 1–20 eşiklerine göre otomatik belirlenir.
 - Eski, XP alanı bulunmayan karakterler mevcut seviyelerinin taban XP’siyle açılır; `xpHistory` son 50 gerekçeli DM işlemini kampanya state’inde tutar.
+- Sürüm Notları üst özeti, aralık metni ve açık kartı `V37_PATCH_NOTES` içindeki en yüksek sürümden otomatik belirlenir; Build 78 görünüm hotfix’i `v78.1` cache anahtarıyla dağıtılır.
 
 ## Build 78 çalışma rotası
 
 - `v78-core.js`: 1–20 XP eşikleri, eski karakter normalizasyonu, ilerleme hesabı ve saf XP işlem/geçmiş kuralları.
 - `v78.js`, `v78.css`: oyuncu XP göstergesi; DM ekleme/çıkarma/ayarlama/geri alma ve toplu parti ödülü; telefon görünümü.
 - `tests/v78-*.cjs`: eşik sınırları, geriye uyumluluk, seviye değişimi ve rol bazlı arayüz bağları.
+- `tests/v37-patch-notes.test.cjs`: en güncel sürümün üst özet, sürüm aralığı ve varsayılan açık kartta otomatik gösterilmesini doğrular.
 - XP mevcut karakter nesnesinde ve `campaign_save_v31` hattında saklanır; yeni SQL veya ayrı tablo gerekmez.
 
 ## Build 77 çalışma rotası
