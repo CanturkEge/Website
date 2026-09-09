@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v74 / uygulama v3.5.0 / Build 74** (özellik branch’i; canlı SQL onayı bekliyor)
+Güncel sürüm: **v75 / uygulama v3.6.0 / Build 75**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -21,6 +21,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Görev panosu | `v50.js`, hedef görev için `v50-data.js` | eski `state.quests` için `app.js` |
 | Harita/kale | `v32.js`, `v33.js` | `v34-data.js`, `Map.png` yalnız görsel gerekirse |
 | Yol/binek/seyahat | `v38.js`, `v38-data.js` | `v34-data.js` |
+| İlişkiler ve ayrıntılı parti statları | `v75.js`, `v75-core.js`, `v75.css` | kampanya state birleştirmesi için `v31.js`; yeni SQL gerekmez |
 | Savaş büyüleri, kaynaklar, etkiler, DM zar isteği | `v74-combat.js`, `v74-core.js`, `v74.css` | `v74.js`, `v74-update.sql`, `tests/v74-database.test.cjs` |
 | Belgeler, topluluk itibarı, dinlenme faaliyetleri | `v74.js`, `v74.css` | `v74-update.sql`, `RELEASE_V74.md` |
 | Taktik savaş | `v38-battle.js`, `v38.css` | encounter state'i için `app.js`, `v31.js`; oyuncu hareketi için `v60-update.sql` |

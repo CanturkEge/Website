@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-09-08**
-Referans branch: `feat/adventure-v74`
+Son doğrulama: **2026-09-09**
+Referans branch: `main`
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Bu branch: **3.5.0 / v74 / Build 74**; canlı `main`: **3.4.0 / Build 73** (v74 SQL onayı bekliyor)
+- Canlı hedef: **3.6.0 / v75 / Build 75**; Build 74 ve SQL’i uygulanmış güncel `main` temel alınmıştır.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -49,15 +49,22 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - `ui-state-manager.js`, Supabase yenilemeleri sırasında dirty/aktif alanları, açık details/modal/sekme durumunu ve scroll konumunu korur; sayfa bağımlılıkları alakasız server-state değişikliklerinde full render'ı engeller.
 - `v73.js`, DM’in bir veya birden fazla oyuncuya verdiği mekanik etkisiz başarımları ayrı Hatıra Arşivi sayfasında gösterir. `v73-update.sql`, oyuncunun yalnız kendi kayıtlarını görebildiği token doğrulamalı RPC’leri ve RLS korumalı ayrı tabloyu sağlar.
 
+## Build 75 çalışma rotası
+
+- `v75-core.js`: ilişki türleri, puan bantları, geriye uyumlu normalizasyon, çift anahtarı ve filtre kuralları.
+- `v75.js`: DM ilişki editörü, gerekçeli puan geçmişi, karakter/NPC dizini ve oyunculara açık ayrıntılı parti föyleri.
+- `v75.css`: masaüstü ve telefon için ilişki kartları, filtreler, editör ve parti stat düzeni.
+- İlişkiler `state.relationshipsV75` içinde kararlı kimliklerle tutulur ve `v31` üç yönlü kampanya birleştirmesini kullanır. Yeni SQL gerekmez.
+
 ## Build 74 çalışma rotası
 
 - `v74-core.js`: ortak slot, sınıf kaynağı, seçili/domain büyüsü ve süre kuralları; `v59.js` slot tablosu bu hesabı paylaşır.
 - `v74.js`: tek kampanya/hesap kapsamlı yükleyici ve tekrar gönderim korumalı işlem kuyruğu; Belgeler, Topluluklar, Dinlenme Faaliyetleri sayfaları.
 - `v74-combat.js`, `v74.css`: savaş sekmeleri, büyü kullanımı, sınıf kaynakları, DM atış istekleri ve etki takibi. `v51.js` menü gruplarına bağlar.
 - `style.css`, `mobile.css`, `v27.css`, `v51.css`: ana menü yerleşimi/kaydırma stilleri `#appShell>aside` ile sınırlıdır; savaş içindeki `aside` panellerini taşırmaz.
-- `v74-update.sql`: ayrı RLS kapalı erişimli araç/kural tabloları, token RPC’leri ve kampanya HP/sıra değişimi tetikleyicisi. DDL henüz canlıya uygulanmadı; otomatik onay incelemesi açık onay istiyor.
+- `v74-update.sql`: ayrı RLS kapalı erişimli araç/kural tabloları, token RPC’leri ve kampanya HP/sıra değişimi tetikleyicisi. Canlı Supabase projesine uygulanmıştır.
 - `scripts/build-v74-rules.cjs` ilgili mevcut kataloglardan sunucu meta verisini üretir; hem kurulum SQL’ini hem CLI migration’ını günceller. SQL içindeki generated bölümü elle düzenleme.
-- `RELEASE_V74.md`: yedek SHA/branch, onay bekleyen rollout, geri dönüş ve test sınırları.
+- `RELEASE_V74.md`: v74 yedek SHA/branch, rollout, geri dönüş ve test sınırları.
 
 ## Korunması gereken sözleşmeler
 
@@ -73,7 +80,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Uygulama, çok sayıda global ve sıralı yüklenen sürüm dosyasına dayanıyor.
 - README geçmişte sürüm günlüğü olarak kullanıldığı için büyümüştü; ayrıntılar artık `CHANGELOG.md` içinde.
 - Aynı sistemin davranışı eski temel dosya ile daha yeni patch dosyaları arasında dağılmış olabilir.
-- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları ve izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
+- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları, v75 ilişki kuralları ve izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
 - `config.js` içindeki Supabase publishable/anon anahtarı istemci anahtarıdır; güvenlik RLS politikalarına bağlıdır. Service-role anahtarı repoya konmamalıdır.
 
 ## Sonraki çalışma kuralı

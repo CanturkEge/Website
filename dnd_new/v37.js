@@ -4,6 +4,13 @@ let v37PatchOrder='desc';
 
 const V37_PATCH_NOTES=[
   {
+    version:'3.6.0',build:'Build 75',title:'İlişkiler ve Parti Föyleri',tag:'İLİŞKİ',tone:'current',
+    summary:'Karakterler ve NPC’ler için ayrıntılı sosyal bağ haritası; DM düzenleme araçları ve oyunculara açık savaş odaklı parti statları.',
+    added:['DM ve oyuncu menülerine filtreli İlişkiler sayfası.','Nötr, normal, iş arkadaşı, müttefik, dost, yakın, romantik, aile, mentor, rakip, gergin, düşman ve yeminli bağ türleri.','−100…+100 genel ilişki puanı; güven, saygı, yakınlık ve gerilim eksenleri.','Tek yönlü veya karşılıklı bağ, gerekçeli puan geçmişi ve kişi bazlı ilişki dizini.','Oyuncular için parti arkadaşlarının HP, AC, hız, stat, save, skill, büyü DC/attack, spell slot, kuşanılan eşya, efekt, direnç ve zayıflık föyleri.'],
+    fixed:['Silinen karakter veya NPC’ye ait eski ilişki kaydı kaybolmadan DM tarafından temizlenebilir.','Eski kampanyalar ilişki alanı olmadan açılır; boş liste otomatik ve güvenli biçimde hazırlanır.'],
+    changed:['İlişki türü ile puan ayrıdır; aynı tür bağ olumlu veya olumsuz gelişebilir.','DM ilişkiyi oyuncu görünümünden kaldırabilir; oyuncu ilişki kayıtlarını değiştiremez.','Veriler mevcut kampanya JSON kaydında tutulur; yeni SQL veya hesap taşıması gerekmez.','Telefon görünümü tek sütun, geniş dokunma hedefleri ve taşmayan detay kartları kullanır.']
+  },
+  {
     version:'3.5.0',build:'Build 74',title:'Savaş Araçları ve Macera Defteri',tag:'MACERA',tone:'current',
     summary:'Savaş ekranından büyü kullanımı, süreli etkiler ve konsantrasyon; DM zar istekleri, seçili oyunculara belgeler, topluluk itibarı ve dinlenme faaliyetleri.',
     added:['Oyuncu savaş ekranında Harita & hareket / Büyüler & sınıf sekmeleri; büyü arama, seviye ve seçili/katalog filtreleri.','13 sınıf için kaynak/özellik görünümü; hazırlanmış, öğrenilmiş ve otomatik domain büyülerini hedef ve slot seçerek kullanma.','Süreli etkiler, tek konsantrasyon, HP kaybında CON atışı ve kaynak sırasıyla ilerleyen süre.','DM’den seçilen karakterlere normal/avantajlı/dezavantajlı atış isteği; yalnız DM’ye sonuç seçeneği.','Mektup, kitap, harita ve ipuçlarını taslak tutma veya seçilen oyunculara yayınlama.','Grup ve kişisel topluluk itibarı; gerekçeli değişim geçmişi ve gizli DM notları.','Üretim, araştırma, eğitim ve çalışma faaliyetleri; DM onayı, gün ilerletme, atomik maliyet/malzeme tüketimi ve ödül teslimi.'],
@@ -835,7 +842,7 @@ function v37PatchGroup(kind,title,items){
 
 function v37PatchCards(){
   let rows=v37PatchRows();
-  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.5.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
+  return rows.map(note=>`<details class="v37-release ${note.tone}" ${note.version==='3.6.0'?'open':''}><summary><span class="v37-version">v${note.version}</span><span class="v37-release-title"><b>${esc(note.title)}</b><small>${esc(note.build)} • ${esc(note.summary)}</small></span><span class="v37-tag">${esc(note.tag)}</span><i>＋</i></summary><div class="v37-release-body">${v37PatchGroup('added','Yeni',note.added)}${v37PatchGroup('fixed','Düzeltildi',note.fixed)}${v37PatchGroup('changed','Değiştirildi',note.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada eşleşen sürüm notu yok.</div>';
 }
 
 function v37PatchPage(){
@@ -843,7 +850,7 @@ function v37PatchPage(){
   return `${v26Head('GELİŞİM GÜNLÜĞÜ','Sürüm Notları','Eklenen özellikler, giderilen hatalar ve değişen sistemler. En yeni sürüm varsayılan olarak üsttedir.')}
   <section class="v37-patch-page">
     <div class="v37-patch-hero">
-      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.5.0 • Build 74</h2><p>Savaşta büyü kullanımı, etkiler, atış istekleri ve macera boyunca tutulan belgeler, ilişkiler, faaliyetler.</p></div>
+      <div><span class="v26-kicker">KADİM MASA DEFTERİ</span><h2>v3.6.0 • Build 75</h2><p>Karakter ve NPC ilişkileri, puan geçmişi, sosyal filtreler ve ayrıntılı parti statları.</p></div>
       <div class="v37-patch-stats"><span><b>${V37_PATCH_NOTES.length}</b>Sürüm</span><span><b>Hatıra</b>Başarımlar</span><span><b>Çok Tur</b>Pazarlık</span><span><b>24</b>Boss</span><span><b>319</b>Büyü</span></div>
     </div>
     <div class="v37-patch-tools card">
@@ -853,7 +860,7 @@ function v37PatchPage(){
       <button class="ghost" data-v37-patch-open="none">Kapat</button>
       <b id="v37PatchCount">${rows.length}/${V37_PATCH_NOTES.length}</b>
     </div>
-    <p class="v37-version-note">v0.1.0–v3.5.0 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
+    <p class="v37-version-note">v0.1.0–v3.6.0 oyuncuya açık kilometre taşı numaralarıdır. Düzeltme patch'i, yeni sistem minor'ı, büyük deneyim değişimi major'ı artırır; segmentler 9’dan sonra 10 diye devam edebilir. “Build” etiketi dağıtılan teknik pakettir.</p>
     <div id="v37PatchList" class="v37-release-list">${v37PatchCards()}</div>
   </section>`;
 }

@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v75 — İlişkiler ve Parti Föyleri
+
+- Ürün sürümü **3.6.0**, teknik paket **Build 75**.
+- DM, karakterler ve NPC’ler arasında tek yönlü veya karşılıklı ilişki kurabilir; tür, genel puan, güven, saygı, yakınlık ve gerilim ayrı izlenir.
+- İlişki listesi kişi, varlık türü, ilişki türü ve puan bandına göre filtrelenebilir. Puan değişimleri gerekçesi ve tarihiyle saklanır.
+- Oyuncular DM’in görünür yaptığı ilişkileri ve bütün onaylı parti karakterlerinin savaşta kullanılan ayrıntılı statlarını görebilir.
+- Silinmiş kişi bağlantıları DM ekranında kayıp kayıt olarak kalır. Mevcut kampanyalar boş ilişki listesiyle geriye uyumlu açılır.
+- İlişkiler mevcut kampanya JSON state’inde tutulur; **yeni SQL gerekmez**.
+
 ## v74 — Savaş Araçları ve Macera Defteri
 
 - Ürün sürümü **3.5.0**, teknik paket **Build 74**.

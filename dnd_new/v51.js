@@ -199,7 +199,7 @@
   });
 
   const v51NavGroups=[
-    {id:'characters',icon:'♙',label:'Karakter & Parti',pages:['dashboard','party','partyview','inventory','skills']},
+    {id:'characters',icon:'♙',label:'Karakter & Parti',pages:['dashboard','party','partyview','inventory','skills','relationships']},
     {id:'adventure',icon:'⚔',label:'Macera & Savaş',pages:['questboard','map','encounter','encounterview','dice','factions']},
     {id:'economy',icon:'◇',label:'Lonca & Ekonomi',pages:['guilddm','guild','treasury','market','lootgen','downtime']},
     {id:'world',icon:'✥',label:'Dünya & Kayıtlar',pages:['world','npcs','bestiary','bosses','karma']},
