@@ -1,5 +1,14 @@
 # Kadim Masa Defteri — Kurulum
 
+## v76 — Güvenli Yedek Geri Yükleme
+
+- Ürün sürümü **3.6.1**, teknik paket **Build 76**.
+- DM, **Yedeği içe aktar** ile eski veya yeni kampanya JSON yedeklerini seçebilir.
+- Kaydetmeden önce mevcut/yedek içerik sayıları gösterilir ve açık onay istenir.
+- Geri yükleme başlarken mevcut kampanya ayrıca otomatik JSON olarak indirilir.
+- Bozuk, ilgisiz, 10 MB üstü, yanlış alan tipli ve güvenli olmayan dosyalar reddedilir.
+- Mevcut `campaign_save_v31` hattı kullanılır; yeni SQL gerekmez. Hesap, üye ve ayrı SQL geçmişleri içe aktarmadan etkilenmez.
+
 ## v75 — İlişkiler ve Parti Föyleri
 
 - Ürün sürümü **3.6.0**, teknik paket **Build 75**.

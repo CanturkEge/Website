@@ -4,9 +4,9 @@ Kadim Masa Defteri; D&D 5e 2014 kampanyaları için DM ve oyuncu panelleri, kara
 
 ## Güncel sürüm
 
-- Ürün sürümü: **3.6.0**
-- Build/modül sürümü: **v75 / Build 75**
-- Son paket: karakter/NPC ilişkileri, sosyal puan geçmişi ve ayrıntılı parti föyleri
+- Ürün sürümü: **3.6.1**
+- Build/modül sürümü: **v76 / Build 76**
+- Son paket: doğrulamalı ve otomatik geri dönüş yedekli kampanya içe aktarma
 - Mimari: statik HTML/CSS, klasik global JavaScript ve Supabase RPC
 
 Güncel teknik gerçekler için [`PROJECT_STATE.md`](PROJECT_STATE.md), görevden dosyaya gitmek için [`PROJECT_INDEX.md`](PROJECT_INDEX.md), eski sürümlerin ayrıntıları için [`CHANGELOG.md`](CHANGELOG.md) kullanılır.

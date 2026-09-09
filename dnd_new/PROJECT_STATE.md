@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Canlı hedef: **3.6.0 / v75 / Build 75**; Build 74 ve SQL’i uygulanmış güncel `main` temel alınmıştır.
+- Canlı hedef: **3.6.1 / v76 / Build 76**; Build 75’in güncel `main` commit’i temel alınmıştır.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -49,6 +49,12 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - `ui-state-manager.js`, Supabase yenilemeleri sırasında dirty/aktif alanları, açık details/modal/sekme durumunu ve scroll konumunu korur; sayfa bağımlılıkları alakasız server-state değişikliklerinde full render'ı engeller.
 - `v73.js`, DM’in bir veya birden fazla oyuncuya verdiği mekanik etkisiz başarımları ayrı Hatıra Arşivi sayfasında gösterir. `v73-update.sql`, oyuncunun yalnız kendi kayıtlarını görebildiği token doğrulamalı RPC’leri ve RLS korumalı ayrı tabloyu sağlar.
 
+## Build 76 çalışma rotası
+
+- `v76-core.js`: yedek biçimi doğrulama, güvenli derin kopya, alan tipi kontrolü ve içerik sayımı.
+- `v76.js`, `v76.css`, `index.html`: DM dosya seçici, fark özeti, açık onay, otomatik geri dönüş yedeği ve `v31` üzerinden kayıt.
+- Eski düz state JSON yedekleri desteklenir. İçe aktarma hesapları, üyeleri ve ayrı SQL tablolarını değiştirmez; yeni SQL gerekmez.
+
 ## Build 75 çalışma rotası
 
 - `v75-core.js`: ilişki türleri, puan bantları, geriye uyumlu normalizasyon, çift anahtarı ve filtre kuralları.
@@ -80,7 +86,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Uygulama, çok sayıda global ve sıralı yüklenen sürüm dosyasına dayanıyor.
 - README geçmişte sürüm günlüğü olarak kullanıldığı için büyümüştü; ayrıntılar artık `CHANGELOG.md` içinde.
 - Aynı sistemin davranışı eski temel dosya ile daha yeni patch dosyaları arasında dağılmış olabilir.
-- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları, v75 ilişki kuralları ve izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
+- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları, v75 ilişki kuralları, v76 yedek doğrulaması ve izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
 - `config.js` içindeki Supabase publishable/anon anahtarı istemci anahtarıdır; güvenlik RLS politikalarına bağlıdır. Service-role anahtarı repoya konmamalıdır.
 
 ## Sonraki çalışma kuralı
