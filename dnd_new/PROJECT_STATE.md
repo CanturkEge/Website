@@ -6,7 +6,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 
 ## Aktif durum
 
-- Canlı hedef: **3.6.1 / v76 / Build 76**; Build 75’in güncel `main` commit’i temel alınmıştır.
+- Canlı hedef: **3.7.0 / v77 / Build 77**; Build 76’nın güncel `main` commit’i temel alınmıştır.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -48,6 +48,16 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Anlaşma mesajları `pact_notify_v59` trigger'ıyla ilgili DM veya oyuncuya bildirim üretir.
 - `ui-state-manager.js`, Supabase yenilemeleri sırasında dirty/aktif alanları, açık details/modal/sekme durumunu ve scroll konumunu korur; sayfa bağımlılıkları alakasız server-state değişikliklerinde full render'ı engeller.
 - `v73.js`, DM’in bir veya birden fazla oyuncuya verdiği mekanik etkisiz başarımları ayrı Hatıra Arşivi sayfasında gösterir. `v73-update.sql`, oyuncunun yalnız kendi kayıtlarını görebildiği token doğrulamalı RPC’leri ve RLS korumalı ayrı tabloyu sağlar.
+- `v77.js`, DM’in açıp kapattığı Kadim Şans Salonu’nda dört tek kişilik ve iki çok oyunculu varsayılan oyun sunar. DM bahis sınırı, çarpan, çark dilimi, kasa payı ve masa kapasitesini düzenleyebilir.
+- Kumarhane bahisleri `campaign_wallets` ile atomik çalışır; aynı işlem kimliği iki kez ücretlendirilmez. Ortak masa iptali bütün bekleyen bahisleri aynı transaction içinde iade eder.
+
+## Build 77 çalışma rotası
+
+- `v77-core.js`: para/çarpan biçimi, oyun türleri, seçimler ve sonuç etiketleri.
+- `v77.js`, `v77.css`: DM salon kumandası, oyun ayarları, oyuncu bahisleri, ortak masalar, geçmiş ve telefon görünümü.
+- `v77-update.sql`: RLS-korumalı ayar/oyun/tur/bahis/işlem tabloları ile token doğrulamalı yükleme ve atomik işlem RPC’leri; canlı Supabase projesine uygulanmıştır.
+- `tests/v77-*.cjs`: saf kural, rol bazlı arayüz ve izole PGlite/Postgres güvenlik/para testleri.
+- CLI migration zinciri: temel `20260909171706_casino_v77.sql`, FK indeksleri `20260909175000_casino_v77_fk_indexes.sql` ve dar kapsamlı fonksiyon sertleştirmesi `20260909180000_casino_v77_hardening.sql`.
 
 ## Build 76 çalışma rotası
 
@@ -86,7 +96,7 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Uygulama, çok sayıda global ve sıralı yüklenen sürüm dosyasına dayanıyor.
 - README geçmişte sürüm günlüğü olarak kullanıldığı için büyümüştü; ayrıntılar artık `CHANGELOG.md` içinde.
 - Aynı sistemin davranışı eski temel dosya ile daha yeni patch dosyaları arasında dağılmış olabilir.
-- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları, v75 ilişki kuralları, v76 yedek doğrulaması ve izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
+- `npm ci && npm test`: ortak UI state, başarımlar, v74 kuralları, v75 ilişki kuralları, v76 yedek doğrulaması, v77 kumarhane kuralları/arayüzü ve izole PGlite/Postgres entegrasyon testleri. Test fixture gerçek Supabase bağlantısı açmaz; v66 token çözümü yerel test oturumlarıyla temsil edilir.
 - `config.js` içindeki Supabase publishable/anon anahtarı istemci anahtarıdır; güvenlik RLS politikalarına bağlıdır. Service-role anahtarı repoya konmamalıdır.
 
 ## Sonraki çalışma kuralı

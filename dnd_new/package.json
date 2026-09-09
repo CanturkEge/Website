@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "node tests/v74-fixture-server.cjs",
-    "test": "node --test tests/ui-state-manager.test.cjs tests/v73-achievements.test.cjs tests/v74-core.test.cjs tests/v74-database.test.cjs tests/v75-core.test.cjs tests/v75-ui.test.cjs tests/v76-backup.test.cjs",
+    "test": "node --test tests/ui-state-manager.test.cjs tests/v73-achievements.test.cjs tests/v74-core.test.cjs tests/v74-database.test.cjs tests/v75-core.test.cjs tests/v75-ui.test.cjs tests/v76-backup.test.cjs tests/v77-core.test.cjs tests/v77-ui.test.cjs tests/v77-database.test.cjs",
     "rules:v74": "node scripts/build-v74-rules.cjs"
   },
   "devDependencies": { "@electric-sql/pglite": "0.5.8" }

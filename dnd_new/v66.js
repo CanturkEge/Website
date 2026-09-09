@@ -64,7 +64,7 @@
   }
   function auditPage(){
     queueMicrotask(()=>loadAudit());
-    const labels={market_purchase:'Market',money_transfer:'Para',money_discard:'Silme',npc_money:'NPC para',npc_item:'NPC eşya',item_transfer:'Eşya',item_ground:'Yere bırakma',item_take:'Yerden alma',dm_item_grant:'DM eşya',wallet_adjust:'Kese',loot_money:'Ganimet',guild_action:'Lonca'};
+    const labels={market_purchase:'Market',money_transfer:'Para',money_discard:'Silme',npc_money:'NPC para',npc_item:'NPC eşya',item_transfer:'Eşya',item_ground:'Yere bırakma',item_take:'Yerden alma',dm_item_grant:'DM eşya',wallet_adjust:'Kese',loot_money:'Ganimet',guild_action:'Lonca',casino_play:'Kumarhane',casino_table:'Kumarhane masası'};
     return `<section class="v69-audit-head"><div><span class="v26-kicker">YALNIZCA DM</span><h2>İşlem Logu</h2><p>Alışveriş, eşya ve para hareketleri burada tutulur; bunlar bildirim üretmez.</p></div><div><button id="v69RefreshAudit" class="ghost">Yenile</button><button id="v69ClearAudit" class="danger" ${auditRows.length?'':'disabled'}>Logu Temizle</button></div></section><details class="card v69-audit-shell" open><summary>${auditRows.length} kayıt • ayrıntıları küçült / aç</summary><div class="v69-audit-list">${auditRows.map(row=>`<article><span class="v69-audit-kind">${esc(labels[row.action]||row.action)}</span><div><b>${esc(row.title)}</b><p>${esc(row.body)}</p><small>${esc(row.actor_name)} • ${timeLabel(row.created_at)}</small></div></article>`).join('')||(auditError?`<div class="empty">${esc(auditError)}</div>`:'<div class="empty">Henüz kayıtlı işlem yok.</div>')}</div></details>`;
   }
   dmPages.auditlog=auditPage;

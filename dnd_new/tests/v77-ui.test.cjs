@@ -1,0 +1,21 @@
+const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+const root=path.join(__dirname,'..');
+const games=[
+ {id:'g1',kind:'coin_flip',mode:'solo',name:'Taç mı Kılıç mı?',description:'Sikke oyunu',enabled:true,minBet:10,maxBet:1000,config:{winMultiplierBps:19000},sortOrder:10},
+ {id:'g2',kind:'bone_dice',mode:'solo',name:'Kemik Zar Kehaneti',description:'Zar oyunu',enabled:true,minBet:10,maxBet:1000,config:{lowHighMultiplierBps:20000,sevenMultiplierBps:50000},sortOrder:20},
+ {id:'g3',kind:'shells',mode:'solo',name:'Aytaşı Kupaları',description:'Kupa oyunu',enabled:true,minBet:10,maxBet:1000,config:{cupCount:3,winMultiplierBps:27000},sortOrder:30},
+ {id:'g4',kind:'wheel',mode:'solo',name:'Ejderha Çarkı',description:'Çark oyunu',enabled:true,minBet:10,maxBet:1000,config:{segments:[0,0,10000,20000]},sortOrder:40},
+ {id:'g5',kind:'high_roll',mode:'table',name:'Yüksek Zar Masası',description:'Ortak pot',enabled:true,minBet:10,maxBet:1000,config:{houseCutBps:500,minPlayers:2,maxPlayers:10,sides:20},sortOrder:50},
+ {id:'g6',kind:'sigil_draw',mode:'table',name:'Altı Mühür',description:'Mühür oyunu',enabled:true,minBet:10,maxBet:1000,config:{houseCutBps:500,minPlayers:2,maxPlayers:12,sides:6},sortOrder:60}
+];
+function fixture(role='dm'){
+ const context={console,Date,Intl,Math,Number,JSON,current:{id:'campaign',role},auth:{id:role==='dm'?'dm':'player',sessionToken:'token'},page:'casino',dmNav:[['market','◇','Market'],['guide','⌕','Rehber']],playerNav:[['market','◇','Market'],['guide','⌕','Rehber']],dmPages:{},playerPages:{},esc:value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;'),exMoney:value=>`<i>${value} CP</i>`,exWalletCampaign:null,alert(){},confirm(){return true},toast(){},modal(){},render(){},queueMicrotask(){},setInterval(){},crypto:{randomUUID:()=> '00000000-0000-4000-8000-000000000099'},db:{rpc:async()=>({data:null,error:null})},document:{addEventListener(){},querySelector(){return null}}};
+ context.window=context;context.globalThis=context;context.kadimUiState={registerPage(){},safeUpdate(_node,fn){fn()},markDirty(){}};vm.createContext(context);
+ for(const file of ['v77-core.js','v77.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
+ context.v77Casino.data={settings:{isOpen:true,title:'Altın Zar Kumarhanesi',houseNote:'Masalar hazır.'},games:structuredClone(games),rounds:[],history:[],wallet:1234};
+ return context;
+}
+test('casino is installed immediately after Market for both roles',()=>{const c=fixture();assert.deepEqual(c.dmNav.map(x=>x[0]),['market','casino','guide']);assert.deepEqual(c.playerNav.map(x=>x[0]),['market','casino','guide']);assert.equal(typeof c.dmPages.casino,'function');assert.equal(typeof c.playerPages.casino,'function');});
+test('DM page includes global opening controls, six default games and table controls',()=>{const c=fixture('dm'),html=c.dmPages.casino();for(const text of ['DM KUMANDASI','Salon Ayarlarını Kaydet','Taç mı Kılıç mı?','Kemik Zar Kehaneti','Ejderha Çarkı','Yüksek Zar Masası','Altı Mühür','Yeni Masa Aç','Geçmişi'])assert.ok(html.includes(text),text);assert.ok(!html.includes('data-v77="solo"'));});
+test('player page shows wallet, solo bet controls and waits for DM multiplayer table',()=>{const c=fixture('player'),html=c.playerPages.casino();assert.ok(html.includes('1234 CP'));assert.ok(html.includes('data-v77="solo"'));assert.ok(html.includes('Bahsi Oyna'));assert.ok(html.includes('DM bu oyun için henüz masa açmadı'));assert.ok(!html.includes('DM KUMANDASI'));});
+test('open multiplayer table renders participants and role-appropriate actions',()=>{const dm=fixture('dm');dm.v77Casino.data.rounds=[{id:'r1',gameId:'g5',status:'open',bets:[{userId:'player',playerName:'Oğuzhan',stake:100,selection:{choice:'d20'}},{userId:'other',playerName:'Ayla',stake:100,selection:{choice:'d20'}}]}];assert.match(dm.dmPages.casino(),/Zarları At ve Sonuçlandır/);const player=fixture('player');player.v77Casino.data.rounds=structuredClone(dm.v77Casino.data.rounds);assert.match(player.playerPages.casino(),/Bahsin masada/);assert.doesNotMatch(player.playerPages.casino(),/Zarları At ve Sonuçlandır/);});

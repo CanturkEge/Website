@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v77 — Kadim Şans Salonu
+
+- Ürün sürümü **3.7.0**, teknik paket **Build 77**.
+- DM, Kumarhane sayfasından salonu açıp kapatabilir; adını ve atmosfer yazısını değiştirebilir.
+- Dört tek kişilik oyun eklendi: Taç mı Kılıç mı, Kemik Zar Kehaneti, Kupa Altındaki Aytaşı ve Ejderha Çarkı.
+- İki ortak pot oyunu eklendi: Yüksek Zar Masası ve Altı Mühür Çekilişi. DM masayı açar, oyuncular katılır, DM sonucu sunucu zarıyla çözer veya tüm bahisleri iade eder.
+- DM her oyunun adını, açıklamasını, açık/kapalı durumunu, bahis sınırlarını, kazanç çarpanlarını, çark dilimlerini, kasa payını ve oyuncu sınırlarını düzenleyebilir.
+- Bahis, ödeme ve iptal iadeleri oyuncunun mevcut Kesem bakiyesiyle atomik çalışır. Yeniden gönderilen aynı işlem ikinci kez para çekmez.
+- Oyuncu yalnız kendi oyun geçmişini; DM tüm bahis ve masa geçmişini görür. Para hareketleri bildirim üretmeden DM İşlem Logu’na da yazılır.
+- Telefon görünümü tek sütun kartlar, taşmayan hızlı bahisler ve geniş dokunma hedefleri kullanır.
+
+Kurulumda `v77-update.sql` veya aynı içerikli `supabase/migrations/20260909171706_casino_v77.sql` gerekir. Yeni RLS-korumalı tablolar ve token doğrulamalı RPC’ler eklenir; mevcut hesap, kampanya JSON’u, karakter, market ve cüzdan kayıtları değiştirilmez.
+
 ## v76 — Güvenli Yedek Geri Yükleme
 
 - Ürün sürümü **3.6.1**, teknik paket **Build 76**.
