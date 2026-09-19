@@ -158,6 +158,19 @@
   }
 
   const oldRender = render;
+  if (typeof V37_PATCH_NOTES !== 'undefined' && Array.isArray(V37_PATCH_NOTES) && !V37_PATCH_NOTES.some(x => x.build === 'Build 80')) {
+    V37_PATCH_NOTES.unshift({
+      version:'3.9.0',
+      build:'Build 80',
+      title:'Kampanya Sistemleri',
+      tag:'KAMPANYA',
+      tone:'current',
+      summary:'Üs yönetimi, fraksiyon itibarı, yaşayan dünya olayları, pet ilişkileri, sayfalı defterler ve Savaş ekranına bağlı tuzak sistemi eklendi.',
+      added:['DM için tek Kampanya ekranında üs odaları, inşa projeleri, personel ve üs kaynakları.','Fraksiyonların -100/+100 itibar takibi ve durum etiketleri.','Aktif, gelişen, çözülen veya başarısız dünya olayları.','Karaktere bağlanan evcil hayvanlar; ilişki, eğitim, HP/AC ve hikâye notları.','DM ve oyuncular için sayfa çevirme animasyonlu defter, NPC etiketleri ve görsel/dosya ekleri.','Savaş ekranında pasif Perception DC’sine göre gizli tuzakların görünmesi; DM açığa çıkarma ve tetikleme kontrolleri.'],
+      fixed:['Örümcek gibi bulunan canlıların yalnız NPC olarak kalması yerine pet olarak karaktere bağlanabilmesi.','Yeni sistem state’i mevcut karakter, envanter, market ve kampanya kayıtlarını bozmadan v80 altında saklanır.'],
+      changed:['Menü karmaşasını azaltmak için üs, fraksiyon, dünya olayları ve tuzaklar aynı Kampanya ekranında sekmeli olarak toplandı.','Defter ekleri istemci tarafında kampanya state’ine kaydedilir; tek dosya/görsel sınırı 2 MB’dır.']
+    });
+  }
   v80Nav();
   dmPages.bastion = v80Bastion; playerPages.bastion = v80Bastion;
   dmPages.pets = v80Pets; playerPages.pets = v80Pets;
