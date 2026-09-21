@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-09-09**
+Son doğrulama: **2026-09-21**
 Referans branch: `main`
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Canlı hedef: **3.8.1 / v79 / Build 79**; Build 78’in güncel `main` commit’i temel alınmıştır.
+- Canlı hedef: **3.10.0 / v81 / Build 81**; Build 80 güncel `main` commit'i temel alınmıştır.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -24,6 +24,8 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Build seçim RPC'si: `character_build_set_v30`
 - NPC lonca üyeliği, para kesesi ve tüm özellik alanlarını koruyan envanteri kampanya state'inde tutulur.
 - Spell slot kullanımı `spellSlotsUsed` alanında tutulur; DM tablosu ve Long Rest aynı alanı kullanır.
+- Wizard büyü kitabı `spellbookSpells`, günlük hazırlık ve cantripler `preparedSpells` alanında tutulur. Eski Wizard kayıtları ilk kayıtta kitaba geriye uyumlu taşınır.
+- `wizard_spellbook_set_v81`, `wizard_ritual_cast_v81` ve `wizard_arcane_recovery_v81` güvenli oturum, kampanya üyeliği ve karakter sahipliğini sunucuda doğrular.
 - Hazır taktik içerik: 51 map, rütbe kopyalarından arındırılmış yaratık kataloğu, 24 ayrı boss ve genişletilmiş arazi/obje paleti.
 - Build 59 yaratıkları ansiklopedi için eksik detay alanları güvenli varsayılanlarla tamamlanarak açılış hatasından korunur.
 - Oyuncu, yalnız aktif sırasındaki kendi savaş tokenını kalan hızı kadar hareket ettirebilir; yetki ve mesafe `battle_token_move_v60` RPC'sinde doğrulanır.
@@ -54,6 +56,14 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Eski, XP alanı bulunmayan karakterler mevcut seviyelerinin taban XP’siyle açılır; `xpHistory` son 50 gerekçeli DM işlemini kampanya state’inde tutar.
 - Sürüm Notları üst özeti, aralık metni ve açık kartı `V37_PATCH_NOTES` içindeki en yüksek sürümden otomatik belirlenir; Build 78 görünüm hotfix’i `v78.1` cache anahtarıyla dağıtılır.
 - Ganimet sandıkları yalnız para vermez; ilk eşya kalite tabanına ve ödül kategorisine bağlıdır. Kalite artışı aday eşya seviyesine de uygulanır, çöp ağırlığı azaltılır ve nadirlik eğrisi oyuncu lehine yükseltilir.
+
+## Build 81 çalışma rotası
+
+- `v81-core.js`: Wizard kitap/hazırlık limitleri, eski kayıt normalizasyonu ve kopyalama maliyeti için saf kurallar.
+- `v81.js`, `v81.css`: Büyü Kitabım / Bugün Hazırladıklarım ayrımı, parşömen veya kitaptan kopya kaydı, ritüel kullanımı ve Arcane Recovery arayüzü.
+- `v81-update.sql`: oyuncunun kendi Wizard karakterine bağlı kitap/hazırlık kaydı, slotsuz ritüel logu ve sınırlı slot geri kazanımı için token doğrulamalı RPC'ler.
+- `tests/v81-wizard.test.cjs`: eski kayıt koruması, kitap-hazırlık alt kümesi, seviye/INT sınırları, kopyalama maliyeti ve katalog erişimi testleri.
+- Mevcut karakter, envanter, XP, büyü slotu ve kampanya kimlikleri korunur; ayrı tablo eklenmez.
 
 ## Build 79 çalışma rotası
 

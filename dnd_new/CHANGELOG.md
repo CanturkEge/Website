@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v81 — Wizard Büyü Kitabı
+
+- Ürün sürümü **3.10.0**, teknik paket **Build 81**.
+- Wizard cantripleri, kitabındaki slotlu büyüler ve o gün hazırladığı büyüler ayrı yönetilir.
+- Eski Wizard karakterlerinin hazırlanmış büyüleri ilk kayıtta kaybolmadan büyü kitabına alınır.
+- Seviye kazanımıyla öğrenilen büyüler `6 + 2 × (Wizard seviyesi − 1)` kotasıyla izlenir. DM onaylı parşömen veya başka kitaptan kopyalar bu kotaya sayılmaz; temel 50 GP/seviye ve 2 saat/seviye bedeli arayüzde gösterilir.
+- Hazırlanan büyülerin kitapta bulunması ve sayılarının Wizard seviyesi + INT modunu aşmaması hem istemcide hem RPC içinde doğrulanır.
+- Kitaptaki Wizard ritüelleri hazırlanmış olmasa da 10 dakika ek süreyle, slot harcamadan kullanılabilir ve masa kaydına yazılır.
+- Arcane Recovery, harcanmış 1–5. seviye slotlardan toplam seviyesi Wizard seviyesinin yarısı kadar olan seçimi geri kazandırır; uzun dinlenmeden önce ikinci kullanım reddedilir.
+- Yeni RPC'ler güvenli oturum, oyuncu rolü ve karakter sahipliği kontrolü yapar. Mevcut karakter, envanter, XP ve slot verileri korunur.
+
+Kurulumda `v81-update.sql` dosyasını Supabase'te bir kez çalıştır.
+
 ## v79 — Cömert Ganimet Dengesi
 
 - Ürün sürümü **3.8.1**, teknik paket **Build 79**.

@@ -46,11 +46,12 @@ window.DM_CONFIG = {
   'v76.css',
   'v77.css',
   'v78.css',
-  'v80.css'
+  'v80.css',
+  'v81.css'
 ].forEach(href => {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = href + '?v=80';
+  link.href = href + '?v=81';
   document.head.appendChild(link);
 });
 
@@ -116,11 +117,13 @@ window.addEventListener('load', () => {
     'v77.js',
     'v78-core.js',
     'v78.js',
-    'v80.js'
+    'v80.js',
+    'v81-core.js',
+    'v81.js'
   ]) {
     let s = document.createElement('script');
     s.async = false;
-    s.src = src + '?v=80';
+    s.src = src + '?v=81';
     document.body.appendChild(s);
   }
 });
