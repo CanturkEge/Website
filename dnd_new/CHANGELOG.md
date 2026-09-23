@@ -1,5 +1,17 @@
 # Kadim Masa Defteri — Kurulum
 
+## v82 — Wizard Dinlenme Kilitleri
+
+- Ürün sürümü **3.10.1**, teknik paket **Build 82**.
+- Normal Wizard görünümü yalnız bilinen cantripleri ve büyü kitabındaki kayıtları gösterir; bütün katalog yalnız ilk kurulumda veya DM'in verdiği tek kullanımlık düzenleme izninde açılır.
+- Cantrip ve kitap değişiklikleri DM izni olmadan, günlük hazırlık değişikliği DM tarafından tamamlanan uzun dinlenme olmadan sunucuda reddedilir.
+- Uzun dinlenme mevcut hazırlıkları zorla değiştirmez; oyuncuya kitabından bir kez yeni günlük liste kaydetme hakkı verir.
+- Arcane Recovery yalnız DM tarafından tamamlanan kısa dinlenmeden sonra açılır, kullanıldığında izin tüketilir ve uzun dinlenmeye kadar ikinci kez kullanılamaz.
+- Wizard için kısa/uzun dinlenme, mevcut sınıf kaynağı ve slot yenileme davranışını koruyan ayrı, token doğrulamalı RPC üzerinden işlenir.
+- Eski Wizard kitapları, cantripleri, hazırlıkları, slotları, karakter kimlikleri ve kampanya verileri korunur.
+
+Kurulumda önce `v81-update.sql`, ardından `v82-update.sql` veya aynı içerikli `supabase/migrations/20260921233000_wizard_rest_locks_v82.sql` çalıştırılır.
+
 ## v81 — Wizard Büyü Kitabı
 
 - Ürün sürümü **3.10.0**, teknik paket **Build 81**.

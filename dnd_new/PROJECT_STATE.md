@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-09-21**
+Son doğrulama: **2026-09-23**
 Referans branch: `main`
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Canlı hedef: **3.10.0 / v81 / Build 81**; Build 80 güncel `main` commit'i temel alınmıştır.
+- Canlı hedef: **3.10.1 / v82 / Build 82**; Build 81 güncel `main` commit'i temel alınmıştır.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -26,6 +26,8 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Spell slot kullanımı `spellSlotsUsed` alanında tutulur; DM tablosu ve Long Rest aynı alanı kullanır.
 - Wizard büyü kitabı `spellbookSpells`, günlük hazırlık ve cantripler `preparedSpells` alanında tutulur. Eski Wizard kayıtları ilk kayıtta kitaba geriye uyumlu taşınır.
 - `wizard_spellbook_set_v81`, `wizard_ritual_cast_v81` ve `wizard_arcane_recovery_v81` güvenli oturum, kampanya üyeliği ve karakter sahipliğini sunucuda doğrular.
+- Oyuncu normal zamanda yalnız bilinen cantriplerini ve kitabındaki büyüleri görür. Kitap/cantrip değişikliği DM'in tek kullanımlık iznine, günlük hazırlık uzun dinlenmeye, Arcane Recovery kısa dinlenmeye bağlıdır.
+- `wizard_rest_v82` ve `wizard_spellbook_unlock_v82` yalnız kampanya DM'i tarafından çalıştırılabilir; izinler başarılı kayıt veya kullanımdan sonra tüketilir.
 - Hazır taktik içerik: 51 map, rütbe kopyalarından arındırılmış yaratık kataloğu, 24 ayrı boss ve genişletilmiş arazi/obje paleti.
 - Build 59 yaratıkları ansiklopedi için eksik detay alanları güvenli varsayılanlarla tamamlanarak açılış hatasından korunur.
 - Oyuncu, yalnız aktif sırasındaki kendi savaş tokenını kalan hızı kadar hareket ettirebilir; yetki ve mesafe `battle_token_move_v60` RPC'sinde doğrulanır.
@@ -56,6 +58,14 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Eski, XP alanı bulunmayan karakterler mevcut seviyelerinin taban XP’siyle açılır; `xpHistory` son 50 gerekçeli DM işlemini kampanya state’inde tutar.
 - Sürüm Notları üst özeti, aralık metni ve açık kartı `V37_PATCH_NOTES` içindeki en yüksek sürümden otomatik belirlenir; Build 78 görünüm hotfix’i `v78.1` cache anahtarıyla dağıtılır.
 - Ganimet sandıkları yalnız para vermez; ilk eşya kalite tabanına ve ödül kategorisine bağlıdır. Kalite artışı aday eşya seviyesine de uygulanır, çöp ağırlığı azaltılır ve nadirlik eğrisi oyuncu lehine yükseltilir.
+
+## Build 82 çalışma rotası
+
+- `v81.js`, `v81.css`: kilitli normal kitap görünümü, uzun dinlenme hazırlık hakkı, kısa dinlenme Arcane Recovery hakkı ve DM kitap düzenleme kumandası.
+- `v82-update.sql`: mevcut v81 kayıt RPC'sini izinlerle sertleştirir; DM doğrulamalı Wizard dinlenme ve kitap açma RPC'lerini ekler.
+- `supabase/migrations/20260921233000_wizard_rest_locks_v82.sql`: v82 canlı migration kaydı.
+- `tests/v81-wizard.test.cjs`: kilitli katalog, ayrık hazırlık/kitap izinleri ve SQL dinlenme bağları dahil sekiz test.
+- Mevcut Wizard kitap/cantrip/hazırlık verileri taşınmaz veya silinmez; yeni tablo eklenmez.
 
 ## Build 81 çalışma rotası
 

@@ -8,5 +8,21 @@ test('Wizard progression limits and copy costs follow 2014 rules',()=>{assert.eq
 test('non-Wizard spells and spells above the unlocked level are rejected',()=>{const low={className:'Wizard',level:1,stats:{INT:16}};const bad=[R.entry(spells[3])];assert.match(R.validate(low,{book:bad,prepared:[],cantrips:[]},spells)[0],/bu Wizard seviyesinde/);assert.equal(R.resolve(spells,'Bless'),null);});
 test('Wizard choice panel replaces the old combined picker with the spellbook workflow',()=>{
  const ui={console,V47_SPELLS:spells,v81WizardRules:R,V37_PATCH_NOTES:[],auth:null,current:null,document:{addEventListener:()=>{},querySelectorAll:()=>[]},prChoicePanel:()=>'<section class="pr-choice card v53-choice"><button id="prSavePlayerChoices" class="primary">Seçimlerimi Kaydet</button></section>',esc:String,$:()=>null};ui.window=ui;ui.globalThis=ui;vm.createContext(ui);vm.runInContext(fs.readFileSync(path.join(root,'v81.js'),'utf8'),ui,{filename:'v81.js'});
- const html=ui.prChoicePanel(wizard);assert.match(html,/Kitabım ve Bugün Hazırladıklarım/);assert.match(html,/id="v81WizardSave"/);assert.doesNotMatch(html,/id="prSavePlayerChoices"/);assert.equal(ui.V37_PATCH_NOTES[0].build,'Build 81');
+ const html=ui.prChoicePanel(wizard);assert.match(html,/Kitabım ve Bugün Hazırladıklarım/);assert.match(html,/id="v81WizardSave"/);assert.doesNotMatch(html,/id="prSavePlayerChoices"/);assert.doesNotMatch(html,/id="v81AddMode"/);assert.equal(ui.V37_PATCH_NOTES[0].build,'Build 82');
+});
+test('normal Wizard view hides the unowned catalog and locks preparation outside a long rest',()=>{
+ const ui={console,V47_SPELLS:spells,v81WizardRules:R,V37_PATCH_NOTES:[],auth:null,current:null,document:{addEventListener:()=>{},querySelectorAll:()=>[]},prChoicePanel:()=>'<section class="pr-choice card v53-choice"><button id="prSavePlayerChoices" class="primary">Seçimlerimi Kaydet</button></section>',esc:String,$:()=>null};ui.window=ui;ui.globalThis=ui;vm.createContext(ui);vm.runInContext(fs.readFileSync(path.join(root,'v81.js'),'utf8'),ui,{filename:'v81.js'});
+ const locked={...wizard,wizardSpellbookVersion:82,spellbookSpells:[R.entry(spells[1])],resources:{}},html=ui.prChoicePanel(locked);
+ assert.match(html,/Alarm/);assert.doesNotMatch(html,/Misty Step/);assert.doesNotMatch(html,/id="v81WizardSave"/);assert.match(html,/Kısa dinlenme gerekli/);
+});
+test('DM rest and library permissions open only their matching Wizard controls',()=>{
+ const ui={console,V47_SPELLS:spells,v81WizardRules:R,V37_PATCH_NOTES:[],auth:null,current:null,document:{addEventListener:()=>{},querySelectorAll:()=>[]},prChoicePanel:()=>'<section class="pr-choice card v53-choice"><button id="prSavePlayerChoices" class="primary">Seçimlerimi Kaydet</button></section>',esc:String,$:()=>null};ui.window=ui;ui.globalThis=ui;vm.createContext(ui);vm.runInContext(fs.readFileSync(path.join(root,'v81.js'),'utf8'),ui,{filename:'v81.js'});
+ const base={...wizard,wizardSpellbookVersion:82,spellbookSpells:[R.entry(spells[1])]};
+ const prepared=ui.prChoicePanel({...base,resources:{v82_prepare_ready:1}});assert.match(prepared,/Günlük hazırlıkları kaydet/);assert.doesNotMatch(prepared,/Misty Step/);
+ const library=ui.prChoicePanel({...base,resources:{v82_spellbook_edit_ready:1}});assert.match(library,/Misty Step/);assert.match(library,/id="v81AddMode"/);
+ const recovery=ui.prChoicePanel({...base,resources:{v82_arcane_recovery_ready:1}});assert.match(recovery,/id="v81RecoveryOpen" >Arcane Recovery</);
+});
+test('database patch requires DM rest and one-use library authorization',()=>{
+ const sql=fs.readFileSync(path.join(root,'v82-update.sql'),'utf8');
+ assert.match(sql,/wizard_rest_v82/);assert.match(sql,/wizard_spellbook_unlock_v82/);assert.match(sql,/İlk Wizard kurulumunda kopya büyü eklenemez/);assert.match(sql,/Hazırlanan büyüler yalnız uzun dinlenmeden sonra/);assert.match(sql,/önce DM kısa dinlenmeyi tamamlamalı/);assert.match(sql,/rows-'v82_arcane_recovery_ready'/);
 });

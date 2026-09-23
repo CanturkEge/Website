@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v79 / uygulama v3.8.1 / Build 79**
+Güncel sürüm: **v82 / uygulama v3.10.1 / Build 82**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -15,7 +15,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 | Mobil menü veya genel görünüm | ilgili CSS + DOM id'si | `mobile.css`, `style.css`, sürüm CSS'i |
 | Karakter oluşturma/stat/species/class | `v53.js`, hedef kayıt için `v53-data.js` | `v30.js`, `v31.js`, `v53-update.sql` |
 | XP, seviye göstergesi ve DM ilerleme yönetimi | `v78.js`, `v78-core.js`, `v78.css` | `progression.js`, güvenli kampanya kaydı için `v31.js` |
-| Büyü hazırlama veya büyü kuralı | `v53.js`, Wizard kitabı için `v81-core.js` + `v81.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js`, Wizard kayıt/RPC akışı için `v81-update.sql` |
+| Büyü hazırlama veya büyü kuralı | `v53.js`, Wizard kitabı için `v81-core.js` + `v81.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js`, Wizard temel RPC'leri için `v81-update.sql`, dinlenme/izin kilitleri için `v82-update.sql` |
 | Cleric/tanrı/domain | `v52.js`, hedef tanrı/domain için `v52-data.js` | `v49-data.js`, `v52-update.sql` |
 | Envanter/kuşanma/aktarım | `inventory-actions.js`, `v45.js`, `v46.js`; NPC transferi için `v66.js` | `v31.js`, `inventory-update.sql`, `v66-update.sql`, eski odak uyumluluğu için `v67-update.sql` |
 | Market/loot/eşya kataloğu | hedef veri ve ganimet dengesi için `v44-data.js`, `v48-data.js`, caster eşyaları için `v63-data.js`, temizlik/class eşya/arcane market için `v64-data.js`, tekil emanetler için `v65-data.js`, odak/materyal için `v66-data.js` | `v34.js`, `v44.js`, ganimet dengesi testi için `tests/v79-loot-balance.test.cjs`, `v64.js`, `v65.js`, sepet/çok turlu teklif için `v66.js`, `v66-update.sql`, `v68-update.sql`, `v69-update.sql`, sessiz bildirim/geçmiş için `v70-update.sql`; büyü bonusu için `v63.js`; Kesem para merkezi için `expansion.js`, `v27.js`, `v61-update.sql` |
@@ -93,7 +93,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 - XP, karakterin kampanya JSON nesnesindeki `xp` ve `xpHistory` alanlarında tutulur; yalnız DM arayüzü mevcut `campaign_save_v31` hattı üzerinden kalıcı değişiklik yapar. Yeni SQL gerekmez.
 - `v31-update.sql` kampanya JSON birleştirme hattının esas güvenli kayıt katmanıdır; lokal özellik değişikliklerinde sebepsiz değiştirilmemelidir.
 - Yeni sürüm eklerken `config.js`, `index.html`, `README.md`, gerekirse `guide-v26.txt` ve `v37.js` sürüm numarası birlikte kontrol edilir.
-- Wizard büyü kitabı/hazırlık güncellemesi `wizard_spellbook_set_v81`; ritüel ve Arcane Recovery işlemleri ilgili v81 RPC'leri üzerinden gider.
+- Wizard büyü kitabı/hazırlık güncellemesi `wizard_spellbook_set_v81`; ritüel v81 RPC'si üzerinden gider. DM dinlenmesi `wizard_rest_v82`, kitap/cantrip izni `wizard_spellbook_unlock_v82`, kısa dinlenme doğrulamalı Arcane Recovery güncellenmiş v81 RPC'si üzerinden çalışır.
 
 ## Lokal değişiklik rotası
 

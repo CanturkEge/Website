@@ -56,6 +56,6 @@ test('forced rarity remains exact for DM-authored rewards',()=>{
 test('Build 79 cache key distributes the loot rebalance immediately',()=>{
   const root=path.join(__dirname,'..'),config=fs.readFileSync(path.join(root,'config.js'),'utf8'),html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   assert.match(config,/v44-data\.js/);
-  assert.match(config,/\?v=79/);
-  assert.match(html,/config\.js\?v=79/);
+  assert.match(config,/\?v=82/);
+  assert.match(html,/config\.js\?v=82/);
 });
