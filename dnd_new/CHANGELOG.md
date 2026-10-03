@@ -1,5 +1,18 @@
 # Kadim Masa Defteri — Kurulum
 
+## v83 — Kampanya Merkezleri ve Güvenli Özel Kayıtlar
+
+- Ürün sürümü **3.11.0**, teknik paket **Build 83**.
+- Soldaki uzun menü DM ve oyuncu için 9 anlamlı merkeze indirildi; bütün mevcut sayfalar içerideki alt sekmelerde korunur.
+- Üs yönetimi bina ve 16 oda presetine; gelişmiş görev ve karşılaşmalar aşama, görünürlük, ödül, arazi, düşman ve gizli DM alanlarına kavuştu.
+- Fraksiyon/itibar, dünya olayları, pet ilişkisi, suç-kanun-aranma, ilahi kayıtlar ve tuzak/bulmaca yönetimi işlevsel ekranlarla tamamlandı.
+- Macera kroniği, özel DM notları ve her oyuncunun kişisel defteri ayrıldı; sayfa animasyonu, NPC etiketi ve güvenli görsel/PDF/TXT eki korunur.
+- Tuzakların gizli ayrıntıları ve özel defterler ortak kampanya JSON'undan çıkarıldı. Oyuncuya yalnız açığa çıkan veya pasif Perception ile sezilen tuzak gider.
+- Eski Build 80 kayıtları kaybolmadan yeni tablolara taşınır; tetikleyici eski açık sekmelerin gizli veriyi tekrar ortak state'e yazmasını engeller.
+- Wizard kitap, cantrip, hazırlık, dinlenme ve Arcane Recovery kuralları Build 82 davranışıyla aynen korunur.
+
+Kurulumda `v83-update.sql` veya aynı içerikli `supabase/migrations/20261003092000_campaign_hubs_v83.sql` bir kez çalıştırılır.
+
 ## v82 — Wizard Dinlenme Kilitleri
 
 - Ürün sürümü **3.10.1**, teknik paket **Build 82**.

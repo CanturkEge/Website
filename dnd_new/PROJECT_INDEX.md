@@ -1,6 +1,6 @@
 # Kadim Masa Defteri — Proje İndeksi
 
-Güncel sürüm: **v82 / uygulama v3.10.1 / Build 82**
+Güncel sürüm: **v83 / uygulama v3.11.0 / Build 83**
 Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sırası `config.js` içinden yönetilir.
 
 ## Hızlı kullanım
@@ -13,6 +13,7 @@ Mimari: statik HTML/CSS + klasik global JavaScript + Supabase RPC. Script sıras
 |---|---|---|
 | Giriş, hesap, lobi, kampanya | `app.js` içinde hedef sembol | `supabase-setup.sql`, ilgili RPC SQL'i |
 | Mobil menü veya genel görünüm | ilgili CSS + DOM id'si | `mobile.css`, `style.css`, sürüm CSS'i |
+| Ana merkez menüsü, üs, gelişmiş görev/karşılaşma, tuzak, fraksiyon, dünya olayı, pet, suç/kanun, ilahi kayıt veya defter | `v83.js`, `v83-core.js`, `v83.css` | güvenli ve role göre filtreli kayıt için `v83-update.sql`, eski v80 verisi için `v80.js` |
 | Karakter oluşturma/stat/species/class | `v53.js`, hedef kayıt için `v53-data.js` | `v30.js`, `v31.js`, `v53-update.sql` |
 | XP, seviye göstergesi ve DM ilerleme yönetimi | `v78.js`, `v78-core.js`, `v78.css` | `progression.js`, güvenli kampanya kaydı için `v31.js` |
 | Büyü hazırlama veya büyü kuralı | `v53.js`, Wizard kitabı için `v81-core.js` + `v81.js`, hedef büyü için `v47-data.js` | `v47.js`, `v52.js`, Wizard temel RPC'leri için `v81-update.sql`, dinlenme/izin kilitleri için `v82-update.sql` |

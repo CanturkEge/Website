@@ -24,8 +24,9 @@
     b.rooms ??= []; b.projects ??= []; b.hirelings ??= [];
     state.v80.factions ??= [];
     state.v80.worldEvents ??= [];
-    state.v80.traps ??= [];
     state.v80.pets ??= [];
+    if (window.v83Rules) return state.v80;
+    state.v80.traps ??= [];
     state.v80.notebooks ??= {dm:{title:'DM Kronikleri',pages:[]},players:{}};
     state.v80.notebooks.dm ??= {title:'DM Kronikleri',pages:[]};
     state.v80.notebooks.dm.pages ??= [];
@@ -176,8 +177,8 @@
   dmPages.pets = v80Pets; playerPages.pets = v80Pets;
   dmPages.notebook = v80Notebook; playerPages.notebook = v80Notebook;
   const oldEncounterDM = dmPages.encounter, oldEncounterPlayer = playerPages.encounterview;
-  dmPages.encounter = () => `${oldEncounterDM()}${v80BattleTrapPanel(true)}`;
-  playerPages.encounterview = () => `${oldEncounterPlayer()}${v80PlayerDetections()}`;
+  dmPages.encounter = () => `${oldEncounterDM()}${window.v83Rules?'':v80BattleTrapPanel(true)}`;
+  playerPages.encounterview = () => `${oldEncounterPlayer()}${window.v83Rules?'':v80PlayerDetections()}`;
   render = function(){v80Ensure();return oldRender();};
 
   document.addEventListener('click', e => {
