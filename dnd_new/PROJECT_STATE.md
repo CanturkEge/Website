@@ -1,12 +1,12 @@
 # Proje Durumu
 
-Son doğrulama: **2026-10-03**
+Son doğrulama: **2026-10-18**
 Referans branch: `main`
 Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baseline v2.5.0`)
 
 ## Aktif durum
 
-- Canlı hedef: **3.11.0 / v83 / Build 83**; Build 82 güncel `main` commit'i temel alınmıştır.
+- Canlı hedef: **3.11.1 / v84 / Build 84**; Build 83 kampanya sistemleri korunarak menü ve yükleme döngüsü düzeltilmiştir.
 - Giriş noktası: `index.html`
 - İlk yüklenen çekirdek: `config.js`, ardından `ui-state-manager.js`, `app.js`, `expansion.js`, `progression.js`, `admin.js`, `session.js`
 - Ek sürüm modülleri `config.js` içindeki sıralı listeden, `window.load` sonrasında yüklenir.
@@ -28,7 +28,8 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - `wizard_spellbook_set_v81`, `wizard_ritual_cast_v81` ve `wizard_arcane_recovery_v81` güvenli oturum, kampanya üyeliği ve karakter sahipliğini sunucuda doğrular.
 - Oyuncu normal zamanda yalnız bilinen cantriplerini ve kitabındaki büyüleri görür. Kitap/cantrip değişikliği DM'in tek kullanımlık iznine, günlük hazırlık uzun dinlenmeye, Arcane Recovery kısa dinlenmeye bağlıdır.
 - `wizard_rest_v82` ve `wizard_spellbook_unlock_v82` yalnız kampanya DM'i tarafından çalıştırılabilir; izinler başarılı kayıt veya kullanımdan sonra tüketilir.
-- Sol menü DM ve oyuncu için 9 ana merkeze indirildi; eski sayfalar içerik kaybetmeden bu merkezlerin alt sekmelerinde açılır.
+- Build 83 üst hub/alt sekme düzeni kaldırılmıştır; Build 82 ve öncesindeki eski sol menü listesi yeniden aktiftir.
+- v83 veri yükleme hatası otomatik RPC tekrar döngüsüne girmez; ekranda hata ve kullanıcı kontrollü yeniden deneme gösterilir.
 - Üs/bastion, gelişmiş görev ve karşılaşma, tuzak, fraksiyon, dünya olayı, pet, suç/kanun, ilahi kayıt ve kronik sistemleri `v83.js` içinde işlevsel düzenleyicilerle sunulur.
 - Tuzaklar, DM notları ve kişisel defterler ortak kampanya JSON'undan çıkarılmıştır. `campaign_systems_load_v83` yalnız role ve pasif Perception sonucuna uygun veriyi döndürür.
 - Eski sekmelerin gizli v80 verisini ortak state'e geri yazması `v83_strip_private_campaign_state` tetikleyicisiyle engellenir.
@@ -63,14 +64,14 @@ Profesyonel baseline: `0ed6a2a` (`chore(website): establish professional baselin
 - Sürüm Notları üst özeti, aralık metni ve açık kartı `V37_PATCH_NOTES` içindeki en yüksek sürümden otomatik belirlenir; Build 78 görünüm hotfix’i `v78.1` cache anahtarıyla dağıtılır.
 - Ganimet sandıkları yalnız para vermez; ilk eşya kalite tabanına ve ödül kategorisine bağlıdır. Kalite artışı aday eşya seviyesine de uygulanır, çöp ağırlığı azaltılır ve nadirlik eğrisi oyuncu lehine yükseltilir.
 
-## Build 83 çalışma rotası
+## Build 84 çalışma rotası
 
 - `v83-core.js`: oda/bina presetleri, durum akışları, pasif Perception ve normalizasyon için saf kurallar.
-- `v83.js`, `v83.css`: 9 merkezli hiyerarşik menü ve kampanya sistemlerinin birbirinden ayrışan işlevsel ekranları.
+- `v83.js`, `v83.css`: eski sol menüyü değiştirmeden kampanya sistemlerinin birbirinden ayrışan işlevsel ekranları ve veri yükleme hotfix'i.
 - `v83-update.sql`: role göre filtrelenen kampanya sistemi, özel defter ve pet RPC'leri; eski v80 gizli alanlarının güvenli taşınması.
 - `supabase/migrations/20261003092000_campaign_hubs_v83.sql`: v83 canlı migration kaydı.
 - `tests/v83-core.test.cjs`, `tests/v83-ui.test.cjs`, `tests/v83-database.test.cjs`: preset, algı, menü, işlem sözleşmesi, migration ve veri mahremiyeti testleri.
-- Mevcut karakterler, eşyalar, görevler, haritalar, Wizard kayıtları ve eski ekranlar korunur; yalnız erişim biçimi merkez sekmelerine taşınır.
+- Mevcut karakterler, eşyalar, görevler, haritalar, Wizard kayıtları ve eski ekranlar korunur; Build 84 için yeni SQL veya veri taşıma işlemi gerekmez.
 
 ## Build 82 çalışma rotası
 

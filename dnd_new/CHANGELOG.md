@@ -1,5 +1,13 @@
 # Kadim Masa Defteri — Kurulum
 
+## v84 — Menü ve Veritabanı İstek Döngüsü Hotfix'i
+
+- Ürün sürümü **3.11.1**, teknik paket **Build 84**.
+- Build 83 ile gelen üst hub/alt sekme düzeni kaldırıldı; Build 82 ve öncesindeki eski sol menü listesi geri getirildi.
+- Yeni menü sadeleştirmesi, ekranların nasıl birleşeceği yeniden netleştirilene kadar uygulanmaz.
+- v83 kampanya sistemi yüklenemediğinde istemcinin aynı Supabase RPC'sini sonsuz döngüde çağırması engellendi. Yeniden deneme artık yalnız kullanıcı **Tekrar dene** düğmesine bastığında yapılır.
+- Mevcut kampanya, karakter, envanter, Wizard, defter ve özel DM kayıtları değiştirilmez. **Yeni SQL gerekmez.**
+
 ## v83 — Kampanya Merkezleri ve Güvenli Özel Kayıtlar
 
 - Ürün sürümü **3.11.0**, teknik paket **Build 83**.

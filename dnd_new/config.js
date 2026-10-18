@@ -52,7 +52,7 @@ window.DM_CONFIG = {
 ].forEach(href => {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = href + '?v=83';
+  link.href = href + '?v=84';
   document.head.appendChild(link);
 });
 
@@ -126,7 +126,7 @@ window.addEventListener('load', () => {
   ]) {
     let s = document.createElement('script');
     s.async = false;
-    s.src = src + '?v=83';
+    s.src = src + '?v=84';
     document.body.appendChild(s);
   }
 });
