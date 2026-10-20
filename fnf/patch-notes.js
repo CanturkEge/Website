@@ -1,6 +1,16 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.4.0', date:'20 Ekim 2026', title:'Dünyanın Taslağı', tag:'TASARIM',
+    summary:'Yerleşim, tarım ve keşif ekranlarında oyunun ana fikirleri görünür hale geldi.',
+    added:[
+      'Yapılar, halk, ekonomi; tohum, yetişme koşulları ve hayvanlar; araştırma ve alametler için kısa kapsam kartları.',
+      'Geliştirme için dosya haritası ve açık tasarım kararları.'
+    ],
+    fixed:[],
+    changed:['Karakter ve ekran metinleri ayrı içerik kataloğuna taşındı. Kartlar henüz oynanabilir sistem değildir.']
+  },
+  {
     version:'0.3.0', date:'20 Ekim 2026', title:'Arkadaş Masası', tag:'HESAPLAR',
     summary:'Kullanıcı adı ve şifreyle e-postasız kayıt ve giriş.',
     added:[

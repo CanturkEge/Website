@@ -1,0 +1,33 @@
+# FNF proje haritası
+
+Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için çık; D&D kodunu FNF'ye kopyalama. Önce `rg -n 'aranan_ad' fnf/`, sonra ilgili küçük bölümü oku.
+
+| İhtiyaç | Dosya / giriş noktası |
+| --- | --- |
+| Sayfa yükleme, script sırası | `index.html` |
+| Renkler, sol menü, düzen | `style.css` (`:root`, `#sidebar`, `.game-mode`) |
+| Tür, yol, uzmanlık, nitelik, beceri ve taslak ekran metinleri | `game-data.js` |
+| Oturum, oda, yönlendirme, render akışı | `app.js`: `refreshRooms`, `openRoom`, `render`, `renderSidebar` |
+| Kayıt, eski hesaba kullanıcı adı, giriş, oda kurma/katılma | `app.js`: `renderAuth`, `renderLegacyClaim`, `renderLobby` |
+| Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
+| Yerleşim, tarım, keşif taslak ekranları | `app.js`: `renderGame`; metinler `game-data.js/featurePanels` |
+| Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
+| Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
+| Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql` |
+| Tasarım kararları ve açık sorular | `GAME_DESIGN.md` |
+| Kurulum ve sınırlar | `README.md` |
+
+## Canlı akış
+
+`egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
+
+Kullanıcı adıyla kayıt Edge Function üzerinden davet doğrular; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
+
+## Değişiklik ritmi
+
+1. Yalnızca ilgili dosyayı ve bu haritayı oku. Veri alanı/kural değişiyorsa SQL doğrulamasını da birlikte değiştir.
+2. Gerçekten tamamlanan özellik için `patch-notes.js` ile `CHANGELOG.md`'yi aynı sürümde tut. Taslak ekranları oynanabilir diye yazma.
+3. İlgili JS dosyalarını tek tek `node --check` ile kontrol et; sunucu kuralı değiştiyse ilgili Supabase sorgusunu çalıştır. GitHub Pages yayınını canlı URL'de kontrol et.
+4. Menüye her alt özellik için yeni sekme ekleme; yerleşim, tarım ve keşif altındaki küçük panellerle büyüt.
+
+Son doğrulama: 20 Ekim 2026. Gerçek hesapla tüm kayıt/oyun akışı uçtan uca denenmedi; eski onaysız e-posta hesabı otomatik etkinleştirilmedi. Bu dosyayı sonraki değişiklikte güncel tut.

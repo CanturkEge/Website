@@ -2,12 +2,14 @@
 
 Independent, static browser game shell at `https://egecanturk.dev/fnf/` in the same GitHub Pages repository as the D&D site. It has its **own** Supabase project, auth session (`fnf-auth-v1`), tables, and room memberships. D&D files are not imported or changed.
 
-## Current shell (v0.3.0)
+## Current shell (v0.4.0)
 
 - Username/password registration and sign-in. New users enter a room code or creator password as their invitation; no real email or confirmation link is needed.
 - DM room creation with a server-checked creator password and a separate 10-character player invite code.
 - The DM enters their room directly without creating a character. Players create one character per room: six species, four paths, twelve specializations, six abilities starting at 10, eight ability points, one species bonus, and two chosen class skills. Species and specialization also grant fixed training; overlapping training gives expertise.
-- Dark game shell with a role-aware left menu, room roster, character sheet, and searchable, sortable patch notes. Settlement, farming, exploration, and world simulation remain clearly marked for later versions.
+- Dark game shell with a role-aware left menu, room roster, character sheet, and searchable, sortable patch notes. Settlement, farming, and exploration show short scope cards, clearly marked as future mechanics.
+
+Start future edits with `PROJECT_INDEX.md`; confirmed concepts and open decisions live in `GAME_DESIGN.md`. Names and descriptions are centralized in `game-data.js`.
 
 ## Set up a dedicated Supabase project
 

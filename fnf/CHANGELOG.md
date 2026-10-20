@@ -2,6 +2,16 @@
 
 Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sırayla tutulur. Teknik dağıtım ile oyun mekaniği henüz ayrı sürümlenmez.
 
+## v0.4.0 — Dünyanın Taslağı (20 Ekim 2026)
+
+### Yeni
+- Yerleşim, tarım ve keşif sayfalarında FNF'nin ana oyun fikirleri kısa kapsam kartlarıyla gösterildi.
+- `PROJECT_INDEX.md`, `GAME_DESIGN.md` ve `AGENTS.md` ile hedefli geliştirme haritası eklendi.
+
+### Değişti
+- Tür, yol, beceri ve ekran metinleri `game-data.js` kataloğuna taşındı.
+- Bu kartlar kayıt/simülasyon içermez; oyun kuralları netleştikten sonra oynanabilir olacak.
+
 ## v0.3.0 — Arkadaş Masası (20 Ekim 2026)
 
 ### Yeni

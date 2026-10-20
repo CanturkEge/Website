@@ -1,4 +1,4 @@
-/* Farms & Fields · v0.3.0. Authorization and character validation live on Supabase. */
+/* Farms & Fields · v0.4.0. Authorization and character validation live on Supabase. */
 (() => {
   'use strict';
   const cfg = window.FNF_CONFIG || {};
@@ -11,32 +11,7 @@
   const db = configured && window.supabase?.createClient(cfg.url, cfg.publishableKey, {
     auth: { storageKey:'fnf-auth-v1', persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
   });
-  const species = [
-    {id:'human',name:'İnsan',icon:'◇',desc:'İnsanlar anlaşmayı ve uyumu öğrenir.',stat:'presence',training:'diplomacy'},
-    {id:'elf',name:'Elf',icon:'✧',desc:'Canlıların izlerini sezerek okur.',stat:'insight',training:'botany'},
-    {id:'dwarf',name:'Cüce',icon:'◆',desc:'Toprağı ve işlenmiş malzemeyi tanır.',stat:'endurance',training:'craft'},
-    {id:'orc',name:'Ork',icon:'◈',desc:'Zor şartlarda ayakta kalır.',stat:'power',training:'defense'},
-    {id:'dragonborn',name:'Ejderdoğan',icon:'✦',desc:'Eski yolların işaretlerini bulur.',stat:'intellect',training:'exploration'},
-    {id:'halfling',name:'Buçukluk',icon:'❖',desc:'Canlılarla güven kurar.',stat:'agility',training:'husbandry'}
-  ];
-  const classes = [
-    {id:'nature',name:'Doğa Bilimleri',icon:'✳',desc:'Canlıları ve gizemli maddeleri anla.',pool:['botany','husbandry','craft','research','exploration'],specialties:[['healer','Şifacı','Şifalı otlar ve iyileştirme','botany'],['alchemist','Simyacı','Büyülü nesneler ve dönüşüm','research'],['artisan','Üretici','Gıda, içki ve işleme','craft']]},
-    {id:'villager',name:'Köylü',icon:'❀',desc:'Toprağı, bahçeyi ve hayvanları büyüt.',pool:['botany','husbandry','craft','diplomacy','exploration'],specialties:[['herder','Hayvancı','Sürülerin bakımı ve yetiştirme','husbandry'],['farmer','Çiftçi','Tarlalar ve ekin verimi','botany'],['gardener','Bahçeci','Ağaçlar ve bahçe bitkileri','botany']]},
-    {id:'physical',name:'Fiziksel',icon:'✥',desc:'Sınırları araştır, yerleşimi koru.',pool:['defense','exploration','craft','husbandry','diplomacy'],specialties:[['warrior','Savaşçı','Yerleşim savunması','defense'],['miner','Madenci','Yer altı kaynakları','craft'],['explorer','Kaşif','Yeni bölgeler ve izler','exploration']]},
-    {id:'engineering',name:'Mühendislik',icon:'⌁',desc:'Yapılar, deneyler ve bilgiyle ilerle.',pool:['engineering','research','craft','botany','defense'],specialties:[['builder','Yapı Ustası','Sağlam binalar ve inşaat','engineering'],['chemist','Kimyager','Gübre, barut ve maddeler','research'],['researcher','Araştırmacı','Keşifleri çözümleme','research']]}
-  ];
-  const abilities = [
-    ['power','Güç','Bedensel kuvvet'],['agility','Çeviklik','El becerisi ve hız'],
-    ['endurance','Dayanıklılık','Zorlu koşullara direnç'],['intellect','Akıl','Bilgi ve çözümleme'],
-    ['insight','Sezgi','Gözlem ve canlılarla bağ'],['presence','Etki','İfade ve ikna']
-  ];
-  const skills = [
-    ['botany','Botanik','Bitki ve toprak bilgisi','insight'],['husbandry','Hayvancılık','Bakım ve yetiştirme','insight'],
-    ['craft','Zanaat','Üretim ve işleme','agility'],['engineering','Mühendislik','Yapı ve onarım','intellect'],
-    ['research','Araştırma','Bilinmeyeni çözme','intellect'],['exploration','Keşif','Yeni yerleri gözleme','insight'],
-    ['defense','Savunma','Tehlikeyle baş etme','power'],['diplomacy','Diplomasi','Yolcularla anlaşma','presence']
-  ];
-  const titles = {overview:'Genel Bakış',settlement:'Yerleşim',people:'Yerleşim Halkı',character:'Karakterim',farming:'Tarım ve Kaynaklar',exploration:'Keşif',patchnotes:'Sürüm Notları'};
+  const {species,classes,abilities,skills,titles,featurePanels} = window.FNF_DATA;
   const state = {user:null,rooms:[],room:null,members:[],characters:[],tab:'overview',authMode:'login',legacySkipped:false,step:0,draft:freshDraft(),patchSearch:'',patchOrder:'desc'};
   const el = s => app.querySelector(s);
   const safe = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -90,7 +65,7 @@
   function renderSidebar(){
     const dm=state.room.role==='dm';
     const nav=[['overview','◈','Genel Bakış'],['settlement','⌂','Yerleşim'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['farming','❀','Tarım ve Kaynaklar'],['exploration','✧','Keşif'],['patchnotes','▤','Sürüm Notları']];
-    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.3.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
+    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.4.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
     sidebar.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.nav;document.body.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');render()});
     sidebar.querySelector('#sideLobby').onclick=()=>{state.room=null;render()};
   }
@@ -193,8 +168,8 @@
       const players=state.members.filter(m=>m.role==='player');
       main.innerHTML=`<div class="grid-2"><section class="panel"><span class="panel-kicker">DM GÖRÜNÜMÜ</span><h2>Oyuncular</h2><p>Bu odada ${players.length} oyuncu var. DM karakter sahibi değildir; oyuncu karakterlerini buradan takip eder.</p><div class="roster">${players.length?players.map(m=>{const c=state.characters.find(x=>x.user_id===m.user_id);return `<div class="roster-item"><div><strong>${c?safe(c.name):'Karakter bekleniyor'}</strong><small>${c?`${safe(getSpecies(c.species)?.name)} · ${safe(getSpec(c.class_id,c.specialty)?.[1])}`:'Oyuncu henüz karakter oluşturmadı'}</small></div><span class="badge">OYUNCU</span></div>`}).join(''):'<div class="empty">Henüz oyuncu yok. Davet kodunu paylaş.</div>'}</div></section><section class="notebook"><span class="eyebrow">ANLATICI MASASI</span><h2>Dünya senin elinde.</h2><p>Bu alanda daha sonra günleri, olayları ve yerleşimi yöneteceksin. Şimdilik oda ve oyuncu takibi açık.</p></section></div>`;
     } else if(state.tab==='settlement'||state.tab==='farming'||state.tab==='exploration'){
-      const info={settlement:['⌂','Yerleşimin temelleri','Binalar, halk ve köy düzeni için ayrılan alan.'],farming:['❀','Toprağın döngüsü','Tarlalar, tohumlar, hayvanlar ve kaynaklar burada yönetilecek.'],exploration:['✧','Bilinmeyen sınır','Yeni bölgeler, kayıp bilgiler ve alametler bu alanda açılacak.']}[state.tab];
-      main.innerHTML=`<div class="feature-shell"><div class="feature-symbol">${info[0]}</div><span class="eyebrow">YAPIM AŞAMASINDA</span><h2>${info[1]}</h2><p>${info[2]}</p><div class="notice">Bu sistem henüz çalışmıyor. Tasarımını sonraki adımlarda birlikte kuracağız.</div></div>`;
+      const info=featurePanels[state.tab];
+      main.innerHTML=`<section class="feature-shell"><div class="feature-symbol">${info.icon}</div><span class="eyebrow">OYUN DÜNYASI · TASLAK</span><h2>${safe(info.title)}</h2><p>${safe(info.summary)}</p><div class="notice">Bu alanın kuralları henüz etkin değil; tasarımı birlikte netleştireceğiz.</div></section><div class="feature-grid">${info.cards.map(([title,desc])=>`<article class="panel feature-card"><span class="panel-kicker">YAKINDA</span><h3>${safe(title)}</h3><p>${safe(desc)}</p></article>`).join('')}</div>`;
     } else if(state.tab==='patchnotes')renderPatchNotes(main);
   }
   function patchGroup(title,items){return items.length?`<section class="change-group"><h4>${title} <small>${items.length}</small></h4><ul>${items.map(x=>`<li>${safe(x)}</li>`).join('')}</ul></section>`:''}
@@ -202,7 +177,7 @@
   function patchCards(){return patchRows().map((n,i)=>`<details class="release" ${i===0?'open':''}><summary><span class="release-version">v${safe(n.version)}</span><span class="release-heading"><b>${safe(n.title)}</b><small>${safe(n.date)} · ${safe(n.summary)}</small></span><span class="badge">${safe(n.tag)}</span><span class="release-plus">＋</span></summary><div class="release-body">${patchGroup('Yeni',n.added)}${patchGroup('Düzeltildi',n.fixed)}${patchGroup('Değiştirildi',n.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada sürüm bulunamadı.</div>'}
   function renderPatchNotes(main){
     const notes=window.FNF_RELEASES||[],latest=notes[0];
-    main.innerHTML=`<section class="patch-hero"><div><span class="eyebrow">GELİŞİM GÜNLÜĞÜ</span><h2>v${safe(latest?.version||'0.3.0')} · ${safe(latest?.title||'')}</h2><p>${safe(latest?.summary||'')}</p></div><div class="patch-count"><strong>${notes.length}</strong><small>SÜRÜM</small></div></section><div class="patch-tools"><label class="sr-only" for="patchSearch">Sürüm notlarında ara</label><input id="patchSearch" placeholder="Sürüm veya özellik ara…" value="${safe(state.patchSearch)}"><label class="sr-only" for="patchOrder">Sıralama</label><select id="patchOrder"><option value="desc" ${state.patchOrder==='desc'?'selected':''}>Yeni sürüm üstte</option><option value="asc" ${state.patchOrder==='asc'?'selected':''}>Eski sürüm üstte</option></select><button class="button secondary" data-patch-open="all">Tümünü aç</button><button class="button secondary" data-patch-open="none">Kapat</button><span id="patchCount">${patchRows().length}/${notes.length}</span></div><div id="patchList" class="release-list">${patchCards()}</div>`;
+    main.innerHTML=`<section class="patch-hero"><div><span class="eyebrow">GELİŞİM GÜNLÜĞÜ</span><h2>v${safe(latest?.version||'0.4.0')} · ${safe(latest?.title||'')}</h2><p>${safe(latest?.summary||'')}</p></div><div class="patch-count"><strong>${notes.length}</strong><small>SÜRÜM</small></div></section><div class="patch-tools"><label class="sr-only" for="patchSearch">Sürüm notlarında ara</label><input id="patchSearch" placeholder="Sürüm veya özellik ara…" value="${safe(state.patchSearch)}"><label class="sr-only" for="patchOrder">Sıralama</label><select id="patchOrder"><option value="desc" ${state.patchOrder==='desc'?'selected':''}>Yeni sürüm üstte</option><option value="asc" ${state.patchOrder==='asc'?'selected':''}>Eski sürüm üstte</option></select><button class="button secondary" data-patch-open="all">Tümünü aç</button><button class="button secondary" data-patch-open="none">Kapat</button><span id="patchCount">${patchRows().length}/${notes.length}</span></div><div id="patchList" class="release-list">${patchCards()}</div>`;
     el('#patchSearch').oninput=e=>{state.patchSearch=e.target.value;el('#patchList').innerHTML=patchCards();el('#patchCount').textContent=`${patchRows().length}/${notes.length}`};
     el('#patchOrder').onchange=e=>{state.patchOrder=e.target.value;el('#patchList').innerHTML=patchCards()};
     app.querySelectorAll('[data-patch-open]').forEach(b=>b.onclick=()=>app.querySelectorAll('.release').forEach(row=>row.open=b.dataset.patchOpen==='all'));
