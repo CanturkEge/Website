@@ -274,7 +274,7 @@ begin
   end loop;
   return new;
 end;
-$;
+$$;
 create trigger fnf_sim_finish_village_jobs before update of resources on public.fnf_sim_state
 for each row execute function fnf_private.finish_village_jobs();
 create function fnf_private.advance_village_ops()
