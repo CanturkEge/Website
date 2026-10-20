@@ -1,6 +1,20 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.10.0', date:'20 Ekim 2026', title:'Köyde Emek', tag:'KÖY YAŞAMI',
+    summary:'Köy yapıları için iş günü; aday ve köylü işlerinin yetkili oyuncularca yönetimi.',
+    added:['Ev, kuyu, atölye ve okulda malzemeyi başta öde, günlük iş gücüyle yapıyı bitir.','Adayı uygun ev kapasitesinde kabul et veya geri çevir.','NPC işini gün için kilitle; DM gerektiğinde düzeltsin. İş sonunda meslek deneyimi ve yorgunluk işlensin.'],
+    fixed:['Köydeki inşa, kabul ve iş atama yetkileri sunucu işlemlerinde denetlenir.'],
+    changed:['Köy işleri ve sakinler kampanya yedeğine eklenir.']
+  },
+  {
+    version:'0.9.0', date:'20 Ekim 2026', title:'Yirmi Kare Toprak', tag:'TARIM',
+    summary:'Her köy için yeni parseller, su taşıma ve küçük başlangıç kampı.',
+    added:['Yirmi karelik ayrı tarlalarda farklı tohumları parça parça ek.','İki gün tarla aç, sınırlı dere suyunu taşı, kalıntıyı temizle ve toprağı nadasa bırak.','DM başlangıç malzemelerini ve tohumu dağıtsın; tarlalar yedekte saklansın.'],
+    fixed:['Yeni kampanya hazır tarla, tohum, hayvan ve köylü olmadan başlar.'],
+    changed:['Eski dört tarla kaydı yalnız geçmiş yedeklerle uyum için içeride tutulur.']
+  },
+  {
     version:'0.8.0', date:'20 Ekim 2026', title:'Köylerin İlk Adımı', tag:'KÖY YÖNETİMİ',
     summary:'Oyuncular kendi köylerini kurabilir veya davet ve başvuruyla başka köye katılabilir.',
     added:[
