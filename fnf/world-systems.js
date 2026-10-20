@@ -39,7 +39,7 @@
     if(!s)return;
     const block=document.createElement('section');
     block.className='sim-overview stacked';
-    block.innerHTML=`<div class="sim-heading"><span class="eyebrow">DÜNYANIN NABZI · ${safe(s.climate)}</span><h2>Günün ritmi</h2><p>Dünya tohumu <code>${safe(s.world_seed)}</code> · Mevsimler 10 gün sürer. Güneş ${safe(s.conditions?.sun)} · Nem %${safe(s.conditions?.humidity)} · Sıcaklık ${safe(s.conditions?.temperature)}°C. Sabah kuralları DM gün geçirdiğinde işler.</p></div>
+    block.innerHTML=`<div class="sim-heading"><span class="eyebrow">DÜNYANIN NABZI · ${safe(s.climate)}</span><h2>Günün ritmi</h2><p>Dünya tohumu <code>${safe(s.world_seed)}</code> · Mevsimler 20 gün sürer. Güneş ${safe(s.conditions?.sun)} · Nem %${safe(s.conditions?.humidity)} · Sıcaklık ${safe(s.conditions?.temperature)}°C. Sabah kuralları DM gün geçirdiğinde işler.</p></div>
       <div class="weather-track">${(s.weather_phases||[]).map((v,i)=>`<div class="${i===s.phase?'current':''}"><small>${phaseNames[i]}</small><strong>${safe(v)}</strong></div>`).join('')}</div>
       ${dm&&s.phase<2?`<button class="button secondary" data-sim="phase">Sonraki hava evresi →</button>`:''}
       <div class="sim-kpis"><div><b>${s.population}</b><small>HALK</small></div><div><b>${s.morale}</b><small>MORAL</small></div><div><b>${s.threat}</b><small>TEHLİKE</small></div><div><b>${s.favor}</b><small>LÜTUF</small></div></div>
@@ -69,12 +69,14 @@
     main.innerHTML=`<section class="sim-heading"><span class="eyebrow">YERLEŞİM DEFTERİ · GÜN ${ctx.world.day}</span><h2>Köy yaşadıkça değişir.</h2><p>Halk yiyecek tüketir, binalar bakım ister. Ahırdaki hayvanlar yemle üretir; vergi her onuncu günde gelir.</p></section>
       <div class="sim-two"><section class="sim-sheet"><h3>Ortak depo</h3><p>Ağırlık ${ctx.world.weight}/${ctx.world.capacity}. Kervan tek seferde ${ctx.world.carry} hacim taşır.</p><div class="supplies">${entries}</div></section>
       <section class="sim-sheet"><h3>Halk ve yolcular</h3>${row('Köylü',s.population,'Her gün yiyecek gerekli')}${row('Moral',s.morale+'/100','Eksiklik, vergi ve baskın etkiler')}
-        <div class="visitor-list">${s.visitors?.length?s.visitors.map((v,i)=>`<div class="visitor"><b>${safe(v.name)}</b><small>${safe(label("species",v.species))} · ${safe(label("classes",v.class_id))} · ${safe(label("skills",v.skill))} · ${v.abilities?Object.entries(v.abilities).map(([k,n])=>`${safe(k)} ${safe(n)}`).join(" · "):safe(v.ability)}</small><button class="text-button" data-sim="ask" data-target="${i}" ${s.last_ask_day===ctx.world.day?'disabled':''}>1 paraya bilgi sor →</button>${dm?`<button class="text-button" data-sim="recruit" data-index="${i}">2 yiyecekle köye al →</button>`:''}</div>`).join(''):'<p class="muted">Yolcuların gelişi için günü geçir.</p>'}</div></section></div>
-      <section class="sim-sheet stacked"><div class="sim-section-head"><div><span class="eyebrow">KÖY HALKI</span><h3>Sakinler</h3></div><span>Her yolcunun kendi kökeni ve becerisi vardır.</span></div>
+        <div class="visitor-list">${s.visitors?.length?s.visitors.map((v,i)=>`<div class="visitor"><b>${safe(v.name)}</b><small>${safe(label("species",v.species))} · ${safe(label("classes",v.class_id))} · ${safe(label("skills",v.skill))} · ${v.abilities?Object.entries(v.abilities).map(([k,n])=>`${safe(k)} ${safe(n)}`).join(" · "):safe(v.ability)}</small><button class="text-button" data-sim="ask" data-target="${i}" ${s.last_ask_day===ctx.world.day?'disabled':''}>1 paraya bilgi sor →</button></div>`).join(''):'<p class="muted">Yolcuların gelişi için günü geçir.</p>'}</div></section></div>
+      <section class="sim-sheet stacked"><div class="sim-section-head"><div><span class="eyebrow">KÖY HALKI</span><h3>Eski oda sakinleri</h3></div><span>Her yolcunun kendi kökeni ve becerisi vardır.</span></div>
         <div class="visitor-list">${s.villagers.map(v=>`<div class="visitor"><b>${safe(v.name)}</b><small>${safe(label("species",v.species))} · ${safe(label("classes",v.class_id))} · ${safe(label("skills",v.skill))} · ${v.abilities?Object.entries(v.abilities).map(([k,n])=>`${safe(k)} ${safe(n)}`).join(" · "):`Yetenek ${safe(v.ability)}`}</small></div>`).join('')}</div></section>
-      <section class="sim-sheet stacked"><div class="sim-section-head"><div><span class="eyebrow">YAPILAR</span><h3>İnşa ve bakım</h3></div><span>Günlük bakım odun ister.</span></div>
-        <div class="buildings">${Object.entries(buildings).map(([id,[name,desc]])=>`<div class="building"><span>⌂</span><div><strong>${name} · Seviye ${s.buildings[id]}</strong><small>${desc}</small></div>${dm?`<button class="button secondary" data-sim="build" data-target="${id}" ${s.buildings[id]>=3?'disabled':''}>Yükselt · ${4+3*s.buildings[id]} odun / ${2+s.buildings[id]} taş</button>`:''}</div>`).join('')}</div></section>${notice('')}`;
+      <section class="sim-sheet stacked"><div class="sim-section-head"><div><span class="eyebrow">YAPILAR</span><h3>Eski oda yapıları</h3></div><span>Günlük bakım odun ister.</span></div>
+        <div class="buildings">${Object.entries(buildings).map(([id,[name,desc]])=>`<div class="building"><span>⌂</span><div><strong>${name} · Seviye ${s.buildings[id]}</strong><small>${desc}</small></div></div>`).join('')}</div></section>${notice('')}`;
     bind(main,ctx);
+    window.FNF_VILLAGES?.render(main,ctx);
+    window.FNF_VILLAGE_OPS?.render(main,ctx);
   }
   function livestock(main,ctx){
     const s=ctx.world.sim,entry=ctx.world.catalog.find(x=>x.id==='animal_01');
