@@ -1,4 +1,4 @@
-/* Farms & Fields · v0.6.0. Persistent rules and authorization live on Supabase. */
+/* Farms & Fields · v0.7.0. Persistent rules and authorization live on Supabase. */
 (() => {
   'use strict';
   const cfg = window.FNF_CONFIG || {};
@@ -11,7 +11,7 @@
   const db = configured && window.supabase?.createClient(cfg.url, cfg.publishableKey, {
     auth: { storageKey:'fnf-auth-v1', persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
   });
-  const {species,classes,abilities,skills,titles,featurePanels} = window.FNF_DATA;
+  const {species,classes,abilities,skills,titles} = window.FNF_DATA;
   const state = {user:null,rooms:[],room:null,members:[],characters:[],world:null,selectedSeed:'seed_01',codexFilter:'all',tab:'overview',authMode:'login',legacySkipped:false,step:0,draft:freshDraft(),patchSearch:'',patchOrder:'desc'};
   const el = s => app.querySelector(s);
   const safe = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -28,9 +28,9 @@
   function showError(error,selector){feedback(error?.message||'Bir sorun oluştu. Tekrar dene.',false,selector)}
   function busy(button,on){if(button){button.disabled=on;button.dataset.label ||= button.textContent;button.textContent=on?'Bir saniye…':button.dataset.label}}
   function skillsFor(d){return [getSpecies(d.species)?.training,getSpec(d.class_id,d.specialty)?.[3],...(d.skillChoices||d.skill_choices||[])].filter(Boolean)}
-  function skillRank(d,id){return Math.min(2,skillsFor(d).filter(x=>x===id).length)}
+  function skillRank(d,id){const base=Math.min(2,skillsFor(d).filter(x=>x===id).length),xp=d.user_id===state.user?.id?Number(state.world?.progress?.skill_xp?.[id]||0):0;return Math.max(base,xp>=20?2:xp>=10?1:0)}
   function scoreFor(d,id){return Number(d.abilities?.[id]??10)+(getSpecies(d.species)?.stat===id?1:0)}
-  function skillBonus(d,id,ability){return abilityMod(scoreFor(d,ability))+2*skillRank(d,id)}
+  function skillBonus(d,id,ability){const training=Math.min(6,2+Math.floor(Number(state.world?.progress?.xp||0)/20));return abilityMod(scoreFor(d,ability))+training*skillRank(d,id)}
   function hasCharacter(){return state.characters.some(c=>c.user_id===state.user?.id)}
   async function refreshRooms(){
     const {data,error}=await db.from('fnf_room_members').select('role,room_id,fnf_rooms(id,name,code,created_at)').order('joined_at',{ascending:false});
@@ -51,7 +51,7 @@
     state.tab=state.room.role==='dm'||hasCharacter()?'overview':'character';render();
   }
   async function loadWorld(){
-    const {data,error}=await db.rpc('fnf_world_snapshot',{p_room_id:state.room.id});
+    const {data,error}=await db.rpc('fnf_sim_snapshot',{p_room_id:state.room.id});
     if(error||data?.error)throw error||new Error(data.error);
     state.world=data;
   }
@@ -70,8 +70,8 @@
   }
   function renderSidebar(){
     const dm=state.room.role==='dm';
-    const nav=[['overview','◈','Günün Akışı'],['farming','❀','Tarlalar'],['codex','✧','Ansiklopedi'],['settlement','⌂','Yerleşim'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['exploration','⌁','Keşif'],['patchnotes','▤','Sürüm Notları']];
-    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.6.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
+    const nav=[['overview','◈','Günün Akışı'],['farming','❀','Tarlalar'],['settlement','⌂','Yerleşim'],['livestock','♧','Ahır'],['market','◇','Pazar & Han'],['research','✳','Araştırma'],['codex','✧','Ansiklopedi'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['exploration','⌁','Keşif'],['patchnotes','▤','Sürüm Notları']];
+    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.7.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
     sidebar.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.nav;document.body.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');render()});
     sidebar.querySelector('#sideLobby').onclick=()=>{state.room=null;render()};
   }
@@ -173,12 +173,12 @@
     if(state.tab==='people'&&!dm)state.tab='overview';
     if(state.tab==='character'&&dm)state.tab='overview';
     const w=state.world;
-    app.innerHTML=`<section class="page-intro"><div><span class="eyebrow">${dm?'KURUCU MASASI':'YERLEŞİM'} · FARMS & FIELDS</span><h1>${safe(titles[state.tab]||'Günün Akışı')}</h1><p>${safe(room.name)} · ${dm?'Dünyanın anlatıcısı ve yöneticisi':'Yeni yerleşimin ilk yolcularından biri'}</p></div><span class="header-seal">${dm?'DM MASASI':'OYUNCU'}</span></section><div class="day-ribbon"><span class="day-medallion">${String(w?.day||1).padStart(2,'0')}</span><div><strong>${safe(w?.season||'Bahar')} <span>· ${safe(w?.weather||'Açık')}</span></strong><small>OYUN GÜNÜ / DM GÜNÜ GEÇİRİNCE TARLALAR VE SABAH OLAYI ÇALIŞIR</small></div><button id="refreshWorld" class="text-button" type="button">↻ Yenile</button></div><p id="refreshFeedback" class="feedback" role="status"></p><div id="tabContent"></div>`;
+    app.innerHTML=`<section class="page-intro"><div><span class="eyebrow">${dm?'KURUCU MASASI':'YERLEŞİM'} · FARMS & FIELDS</span><h1>${safe(titles[state.tab]||'Günün Akışı')}</h1><p>${safe(room.name)} · ${dm?'Dünyanın anlatıcısı ve yöneticisi':'Yeni yerleşimin ilk yolcularından biri'}</p></div><span class="header-seal">${dm?'DM MASASI':'OYUNCU'}</span></section><div class="day-ribbon"><span class="day-medallion">${String(w?.day||1).padStart(2,'0')}</span><div><strong>${safe(w?.season||'Bahar')} <span>· ${safe(w?.weather||'Açık')}</span></strong><small>OYUN GÜNÜ / DM GÜNÜ GEÇİRİNCE ÜRETİM, HALK VE OLAYLAR İŞLENİR</small></div><button id="refreshWorld" class="text-button" type="button">↻ Yenile</button></div><p id="refreshFeedback" class="feedback" role="status"></p><div id="tabContent"></div>`;
     el('#refreshWorld').onclick=async e=>{busy(e.currentTarget,true);try{await loadWorld();render()}catch(err){busy(e.currentTarget,false);showError(err,'#refreshFeedback')}};
     const main=el('#tabContent');
     if(state.tab==='overview'){
       const playerChars=state.characters.filter(c=>state.members.some(m=>m.user_id===c.user_id&&m.role==='player'));
-      main.innerHTML=`<div class="world-grid"><section class="morning-scene"><span class="eyebrow">GÜN ${safe(w?.day)} · SABAH HABERİ</span><h2>${safe(w?.event)}</h2><p>Bu bir RP kancası. Gün geçişinde ekinler işlenir, yeni hava ve olay belirir; hikâyeyi DM yönetir.</p><span class="horizon" aria-hidden="true">☼</span>${dm?'<button id="advanceDay" class="button">Günü bitir → yeni güne geç</button>':'<span class="badge">GÜNÜ DM GEÇİRİR</span>'}<p id="worldFeedback" class="feedback" role="status"></p></section><section class="ledger"><span class="panel-kicker">ODA DEFTERİ</span><h2>${safe(room.name)}</h2><p>${dm?'Davet kodunu arkadaşlarına gönder.':'Arkadaşların kodla katılabilir.'}</p><div class="code">${safe(room.code)}</div><button id="copyCode" class="button secondary">Kodu kopyala</button><div class="rule"></div><div class="stat-strip"><div class="stat"><b>${state.members.filter(m=>m.role==='player').length}</b><small>Oyuncu</small></div><div class="stat"><b>${playerChars.length}</b><small>Karakter</small></div><div class="stat"><b>${safe(w?.day)}</b><small>Gün</small></div></div></section></div><section class="timeline stacked"><span class="panel-kicker">SON SABAHlar</span><h2>Günlük</h2><div class="timeline-list">${w?.log?.length?w.log.map(l=>`<div class="timeline-row"><b>${safe(l.day)}</b><div><strong>${safe(l.season)} · ${safe(l.weather)}</strong><p>${safe(l.event)}</p></div></div>`).join(''):'<p>İlk günün hikâyesi başlıyor. Gün geçtikçe kayıtlar burada birikecek.</p>'}</div></section><section class="ledger stacked"><span class="panel-kicker">YERLEŞİM HALKI</span><h2>İlk sakinler</h2><div class="roster">${playerChars.length?playerChars.map(c=>`<div class="roster-item"><div><strong>${safe(c.name)}</strong><small>${safe(getSpecies(c.species)?.name)} · ${safe(getClass(c.class_id)?.name)} / ${safe(getSpec(c.class_id,c.specialty)?.[1])}</small></div>${c.user_id===state.user.id?'<span class="badge">Sen</span>':''}</div>`).join(''):'<p class="muted">Oyuncular karakterlerini oluşturduğunda burada görünecek.</p>'}</div></section>`;
+      main.innerHTML=`<div class="world-grid"><section class="morning-scene"><span class="eyebrow">GÜN ${safe(w?.day)} · SABAH HABERİ</span><h2>${safe(w?.event)}</h2><p>Gün geçişinde üretim, halk, araştırma ve olaylar işlenir. Ardından hikâyeyi DM ve oyuncular RP ile sürdürür.</p><span class="horizon" aria-hidden="true">☼</span>${dm?'<button id="advanceDay" class="button">Günü bitir → yeni güne geç</button>':'<span class="badge">GÜNÜ DM GEÇİRİR</span>'}<p id="worldFeedback" class="feedback" role="status"></p></section><section class="ledger"><span class="panel-kicker">ODA DEFTERİ</span><h2>${safe(room.name)}</h2><p>${dm?'Davet kodunu arkadaşlarına gönder.':'Arkadaşların kodla katılabilir.'}</p><div class="code">${safe(room.code)}</div><button id="copyCode" class="button secondary">Kodu kopyala</button><div class="rule"></div><div class="stat-strip"><div class="stat"><b>${state.members.filter(m=>m.role==='player').length}</b><small>Oyuncu</small></div><div class="stat"><b>${playerChars.length}</b><small>Karakter</small></div><div class="stat"><b>${safe(w?.day)}</b><small>Gün</small></div></div></section></div><section class="timeline stacked"><span class="panel-kicker">SON SABAHlar</span><h2>Günlük</h2><div class="timeline-list">${w?.log?.length?w.log.map(l=>`<div class="timeline-row"><b>${safe(l.day)}</b><div><strong>${safe(l.season)} · ${safe(l.weather)}</strong><p>${safe(l.event)}</p></div></div>`).join(''):'<p>İlk günün hikâyesi başlıyor. Gün geçtikçe kayıtlar burada birikecek.</p>'}</div></section><section class="ledger stacked"><span class="panel-kicker">YERLEŞİM HALKI</span><h2>İlk sakinler</h2><div class="roster">${playerChars.length?playerChars.map(c=>`<div class="roster-item"><div><strong>${safe(c.name)}</strong><small>${safe(getSpecies(c.species)?.name)} · ${safe(getClass(c.class_id)?.name)} / ${safe(getSpec(c.class_id,c.specialty)?.[1])}</small></div>${c.user_id===state.user.id?'<span class="badge">Sen</span>':''}</div>`).join(''):'<p class="muted">Oyuncular karakterlerini oluşturduğunda burada görünecek.</p>'}</div></section>`;
       if(dm){
         const tools=document.createElement('section');
         tools.className='panel campaign-tools stacked';
@@ -204,19 +204,19 @@
           state.room=null;state.world=null;await refreshRooms();render();
         };
       }
+      window.FNF_SYSTEMS?.overview(main,{db,world:w,room,loadWorld,render});
       el('#copyCode').onclick=async e=>{try{await navigator.clipboard.writeText(room.code);e.target.textContent='Kopyalandı ✓'}catch{e.target.textContent=room.code}};
       if(dm)el('#advanceDay').onclick=async e=>{const b=e.currentTarget;busy(b,true);const {data,error}=await db.rpc('fnf_advance_day',{p_room_id:room.id});if(error||data?.error){busy(b,false);return showError(error||new Error(data.error),'#worldFeedback')}try{await loadWorld();render()}catch(err){busy(b,false);showError(err,'#worldFeedback')}};
     } else if(state.tab==='character'&&me){
       const sp=getSpecies(me.species),cl=getClass(me.class_id),spec=getSpec(me.class_id,me.specialty);
-      main.innerHTML=`<div class="grid-2"><section class="panel"><span class="panel-kicker">KARAKTER FÖYÜ</span><div class="character-title"><h2>${safe(me.name)}</h2><span class="badge">Seviye 1 · Eğitim +2</span></div><p>${safe(sp?.name)} · ${safe(cl?.name)} / ${safe(spec?.[1])}</p><div class="ability-grid">${abilities.map(([id,label])=>`<div class="ability ability-read"><strong>${label}</strong><b>${scoreFor(me,id)}</b><small>${signed(abilityMod(scoreFor(me,id)))}</small></div>`).join('')}</div></section><section class="panel"><span class="panel-kicker">BECERİLER</span><h2>Yatkınlıklar</h2><p>Nitelik değişkeni + eğitim. İki sabit eğitim örtüşürse ustalık uygulanır.</p><div class="skill-list">${skills.map(([id,name,,ability])=>{const rank=skillRank(me,id);return `<div class="skill-row"><span><strong>${name}</strong><small>${abilities.find(a=>a[0]===ability)?.[1]} · ${rank===2?'Ustalık':rank===1?'Eğitim':'Temel'}</small></span><b>${signed(skillBonus(me,id,ability))}</b></div>`}).join('')}</div></section></div><section class="notebook stacked"><span class="eyebrow">YOLUN</span><h2>${safe(spec?.[1])}</h2><p>${safe(spec?.[2])}</p></section>`;
+      main.innerHTML=`<div class="grid-2"><section class="panel"><span class="panel-kicker">KARAKTER FÖYÜ</span><div class="character-title"><h2>${safe(me.name)}</h2><span class="badge">Seviye ${Math.floor((w?.progress?.xp||0)/20)+1} · ${w?.progress?.xp||0} XP · Eğitim +${Math.min(6,2+Math.floor((w?.progress?.xp||0)/20))}</span></div><p>${safe(sp?.name)} · ${safe(cl?.name)} / ${safe(spec?.[1])}</p><div class="ability-grid">${abilities.map(([id,label])=>`<div class="ability ability-read"><strong>${label}</strong><b>${scoreFor(me,id)}</b><small>${signed(abilityMod(scoreFor(me,id)))}</small></div>`).join('')}</div></section><section class="panel"><span class="panel-kicker">BECERİLER</span><h2>Yatkınlıklar</h2><p>Nitelik değişkeni + eğitim. İki sabit eğitim örtüşürse ustalık uygulanır. Pratikte 10 beceri XP eğitimi, 20 XP ustalığı açar; her 20 genel XP eğitim bonusunu artırır (en çok +6).</p><div class="skill-list">${skills.map(([id,name,,ability])=>{const rank=skillRank(me,id);return `<div class="skill-row"><span><strong>${name}</strong><small>${abilities.find(a=>a[0]===ability)?.[1]} · ${rank===2?'Ustalık':rank===1?'Eğitim':'Temel'}</small></span><b>${signed(skillBonus(me,id,ability))}</b></div>`}).join('')}</div></section></div><section class="notebook stacked"><span class="eyebrow">YOLUN</span><h2>${safe(spec?.[1])}</h2><p>${safe(spec?.[2])}</p></section>`;
     } else if(state.tab==='people'){
       const players=state.members.filter(m=>m.role==='player');
-      main.innerHTML=`<div class="grid-2"><section class="panel"><span class="panel-kicker">DM GÖRÜNÜMÜ</span><h2>Oyuncular</h2><p>Bu odada ${players.length} oyuncu var. DM karakter sahibi değildir; oyuncu karakterlerini buradan takip eder.</p><div class="roster">${players.length?players.map(m=>{const c=state.characters.find(x=>x.user_id===m.user_id);return `<div class="roster-item"><div><strong>${c?safe(c.name):'Karakter bekleniyor'}</strong><small>${c?`${safe(getSpecies(c.species)?.name)} · ${safe(getSpec(c.class_id,c.specialty)?.[1])}`:'Oyuncu henüz karakter oluşturmadı'}</small></div><span class="badge">OYUNCU</span></div>`}).join(''):'<div class="empty">Henüz oyuncu yok. Davet kodunu paylaş.</div>'}</div></section><section class="notebook"><span class="eyebrow">ANLATICI MASASI</span><h2>Dünya senin elinde.</h2><p>Bu alanda daha sonra günleri, olayları ve yerleşimi yöneteceksin. Şimdilik oda ve oyuncu takibi açık.</p></section></div>`;
+      main.innerHTML=`<div class="grid-2"><section class="panel"><span class="panel-kicker">DM GÖRÜNÜMÜ</span><h2>Oyuncular</h2><p>Bu odada ${players.length} oyuncu var. DM karakter sahibi değildir; oyuncu karakterlerini buradan takip eder.</p><div class="roster">${players.length?players.map(m=>{const c=state.characters.find(x=>x.user_id===m.user_id);return `<div class="roster-item"><div><strong>${c?safe(c.name):'Karakter bekleniyor'}</strong><small>${c?`${safe(getSpecies(c.species)?.name)} · ${safe(getSpec(c.class_id,c.specialty)?.[1])}`:'Oyuncu henüz karakter oluşturmadı'}</small></div><span class="badge">OYUNCU</span></div>`}).join(''):'<div class="empty">Henüz oyuncu yok. Davet kodunu paylaş.</div>'}</div></section><section class="notebook"><span class="eyebrow">ANLATICI MASASI</span><h2>Dünya senin elinde.</h2><p>Gün, halk, tarla ve araştırma kararlarını sol menüden yönet. Sabah geçişi dışındaki sahneleri RP olarak oynayın.</p></section></div>`;
     } else if(state.tab==='farming')renderFarm(main);
     else if(state.tab==='codex')renderCodex(main);
-    else if(state.tab==='settlement'||state.tab==='exploration'){
-      const info=featurePanels[state.tab];
-      main.innerHTML=`<section class="feature-shell"><div class="feature-symbol">${info.icon}</div><span class="eyebrow">OYUN DÜNYASI · TASLAK</span><h2>${safe(info.title)}</h2><p>${safe(info.summary)}</p><div class="notice">Bu alanın kuralları henüz etkin değil; tasarımı birlikte netleştireceğiz.</div></section><div class="feature-grid">${info.cards.map(([title,desc])=>`<article class="panel feature-card"><span class="panel-kicker">YAKINDA</span><h3>${safe(title)}</h3><p>${safe(desc)}</p></article>`).join('')}</div>`;
+    else if(['settlement','livestock','market','research','exploration'].includes(state.tab)){
+      window.FNF_SYSTEMS?.[state.tab](main,{db,world:w,room,loadWorld,render});
     } else if(state.tab==='patchnotes')renderPatchNotes(main);
   }
   function codexImage(entry,large=false){
@@ -237,6 +237,7 @@
       try{await loadWorld();render()}catch(err){busy(b,false);showError(err,'#farmFeedback')}
     });
     main.querySelector('#goCodex').onclick=()=>{state.tab='codex';render()};
+    window.FNF_SYSTEMS?.farm(main,{db,world:w,room:state.room,loadWorld,render});
   }
   function renderCodex(main){
     const dm=state.room.role==='dm',all=state.world.catalog;

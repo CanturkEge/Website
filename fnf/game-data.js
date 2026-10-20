@@ -26,23 +26,6 @@
     ['research','Araştırma','Bilinmeyeni çözme','intellect'],['exploration','Keşif','Yeni yerleri gözleme','insight'],
     ['defense','Savunma','Tehlikeyle baş etme','power'],['diplomacy','Diplomasi','Yolcularla anlaşma','presence']
   ];
-  const titles = {overview:'Günün Akışı',settlement:'Yerleşim',people:'Yerleşim Halkı',character:'Karakterim',farming:'Tarlalar',codex:'Ansiklopedi',exploration:'Keşif',patchnotes:'Sürüm Notları'};
-  const featurePanels = {
-    settlement: {icon:'⌂', title:'Köyün temelleri', summary:'Yapılar, halk, kaynaklar ve ekonomi burada şekillenecek.', cards:[
-      ['Yapılar ve bakım','İnşa, yıpranma ve onarım aynı yerleşim döngüsünde izlenecek.'],
-      ['Halk ve yolcular','Yeni gelenler, görevleri ve yerleşimdeki ihtiyaçları görünür olacak.'],
-      ['Ticaret ve tehlike','Stok, taşıma, arz-talep, vergiler ve baskınlar birbirini etkileyecek.']
-    ]},
-    farming: {icon:'❀', title:'Toprağın döngüsü', summary:'Her tohumun koşulları ve her canlının soyundan gelen farklar keşfedilecek.', cards:[
-      ['Bilinmeyen tohumlar','Türü ve koşulları deneme, araştırma veya yolculardan öğrenilecek.'],
-      ['Büyüme ve verim','Zorunlu yetişme koşulları; gübre, bakım ve büyü gibi verim etkilerinden ayrı tutulacak.'],
-      ['Hayvan yetiştirme','Bakım, eşleştirme ve kalıtsal özellikler ileride aynı alanda takip edilecek.']
-    ]},
-    exploration: {icon:'✧', title:'Dünyanın işaretleri', summary:'Araştırma, mevsimler ve alametler köyün kararlarını değiştirecek.', cards:[
-      ['Araştırma ve keşif','Tohum, bölge ve işaretlerin bilgisi oyun içinde açılacak.'],
-      ['İlahi alametler','Tek yüce tanrı ve yardımcıları; melekler haber, görev, nimet ve sonuçlar getirecek.'],
-      ['Günlük dünya','Mevsim, hava ve olaylar; aynı başlangıç tohumu ile tutarlı bir dünya oluşturacak.']
-    ]}
-  };
-  window.FNF_DATA = Object.freeze({species,classes,abilities,skills,titles,featurePanels});
+  const titles = {overview:'Günün Akışı',settlement:'Yerleşim',livestock:'Ahır',market:'Pazar & Han',research:'Araştırma',people:'Yerleşim Halkı',character:'Karakterim',farming:'Tarlalar',codex:'Ansiklopedi',exploration:'Keşif',patchnotes:'Sürüm Notları'};
+  window.FNF_DATA = Object.freeze({species,classes,abilities,skills,titles});
 })();

@@ -9,13 +9,19 @@
 - Tek yüce tanrı; yardımcı tanrılar/melekler habercilik, alamet, görev, nimet ve sonuçlar getirebilir. Nadir doğum nimetleri ve tür yatkınlıkları düşünüldü; nasıl seçileceği henüz kararlaştırılmadı.
 - Bilinmeyen tohum ve alamet bilgisi araştırma, soru sorma veya deney yoluyla açılmalı. Tohumun **zorunlu büyüme koşulu** ile bakım/gübre/büyü gibi **verim değiştiricisi** ayrı tutulmalı. Dünya tohumu farklı başlangıçlar yaratmalı.
 
-## Şu an çalışan / taslak
+## Canlı sürüm ve yayın adayı
+
+Canlı v0.6.0: hesap/oda/karakter, dört tarla, temel gün geçişi, keşif ansiklopedisi, yedek/yükleme/silme. Eski 7 günlük mevsim kuralı canlıda geçerlidir.
+
+v0.7.0 yayın adayı `v06-world-systems.sql` ve `world-systems.js` içinde hazırlandı; canlı veritabanına uygulanmadı. Taslaktaki sistemlerin ilk oynanabilir rakamları buradadır: 10 günlük mevsim, bölgesel iklim, hava evreleri, toprak/güneş/nem/sıcaklık koşulları, alan ve bakım verimi, köy tüketim/bakımı, yapı, kervan/depo, yolcu/köylü, ahır ve kalıtım, araştırma/keşif/soru, pazar/han, vergi/baskın, alamet/lütuf ve XP. Bu değerler arkadaş oyunuyla denge testi sonrası değişebilir.
+
+## Eski ilk dilim kaydı
 
 | Çalışan | Yalnızca taslak ekran |
 | --- | --- |
 | Kullanıcı adı + şifreyle kodsuz kayıt; DM oda kurma, oyuncu kodla katılma; karakter ve beceri; dört ortak tarla, 3 tohum, sulama/hasat; DM gün geçişi ve basit RP sabah kancaları; aşamalı ansiklopedi; sürüm notları | Bina/üretim, hayvan genetiği, pazar, araştırma, dünya tohumu, melek/alamet, görev, etkili rastgele olay ve savaş/tehdit döngüleri |
 
-İlk oynanabilir dilim: 7 DM günü bir mevsim; ekimde ilk sulama yapılır, her gün geçişinde uygun mevsim + toprak + su varsa ekin bir kademe büyür, su sıfırlanır; hasat iki tohum verir. Hava ve sabah haberi dört günlük örnek döngüyle gelir ve mekanik etki yaratmaz. Bu rakamlar ve örnek türler `v04-farming-day-codex.sql` içinde; değiştirilebilir ilk tasarımdır.
+İlk oynanabilir dilim: 7 DM günü bir mevsim; ekimde ilk sulama yapılır, her gün geçişinde uygun mevsim + toprak + su varsa ekin bir kademe büyür, su sıfırlanır; hasat iki tohum verir. Hava ve sabah haberi dört günlük örnek döngüyle gelir ve mekanik etki yaratmaz. Bu rakamlar `v04-farming-day-codex.sql` içinde; yayın adayı geçişi bu döngüyü değiştirir.
 
 ## Sonraki oynanabilir dilim için açık kararlar
 

@@ -1,6 +1,20 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.7.0', date:'20 Ekim 2026', title:'Yaşayan Yerleşim', tag:'OYUN SİSTEMLERİ',
+    summary:'Günlük yerleşim, iklim, yetiştirme, ticaret, araştırma ve keşif döngüsü.',
+    added:[
+      'On günlük mevsimler; dünya tohumu ve iklimden türeyen sabah, öğle, gece havası. Güneş, nem ve sıcaklık ürün büyümesini etkiler.',
+      'Alan, toprak verimi, bakım, gübre ve ilahi lütufla hasat miktarı; zorunlu yetişme koşulları ayrı değerlendirilir.',
+      'Ortak depo, ağırlık ve hacim sınırı; inşaat, bakım, köylü ve yolcu gelişleri; ahırda kalıtım ve nadir doğum nimeti.',
+      'Gün ve bölgeye göre fiyatlar, alım satımla arz-talep, han haberleri ve oyun içi han oyunu.',
+      'Araştırma, soru sorma ve keşifle bilgi açma; yardımcı elçi görevleri, vergi, nöbet ve baskın olayları.',
+      'Karakter eylemlerinden deneyim ve beceri pratiği; kampanya yedeğine yeni yerleşim kayıtları.'
+    ],
+    fixed:['Mevsim uzunluğu tasarımdaki 10 oyun gününe çekildi.'],
+    changed:['Sabah işlemleri tek DM gün geçişinde tamamlanır; günün kalanı rol yapma akışına bırakılır.']
+  },
+  {
     version:'0.6.0', date:'20 Ekim 2026', title:'Kampanya Defteri', tag:'YÖNETİM',
     summary:'DM kampanyayı yedekleyebilir, yedekten ayrı bir oda açabilir ve oda adını yazarak silebilir.',
     added:[
