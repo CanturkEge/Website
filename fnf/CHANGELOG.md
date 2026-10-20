@@ -4,6 +4,10 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
+## v0.11.1 — Saha Çizimleri (20 Ekim 2026)
+
+- Parşömen defteri çizimlerinde bitki yaprak damarları ve hayvan türlerine göre ayırt edici vücut, kanat, kabuk ve kuyruk biçimleri güçlendirildi. Görseller için önbellek sürümü yenilendi.
+
 ## v0.11.0 — Orman Defteri ve Tapınak (20 Ekim 2026)
 
 - Ansiklopedide 100 ayrı bitki, 30 hayvan ve mevcut üç başlangıç tohumu var. Her kaydın ayrı parşömen/kara kalem SVG çizimi, nadirliği, doğal yaşam koşulu ve gözlem notu bulunur. Yeni kayıtlar var olan odalarda ve yeni odalarda gizli başlar; DM beş bilgi alanını ayrı açar.

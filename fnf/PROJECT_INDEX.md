@@ -30,7 +30,7 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 
 `egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js` + `world-systems.js` / `world-systems.css`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
-v0.11.0 veritabanı geçişleri v08–v16 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; DM ortak yapıları v14 köprüsüyle, eski yerleşim durumu `fnf_sim_snapshot` ile yürür. v15 100 bitki/30 hayvan ekler; v16 tapınak ve hiyerarşi durumunu yedek zincirine taşır. İllüstrasyonları yeniden üretmek için `python3 fnf/tools/generate_fieldguide.py` çalıştır.
+v0.11.1 arayüzü ve v0.11.0 veritabanı geçişleri v08–v16 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; DM ortak yapıları v14 köprüsüyle, eski yerleşim durumu `fnf_sim_snapshot` ile yürür. v15 100 bitki/30 hayvan ekler; v16 tapınak ve hiyerarşi durumunu yedek zincirine taşır. İllüstrasyonları yeniden üretmek için `python3 fnf/tools/generate_fieldguide.py` çalıştır.
 
 Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
 

@@ -117,6 +117,10 @@ def svg(row):
         strokes.append(f'<path d="{d}" fill="none" stroke="{ink}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round" opacity="{opacity}"/>')
     def ellipse(cx,cy,rx,ry,fill='none',width=2):
         strokes.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="{fill}" stroke="{ink}" stroke-width="{width}"/>')
+    def leaf(cx,cy,rx,ry):
+        cx,cy,rx,ry=map(round,(cx,cy,rx,ry))
+        strokes.append(f'<path d="M{cx} {cy-ry} Q{cx+rx*2} {cy-ry//3} {cx} {cy+ry} Q{cx-rx*2} {cy+ry//3} {cx} {cy-ry} Z" fill="#a89c8320" stroke="{ink}" stroke-width="1.5"/>')
+        path(f'M{cx} {cy-ry+3} Q{cx+3} {cy} {cx} {cy+ry-3} M{cx} {cy-ry//3} l{rx//2} {-ry//5} M{cx} {cy+ry//4} l{-rx//2} {-ry//5}',.75,.65)
     # Silhouette families, with species-specific phase, branch counts and angles.
     if group in ('ağaç','çiçek','ot','su bitkisi','çalı','sarmaşık','kök','tahıl','yosun'):
         n={'ağaç':7,'çiçek':5,'ot':8,'su bitkisi':8,'çalı':10,'sarmaşık':7,'kök':6,'tahıl':8,'yosun':12}[group]
@@ -128,8 +132,7 @@ def svg(row):
                 path(f'M251 {y+32} Q{251+side*reach*.48:.0f} {y-22} {251+side*reach} {y-32}',2.5)
                 for k in range(3):
                     x=251+side*(reach*.5+k*reach*.16); yy=y-24-k*7
-                    ellipse(round(x),round(yy),10+(v+j+k)%8,4+(v+k)%4, '#a89c8350',1.4)
-                    path(f'M{x-side*9:.0f} {yy:.0f} l{side*15} -1',.7,.65)
+                    leaf(x,yy,5+(v+j+k)%4,13+(v+k)%7)
         elif group=='mantar':
             pass
         elif group=='kök':
@@ -171,8 +174,7 @@ def svg(row):
                     ellipse(250+offset,peak,13+(j+v)%9,24+(j%3)*3,'#a89c8330',1.5)
                     for k in range(3): ellipse(250+offset+(k-1)*9,peak-4+k*5,2,2,ink,1)
                 else:
-                    ellipse(250+offset,peak,8+(j%4)*2,30+(v%3)*5,'#a89c8326',1.6)
-                    path(f'M{250+offset} {peak-22} l0 43 M{246+offset} {peak-6} l8 7 M{254+offset} {peak-12} l-8 9',.65,.7)
+                    leaf(250+offset,peak,8+(j%4)*2,30+(v%3)*5)
                     if group=='ot': path(f'M{250+offset} {peak+27} l{-8-(j%4)*2} -19',.9,.7)
         # Ground line, faint registration and pencil side studies.
         path('M128 473 Q252 466 381 475',1.2,.45)
@@ -184,38 +186,55 @@ def svg(row):
             for k in range(5): ellipse(x-20+k*10,y-8+(k%2)*8,2,3,ink,.8)
         path('M125 455 Q250 447 378 455',1.4,.5)
     elif group=='memeli':
-        # A naturalist's side study; different ears, horns, tails and body markings.
-        slender=v in (2,5,9)
-        body_x=230 if v in (4,7,8) else 246
-        ellipse(body_x,333,83 if slender else (113 if v in (4,8) else 100),47 if slender else (43 if v in (4,8) else 58),'#b3a68818',2.4)
-        path('M304 311 Q343 288 350 261 Q365 231 389 252 L407 278 Q392 296 358 293 L335 323',2.5)
-        ear=35+(v*7)%38
-        if v in (0,4,8): ear+=26
-        if v in (3,6): ear=17
-        path(f'M362 251 l{-10-ear//4} {-ear} q24 10 26 {ear-7} M379 249 l{11+ear//5} {-ear+9} q12 19 -2 {ear}',2)
-        path('M397 276 l8 0',2)
-        ellipse(382,269,2,2,ink,1)
-        for x,y in [(191,362),(240,375),(282,374),(319,358)]:
-            path(f'M{x} {y} l{-9+(v%3)*3} {72-(v%3)*8} l24 0',2.2)
-        tailx=115 if v%2 else 130
-        path(f'M{tailx+40} 315 Q{tailx-42} {285-v*5} {tailx} {258+v*2}',2.2)
-        if v in (1,7):
-            path(f'M{tailx} {258+v*2} Q{tailx-50} {201+v*2} {tailx-43} {277+v*3} Q{tailx-9} 289 {tailx+20} 321',1.9)
-            for j in range(10):path(f'M{tailx-38+j*5} {237+j*3} l-8 -9',.9,.7)
-        if v in (2,5,9): path('M356 236 Q339 192 317 190 M362 231 Q377 197 395 187',2.2)
-        if v==6:
-            for j in range(20):
-                x=152+j*8
-                path(f'M{x} {307-(j%3)*3} l{-11+j%5} {-24-(j%5)*4} l{17} {16}',1.15,.85)
-        if v==3:
-            for j in range(6):path(f'M{345+j*6} {251+j*4} l-13 33',1.4,.65)
-        for j in range(9):
-            x=180+(j*23+v*11)%139; y=316+(j*13)%30
-            path(f'M{x} {y} l{5+j%3} {2+j%4}',.8,.6)
-        for j in range(35):
-            x=170+(j*19+v*7)%144; y=325+(j*13)%47
-            path(f'M{x} {y} l9 4',.5,.29)
-        path('M107 455 Q257 451 419 459',1.3,.45)
+        # Observational silhouettes: rabbit, fox, deer, badger, marten, goat,
+        # hedgehog, squirrel, ferret, gazelle. Marks vary per individual plate.
+        if v==0:  # crouched rabbit, broad haunch and small front paws
+            path('M137 345 Q145 275 220 270 Q283 254 326 308 Q339 319 347 318 Q348 288 370 277 Q391 265 409 287 L421 302 Q411 318 379 320 Q366 345 355 355 Q326 386 280 385 Q241 408 187 390 Q142 386 137 345 Z',2.25)
+            path('M365 282 Q352 227 361 177 Q379 174 385 247 L381 273 M383 277 Q391 217 411 183 Q428 197 404 273',2.1)
+            path('M241 383 Q226 350 191 356 Q166 369 180 391 L253 396 M330 366 Q349 386 377 378 L385 382 M145 331 Q115 313 118 342 Q125 358 143 352',1.8)
+            for j in range(5): path(f'M{360+j*8} 306 l{22-j*3} {-6+j*4}',.6,.8)
+            ellipse(392,292,2.5,2.5,ink,.8)
+        elif v==6:  # low spiny hedgehog
+            path('M115 359 Q139 272 233 267 Q315 264 353 337 Q386 343 416 364 L391 381 Q326 391 276 396 L171 395 Q132 389 115 359 Z',2.2)
+            for j in range(36):
+                x=145+j*6
+                path(f'M{x} {301-((j*9)%27)} l{-14+(j%4)*3} {-22-(j%5)*5} l17 16',1.2,.76)
+            path('M160 392 l-6 19 28 0 M337 390 l6 21 27 0',1.7)
+            ellipse(386,358,2.5,2.5,ink,.8)
+        elif v==7:  # squirrel with an arched tufted tail
+            path('M223 382 Q183 358 204 313 Q230 278 280 294 Q312 301 324 321 Q345 286 362 280 L397 303 Q381 317 349 319 Q325 370 298 382 Q263 398 223 382 Z',2.1)
+            path('M213 338 Q112 327 125 239 Q152 190 192 224 Q227 245 188 268 Q154 272 159 308 Q174 332 213 338 Z',2)
+            path('M356 280 l-8 -37 24 25 M373 278 l12 -40 5 43 M276 375 l18 43 30 0 M240 379 l-13 34 26 0',1.8)
+            ellipse(376,296,2.2,2.2,ink,.8)
+        else:
+            slender=v in (2,5,9)
+            low=v in (3,4,8)
+            cx=239 if low else 246
+            ellipse(cx,338,112 if low else (88 if slender else 103),43 if low else (48 if slender else 57),'#b3a68818',2.1)
+            path('M304 317 Q336 298 348 272 Q363 244 382 252 L410 273 Q413 287 387 298 L355 300 L335 326',2.2)
+            if v in (1,3,4,8):
+                path('M367 251 l-12 -37 32 25 M386 252 l15 -37 5 53',1.9)
+            elif v in (2,5,9):
+                path('M361 251 Q344 202 322 186 M369 247 Q379 200 404 186',2)
+                if v==2:
+                    path('M338 217 l-28 -20 M338 218 l12 -27 M389 216 l25 -23',1.4)
+                if v==5:path('M390 296 q-3 21 11 29',1.3)
+            ellipse(390,273,2.4,2.4,ink,.7)
+            if low:
+                for x in (172,227,296,331):path(f'M{x} 365 l-5 45 22 0',1.9)
+            else:
+                for x in (192,239,285,323):path(f'M{x} 370 l{-8 if x%2 else 3} 73 23 0',1.9)
+            if v==1:
+                path('M144 325 Q65 276 88 244 Q130 249 163 306 Q159 337 144 325 Z',2)
+                for j in range(11):path(f'M{99+j*5} {263+j*4} l-12 -8',.9,.7)
+            elif v in (4,8):path('M132 344 Q79 330 91 306 Q107 292 150 326',1.8)
+            else:path('M148 319 Q113 287 117 264 Q144 278 160 308',1.7)
+            if v==3:
+                for j in range(6):path(f'M{357+j*7} {259+j*4} l-17 30',1.2,.65)
+        for j in range(52):
+            x=180+(j*19+v*7)%141; y=325+(j*13)%48
+            path(f'M{x} {y} l{5+j%4} {2+j%3}',.65,.47)
+        path('M103 455 Q262 447 421 456',1.15,.45)
     elif group=='kuş':
         path('M252 432 Q245 387 253 363 M265 430 Q266 388 260 363 M236 431 l21 0 M257 432 l23 0',2)
         ellipse(254,306,58+(v%3)*9,67,'#b3a68818',2.5)
@@ -230,22 +249,58 @@ def svg(row):
             path(f'M{211+j*8} {367+j%3*6} Q{170+j*9} 427 {149+j*8} 421',1.3,.8)
         path('M146 450 Q255 447 377 452',1.2,.45)
     else:
-        # Invertebrate/amphibian/reptile specimen, segmented by species index.
-        if v in (2,5,6,8):
-            path('M105 338 Q157 292 225 321 Q317 342 384 299 Q412 300 398 326 Q345 378 254 367 Q143 375 105 338 Z',2.2)
-            for j in range(8):
-                x=145+j*30; path(f'M{x} 359 l{-12 if j%2 else 13} 30',1.5)
-        else:
-            ellipse(247,330,65+(v%3)*10,64,'#a89c8322',2.3)
-            ellipse(321,315,27,26,'#a89c8322',2)
-            for j in range(3):
-                path(f'M{190+j*26} 345 Q{150+j*19} 393 {130+j*27} 412 M{275+j*19} 351 Q{330+j*18} 400 {332+j*24} 420',1.7)
-            if v in (0,1,4):
-                path('M197 320 Q125 209 199 206 Q253 216 249 310 M250 309 Q269 193 335 208 Q372 260 294 333',1.8)
-        for j in range(9):
-            x=190+(j*17+v*6)%143; y=302+(j*11)%62
-            ellipse(x,y,2+(j%3),2,ink,.8)
-        path('M108 454 Q252 446 395 453',1.2,.45)
+        # Firefly, moth, turtle, salamander, butterfly, lizard, frog, snail,
+        # snake and crab have individual naturalist motifs.
+        if v in (0,1,4):
+            ellipse(251,344,20,54,'#92866e32',2.1)
+            ellipse(251,283,23,20,'#a89c8333',1.8)
+            path('M240 266 Q214 236 207 215 M261 266 Q288 237 295 214',1.25)
+            wing=85 if v==4 else 68
+            path(f'M228 308 Q{150-wing//3} 188 {152-wing//4} 259 Q136 321 226 351 M273 308 Q{350+wing//3} 188 {348+wing//4} 259 Q364 321 275 351',2.1)
+            path('M224 352 Q123 327 157 398 Q207 421 244 374 M277 352 Q378 327 343 398 Q293 421 257 374',1.8)
+            for j in range(4):
+                path(f'M{235-j*3} {322+j*11} Q{171-j*4} {270+j*26} {155-j*2} {260+j*27}',.75,.55)
+                path(f'M{266+j*3} {322+j*11} Q{329+j*4} {270+j*26} {345+j*2} {260+j*27}',.75,.55)
+            if v==0:
+                for j in range(6):ellipse(249,361+j*5,3,2,ink,.7)
+        elif v==2:  # turtle
+            ellipse(245,345,112,69,'#92866e25',2.3)
+            path('M133 347 Q158 266 248 267 Q343 273 358 346 M170 291 l52 65 61 -83 M222 356 l48 50 60 -71 M283 274 l-13 82',1.7)
+            ellipse(375,346,28,22,'#a89c8322',1.8)
+            ellipse(391,340,2,2,ink,.8)
+            for x,y in ((170,385),(309,385),(190,392),(326,371)):
+                path(f'M{x} {y} q-13 26 14 31 l15 -25',1.65)
+            path('M134 352 Q100 335 111 304',1.5)
+        elif v==7:  # snail with spiral shell
+            ellipse(225,324,84,78,'#a89c8322',2.1)
+            path('M277 315 Q262 244 207 272 Q164 297 193 345 Q238 380 262 338 Q274 309 239 299 Q214 292 209 322 Q209 339 230 332',1.7)
+            path('M140 388 Q206 373 281 388 Q327 394 349 364 Q365 329 361 298 M350 365 Q378 345 386 305 M361 298 l-4 -28 M386 305 l16 -26',2)
+            ellipse(357,267,3,3,ink,.8);ellipse(403,277,3,3,ink,.8)
+        elif v==8:  # coiled snake
+            path('M125 344 C151 280 280 293 302 347 C322 391 224 397 205 357 C188 329 242 318 267 352 C295 389 358 367 368 313 Q375 268 410 267 L424 280 Q403 297 382 288',2.5)
+            path('M130 351 C161 284 288 302 298 352 M203 356 Q221 386 268 374 M369 311 Q365 286 384 271',1.05,.58)
+            ellipse(405,277,2,2,ink,.8)
+            for j in range(14):path(f'M{158+j*14} {320+(j%3)*8} l7 9',.7,.5)
+        elif v==9:  # crab
+            ellipse(246,338,85,53,'#a89c8323',2.1)
+            for j in range(4):
+                path(f'M{185+j*20} 371 q-40 21 -43 54 M{280+j*17} 373 q40 19 43 52',1.55)
+            path('M176 324 Q127 292 115 269 Q80 239 111 220 Q141 219 147 260 L130 272 M316 324 Q365 292 377 269 Q412 239 381 220 Q351 219 345 260 L362 272',2)
+            path('M222 291 l-8 -31 M276 291 l8 -31',1.7)
+            ellipse(214,256,3,3,ink,.8);ellipse(284,256,3,3,ink,.8)
+        else:  # salamander, lizard or frog
+            ellipse(247,333,103 if v==5 else 75,39 if v!=6 else 55,'#a89c8322',2)
+            path('M323 320 Q358 302 389 318 L406 334 Q379 350 328 345 M146 338 Q101 320 81 338 Q100 351 148 348',2)
+            for x,sgn in ((175,-1),(209,1),(288,-1),(317,1)):
+                path(f'M{x} 355 q{sgn*24} 32 {sgn*49} 30 l{sgn*18} 20',1.7)
+            if v==6:
+                ellipse(366,313,7,9,'#a89c8322',1.4)
+                path('M360 348 Q381 362 403 347',1.3)
+            for j in range(18):
+                x=185+(j*17)%120; y=310+(j*11)%33
+                ellipse(x,y,2.1+(j%3),1.6,ink,.55)
+            ellipse(386,326,2,2,ink,.8)
+        path('M103 455 Q258 449 404 456',1.15,.44)
     # Paper flecks, graphite hatching and a slightly imperfect found-page border.
     hatch=[]
     for j in range(130):

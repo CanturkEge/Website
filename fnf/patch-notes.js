@@ -1,6 +1,13 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.11.1', date:'20 Ekim 2026', title:'Saha Çizimleri', tag:'GÖRSEL DÜZELTME',
+    summary:'Parşömen defterindeki tür çizimleri belirginleştirildi.',
+    added:[],
+    fixed:['Hayvanların kulak, kuyruk, kabuk ve kanat gibi ayırt edici çizgileri tür grubuna göre ayrıldı; bitki yapraklarına damar ve kurşun kalem taraması eklendi.'],
+    changed:['Ansiklopedi çizimleri yeni sürümle önbellekten tazelenir.']
+  },
+  {
     version:'0.11.0', date:'20 Ekim 2026', title:'Orman Defteri ve Tapınak', tag:'KEŞİF',
     summary:'100 bitki, 30 hayvan ve DM tarafından yönetilen geçici tanrı hiyerarşisi eklendi.',
     added:['Ansiklopediye 100 bitki ve 30 hayvan türü, her biri için parşömen üstü kara kalem çizim eklendi.','Tapınakta tek yüce kaynak, dört başmelek ve sekiz elçi hiyerarşisi var; DM tapınağı açabilir, isimleri oda bazında değiştirebilir ve ad, alan, anlatı bilgilerini ayrı ayrı gösterebilir.','Ansiklopedide kategori sayıları, arama ve sayfalama eklendi.'],
