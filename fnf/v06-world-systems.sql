@@ -99,7 +99,7 @@ returns integer language sql immutable set search_path = '' as $$
 $$;
 create function fnf_private.roll(p_seed text,p_day integer,p_salt text,p_mod integer)
 returns integer language sql immutable set search_path = '' as $$
-  select mod(abs(hashtext(p_seed||':'||p_day||':'||p_salt')::bigint),p_mod)::integer;
+  select mod(abs(hashtext(p_seed||':'||p_day||':'||p_salt)::bigint),p_mod)::integer;
 $$;
 create function fnf_private.price(p_resource text,p_day integer,p_season text,p_climate text,p_demand integer)
 returns integer language sql immutable set search_path = '' as $$

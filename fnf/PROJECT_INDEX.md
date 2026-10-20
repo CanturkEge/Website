@@ -12,19 +12,19 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
 | Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; sunucu kuralları `v04-farming-day-codex.sql` |
 | Kampanya yedekleme, geri yükleme, silme | `app.js`: `renderLobby`, `renderGame`; SQL `v05-campaign-backup.sql` |
-| Yayın adayı yerleşim, ahır, pazar, araştırma, keşif | `world-systems.js`, `world-systems.css`; sunucu `v06-world-systems.sql` |
+| Yerleşim, ahır, pazar, araştırma, keşif | `world-systems.js`, `world-systems.css`; sunucu `v06-world-systems.sql` |
 | Ansiklopedi çizimleri | `assets/codex/*.svg`; katalog ve kilit durumu veritabanında |
 | Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
 | Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
-| Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql`, yayın adayı `v06-world-systems.sql` |
+| Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql`, `v06-world-systems.sql` |
 | Tasarım kararları ve açık sorular | `GAME_DESIGN.md` |
 | Kurulum ve sınırlar | `README.md` |
 
 ## Canlı akış
 
-`egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
+`egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js` + `world-systems.js` / `world-systems.css`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
-v0.7.0 hazırlık dalında `world-systems.js` ve `world-systems.css` ayrıca yüklenir. Bu dal canlı Supabase geçişi uygulanmadan ana dala birleştirilmemelidir.
+v0.7.0 sunucu geçişi uygulandı. Yeni eylemler `fnf_sim_snapshot` ve `fnf_sim_action` RPC'leriyle; gün geçişi, hasat ve yedek eski RPC adlarıyla genişletilerek yürür.
 
 Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
 
@@ -39,4 +39,4 @@ DM yedeği JSON indirilir; yükleme şifre kapısından geçerek yeni kodlu oda 
 
 Son doğrulama: 20 Ekim 2026. Gerçek hesapla tüm kayıt/oyun akışı uçtan uca denenmedi; eski onaysız e-posta hesabı otomatik etkinleştirilmedi. Bu dosyayı sonraki değişiklikte güncel tut.
 
-v0.6.0 ana dal Pages iş akışı başarılıdır. v0.7.0 SQL geçişi üretimde onay engeline takıldı; yeni RPC ve oyun ekranları uçtan uca denenmedi. Canlıya almadan önce migration, rol/yedek testleri ve mobil ekran doğrulaması yap.
+v0.7.0 SQL geçişi üretime uygulandı. DM gün geçişi, yapı, ticaret ve tarla işlemleri geri alınan veritabanı denemelerinde çalıştı; oyuncu DM eylemine erişemedi. Gerçek hesapla tüm oyun akışı, eski yedeğin şifreli geri yüklenmesi ve mobil ekran uçtan uca denenmedi; ilk oyun raporuyla incele.

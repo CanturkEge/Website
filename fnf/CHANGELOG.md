@@ -4,7 +4,7 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
-## v0.7.0 — Yaşayan Yerleşim (yayın adayı, 20 Ekim 2026)
+## v0.7.0 — Yaşayan Yerleşim (20 Ekim 2026)
 
 - On günlük mevsimler, seçilebilir dünya tohumu ve iklim, üç günlük hava evresi; güneş, nem, sıcaklık, toprak, su ve mevsim zorunlu büyüme koşullarıdır.
 - Hasat alanı ve ekin türüyle taban verim, toprak verimi/bakım/gübre/büyü ile verim değiştiricisi hesaplanır. Depo ağırlığı ve kervan hacmi ayrıdır.
@@ -12,7 +12,7 @@ Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük dü
 - Gün/mevsim/iklim/arz-talep pazar fiyatı, han haberleri, içki ve yalnız oyun içi paralı oyun.
 - Keşif, yolcuya soru sorma, DM kontrollü araştırma; yardımcı elçi görevi ve lütuf, nadir doğum nimeti, vergi, yol harcı, nöbet ve baskın.
 - Oyuncu eylemleri genel ve beceri deneyimi kazandırır. Yedek yeni yerleşim durumunu ve deneyimi kapsar; eski v0.6 yedekleri okunur.
-- **Durum:** Canlı veritabanı geçişi otomatik onay incelemesinde durduruldu. Bu sürüm ana dala alınmadı; yalnız hazırlık dalındadır. Onay ve uçtan uca doğrulama sonrasında durum güncellenir.
+- Veritabanı geçişi uygulandı. DM eylemleri ve gün geçişi geri alınan denemelerde doğrulandı; oyun dengesi arkadaş grubunun raporlarıyla geliştirilecek.
 
 ## v0.6.0 — Kampanya Defteri (20 Ekim 2026)
 
