@@ -17,7 +17,8 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
 | Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
 | Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql`, `v06-world-systems.sql` |
-| Tasarım kararları ve açık sorular | `GAME_DESIGN.md` |
+| Canlı kuralların özeti | `GAME_DESIGN.md` |
+| 20 Ekim görüşmesi, sonraki hedef kurallar ve açık sorular | `DESIGN_DECISIONS_2026-10-20.md` |
 | Kurulum ve sınırlar | `README.md` |
 
 ## Canlı akış
@@ -38,5 +39,7 @@ DM yedeği JSON indirilir; yükleme şifre kapısından geçerek yeni kodlu oda 
 4. Menüye her alt özellik için yeni sekme ekleme; yerleşim, tarım ve keşif altındaki küçük panellerle büyüt.
 
 Son doğrulama: 20 Ekim 2026. Gerçek hesapla tüm kayıt/oyun akışı uçtan uca denenmedi; eski onaysız e-posta hesabı otomatik etkinleştirilmedi. Bu dosyayı sonraki değişiklikte güncel tut.
+
+20 Ekim ayrıntılı görüşmesi yalnızca tasarım kaydına işlendi. 20 günlük mevsim, parsel başına 20 kare, çoklu köy, yetki ve şehir pazarı bu aşamada kodlanmadı; sürüm notlarına tamamlandı diye ekleme.
 
 v0.7.0 SQL geçişi üretime uygulandı. DM gün geçişi, yapı, ticaret ve tarla işlemleri geri alınan veritabanı denemelerinde çalıştı; oyuncu DM eylemine erişemedi. Gerçek hesapla tüm oyun akışı, eski yedeğin şifreli geri yüklenmesi ve mobil ekran uçtan uca denenmedi; ilk oyun raporuyla incele.
