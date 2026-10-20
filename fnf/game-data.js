@@ -26,7 +26,7 @@
     ['research','Araştırma','Bilinmeyeni çözme','intellect'],['exploration','Keşif','Yeni yerleri gözleme','insight'],
     ['defense','Savunma','Tehlikeyle baş etme','power'],['diplomacy','Diplomasi','Yolcularla anlaşma','presence']
   ];
-  const titles = {overview:'Genel Bakış',settlement:'Yerleşim',people:'Yerleşim Halkı',character:'Karakterim',farming:'Tarım ve Kaynaklar',exploration:'Keşif',patchnotes:'Sürüm Notları'};
+  const titles = {overview:'Günün Akışı',settlement:'Yerleşim',people:'Yerleşim Halkı',character:'Karakterim',farming:'Tarlalar',codex:'Ansiklopedi',exploration:'Keşif',patchnotes:'Sürüm Notları'};
   const featurePanels = {
     settlement: {icon:'⌂', title:'Köyün temelleri', summary:'Yapılar, halk, kaynaklar ve ekonomi burada şekillenecek.', cards:[
       ['Yapılar ve bakım','İnşa, yıpranma ve onarım aynı yerleşim döngüsünde izlenecek.'],

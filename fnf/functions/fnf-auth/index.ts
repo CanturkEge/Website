@@ -1,5 +1,5 @@
 // FNF account registration and one-time migration of existing email accounts.
-// Deploy with verify_jwt=false: register validates an invite; claim validates a user JWT.
+// Deploy with verify_jwt=false: public registration; claim validates a user JWT.
 import { createClient } from 'npm:@supabase/supabase-js@2.95.0';
 
 const siteOrigin = 'https://egecanturk.dev';
@@ -42,14 +42,9 @@ Deno.serve(async (request: Request) => {
 
   if (payload.action === 'register') {
     const password = payload.password;
-    const access = payload.access;
-    if (typeof password !== 'string' || password.length < 8 || password.length > 128 ||
-        typeof access !== 'string' || access.length < 10 || access.length > 128) {
-      return reply({ error: 'Şifre en az 8 karakter olmalı; geçerli bir oda kodu veya kurucu şifresi gir.' }, 400);
+    if (typeof password !== 'string' || password.length < 8 || password.length > 128) {
+      return reply({ error: 'Şifre 8–128 karakter olmalı.' }, 400);
     }
-    const { data: allowed, error: accessError } = await admin.rpc('fnf_signup_access', { p_access: access.trim() });
-    if (accessError) return reply({ error: 'Davet kontrolü yapılamadı.' }, 503);
-    if (!allowed) return reply({ error: 'Oda kodu veya kurucu şifresi yanlış.' }, 403);
 
     const { error } = await admin.auth.admin.createUser({
       email: emailFor(username), password, email_confirm: true,

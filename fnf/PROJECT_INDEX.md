@@ -10,10 +10,12 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Oturum, oda, yönlendirme, render akışı | `app.js`: `refreshRooms`, `openRoom`, `render`, `renderSidebar` |
 | Kayıt, eski hesaba kullanıcı adı, giriş, oda kurma/katılma | `app.js`: `renderAuth`, `renderLegacyClaim`, `renderLobby` |
 | Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
-| Yerleşim, tarım, keşif taslak ekranları | `app.js`: `renderGame`; metinler `game-data.js/featurePanels` |
+| Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; sunucu kuralları `v04-farming-day-codex.sql` |
+| Yerleşim ve keşif taslak ekranları | `app.js`: `renderGame`; metinler `game-data.js/featurePanels` |
+| Ansiklopedi çizimleri | `assets/codex/*.svg`; katalog ve kilit durumu veritabanında |
 | Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
 | Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
-| Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql` |
+| Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql` |
 | Tasarım kararları ve açık sorular | `GAME_DESIGN.md` |
 | Kurulum ve sınırlar | `README.md` |
 
@@ -21,7 +23,7 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 
 `egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
-Kullanıcı adıyla kayıt Edge Function üzerinden davet doğrular; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
+Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
 
 ## Değişiklik ritmi
 

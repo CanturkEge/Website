@@ -3,7 +3,7 @@
 ## Kesinleşen yön
 
 - Arkadaşlarla oynanan, mitolojik yerleşim ve üretim oyunu. Zindan/savaş merkezli D&D kopyası değil; D&D sitesi yalnızca arayüz ve beceri düzeni için yapısal örnek.
-- Odayı kuran kişi DM; kurucu şifresi yalnız yetki verilenlerde. Oyuncular oda koduyla girer. DM karakter oluşturmaz.
+- Odayı kuran kişi DM; kurucu şifresi yalnız yetki verilenlerde. Hesap herkesçe kodsuz açılır, oyuncular oda koduyla girer. DM karakter oluşturmaz.
 - Karakterde tür, ana yol, uzmanlık, altı nitelik ve eğitim/ustalık başlangıcı vardır. Mevcut rakamlar `v02-update.sql` ve `game-data.js` içinde; ileride seviye sistemi henüz tanımlı değil.
 - Dünya fikri: köy yapıları/bakım, kaynak/depo/taşıma, tarım, hayvan yetiştirme ve kalıtım, araştırma, yolcular, ticaret/arz-talep, vergi, baskın, mevsim/hava ve günlük olaylar. Bunlar henüz mekanik olarak çalışmıyor.
 - Tek yüce tanrı; yardımcı tanrılar/melekler habercilik, alamet, görev, nimet ve sonuçlar getirebilir. Nadir doğum nimetleri ve tür yatkınlıkları düşünüldü; nasıl seçileceği henüz kararlaştırılmadı.
@@ -13,13 +13,14 @@
 
 | Çalışan | Yalnızca taslak ekran |
 | --- | --- |
-| Kullanıcı adı + şifre ve davetle kayıt; DM oda kurma, oyuncu kodla katılma; karakter oluşturma ve beceri bonusu; roster; sürüm notları | Bina/üretim, tarla/tohum koşulları, hayvan genetiği, pazar, araştırma, dünya tohumu, gün/mevsim/hava, melek/alamet, görev, olay ve savaş/tehdit döngüleri |
+| Kullanıcı adı + şifreyle kodsuz kayıt; DM oda kurma, oyuncu kodla katılma; karakter ve beceri; dört ortak tarla, 3 tohum, sulama/hasat; DM gün geçişi ve basit RP sabah kancaları; aşamalı ansiklopedi; sürüm notları | Bina/üretim, hayvan genetiği, pazar, araştırma, dünya tohumu, melek/alamet, görev, etkili rastgele olay ve savaş/tehdit döngüleri |
+
+İlk oynanabilir dilim: 7 DM günü bir mevsim; ekimde ilk sulama yapılır, her gün geçişinde uygun mevsim + toprak + su varsa ekin bir kademe büyür, su sıfırlanır; hasat iki tohum verir. Hava ve sabah haberi dört günlük örnek döngüyle gelir ve mekanik etki yaratmaz. Bu rakamlar ve örnek türler `v04-farming-day-codex.sql` içinde; değiştirilebilir ilk tasarımdır.
 
 ## Sonraki oynanabilir dilim için açık kararlar
 
-1. **Gün ilerlemesi:** DM düğmeyle mi ilerletir, yoksa süreye bağlı otomatik mi? Hava/olay hangi anda hesaplanır?
-2. **İlk sistem:** Tarla + tohum keşfi mi, yoksa depo + bina ve iş gücü mü önce oynanabilir olmalı? İlk sürümde kaç ürün/yapı yeterli?
-3. **Bilgi ve yetki:** Keşfedilen tohum bilgisi tüm odaya mı açılır, oyuncu/karakter bazlı mı tutulur? Ekin ekme, hasat ve ticaret kararını kim onaylar?
-4. **Kaynak belge:** İlk “Fantasy Genesis” notlarının tam dosyası bu repoda yok. Sayılar, tanrı adları, bitki/hayvan listesi ve özel kurallar o belge görüldükten sonra kesinleştirilmeli.
+1. **Bilgi ve yetki:** Şimdilik keşif oda ortak ve DM tikleriyle açılıyor. Karakter bazlı bilgi veya ekim onayı istenecek mi?
+2. **Olay etkisi:** Sabah haberleri şimdilik RP kancası. Sonraki sürümde hangileri mekanik sonuç doğurmalı, DM olayı seçebilmeli mi?
+3. **Kaynak belge:** İlk “Fantasy Genesis” notlarının tam dosyası bu repoda yok. Sayılar, tanrı adları, bitki/hayvan listesi ve özel kurallar o belge görüldükten sonra kesinleştirilmeli.
 
-Bu kararlar çıkmadan kalıcı ekonomi, rastgele olay oranı veya verim formülü icat etme. Görünür kartlar kapsam işaretidir; kaydedilen dünya durumu değildir.
+Bu kararlar çıkmadan ekonomi, rastgele olay oranı veya kapsamlı verim formülü icat etme. Yerleşim ve keşif kartları kapsam işaretidir.

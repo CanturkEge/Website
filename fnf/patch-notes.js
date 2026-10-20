@@ -1,6 +1,17 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.5.0', date:'20 Ekim 2026', title:'İlk Hasat', tag:'OYUN DÖNGÜSÜ',
+    summary:'Kod istemeyen hesap açma, ortak tarla, gün akışı ve keşif ansiklopedisi.',
+    added:[
+      'Dört ortak tarla gözü: tohum seç, ek, sula ve olgunlaşınca hasat et.',
+      'DM gün geçirince ekinler işlenir; yeni hava, mevsim ve sabah RP kancası kaydedilir.',
+      'Tohum, bitki ve hayvan ansiklopedisi; DM resim, ad, nadirlik, kullanım ve koşulları ayrı ayrı açabilir.'
+    ],
+    fixed:['Hesap açmak için oda kodu veya kurucu şifresi gerekmiyor.'],
+    changed:['Arayüz tarla defteri ve gün akışı etrafında yeni bir görsel dile geçti.']
+  },
+  {
     version:'0.4.0', date:'20 Ekim 2026', title:'Dünyanın Taslağı', tag:'TASARIM',
     summary:'Yerleşim, tarım ve keşif ekranlarında oyunun ana fikirleri görünür hale geldi.',
     added:[

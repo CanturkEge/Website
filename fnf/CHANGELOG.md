@@ -2,6 +2,14 @@
 
 Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sırayla tutulur. Teknik dağıtım ile oyun mekaniği henüz ayrı sürümlenmez.
 
+## v0.5.0 — İlk Hasat (20 Ekim 2026)
+
+- Kayıt oda kodundan ayrıldı; kullanıcı adı ve şifre yeterli. Oda kurma şifresi ve katılım kodu kendi işlemlerinde kaldı.
+- Dört ortak tarla, tohum stoğu, koşullara göre ekim, sulama ve hasat.
+- Günü yalnız DM geçirir. Geçişte önceki gün sulanan uygun ekin büyür, ardından yeni günün hava ve sabah RP olayı kaydolur. 7 gün bir mevsimdir.
+- Ansiklopedide üç tohum, bir yabani bitki ve iki hayvan; DM her kaydın resim, kimlik, nadirlik, detay ve koşullarını bağımsız olarak açar.
+- FNF arayüzü bakır/lacivert tarla defteri görünümüne geçti. Ekonomi ve hayvan yetiştirme henüz taslak.
+
 ## v0.4.0 — Dünyanın Taslağı (20 Ekim 2026)
 
 ### Yeni
@@ -45,3 +53,4 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 - `/fnf/` için bağımsız site ve ayrı Supabase projesi/oturumu.
 - Kurucu şifresiyle oda kurma, oyuncular için davet koduyla katılım.
 - Altı tür, dört ana yol, on iki uzmanlık ve ilk karakter akışı.
+
