@@ -1,6 +1,16 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.3.0', date:'20 Ekim 2026', title:'Arkadaş Masası', tag:'HESAPLAR',
+    summary:'Kullanıcı adı ve şifreyle e-postasız kayıt ve giriş.',
+    added:[
+      'Arkadaşın verdiği oda kodu veya kurucu şifresiyle kullanıcı adı açma.',
+      'Eski e-postalı FNF hesabına bir kez girip kullanıcı adı seçme.'
+    ],
+    fixed:['Yeni hesaplar e-posta doğrulama bağlantısı beklemeden oyuna girer.'],
+    changed:['D&D hesabı ve mevcut FNF odaları ayrı kalır; eski FNF hesabının verisi korunur.']
+  },
+  {
     version:'0.2.0', date:'20 Ekim 2026', title:'İlk Yerleşim Masası', tag:'ARAYÜZ',
     summary:'Koyu oyun arayüzü, sol menü, DM rolü ve yeni karakter beceri sistemi.',
     added:[

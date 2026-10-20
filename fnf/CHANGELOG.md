@@ -2,6 +2,18 @@
 
 Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sırayla tutulur. Teknik dağıtım ile oyun mekaniği henüz ayrı sürümlenmez.
 
+## v0.3.0 — Arkadaş Masası (20 Ekim 2026)
+
+### Yeni
+- Kullanıcı adı ve şifreyle hesap açma; davet olarak oda kodu veya kurucu şifresi gerekir.
+- Eski e-postalı FNF hesapları giriş yaptıktan sonra kullanıcı adı alabilir, odaları ve karakterleri korunur.
+
+### Düzeltildi
+- Yeni hesapta e-posta ve doğrulama bağlantısı istenmez.
+
+### Değişti
+- Kayıt sunucuda yapılır; kurucu şifresi ve yetkili anahtarlar istemci koduna gömülmez.
+
 ## v0.2.0 — İlk Yerleşim Masası (20 Ekim 2026)
 
 ### Yeni

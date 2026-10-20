@@ -1,4 +1,4 @@
-/* Farms & Fields · v0.2.0. Authorization and character validation live in SQL. */
+/* Farms & Fields · v0.3.0. Authorization and character validation live on Supabase. */
 (() => {
   'use strict';
   const cfg = window.FNF_CONFIG || {};
@@ -37,9 +37,12 @@
     ['defense','Savunma','Tehlikeyle baş etme','power'],['diplomacy','Diplomasi','Yolcularla anlaşma','presence']
   ];
   const titles = {overview:'Genel Bakış',settlement:'Yerleşim',people:'Yerleşim Halkı',character:'Karakterim',farming:'Tarım ve Kaynaklar',exploration:'Keşif',patchnotes:'Sürüm Notları'};
-  const state = {user:null,rooms:[],room:null,members:[],characters:[],tab:'overview',authMode:'login',step:0,draft:freshDraft(),patchSearch:'',patchOrder:'desc'};
+  const state = {user:null,rooms:[],room:null,members:[],characters:[],tab:'overview',authMode:'login',legacySkipped:false,step:0,draft:freshDraft(),patchSearch:'',patchOrder:'desc'};
   const el = s => app.querySelector(s);
   const safe = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const usernameEmail = name => `fnf-${name.toLowerCase()}@users.fnf.invalid`;
+  const validUsername = name => /^[a-z0-9_]{3,20}$/.test(name);
+  const needsClaim = () => !!state.user && !state.legacySkipped && !state.user.email?.endsWith('@users.fnf.invalid');
   const abilityMod = score => Math.floor((score-10)/2);
   const signed = value => value>=0?'+'+value:String(value);
   const getSpecies = id => species.find(x=>x.id===id);
@@ -73,13 +76,13 @@
   }
   function render(){
     out.hidden=!state.user;account.hidden=!state.user;
-    account.textContent=state.user?.email?.split('@')[0]||'';
+    account.textContent=state.user?.user_metadata?.fnf_username||state.user?.email?.split('@')[0]||'';
     document.body.classList.toggle('game-mode',!!state.room);
     sidebar.hidden=!state.room;menuToggle.hidden=!state.room;
     if(!state.room){document.body.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false')}
     if(!configured||!db){app.innerHTML='<div class="panel"><h2>Kurulum bekleniyor</h2><p>FNF veritabanı bağlantısı henüz yapılandırılmadı.</p></div>';return}
     if(!state.user) return renderAuth();
-    if(!state.room) return renderLobby();
+    if(!state.room) return needsClaim()?renderLegacyClaim():renderLobby();
     renderSidebar();
     if(state.room.role==='player'&&!hasCharacter()&&state.tab!=='patchnotes') return renderCreation();
     return renderGame();
@@ -87,21 +90,51 @@
   function renderSidebar(){
     const dm=state.room.role==='dm';
     const nav=[['overview','◈','Genel Bakış'],['settlement','⌂','Yerleşim'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['farming','❀','Tarım ve Kaynaklar'],['exploration','✧','Keşif'],['patchnotes','▤','Sürüm Notları']];
-    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.2.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
+    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.3.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
     sidebar.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.nav;document.body.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');render()});
     sidebar.querySelector('#sideLobby').onclick=()=>{state.room=null;render()};
   }
+  async function edgeError(error){
+    try { const details=await error?.context?.json();return details?.error||error?.message; }
+    catch { return error?.message||'İşlem tamamlanamadı.'; }
+  }
   function renderAuth(){
     const signup=state.authMode==='signup';
-    app.innerHTML=`<div class="hero"><section><span class="eyebrow">FARMS & FIELDS · YENİ BİR HİKÂYE</span><h1>Bir dünya<br><i>yetiştir.</i></h1><p class="lead">Bilmediğin bir toprağa yerleş. Arkadaşlarınla bir köy kur; tohumların sırrını, mevsimlerin dilini ve gökten gelen işaretleri birlikte çöz.</p><div class="chips"><span class="chip">✳ Yerleşim</span><span class="chip">❀ Keşif</span><span class="chip">◇ Üretim</span><span class="chip">✧ Mitoloji</span></div></section><section class="auth-card"><span class="eyebrow">YOLCULUĞUN BAŞLANGICI</span><h2>${signup?'Yeni hesap aç':'Tekrar hoş geldin'}</h2><p class="muted">FNF hesabın D&D hesabından ayrıdır. Bu dünyanın kendi kaydı var.</p><div class="segmented"><button type="button" data-auth="login" class="${signup?'':'active'}">Giriş</button><button type="button" data-auth="signup" class="${signup?'active':''}">Kayıt ol</button></div><form id="authForm"><label for="email">E-posta</label><input required id="email" type="email" autocomplete="email" placeholder="sen@ornek.com"><label for="password">Şifre</label><input required id="password" type="password" minlength="6" autocomplete="${signup?'new-password':'current-password'}" placeholder="En az 6 karakter"><button class="button full">${signup?'Hesap oluştur':'Oyuna gir'}</button><p class="feedback" role="status"></p></form></section></div>`;
+    app.innerHTML=`<div class="hero"><section><span class="eyebrow">FARMS & FIELDS · YENİ BİR HİKÂYE</span><h1>Bir dünya<br><i>yetiştir.</i></h1><p class="lead">Bilmediğin bir toprağa yerleş. Arkadaşlarınla bir köy kur; tohumların sırrını, mevsimlerin dilini ve gökten gelen işaretleri birlikte çöz.</p><div class="chips"><span class="chip">✳ Yerleşim</span><span class="chip">❀ Keşif</span><span class="chip">◇ Üretim</span><span class="chip">✧ Mitoloji</span></div></section><section class="auth-card"><span class="eyebrow">YOLCULUĞUN BAŞLANGICI</span><h2>${signup?'Yeni hesap aç':'Tekrar hoş geldin'}</h2><p class="muted">FNF hesabın D&D hesabından ayrıdır. E-posta doğrulaması gerekmez.</p><div class="segmented"><button type="button" data-auth="login" class="${signup?'':'active'}">Giriş</button><button type="button" data-auth="signup" class="${signup?'active':''}">Kayıt ol</button></div><form id="authForm"><label for="username">Kullanıcı adı</label><input required id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="80" placeholder="ör. ege"><label for="password">Şifre</label><input required id="password" type="password" minlength="${signup?8:6}" autocomplete="${signup?'new-password':'current-password'}" placeholder="${signup?'En az 8 karakter':'Şifren'}">${signup?'<label for="access">Oda kodu veya kurucu şifresi</label><input required id="access" type="password" autocomplete="off" placeholder="Arkadaşından aldığın kod"><p class="auth-hint">Şifreni sakla; e-posta olmadan otomatik sıfırlama yapılamaz.</p>':'<p class="auth-hint">Eski e-postalı hesabın varsa adresinle bir kez gir; ardından kullanıcı adını belirle.</p>'}<button class="button full">${signup?'Hesap oluştur':'Oyuna gir'}</button><p class="feedback" role="status"></p></form></section></div>`;
     app.querySelectorAll('[data-auth]').forEach(b=>b.onclick=()=>{state.authMode=b.dataset.auth;render()});
     el('#authForm').onsubmit=async e=>{
-      e.preventDefault();const button=e.submitter;busy(button,true);
-      const email=el('#email').value.trim(),password=el('#password').value;
-      const {data,error}=signup?await db.auth.signUp({email,password,options:{emailRedirectTo:'https://egecanturk.dev/fnf/'}}):await db.auth.signInWithPassword({email,password});
-      busy(button,false);if(error)return showError(error);
-      if(signup&&!data.session)return feedback('Hesabını doğrulamak için gelen e-postadaki bağlantıyı aç.',true);
-      if(data.session){state.user=data.session.user;try{await refreshRooms()}catch(err){return showError(err)}render()}
+      e.preventDefault();
+      const button=e.submitter,username=el('#username').value.trim().toLowerCase(),password=el('#password').value;
+      if(signup&&!validUsername(username))return feedback('Kullanıcı adı 3–20 karakter olmalı; İngilizce harf, rakam ve _ kullan.');
+      if(!signup&&!username.includes('@')&&!validUsername(username))return feedback('Geçerli bir kullanıcı adı gir.');
+      busy(button,true);
+      if(signup){
+        const {error}=await db.functions.invoke('fnf-auth',{body:{action:'register',username,password,access:el('#access').value.trim()}});
+        if(error){busy(button,false);return feedback(await edgeError(error))}
+      }
+      const email=username.includes('@')?username:usernameEmail(username);
+      const {data,error}=await db.auth.signInWithPassword({email,password});
+      busy(button,false);
+      if(error)return feedback(signup?'Hesap açıldı ama otomatik giriş yapılamadı. Giriş sekmesinden dene.':'Kullanıcı adı veya şifre hatalı.');
+      state.user=data.user;state.legacySkipped=false;
+      try{await refreshRooms()}catch(err){return showError(err)}
+      render();
+    };
+  }
+  function renderLegacyClaim(){
+    app.innerHTML=`<section class="legacy-wrap panel"><span class="eyebrow">ESKİ HESABIN HAZIR</span><h1>Kullanıcı adını seç.</h1><p>Mevcut odaların ve karakterlerin kalacak. Bundan sonra kullanıcı adın ve mevcut şifrenle giriş yapabileceksin; e-posta doğrulaması yok.</p><form id="claimForm"><label for="claimName">Yeni kullanıcı adın</label><input id="claimName" required maxlength="20" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ör. ege"><button class="button full">Kullanıcı adını kaydet</button><p class="feedback" role="status"></p></form><button id="skipClaim" class="text-button claim-skip" type="button">Şimdilik eski hesabımla devam et</button></section>`;
+    el('#skipClaim').onclick=()=>{state.legacySkipped=true;render()};
+    el('#claimForm').onsubmit=async e=>{
+      e.preventDefault();const username=el('#claimName').value.trim().toLowerCase();
+      if(!validUsername(username))return feedback('3–20 karakter: İngilizce harf, rakam ve _ kullan.');
+      const button=e.submitter;busy(button,true);
+      const {data,error}=await db.functions.invoke('fnf-auth',{body:{action:'claim',username}});
+      busy(button,false);
+      if(error)return feedback(await edgeError(error));
+      if(!data?.ok)return feedback(data?.error||'Kullanıcı adı kaydedilemedi.');
+      const {data:refreshed}=await db.auth.refreshSession();
+      state.user=refreshed?.session?.user||{...state.user,email:usernameEmail(username),user_metadata:{...state.user.user_metadata,fnf_username:username}};
+      state.legacySkipped=false;render();
     };
   }
   function renderLobby(){
@@ -169,13 +202,13 @@
   function patchCards(){return patchRows().map((n,i)=>`<details class="release" ${i===0?'open':''}><summary><span class="release-version">v${safe(n.version)}</span><span class="release-heading"><b>${safe(n.title)}</b><small>${safe(n.date)} · ${safe(n.summary)}</small></span><span class="badge">${safe(n.tag)}</span><span class="release-plus">＋</span></summary><div class="release-body">${patchGroup('Yeni',n.added)}${patchGroup('Düzeltildi',n.fixed)}${patchGroup('Değiştirildi',n.changed)}</div></details>`).join('')||'<div class="empty">Bu aramada sürüm bulunamadı.</div>'}
   function renderPatchNotes(main){
     const notes=window.FNF_RELEASES||[],latest=notes[0];
-    main.innerHTML=`<section class="patch-hero"><div><span class="eyebrow">GELİŞİM GÜNLÜĞÜ</span><h2>v${safe(latest?.version||'0.2.0')} · ${safe(latest?.title||'')}</h2><p>${safe(latest?.summary||'')}</p></div><div class="patch-count"><strong>${notes.length}</strong><small>SÜRÜM</small></div></section><div class="patch-tools"><label class="sr-only" for="patchSearch">Sürüm notlarında ara</label><input id="patchSearch" placeholder="Sürüm veya özellik ara…" value="${safe(state.patchSearch)}"><label class="sr-only" for="patchOrder">Sıralama</label><select id="patchOrder"><option value="desc" ${state.patchOrder==='desc'?'selected':''}>Yeni sürüm üstte</option><option value="asc" ${state.patchOrder==='asc'?'selected':''}>Eski sürüm üstte</option></select><button class="button secondary" data-patch-open="all">Tümünü aç</button><button class="button secondary" data-patch-open="none">Kapat</button><span id="patchCount">${patchRows().length}/${notes.length}</span></div><div id="patchList" class="release-list">${patchCards()}</div>`;
+    main.innerHTML=`<section class="patch-hero"><div><span class="eyebrow">GELİŞİM GÜNLÜĞÜ</span><h2>v${safe(latest?.version||'0.3.0')} · ${safe(latest?.title||'')}</h2><p>${safe(latest?.summary||'')}</p></div><div class="patch-count"><strong>${notes.length}</strong><small>SÜRÜM</small></div></section><div class="patch-tools"><label class="sr-only" for="patchSearch">Sürüm notlarında ara</label><input id="patchSearch" placeholder="Sürüm veya özellik ara…" value="${safe(state.patchSearch)}"><label class="sr-only" for="patchOrder">Sıralama</label><select id="patchOrder"><option value="desc" ${state.patchOrder==='desc'?'selected':''}>Yeni sürüm üstte</option><option value="asc" ${state.patchOrder==='asc'?'selected':''}>Eski sürüm üstte</option></select><button class="button secondary" data-patch-open="all">Tümünü aç</button><button class="button secondary" data-patch-open="none">Kapat</button><span id="patchCount">${patchRows().length}/${notes.length}</span></div><div id="patchList" class="release-list">${patchCards()}</div>`;
     el('#patchSearch').oninput=e=>{state.patchSearch=e.target.value;el('#patchList').innerHTML=patchCards();el('#patchCount').textContent=`${patchRows().length}/${notes.length}`};
     el('#patchOrder').onchange=e=>{state.patchOrder=e.target.value;el('#patchList').innerHTML=patchCards()};
     app.querySelectorAll('[data-patch-open]').forEach(b=>b.onclick=()=>app.querySelectorAll('.release').forEach(row=>row.open=b.dataset.patchOpen==='all'));
   }
   menuToggle.onclick=()=>{const open=document.body.classList.toggle('menu-open');menuToggle.setAttribute('aria-expanded',String(open));menuToggle.setAttribute('aria-label',open?'Menüyü kapat':'Menüyü aç')};
-  out.onclick=async()=>{await db?.auth.signOut();state.user=null;state.rooms=[];state.room=null;render()};
+  out.onclick=async()=>{await db?.auth.signOut();state.user=null;state.rooms=[];state.room=null;state.legacySkipped=false;render()};
   async function init(){
     if(!db)return render();
     const {data:{session}}=await db.auth.getSession();state.user=session?.user||null;
