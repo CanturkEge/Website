@@ -225,19 +225,7 @@
       : '<span class="mystery-art" aria-label="Henüz keşfedilmedi">?</span>';
   }
   function renderFarm(main){
-    const w=state.world, entries=w.catalog.filter(x=>x.category==='seed');
-    const chosen=entries.find(x=>x.id===state.selectedSeed)||entries[0];
-    const soilName={loam:'Tınlı',sand:'Kumlu',marsh:'Sulak'};
-    main.innerHTML=`<section class="farm-heading"><div><span class="eyebrow">ORTAK TARLA / GÜN ${safe(w.day)}</span><h2>Birlikte ekin.</h2><p>Tohumlar oda deposundan kullanılır. Ekerken ilk su verilir; sonraki günlerde sulamayı unutmayın. Gün geçişini DM başlatır.</p></div><span class="farm-ornament" aria-hidden="true">❦</span></section><div class="farm-layout"><section class="field-board"><div class="field-top"><span>04 TARLA GÖZÜ</span><span>TOPRAK · SU · MEVSİM</span></div><div class="field-rows">${w.plots.map(p=>{const e=entries.find(x=>x.id===p.seed_id),ready=p.ready;return `<article class="field-row ${p.seed_id?'growing':'bare'}"><div class="field-index">0${p.slot}<small>${soilName[p.soil]}</small></div><div class="furrows" aria-hidden="true"><i></i><i></i><i></i></div><div class="field-life"><span class="sprout">${p.seed_id?(ready?'✿':p.growth?'❀':'❦'):'·'}</span><strong>${p.seed_id?safe(e?.name||'Bilinmeyen ekin'):'Boş tarla'}</strong><small>${p.seed_id?(ready?'Hasada hazır':`Büyüme ${p.growth}${e?.growth_days!=null?'/'+e.growth_days:''} · ${p.watered?'Sulandı':'Su bekliyor'}`):'Ekim için hazır'}</small></div><div class="field-actions">${!p.seed_id?`<button class="button" data-farm="plant" data-slot="${p.slot}" ${!chosen||!w.stock[chosen.id]?'disabled':''}>Tohum ek</button>`:ready?`<button class="button" data-farm="harvest" data-slot="${p.slot}">Hasat et</button>`:`<button class="button secondary" data-farm="water" data-slot="${p.slot}" ${p.watered?'disabled':''}>${p.watered?'Sulandı ✓':'Sula'}</button>`}</div></article>`}).join('')}</div><p id="farmFeedback" class="feedback" role="status"></p></section><aside class="seed-drawer"><span class="panel-kicker">TOHUM DEPOSU</span><h3>Ekeceğin tohumu seç</h3><div class="seed-options">${entries.map(x=>`<button class="seed-option ${chosen?.id===x.id?'active':''}" data-seed="${x.id}" type="button" aria-pressed="${chosen?.id===x.id}"><span class="seed-thumb">${codexImage(x)}</span><span><strong>${safe(x.name||'Bilinmeyen tohum')}</strong><small>${x.conditions?safe(x.conditions):'Koşullar henüz bilinmiyor'}</small></span><b>×${safe(w.stock[x.id]||0)}</b></button>`).join('')}</div><p class="field-note">Uygun olmayan toprak veya mevsimde ekim kabul edilmez. Koşullar ansiklopedide DM açtıkça görünür.</p><button type="button" id="goCodex" class="text-button">Ansiklopediye bak ↗</button></aside></div>`;
-    main.querySelectorAll('[data-seed]').forEach(b=>b.onclick=()=>{state.selectedSeed=b.dataset.seed;renderFarm(main)});
-    main.querySelectorAll('[data-farm]').forEach(b=>b.onclick=async()=>{
-      busy(b,true);
-      const {data,error}=await db.rpc('fnf_farm_action',{p_room_id:state.room.id,p_slot:Number(b.dataset.slot),p_action:b.dataset.farm,p_seed_id:b.dataset.farm==='plant'?state.selectedSeed:null});
-      if(error||data?.error){busy(b,false);return showError(error||new Error(data.error),'#farmFeedback')}
-      try{await loadWorld();render()}catch(err){busy(b,false);showError(err,'#farmFeedback')}
-    });
-    main.querySelector('#goCodex').onclick=()=>{state.tab='codex';render()};
-    window.FNF_SYSTEMS?.farm(main,{db,world:w,room:state.room,loadWorld,render});
+    window.FNF_PARCELS?.render(main,{db,world:state.world,room:state.room,loadWorld,render});
   }
   function renderCodex(main){
     const dm=state.room.role==='dm',all=state.world.catalog;
