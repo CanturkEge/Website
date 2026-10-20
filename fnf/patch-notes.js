@@ -8,7 +8,7 @@ window.FNF_RELEASES = [
       'Alan, toprak verimi, bakım, gübre ve ilahi lütufla hasat miktarı; zorunlu yetişme koşulları ayrı değerlendirilir.',
       'Ortak depo, ağırlık ve hacim sınırı; inşaat, bakım, köylü ve yolcu gelişleri; ahırda kalıtım ve nadir doğum nimeti.',
       'Gün ve bölgeye göre fiyatlar, alım satımla arz-talep, han haberleri ve oyun içi han oyunu.',
-      'Araştırma, soru sorma ve keşifle bilgi açma; yardımcı elçi görevleri, vergi, nöbet ve baskın olayları.',
+      'Araştırma, soru sorma ve keşifle bilgi açma; yardımcı elçi görevleri, vergi, yol harcı, nöbet ve baskın olayları.',
       'Karakter eylemlerinden deneyim ve beceri pratiği; kampanya yedeğine yeni yerleşim kayıtları.'
     ],
     fixed:['Mevsim uzunluğu tasarımdaki 10 oyun gününe çekildi.'],

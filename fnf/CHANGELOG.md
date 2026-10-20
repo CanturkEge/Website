@@ -10,7 +10,7 @@ Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük dü
 - Hasat alanı ve ekin türüyle taban verim, toprak verimi/bakım/gübre/büyü ile verim değiştiricisi hesaplanır. Depo ağırlığı ve kervan hacmi ayrıdır.
 - Yapılar, günlük bakım, nüfus tüketimi, özgün yolcu ve köylü profilleri; hayvan eşleştirme ve özellik kalıtımı, yem/ürün döngüsü.
 - Gün/mevsim/iklim/arz-talep pazar fiyatı, han haberleri, içki ve yalnız oyun içi paralı oyun.
-- Keşif, yolcuya soru sorma, DM kontrollü araştırma; yardımcı elçi görevi ve lütuf, nadir doğum nimeti, vergi, nöbet ve baskın.
+- Keşif, yolcuya soru sorma, DM kontrollü araştırma; yardımcı elçi görevi ve lütuf, nadir doğum nimeti, vergi, yol harcı, nöbet ve baskın.
 - Oyuncu eylemleri genel ve beceri deneyimi kazandırır. Yedek yeni yerleşim durumunu ve deneyimi kapsar; eski v0.6 yedekleri okunur.
 - **Durum:** Canlı veritabanı geçişi otomatik onay incelemesinde durduruldu. Bu sürüm ana dala alınmadı; yalnız hazırlık dalındadır. Onay ve uçtan uca doğrulama sonrasında durum güncellenir.
 

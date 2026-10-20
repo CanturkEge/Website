@@ -43,6 +43,7 @@ create table public.fnf_sim_state (
   research jsonb not null default '{"active":null,"progress":0,"done":[]}'::jsonb,
   market jsonb not null default '{"wood":0,"stone":0,"grain":0,"food":0,"fodder":0,"ore":0,"herbs":0,"fertilizer":0}'::jsonb,
   threat smallint not null default 0 check (threat between 0 and 100),
+  extortion_due integer not null default 0,
   favor smallint not null default 0 check (favor between 0 and 100),
   omen jsonb not null default '{"text":"Henüz bir alamet görülmedi.","task":null,"due":null}'::jsonb,
   news text not null default 'Han yolu sakindir; ilk yolcular bekleniyor.',
@@ -352,6 +353,16 @@ begin
     r:=jsonb_set(r,'{wood}',to_jsonb((r->>'wood')::integer-3));
     s.threat:=greatest(0,s.threat-6-(b->>'palisade')::integer);
     result:='Nöbetler tehlikeyi azalttı.';
+  elsif p_action='extortion' then
+    if role<>'dm' or s.extortion_due=0 then return jsonb_build_object('error','Bekleyen harç talebi yok.'); end if;
+    if choice='pay' then
+      if (r->>'coin')::integer<4 then return jsonb_build_object('error','Harç için 4 para gerekli.'); end if;
+      r:=jsonb_set(r,'{coin}',to_jsonb((r->>'coin')::integer-4));
+      s.threat:=greatest(0,s.threat-2);result:='Harç ödendi; yol sakinleşti.';
+    elsif choice='refuse' then
+      s.threat:=least(100,s.threat+5);result:='Harç reddedildi; tehdit arttı.';
+    else return jsonb_build_object('error','Geçerli harç kararı seç.'); end if;
+    s.extortion_due:=0;
   else return jsonb_build_object('error','Bilinmeyen işlem.'); end if;
 
   if fnf_private.weight(r)>180+80*(b->>'warehouse')::integer
@@ -361,7 +372,8 @@ begin
     phase=s.phase,resources=r,buildings=b,visitors=s.visitors,animals=s.animals,
     research=s.research,market=s.market,omen=s.omen,population=s.population,
     villagers=s.villagers,
-    morale=s.morale,threat=s.threat,favor=s.favor,last_result=result,
+    morale=s.morale,threat=s.threat,extortion_due=s.extortion_due,
+    favor=s.favor,last_result=result,
     last_explore_day=s.last_explore_day,last_ask_day=s.last_ask_day,
     last_tavern_day=s.last_tavern_day,updated_at=now()
   where room_id=p_room_id;
@@ -542,7 +554,14 @@ begin
       'species',(array['human','elf','dwarf','orc','dragonborn','halfling'])[idx+1],
       'class_id',(array['nature','villager','physical','engineering'])[1+fnf_private.roll(s.world_seed,d,'class',4)],
       'skill',(array['botany','craft','exploration','engineering'])[1+fnf_private.roll(s.world_seed,d,'skill',4)],
-      'ability',10+fnf_private.roll(s.world_seed,d,'ability',5));
+      'ability',10+fnf_private.roll(s.world_seed,d,'ability',5),
+      'abilities',jsonb_build_object(
+        'power',8+fnf_private.roll(s.world_seed,d,'power',7),
+        'agility',8+fnf_private.roll(s.world_seed,d,'agility',7),
+        'endurance',8+fnf_private.roll(s.world_seed,d,'endurance',7),
+        'intellect',8+fnf_private.roll(s.world_seed,d,'intellect',7),
+        'insight',8+fnf_private.roll(s.world_seed,d,'insight',7),
+        'presence',8+fnf_private.roll(s.world_seed,d,'presence',7)));
     visitors:=visitors||jsonb_build_array(new_visitor);
     event_text:=event_text||' Yeni bir yolcu geldi.';
   end if;
@@ -561,6 +580,13 @@ begin
       event_text:=event_text||' Mevsim vergisi ödendi (5 para).';
     else s.morale:=greatest(0,s.morale-8);s.threat:=least(100,s.threat+3);
       event_text:=event_text||' Vergi ödenemedi; huzursuzluk arttı.'; end if;
+  end if;
+  if s.extortion_due>0 and d>s.extortion_due then
+    s.threat:=least(100,s.threat+4);s.morale:=greatest(0,s.morale-4);
+    s.extortion_due:=0;event_text:=event_text||' Cevapsız harç talebi huzursuzluk getirdi.';
+  end if;
+  if d%7=0 and s.extortion_due=0 then
+    s.extortion_due:=d+1;event_text:=event_text||' Yol eşkıyaları harç istedi.';
   end if;
   s.threat:=least(100,s.threat+case when s.population>8 then 2 else 1 end);
   if s.threat>=9 and fnf_private.roll(s.world_seed,d,'raid',3)=0 then
@@ -591,6 +617,7 @@ begin
   update public.fnf_sim_state set phase=0,weather_phases=phases,conditions=s.conditions,
     resources=r,research=s.research,omen=s.omen,market=s.market,
     visitors=s.visitors,animals=s.animals,morale=s.morale,threat=s.threat,
+    extortion_due=s.extortion_due,
     favor=s.favor,news=s.news,last_result=event_text,updated_at=now()
     where room_id=p_room_id;
   return jsonb_build_object('ok',true,'day',d,'event',event_text);
@@ -656,6 +683,7 @@ begin
     resources=saved.resources,buildings=saved.buildings,population=saved.population,
     morale=saved.morale,visitors=saved.visitors,villagers=saved.villagers,animals=saved.animals,
     research=saved.research,market=saved.market,threat=saved.threat,
+    extortion_due=saved.extortion_due,
     favor=saved.favor,omen=saved.omen,news=saved.news,last_result=saved.last_result,
     last_explore_day=saved.last_explore_day,last_ask_day=saved.last_ask_day,
     last_tavern_day=saved.last_tavern_day,

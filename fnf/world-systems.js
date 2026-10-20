@@ -7,6 +7,8 @@
   const climate=['Ilıman','Kurak','Nemli','Soğuk'];
   const phaseNames=['Sabah','Öğle','Gece'];
   const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const label=(group,id)=>window.FNF_DATA?.[group]?.find(x=>x.id===id||x[0]===id)?.name
+    ||window.FNF_DATA?.[group]?.find(x=>x[0]===id)?.[1]||id;
   function row(label,value,note=''){return `<div class="sim-row"><strong>${safe(label)}</strong><span>${safe(value)}</span>${note?`<small>${safe(note)}</small>`:''}</div>`}
   function notice(message){return `<p class="sim-feedback feedback" role="status">${safe(message)}</p>`}
   function bind(main,ctx){
@@ -43,6 +45,8 @@
       <div class="sim-kpis"><div><b>${s.population}</b><small>HALK</small></div><div><b>${s.morale}</b><small>MORAL</small></div><div><b>${s.threat}</b><small>TEHLİKE</small></div><div><b>${s.favor}</b><small>LÜTUF</small></div></div>
       <div class="omen-line"><span>✧</span><div><b>Alamet</b><p>${safe(s.omen?.text)}</p>${s.omen?.task?`<small>${safe(s.omen.due)}. güne kadar DM kararı bekliyor.</small>`:''}</div></div>
       ${dm&&s.omen?.task?`<div class="sim-actions"><button class="button" data-sim="omen" data-choice="help">3 yiyecekle yardım et</button><button class="button secondary" data-sim="omen" data-choice="refuse">Reddet</button></div>`:''}
+      ${s.extortion_due?`<div class="omen-line"><span>⚑</span><div><b>Yol harcı talebi</b><p>${safe(s.extortion_due)}. güne kadar karar verilmeli.</p></div></div>`:''}
+      ${dm&&s.extortion_due?`<div class="sim-actions"><button class="button secondary" data-sim="extortion" data-choice="pay">4 para öde</button><button class="button secondary" data-sim="extortion" data-choice="refuse">Reddet</button></div>`:''}
       ${dm?`<div class="sim-actions"><button class="button secondary" data-sim="guard">3 odunla nöbet kur</button></div>`:''}
       ${w.day===1&&dm?`<form class="world-seed-form"><label for="worldSeed">Dünya tohumu (yalnız ilk gün)</label><div class="sim-actions"><input id="worldSeed" value="${safe(s.world_seed)}" minlength="4" maxlength="32" pattern="[A-Za-z0-9_-]+"><select id="worldClimate">${climate.map(c=>`<option ${s.climate===c?'selected':''}>${c}</option>`).join('')}</select><button class="button secondary" type="submit">Dünyayı belirle</button></div></form>`:''}
       ${notice('')}`;
@@ -65,9 +69,9 @@
     main.innerHTML=`<section class="sim-heading"><span class="eyebrow">YERLEŞİM DEFTERİ · GÜN ${ctx.world.day}</span><h2>Köy yaşadıkça değişir.</h2><p>Halk yiyecek tüketir, binalar bakım ister. Ahırdaki hayvanlar yemle üretir; vergi her onuncu günde gelir.</p></section>
       <div class="sim-two"><section class="sim-sheet"><h3>Ortak depo</h3><p>Ağırlık ${ctx.world.weight}/${ctx.world.capacity}. Kervan tek seferde ${ctx.world.carry} hacim taşır.</p><div class="supplies">${entries}</div></section>
       <section class="sim-sheet"><h3>Halk ve yolcular</h3>${row('Köylü',s.population,'Her gün yiyecek gerekli')}${row('Moral',s.morale+'/100','Eksiklik, vergi ve baskın etkiler')}
-        <div class="visitor-list">${s.visitors?.length?s.visitors.map((v,i)=>`<div class="visitor"><b>${safe(v.name)}</b><small>${safe(v.species)} · ${safe(v.class_id)} · ${safe(v.skill)} ${safe(v.ability)}</small><button class="text-button" data-sim="ask" data-target="${i}" ${s.last_ask_day===ctx.world.day?'disabled':''}>1 paraya bilgi sor →</button>${dm?`<button class="text-button" data-sim="recruit" data-index="${i}">2 yiyecekle köye al →</button>`:''}</div>`).join(''):'<p class="muted">Yolcuların gelişi için günü geçir.</p>'}</div></section></div>
+        <div class="visitor-list">${s.visitors?.length?s.visitors.map((v,i)=>`<div class="visitor"><b>${safe(v.name)}</b><small>${safe(label("species",v.species))} · ${safe(label("classes",v.class_id))} · ${safe(label("skills",v.skill))} · ${v.abilities?Object.entries(v.abilities).map(([k,n])=>`${safe(k)} ${safe(n)}`).join(" · "):safe(v.ability)}</small><button class="text-button" data-sim="ask" data-target="${i}" ${s.last_ask_day===ctx.world.day?'disabled':''}>1 paraya bilgi sor →</button>${dm?`<button class="text-button" data-sim="recruit" data-index="${i}">2 yiyecekle köye al →</button>`:''}</div>`).join(''):'<p class="muted">Yolcuların gelişi için günü geçir.</p>'}</div></section></div>
       <section class="sim-sheet stacked"><div class="sim-section-head"><div><span class="eyebrow">KÖY HALKI</span><h3>Sakinler</h3></div><span>Her yolcunun kendi kökeni ve becerisi vardır.</span></div>
-        <div class="visitor-list">${s.villagers.map(v=>`<div class="visitor"><b>${safe(v.name)}</b><small>${safe(v.species)} · ${safe(v.class_id)} · ${safe(v.skill)} · Yetenek ${safe(v.ability)}</small></div>`).join('')}</div></section>
+        <div class="visitor-list">${s.villagers.map(v=>`<div class="visitor"><b>${safe(v.name)}</b><small>${safe(label("species",v.species))} · ${safe(label("classes",v.class_id))} · ${safe(label("skills",v.skill))} · ${v.abilities?Object.entries(v.abilities).map(([k,n])=>`${safe(k)} ${safe(n)}`).join(" · "):`Yetenek ${safe(v.ability)}`}</small></div>`).join('')}</div></section>
       <section class="sim-sheet stacked"><div class="sim-section-head"><div><span class="eyebrow">YAPILAR</span><h3>İnşa ve bakım</h3></div><span>Günlük bakım odun ister.</span></div>
         <div class="buildings">${Object.entries(buildings).map(([id,[name,desc]])=>`<div class="building"><span>⌂</span><div><strong>${name} · Seviye ${s.buildings[id]}</strong><small>${desc}</small></div>${dm?`<button class="button secondary" data-sim="build" data-target="${id}" ${s.buildings[id]>=3?'disabled':''}>Yükselt · ${4+3*s.buildings[id]} odun / ${2+s.buildings[id]} taş</button>`:''}</div>`).join('')}</div></section>${notice('')}`;
     bind(main,ctx);
