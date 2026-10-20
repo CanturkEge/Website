@@ -1,6 +1,6 @@
 # Farms & Fields — oyun fikri ve sınırlar
 
-Bu dosya çalışan sürümün kısa kaydıdır. 20 Ekim 2026'daki ayrıntılı oyun görüşmesi ve yeni hedef kurallar: [DESIGN_DECISIONS_2026-10-20.md](DESIGN_DECISIONS_2026-10-20.md). Bu hedefler henüz canlı sürüme uygulanmadı.
+Bu dosya önceki çalışan sürümün **tarihsel kısa kaydıdır**; aşağıdaki “canlı v0.7.0” paragrafları güncel durum değildir. Konuşmanın bütün hedef oyunu, v0.10.1 ile farkı ve açık kararlar [GDD.md](GDD.md) içinde; 20 Ekim ayrıntılı kararları [DESIGN_DECISIONS_2026-10-20.md](DESIGN_DECISIONS_2026-10-20.md) içinde bulunur.
 
 ## Kesinleşen yön
 

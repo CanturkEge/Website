@@ -21,6 +21,7 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
 | Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql`, `v06-world-systems.sql` |
 | Canlı kuralların özeti | `GAME_DESIGN.md` |
+| Konuşmanın bütün hedef oyunu, mevcut/hedef farkı ve açık kararlar | `GDD.md` |
 | 20 Ekim görüşmesi, sonraki hedef kurallar ve açık sorular | `DESIGN_DECISIONS_2026-10-20.md` |
 | Kurulum ve sınırlar | `README.md` |
 
