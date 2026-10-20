@@ -633,7 +633,7 @@ begin
     s.morale:=greatest(0,s.morale-6);
     event_text:=event_text||' Yiyecek azlığı halkın moralini düşürdü.';
   end if;
-  building_upkeep:=greatest(1,((s.buildings->>'study')::integer+
+  building_upkeep:=greatest(0,((s.buildings->>'study')::integer+
     (s.buildings->>'tavern')::integer+(s.buildings->>'palisade')::integer)/2);
   if (r->>'wood')::integer>=building_upkeep then
     r:=jsonb_set(r,'{wood}',to_jsonb((r->>'wood')::integer-building_upkeep));
@@ -641,7 +641,7 @@ begin
     s.morale:=greatest(0,s.morale-3);
     event_text:=event_text||' Yapı bakımı aksadı.';
   end if;
-  feed_need:=greatest(1,ceil(jsonb_array_length(animals)/2.0)::integer);
+  feed_need:=ceil(jsonb_array_length(animals)/2.0)::integer;
   if (r->>'fodder')::integer>=feed_need then
     r:=jsonb_set(r,'{fodder}',to_jsonb((r->>'fodder')::integer-feed_need));
     select coalesce(sum(case when s.climate='Soğuk' and w.weather='Ayaz'
