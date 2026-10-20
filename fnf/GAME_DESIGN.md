@@ -1,5 +1,7 @@
 # Farms & Fields — oyun fikri ve sınırlar
 
+Bu dosya çalışan sürümün kısa kaydıdır. 20 Ekim 2026'daki ayrıntılı oyun görüşmesi ve yeni hedef kurallar: [DESIGN_DECISIONS_2026-10-20.md](DESIGN_DECISIONS_2026-10-20.md). Bu hedefler henüz canlı sürüme uygulanmadı.
+
 ## Kesinleşen yön
 
 - Arkadaşlarla oynanan, mitolojik yerleşim ve üretim oyunu. Zindan/savaş merkezli D&D kopyası değil; D&D sitesi yalnızca arayüz ve beceri düzeni için yapısal örnek.
@@ -9,11 +11,11 @@
 - Tek yüce tanrı; yardımcı tanrılar/melekler habercilik, alamet, görev, nimet ve sonuçlar getirebilir. Nadir doğum nimetleri ve tür yatkınlıkları düşünüldü; nasıl seçileceği henüz kararlaştırılmadı.
 - Bilinmeyen tohum ve alamet bilgisi araştırma, soru sorma veya deney yoluyla açılmalı. Tohumun **zorunlu büyüme koşulu** ile bakım/gübre/büyü gibi **verim değiştiricisi** ayrı tutulmalı. Dünya tohumu farklı başlangıçlar yaratmalı.
 
-## Canlı sürüm
+## Canlı sürüm ve sonraki hedef
 
 Canlı v0.7.0: hesap/oda/karakter, dört tarla, DM gün geçişi, keşif ansiklopedisi, yedek/yükleme/silme ve yerleşim sistemleri.
 
-`v06-world-systems.sql` ve `world-systems.js` içindeki ilk oynanabilir rakamlar: 10 günlük mevsim, bölgesel iklim, hava evreleri, toprak/güneş/nem/sıcaklık koşulları, alan ve bakım verimi, köy tüketim/bakımı, yapı, kervan/depo, yolcu/köylü, ahır ve kalıtım, araştırma/keşif/soru, pazar/han, vergi/baskın, alamet/lütuf ve XP. Bu değerler arkadaş oyunuyla denge testi sonrası değişebilir.
+`v06-world-systems.sql` ve `world-systems.js` içindeki ilk oynanabilir rakamlar: 10 günlük mevsim, bölgesel iklim, hava evreleri, toprak/güneş/nem/sıcaklık koşulları, alan ve bakım verimi, köy tüketim/bakımı, yapı, kervan/depo, yolcu/köylü, ahır ve kalıtım, araştırma/keşif/soru, pazar/han, vergi/baskın, alamet/lütuf ve XP. Bu değerler arkadaş oyunuyla denge testi sonrası değişebilir. Sonraki hedefte 20 günlük mevsim, hazır tarlasız başlangıç, köy sahipliği ve parsel bazlı tarım var; ayrıntı bağlantılı tasarım kaydında.
 
 ## Eski ilk dilim kaydı
 
@@ -23,10 +25,6 @@ Canlı v0.7.0: hesap/oda/karakter, dört tarla, DM gün geçişi, keşif ansiklo
 
 İlk oynanabilir dilim 7 günlük mevsim ve basit hasatla `v04-farming-day-codex.sql` içinde başlamıştı. Güncel 10 günlük mevsim ve verim hesapları `v06-world-systems.sql` içindedir.
 
-## Sonraki oynanabilir dilim için açık kararlar
+## Sonraki tasarım çalışması
 
-1. **Bilgi ve yetki:** Şimdilik keşif oda ortak ve DM tikleriyle açılıyor. Karakter bazlı bilgi veya ekim onayı istenecek mi?
-2. **Olay etkisi:** Sabah haberleri şimdilik RP kancası. Sonraki sürümde hangileri mekanik sonuç doğurmalı, DM olayı seçebilmeli mi?
-3. **Kaynak belge:** İlk “Fantasy Genesis” notlarının tam dosyası bu repoda yok. Sayılar, tanrı adları, bitki/hayvan listesi ve özel kurallar o belge görüldükten sonra kesinleştirilmeli.
-
-İlk sayıları oyunda deneyip kullanıcı raporuna göre ayarla; kaynak belgedeki özel kuralları görülmeden kesin kanon sayma.
+Kesinleşen kurallar, geri çekilen fikirler, canlı sürümle farklar ve cevap bekleyen sorular [20 Ekim tasarım kaydında](DESIGN_DECISIONS_2026-10-20.md). Özellikle 20 günlük mevsim, hazır varlık olmadan küçük yiyecek payıyla başlama, çoklu köy ve izinler henüz uygulanmadı. İlk “Fantasy Genesis” kaynak notlarının tam dosyası bu repoda yok; özel adları, bitki/hayvan listesini ve rakamları kaynak görülmeden kesin kanon sayma.
