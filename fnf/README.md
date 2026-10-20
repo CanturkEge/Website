@@ -33,3 +33,7 @@ The original starter farming loop lives in `v04-farming-day-codex.sql`; `v06-wor
 `v06-world-systems.sql` and the `world-systems.js` / `world-systems.css` UI implement the first larger simulation. The migration is applied to the dedicated FNF project. It extends old rooms and accepts v0.6 JSON backups; new backups include simulation state and experience.
 
 Systems: ten-day seasons, world seed and climate, morning/noon/night weather, crop growth conditions separate from yield modifiers, storage weight and caravan bulk, construction/upkeep, villagers and visitors, livestock genetics, research/discovery, daily regional supply-demand pricing, tavern activities, tax/raids, mythology omens and experience. The starting balance is deliberately easy to revise after play reports.
+
+## v0.8.0 preparation branch
+
+The village ownership and permission foundation plus twenty-day seasons are in `v08-villages-permissions.sql`, `village.js` and `village.css`. This migration has **not** been applied to production; the dependent UI must remain off main until it is approved and verified. Existing rooms and four-slot farm backups remain intact. Village backup/restore preserves accepted memberships after players rejoin, but pending invitations and join requests are not carried into the restored room. The shared room inventory and DM building actions have not yet been partitioned by village; the saved rights do not authorize them. The twenty-tile parcel model needs a separate migration and backup format change.
