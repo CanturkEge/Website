@@ -1,4 +1,4 @@
-/* Farms & Fields · v0.10.1. Persistent rules and authorization live on Supabase. */
+/* Farms & Fields · v0.11.0. Persistent rules and authorization live on Supabase. */
 (() => {
   'use strict';
   const cfg = window.FNF_CONFIG || {};
@@ -12,7 +12,7 @@
     auth: { storageKey:'fnf-auth-v1', persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
   });
   const {species,classes,abilities,skills,titles} = window.FNF_DATA;
-  const state = {user:null,rooms:[],room:null,members:[],characters:[],world:null,selectedSeed:'seed_01',codexFilter:'all',tab:'overview',authMode:'login',legacySkipped:false,step:0,draft:freshDraft(),patchSearch:'',patchOrder:'desc'};
+  const state = {user:null,rooms:[],room:null,members:[],characters:[],world:null,selectedSeed:'seed_01',codexFilter:'all',codexSearch:'',codexPage:0,tab:'overview',authMode:'login',legacySkipped:false,step:0,draft:freshDraft(),patchSearch:'',patchOrder:'desc'};
   const el = s => app.querySelector(s);
   const safe = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const usernameEmail = name => `fnf-${name.toLowerCase()}@users.fnf.invalid`;
@@ -70,8 +70,8 @@
   }
   function renderSidebar(){
     const dm=state.room.role==='dm';
-    const nav=[['overview','◈','Günün Akışı'],['farming','❀','Tarlalar'],['settlement','⌂','Yerleşim'],['livestock','♧','Ahır'],['market','◇','Pazar & Han'],['research','✳','Araştırma'],['codex','✧','Ansiklopedi'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['exploration','⌁','Keşif'],['patchnotes','▤','Sürüm Notları']];
-    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.10.1</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
+    const nav=[['overview','◈','Günün Akışı'],['farming','❀','Tarlalar'],['settlement','⌂','Yerleşim'],['livestock','♧','Ahır'],['market','◇','Pazar & Han'],['research','✳','Araştırma'],['codex','✧','Ansiklopedi'],['temple','✺','Tapınak'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['exploration','⌁','Keşif'],['patchnotes','▤','Sürüm Notları']];
+    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.11.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
     sidebar.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.nav;document.body.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');render()});
     sidebar.querySelector('#sideLobby').onclick=()=>{state.room=null;render()};
   }
@@ -215,13 +215,14 @@
       main.innerHTML=`<div class="grid-2"><section class="panel"><span class="panel-kicker">DM GÖRÜNÜMÜ</span><h2>Oyuncular</h2><p>Bu odada ${players.length} oyuncu var. DM karakter sahibi değildir; oyuncu karakterlerini buradan takip eder.</p><div class="roster">${players.length?players.map(m=>{const c=state.characters.find(x=>x.user_id===m.user_id);return `<div class="roster-item"><div><strong>${c?safe(c.name):'Karakter bekleniyor'}</strong><small>${c?`${safe(getSpecies(c.species)?.name)} · ${safe(getSpec(c.class_id,c.specialty)?.[1])}`:'Oyuncu henüz karakter oluşturmadı'}</small></div><span class="badge">OYUNCU</span></div>`}).join(''):'<div class="empty">Henüz oyuncu yok. Davet kodunu paylaş.</div>'}</div></section><section class="notebook"><span class="eyebrow">ANLATICI MASASI</span><h2>Dünya senin elinde.</h2><p>Gün, halk, tarla ve araştırma kararlarını sol menüden yönet. Sabah geçişi dışındaki sahneleri RP olarak oynayın.</p></section></div>`;
     } else if(state.tab==='farming')renderFarm(main);
     else if(state.tab==='codex')renderCodex(main);
+    else if(state.tab==='temple')window.FNF_DIVINITY?.render(main,{db,room:state.room});
     else if(['settlement','livestock','market','research','exploration'].includes(state.tab)){
       window.FNF_SYSTEMS?.[state.tab](main,{db,world:w,room,loadWorld,render});
     } else if(state.tab==='patchnotes')renderPatchNotes(main);
   }
   function codexImage(entry,large=false){
     return entry.image
-      ? `<img class="codex-art ${large?'large':''}" src="./assets/codex/${safe(entry.image)}" alt="${safe(entry.name||'Keşfedilen canlı')}" loading="lazy">`
+      ? `<img class="codex-art ${large?'large':''}" src="./assets/codex/${safe(entry.image)}?v=11" alt="${safe(entry.name||'Keşfedilen canlı')}" loading="lazy">`
       : '<span class="mystery-art" aria-label="Henüz keşfedilmedi">?</span>';
   }
   function renderFarm(main){
@@ -231,9 +232,15 @@
     const dm=state.room.role==='dm',all=state.world.catalog;
     const labels={all:'Tümü',seed:'Tohumlar',plant:'Bitkiler',animal:'Hayvanlar'};
     const fields=[['image','Resim'],['identity','Ad ve tür'],['rarity','Nadirlik'],['details','Tanım ve kullanım'],['conditions','Koşullar']];
-    const selected=state.codexFilter==='all'?all:all.filter(x=>x.category===state.codexFilter);
-    main.innerHTML=`<section class="codex-heading"><span class="eyebrow">YAŞAYAN DÜNYA ARŞİVİ</span><h2>Gördükçe açılan bir dünya.</h2><p>${dm?'DM olarak her kaydı görürsün. Kutucuklar oyuncuların görebildiği parçaları açar.':'İlk başta yalnız izler var. DM keşifleri açtıkça resim, tür ve bilgiler görünür.'}</p><div class="codex-tabs">${Object.entries(labels).map(([id,label])=>`<button type="button" data-filter="${id}" class="${state.codexFilter===id?'active':''}">${label}</button>`).join('')}</div></section><div class="codex-shelf">${selected.map((x,i)=>`<article class="codex-entry ${x.identity_open?'identified':'unknown'}"><div class="codex-visual">${codexImage(x,true)}<span class="folio">№ ${String(all.indexOf(x)+1).padStart(2,'0')}</span></div><div class="codex-copy"><span class="panel-kicker">${labels[x.category]} · ${x.kind?safe(x.kind):'TÜR BİLİNMİYOR'}</span><h3>${safe(x.name||'???')}</h3><p class="rarity">${x.rarity?`◈ ${safe(x.rarity)}`:'Nadirlik bilinmiyor'}</p><div class="codex-rule"></div><p>${x.description?safe(x.description):'Bu canlının hikâyesi henüz açılmadı.'}</p><p><b>Kullanım</b> ${x.uses?safe(x.uses):'?'}</p><p><b>Koşullar</b> ${x.conditions?safe(x.conditions):'?'}</p>${dm?`<div class="discovery-controls"><small>OYUNCULARA AÇ</small><div>${fields.map(([id,label])=>`<label><input type="checkbox" data-discovery="${id}" data-entry="${x.id}" ${x[id+'_open']?'checked':''}><span>${label}</span></label>`).join('')}</div></div>`:''}</div></article>`).join('')}</div><p id="codexFeedback" class="feedback" role="status"></p>`;
-    main.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{state.codexFilter=b.dataset.filter;renderCodex(main)});
+    const folded=s=>String(s||'').toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const query=folded(state.codexSearch.trim());
+    const selected=all.filter(x=>(state.codexFilter==='all'||x.category===state.codexFilter)&&(!query||folded([x.name,x.kind,x.rarity,x.description].filter(Boolean).join(' ')).includes(query)));
+    const maxPage=Math.max(0,Math.ceil(selected.length/12)-1);state.codexPage=Math.min(state.codexPage,maxPage);
+    const page=selected.slice(state.codexPage*12,(state.codexPage+1)*12);
+    main.innerHTML=`<section class="codex-heading"><span class="eyebrow">YAŞAYAN DÜNYA ARŞİVİ</span><h2>Gördükçe açılan bir dünya.</h2><p>${dm?'DM olarak her kaydı görürsün. Kutucuklar oyuncuların görebildiği parçaları açar.':'İlk başta yalnız izler var. DM keşifleri açtıkça resim, tür ve bilgiler görünür.'}</p><div class="codex-tabs">${Object.entries(labels).map(([id,label])=>`<button type="button" data-filter="${id}" class="${state.codexFilter===id?'active':''}">${label} <small>${id==='all'?all.length:all.filter(x=>x.category===id).length}</small></button>`).join('')}</div></section><div class="codex-toolbar"><label for="codexSearch">Keşfedilenlerde ara</label><input id="codexSearch" type="search" value="${safe(state.codexSearch)}" placeholder="Ad, tür veya bilgi ara…"><span>${selected.length} kayıt · ${state.codexPage+1}/${maxPage+1} sayfa</span></div><div class="codex-shelf">${page.map(x=>`<article class="codex-entry ${x.identity_open?'identified':'unknown'}"><div class="codex-visual">${codexImage(x,true)}<span class="folio">№ ${String(all.indexOf(x)+1).padStart(3,'0')}</span></div><div class="codex-copy"><span class="panel-kicker">${labels[x.category]} · ${x.kind?safe(x.kind):'TÜR BİLİNMİYOR'}</span><h3>${safe(x.name||'???')}</h3><p class="rarity">${x.rarity?`◈ ${safe(x.rarity)}`:'Nadirlik bilinmiyor'}</p><div class="codex-rule"></div><p>${x.description?safe(x.description):'Bu canlının hikâyesi henüz açılmadı.'}</p><p><b>Kullanım</b> ${x.uses?safe(x.uses):'?'}</p><p><b>Koşullar</b> ${x.conditions?safe(x.conditions):'?'}</p>${dm?`<div class="discovery-controls"><small>OYUNCULARA AÇ</small><div>${fields.map(([id,label])=>`<label><input type="checkbox" data-discovery="${id}" data-entry="${x.id}" ${x[id+'_open']?'checked':''}><span>${label}</span></label>`).join('')}</div></div>`:''}</div></article>`).join('')||'<div class="empty">Bu aramada kayıt bulunamadı.</div>'}</div><div class="codex-pages"><button class="button secondary" data-page="prev" ${state.codexPage===0?'disabled':''}>← Önceki</button><span>Sayfa ${state.codexPage+1} / ${maxPage+1}</span><button class="button secondary" data-page="next" ${state.codexPage>=maxPage?'disabled':''}>Sonraki →</button></div><p id="codexFeedback" class="feedback" role="status"></p>`;
+    main.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{state.codexFilter=b.dataset.filter;state.codexPage=0;renderCodex(main)});
+    main.querySelector('#codexSearch').oninput=e=>{const start=e.target.selectionStart;state.codexSearch=e.target.value;state.codexPage=0;renderCodex(main);const input=main.querySelector('#codexSearch');input.focus();input.setSelectionRange(start,start)};
+    main.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{state.codexPage+=b.dataset.page==='next'?1:-1;renderCodex(main);main.querySelector('.codex-toolbar').scrollIntoView({block:'start',behavior:'smooth'})});
     if(dm)main.querySelectorAll('[data-discovery]').forEach(b=>b.onchange=async()=>{
       b.disabled=true;
       const {data,error}=await db.rpc('fnf_set_discovery',{p_room_id:state.room.id,p_entry_id:b.dataset.entry,p_field:b.dataset.discovery,p_open:b.checked});

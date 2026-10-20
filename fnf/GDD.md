@@ -174,6 +174,8 @@ Dünya güvenli ve tekdüze değildir: hava, kıtlık, vergi, eşkıya, hastalı
 
 Mitolojinin yönü **tek yüce tanrı** ve ona bağlı yardımcı elçi/meleklerdir. Alamet, görev, nimet, reddetme/yardım etme ve sonuçları RP ve dünya mekaniğine bağlanır. İyilik/kötülük ve günah davranışlarının izlenmesi, belirli ürün ve doğaüstü olaylara etkisi hedeflenir. Oyuncu bunun bütün formülünü başlangıçta görmez. **Tapınak başlangıçta kilitlidir**, DM açınca başmelek seçimi ve ilgili yol ilerler. Başmelek listesi, puan eşikleri, olay havuzu ve ödül/ceza formülü henüz onaylı değildir. Nadir doğum nimeti ve tür yatkınlığı mümkündür; kesin oran uydurulmaz.
 
+**v0.11.0 uygulama notu:** Geçici hiyerarşi `Kaynak` → `Taşın Bekçisi`, `Devrin Sözcüsü`, `Yolun Gözcüsü`, `İzin Muhafızı` → her başmeleğe bağlı iki elçi biçimindedir. Kimlikler sabit teknik anahtarlardır, DM görünen adları oda özelinde değiştirebilir. Başmelek seçimi ve mekanik sonuçlar hâlâ tasarımdır. Ansiklopedide 100 bitki ve 30 hayvanın çizim/gözlem kaydı vardır; üretim, işleme ve ekolojik etkilerinin tamamlandığı anlamına gelmez.
+
 ## 15. Arayüz, navigasyon ve erişilebilirlik
 
 Görsel yön **koyu, zarif, yaşayan oyun dünyası**dır; beyaz yönetim paneli veya D&D sitesinin birebir kopyası değildir. Arka planda koyu tonlar, okunaklı kontrast, tarla/harita/defter çağrışımları ve yerinde küçük animasyonlar kullanılabilir. İçerik tek tip durağan kart yığınına dönmez: gün özeti, köy haritası/yerleşim görünümü, parsel ızgarası, ansiklopedi sayfası ve iş çizelgesi kendi bilgi biçimine göre düzenlenir. Görsellik bilgi gizleme durumuyla uyumlu olur.

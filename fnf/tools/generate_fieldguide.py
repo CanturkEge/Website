@@ -1,0 +1,294 @@
+"""Generate the FNF field guide migration and individual pencil-on-parchment SVG plates.
+
+Run from the repository root: python3 fnf/tools/generate_fieldguide.py
+The lists below are the editable source for the provisional fantasy taxonomy.
+"""
+from pathlib import Path
+import hashlib
+import html
+import json
+import math
+import random
+
+ROOT = Path(__file__).resolve().parents[1]
+ART = ROOT / "assets" / "codex"
+
+# Ten distinct silhouettes per ecological group. The description and habitat of each
+# entry are stable lore; no mechanical harvest or breeding effect is implied here.
+PLANTS = {
+    "ağaç": "Kızıl Sis Sediri|Ayaz Meşesi|Çan Kabuğu|Kül Ihlamuru|Cam Yapraklı Kavak|Gece Çınarı|Bakır Söğüt|Yıldız Karaağacı|Koru Ardıcı|Duman Dişbudağı",
+    "çiçek": "Şafak Çanı|Mor Ağıt|Gümüş Gelincik|Kırık Taç|Ateş Kesiği|Sis Zambağı|Çiy Tacı|Alaca Kandil|Bal Yıldızı|Karanfil Gölgesi",
+    "ot": "Fısıltı Eğreltisi|Gölge Nanesi|Kaya Kekliği|Çam İğnesi Otu|Sedef Adaçayı|Pus Kekiği|İnce Damar Otu|Kum Fesleğeni|Kül Isırganı|Sabah Mercanköşkü",
+    "mantar": "Çan Şapkası|Soluk Mürekkep|Kök Feneri|Benekli Kadeh|Yosun Kulak|Duman Süngeri|Kuzgun Şapkası|Cam Spor|Kıvrık Raf|Gece Fincanı",
+    "su bitkisi": "Gölet Aynası|Saz Dili|Kıyı Feneri|Suyolu Sümbülü|Bataklık Tarakotu|Derin Kök|Yüzen Düğme|Sıska Kamış|Nehir Tüyü|Yağmur Yaprağı",
+    "çalı": "Gece Yemişi Çalısı|Kızıl Diken|Bal Çiti|Ay Pıtrağı|Sis Böğürtleni|Demir Yaban Mersini|Kum Tırnağı|Gümüş Çit|Kırlangıç Diken|Sarı Yuva Çalısı",
+    "sarmaşık": "Rüzgâr İpi|Kaya Saçı|Meşe Sarmaşığı|Yıldız Bağı|Kuyu İpliği|Kül Asması|Orman Zinciri|Sis Sarmalı|Çan Asması|Şafak Düğümü",
+    "kök": "Ay Kökü|Kızıl Yumru|Taş Havuç|Pus Soğanı|Yaban Şalgamı|Sedef Kök|Kül Yumrusu|Kırk Damar|Don Pancarı|Dere Turpu",
+    "tahıl": "Amber Buğdayı|Güz Darısı|Sis Çavdarı|Kıraç Arpası|Bakır Yulaf|Gölge Pirinci|İnci Taneli Darı|Rüzgâr Başak|Kara Tohumlu Keten|Şafak Susamı",
+    "yosun": "Taş Kadifesi|Çiy Halısı|Kuyu Yosunu|Kızıl Liken|Gölge Halısı|Gümüş Kabuk Yosunu|Pus Örtüsü|Kış Likeni|Ağaç Sakalı|Bataklık Kadifesi",
+}
+ANIMALS = {
+    "memeli": "Yosun Tavşanı|Kızıl Sırt Tilkisi|Kül Geyiği|Orman Porsuğu|Ayaz Sansarı|Sis Keçisi|Kaya Kirpisi|Bal Rengi Sincap|Gece Gelinciği|Çan Boynuzlu Ceylan",
+    "kuş": "Sis Turnası|Bakır Kanatlı İspinoz|Kuzgun Kâtibi|Ay Balıkçılı|Şafak Baykuşu|Koru Ağaçkakanı|Gümüş Sığırcık|Çiy Bülbülü|Kül Kartalı|Kıyı Kırlangıcı",
+    "küçük canlı": "Fener Böceği|Cam Kanatlı Güve|Kırmızı Kabuklu Kaplumbağa|Dere Semenderi|Yaprak Kelebeği|Kum Kertenkelesi|Çan Kurbağası|Yıldız Salyangozu|Saz Yılanı|Kök Yengeci",
+}
+HABITATS = {
+    "ağaç": ["eski ormanın yüksek sırtları", "serin vadi yamaçları", "rüzgârlı orman sınırı"],
+    "çiçek": ["orman açıklıkları", "gün ışığı alan taşlıklar", "çiyli çayırlar"],
+    "ot": ["nemli orman tabanı", "patika kenarları", "yarı gölgeli toprak"],
+    "mantar": ["çürük kütüklerin gölgesi", "ıslak yaprak örtüsü", "köklere yakın serin yerler"],
+    "su bitkisi": ["durgun gölet kıyıları", "sığ dere yatakları", "sulak bataklık sınırı"],
+    "çalı": ["koru sınırı", "açık yamaçlar", "taşlı orman kenarı"],
+    "sarmaşık": ["yaşlı gövdeler", "gölge taş duvarlar", "ağaçlarla örtülü yamaçlar"],
+    "kök": ["gevşek orman toprağı", "serin yamaç dipleri", "nemli dere kıyısı"],
+    "tahıl": ["güneşli açıklıklar", "kuru çayır toprağı", "rüzgârlı düzlükler"],
+    "yosun": ["gölgeli taş yüzleri", "ıslak kütükler", "serin kaynak çevresi"],
+    "memeli": ["orman kenarı", "çalılık patikalar", "taşlı yamaç"],
+    "kuş": ["yüksek dallar", "sulak alan sınırı", "açık gökyüzlü koru"],
+    "küçük canlı": ["nemli yaprak örtüsü", "dere taşları", "çayır kenarı"],
+}
+DETAILS = {
+    "ağaç": ["çatallı gövdesi ve dar yaprakları", "pullu kabuğu ve seyrek tacı", "alçak dalları ve geniş yaprakları"],
+    "çiçek": ["kat kat taç yaprakları", "sarkık çan biçimli çiçekleri", "ince saplı yıldız çiçekleri"],
+    "ot": ["dişli yaprak uçları", "karşılıklı küçük yaprakları", "kıvrık ince filizleri"],
+    "mantar": ["kavisli şapkası", "ince sap ve halka izi", "küme hâlinde yükselen şapkaları"],
+    "su bitkisi": ["uzun ince yaprakları", "yüzer yuvarlak yaprakları", "su üstüne çıkan saz başları"],
+    "çalı": ["sık dalları ve küçük meyveleri", "uzun dikenleri", "oval yapraklarının damarları"],
+    "sarmaşık": ["sarmal dalları", "üç parçalı yaprakları", "ince tutunma kolları"],
+    "kök": ["çatallı yumrusu", "kalın kök damarları", "toprak üstündeki rozet yaprakları"],
+    "tahıl": ["çok taneli başağı", "uzun kılçıkları", "eğilen ince sapları"],
+    "yosun": ["sık küçük sürgünleri", "yumuşak kabartılı örtüsü", "taşa yapışan ince kolları"],
+    "memeli": ["belirgin kulakları ve kuyruk izi", "çizgili sırt tüyleri", "uzun bacakları ve dikkatli duruşu"],
+    "kuş": ["uzun kanat tüyleri", "ince gagası ve boynu", "kabarık göğüs tüyleri"],
+    "küçük canlı": ["desenli sırt çizgileri", "ince uzuvları", "benekli kabuğu"],
+}
+USES = {
+    "ağaç": ["Kabuk örneği ve odun niteliği araştırılabilir.", "Gölgesi ve dalları yol işareti olabilir.", "Tohumları koru gözlemlerine eklenir."],
+    "çiçek": ["Pigment denemelerine konu olabilir; etkisi henüz kanıtlanmadı.", "Çiçeklenme zamanı mevsim kaydına işlenir.", "Koku ve nektar izi saha defterine alınır."],
+    "ot": ["Yaprak örneği inceleme için saklanabilir.", "Koku ve lif niteliği zanaat denemelerinde araştırılır.", "Yetişme izi keşif rotalarına yardımcı olabilir."],
+    "mantar": ["Yenebilirliği doğrulanmadan tüketilmez; spor örneği araştırılır.", "Spor izi toprağın nemini anlamaya yardımcı olabilir.", "Yalnız gözlem ve çizim için kayda alınır; tüketim bilgisi yok."],
+    "su bitkisi": ["Su düzeyi ve akış gözleminde işaret olabilir.", "Lif yapısı zanaat araştırmasına açılabilir.", "Sığ suyun yerini gösteren bir saha ipucudur."],
+    "çalı": ["Meyvesinin kullanımı DM araştırmasıyla belirlenir; doğrudan yenmez.", "Dallar çit ve iz sürme denemelerinde incelenir.", "Çiçek ve meyve zamanı gözlem defterine işlenir."],
+    "sarmaşık": ["Lif dayanımı yapım denemesinde sınanabilir.", "Sardığı gövdenin yaşını okumaya yardımcı olabilir.", "Yön bulmada bitki örtüsü işareti olabilir."],
+    "kök": ["Kök örneği işleme bilgisi açılana kadar yalnız kaydedilir.", "Toprağın yapısını anlamak için kesiti incelenir.", "Yetiştirme olasılığı araştırma konusudur."],
+    "tahıl": ["Tane yapısı değirmen araştırmasında incelenebilir.", "Tohum toplama ve ekim koşulları henüz doğrulanmadı.", "Hasat potansiyeli DM araştırmasıyla açılabilir."],
+    "yosun": ["Nem göstergesi olarak gözlemlenir.", "Dokusu boya veya dolgu denemesi için incelenebilir.", "Yaşadığı yüzey saha defterine işlenir."],
+    "memeli": ["İzleri ve beslenmesi gözlenebilir; evcilleştirme kuralı henüz yok.", "Davranışları RP keşfi ve bakım araştırmasına konu olabilir.", "Yaşam alanı ekosistem gözlemine işlenir."],
+    "kuş": ["Göç ve çağrı örüntüsü mevsim haberi olabilir.", "Tüy ve yuva izi yalnız gözlem amacıyla kayda alınır.", "Uçuş yolu keşif sahnesine ipucu verebilir."],
+    "küçük canlı": ["Yaşadığı mikrohabitat gözlemlenebilir.", "Kabuğu veya kanadı çizim defterine kaydedilir.", "Mevsimsel hareketi araştırma konusu olabilir."],
+}
+
+def species():
+    rows = [{"id":"plant_01", "category":"plant", "name":"Fısıltı Eğreltisi", "group":"ot", "index":0}]
+    plant_index = 2
+    for group, names in PLANTS.items():
+        for index, name in enumerate(names.split("|")):
+            if name == "Fısıltı Eğreltisi":
+                continue
+            rows.append({"id":f"plant_{plant_index:03d}","category":"plant","name":name,"group":group,"index":index})
+            plant_index += 1
+    animal_index = 3
+    for group, names in ANIMALS.items():
+        for index, name in enumerate(names.split("|")):
+            if name == "Yosun Tavşanı":
+                ident = "animal_01"
+            elif name == "Sis Turnası":
+                ident = "animal_02"
+            else:
+                ident = f"animal_{animal_index:03d}"
+                animal_index += 1
+            rows.append({"id":ident,"category":"animal","name":name,"group":group,"index":index})
+    assert len(rows)==130 and len({x['name'] for x in rows})==130 and len({x['id'] for x in rows})==130
+    for x in rows:
+        group,index=x['group'],x['index']
+        x['kind']={"memeli":"Memeli","kuş":"Kuş","küçük canlı":"Küçük canlı"}.get(group,group.capitalize())
+        x['rarity']=["Yaygın","Seyrek","Nadir","Yaygın","Seyrek","Yaygın","Nadir","Seyrek","Çok nadir","Yaygın"][index]
+        x['image']=x['id']+'.svg'
+        habitat=HABITATS[group][index%3]
+        x['description']=f"{x['name']}, {DETAILS[group][index%3]} ile tanınır. {habitat.capitalize()} çevresinde gözlemlenir."
+        x['uses']=USES[group][index%3]
+        x['conditions']=f"Doğal yaşam: {habitat}; mevsimsel sıklığı saha keşfiyle belirlenir. Üretim ve yetiştirme kuralı henüz yok."
+    return rows
+
+def svg(row):
+    ident=row['id']; group=row['group']; v=row['index']; rng=random.Random(int(hashlib.sha256(ident.encode()).hexdigest()[:12],16))
+    ink='#302d29'; pale='#736958'; strokes=[]
+    def path(d,width=2.2,opacity=1):
+        strokes.append(f'<path d="{d}" fill="none" stroke="{ink}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round" opacity="{opacity}"/>')
+    def ellipse(cx,cy,rx,ry,fill='none',width=2):
+        strokes.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="{fill}" stroke="{ink}" stroke-width="{width}"/>')
+    # Silhouette families, with species-specific phase, branch counts and angles.
+    if group in ('ağaç','çiçek','ot','su bitkisi','çalı','sarmaşık','kök','tahıl','yosun'):
+        n={'ağaç':7,'çiçek':5,'ot':8,'su bitkisi':8,'çalı':10,'sarmaşık':7,'kök':6,'tahıl':8,'yosun':12}[group]
+        base=440 if group!='su bitkisi' else 410
+        if group=='ağaç':
+            path('M247 455 C234 380 245 288 253 166 M259 452 C264 355 260 254 253 166',5)
+            for j in range(n):
+                y=195+j*30; side=-1 if j%2 else 1; reach=48+((v*11+j*9)%53)
+                path(f'M251 {y+32} Q{251+side*reach*.48:.0f} {y-22} {251+side*reach} {y-32}',2.5)
+                for k in range(3):
+                    x=251+side*(reach*.5+k*reach*.16); yy=y-24-k*7
+                    ellipse(round(x),round(yy),10+(v+j+k)%8,4+(v+k)%4, '#a89c8350',1.4)
+                    path(f'M{x-side*9:.0f} {yy:.0f} l{side*15} -1',.7,.65)
+        elif group=='mantar':
+            pass
+        elif group=='kök':
+            path('M250 282 Q244 348 253 390 Q270 421 252 470 M252 390 Q220 420 229 469 M252 422 Q283 438 280 479',2.7)
+            for j in range(n):
+                a=(j-n/2)*.32; ex=250+int(math.sin(a)*135); ey=170+abs(j-n/2)*12
+                path(f'M250 291 Q{ex} 266 {ex} {ey}',1.8)
+                ellipse(ex,ey,10,27, '#a89c8322',1.6)
+        elif group=='yosun':
+            path('M91 427 Q247 379 409 429 M94 437 Q251 404 407 441',2.5)
+            for j in range(n*3):
+                x=112+j*8; h=20+((j*13+v*7)%69)
+                path(f'M{x} {426-(j%5)*4} q{-9 if j%2 else 8} {-h//2} {(-6 if j%2 else 7)} {-h}',1.3,.75)
+        elif group=='sarmaşık':
+            path(f'M246 468 C{120+v*5} 380 {380-v*5} 310 240 245 S{170+v*3} 159 250 125',2.6)
+            for j in range(n):
+                y=156+j*43; x=247+int(math.sin(j*1.7+v)*64); side=-1 if j%2 else 1
+                path(f'M{x} {y} q{side*30} -24 {side*58} -32',1.7)
+                ellipse(x+side*62,y-38,14+(j%4)*3,8+(v%3)*2,'#a89c8333',1.5)
+        else:
+            for j in range(n):
+                offset=(j-(n-1)/2)*24; peak=150+((j*23+v*17)%93)
+                if group=='su bitkisi': peak+=50
+                path(f'M250 {base} Q{250+offset*1.9:.0f} 329 {250+offset} {peak}',1.8+(j%3)*.25)
+                if group=='tahıl':
+                    for k in range(5):
+                        x=250+offset; y=peak+k*9
+                        path(f'M{x} {y} q{-13 if k%2 else 13} -12 {(-13 if k%2 else 13)} -24',1.3)
+                elif group=='çiçek':
+                    cx=250+offset
+                    for k in range(5+(v%3)):
+                        a=k*2*math.pi/(5+v%3); xx=cx+math.sin(a)*19; yy=peak+math.cos(a)*19
+                        ellipse(round(xx),round(yy),8,15,'#b4a98b44',1.3)
+                    ellipse(cx,peak,7,7, '#69635455',1.2)
+                    for k in range(8):
+                        a=k*math.pi/4
+                        path(f'M{cx+math.sin(a)*8:.0f} {peak+math.cos(a)*8:.0f} l{math.sin(a)*9:.0f} {math.cos(a)*9:.0f}',.7,.55)
+                elif group=='çalı':
+                    ellipse(250+offset,peak,13+(j+v)%9,24+(j%3)*3,'#a89c8330',1.5)
+                    for k in range(3): ellipse(250+offset+(k-1)*9,peak-4+k*5,2,2,ink,1)
+                else:
+                    ellipse(250+offset,peak,8+(j%4)*2,30+(v%3)*5,'#a89c8326',1.6)
+                    path(f'M{250+offset} {peak-22} l0 43 M{246+offset} {peak-6} l8 7 M{254+offset} {peak-12} l-8 9',.65,.7)
+                    if group=='ot': path(f'M{250+offset} {peak+27} l{-8-(j%4)*2} -19',.9,.7)
+        # Ground line, faint registration and pencil side studies.
+        path('M128 473 Q252 466 381 475',1.2,.45)
+    elif group=='mantar':
+        for j in range(3+(v%3)):
+            x=171+j*47; h=42+((j*17+v*11)%75); y=427-h
+            path(f'M{x-9} 445 Q{x-17} {y+40} {x-7} {y+8} M{x+9} 445 Q{x+15} {y+34} {x+7} {y+8}',2)
+            path(f'M{x-43} {y+17} Q{x-29} {y-49} {x} {y-47} Q{x+32} {y-49} {x+43} {y+17} Q{x} {y+32} {x-43} {y+17} Z',2.3)
+            for k in range(5): ellipse(x-20+k*10,y-8+(k%2)*8,2,3,ink,.8)
+        path('M125 455 Q250 447 378 455',1.4,.5)
+    elif group=='memeli':
+        # A naturalist's side study; different ears, horns, tails and body markings.
+        slender=v in (2,5,9)
+        body_x=230 if v in (4,7,8) else 246
+        ellipse(body_x,333,83 if slender else (113 if v in (4,8) else 100),47 if slender else (43 if v in (4,8) else 58),'#b3a68818',2.4)
+        path('M304 311 Q343 288 350 261 Q365 231 389 252 L407 278 Q392 296 358 293 L335 323',2.5)
+        ear=35+(v*7)%38
+        if v in (0,4,8): ear+=26
+        if v in (3,6): ear=17
+        path(f'M362 251 l{-10-ear//4} {-ear} q24 10 26 {ear-7} M379 249 l{11+ear//5} {-ear+9} q12 19 -2 {ear}',2)
+        path('M397 276 l8 0',2)
+        ellipse(382,269,2,2,ink,1)
+        for x,y in [(191,362),(240,375),(282,374),(319,358)]:
+            path(f'M{x} {y} l{-9+(v%3)*3} {72-(v%3)*8} l24 0',2.2)
+        tailx=115 if v%2 else 130
+        path(f'M{tailx+40} 315 Q{tailx-42} {285-v*5} {tailx} {258+v*2}',2.2)
+        if v in (1,7):
+            path(f'M{tailx} {258+v*2} Q{tailx-50} {201+v*2} {tailx-43} {277+v*3} Q{tailx-9} 289 {tailx+20} 321',1.9)
+            for j in range(10):path(f'M{tailx-38+j*5} {237+j*3} l-8 -9',.9,.7)
+        if v in (2,5,9): path('M356 236 Q339 192 317 190 M362 231 Q377 197 395 187',2.2)
+        if v==6:
+            for j in range(20):
+                x=152+j*8
+                path(f'M{x} {307-(j%3)*3} l{-11+j%5} {-24-(j%5)*4} l{17} {16}',1.15,.85)
+        if v==3:
+            for j in range(6):path(f'M{345+j*6} {251+j*4} l-13 33',1.4,.65)
+        for j in range(9):
+            x=180+(j*23+v*11)%139; y=316+(j*13)%30
+            path(f'M{x} {y} l{5+j%3} {2+j%4}',.8,.6)
+        for j in range(35):
+            x=170+(j*19+v*7)%144; y=325+(j*13)%47
+            path(f'M{x} {y} l9 4',.5,.29)
+        path('M107 455 Q257 451 419 459',1.3,.45)
+    elif group=='kuş':
+        path('M252 432 Q245 387 253 363 M265 430 Q266 388 260 363 M236 431 l21 0 M257 432 l23 0',2)
+        ellipse(254,306,58+(v%3)*9,67,'#b3a68818',2.5)
+        ellipse(290,233,29,32,'#b3a68818',2.2)
+        path('M316 232 l42 8 -40 13 M265 252 Q269 272 270 283',2.1)
+        ellipse(301,227,2,2,ink,.8)
+        path('M221 288 Q164 339 202 376 Q233 355 267 308 M217 307 Q199 343 205 367 M230 304 Q213 342 217 363',1.8)
+        for j in range(19):
+            x=202+j*4; y=320+(j%5)*8
+            path(f'M{x} {y} l-14 19',.7,.48)
+        for j in range(5+(v%4)):
+            path(f'M{211+j*8} {367+j%3*6} Q{170+j*9} 427 {149+j*8} 421',1.3,.8)
+        path('M146 450 Q255 447 377 452',1.2,.45)
+    else:
+        # Invertebrate/amphibian/reptile specimen, segmented by species index.
+        if v in (2,5,6,8):
+            path('M105 338 Q157 292 225 321 Q317 342 384 299 Q412 300 398 326 Q345 378 254 367 Q143 375 105 338 Z',2.2)
+            for j in range(8):
+                x=145+j*30; path(f'M{x} 359 l{-12 if j%2 else 13} 30',1.5)
+        else:
+            ellipse(247,330,65+(v%3)*10,64,'#a89c8322',2.3)
+            ellipse(321,315,27,26,'#a89c8322',2)
+            for j in range(3):
+                path(f'M{190+j*26} 345 Q{150+j*19} 393 {130+j*27} 412 M{275+j*19} 351 Q{330+j*18} 400 {332+j*24} 420',1.7)
+            if v in (0,1,4):
+                path('M197 320 Q125 209 199 206 Q253 216 249 310 M250 309 Q269 193 335 208 Q372 260 294 333',1.8)
+        for j in range(9):
+            x=190+(j*17+v*6)%143; y=302+(j*11)%62
+            ellipse(x,y,2+(j%3),2,ink,.8)
+        path('M108 454 Q252 446 395 453',1.2,.45)
+    # Paper flecks, graphite hatching and a slightly imperfect found-page border.
+    hatch=[]
+    for j in range(130):
+        x=rng.randint(4,496); y=rng.randint(4,556)
+        hatch.append(f'<circle cx="{x}" cy="{y}" r="{rng.choice((.35,.5,.65,1.1))}" fill="{pale}" opacity="{rng.choice((.12,.18,.25))}"/>')
+    for j in range(55):
+        x=rng.randint(62,438); y=rng.randint(74,499)
+        hatch.append(f'<path d="M{x} {y} l{rng.randint(2,13)} -{rng.randint(2,6)}" stroke="{pale}" stroke-width=".55" opacity=".22"/>')
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" role="img" aria-label="Doğa defterinde kara kalem tür çizimi">'
+      '<rect width="500" height="560" fill="#e5d6b8"/><path d="M2 7 Q85 2 165 8 T331 5 T498 6 V552 Q391 557 292 551 T101 556 T2 552 Z" fill="none" stroke="#9c8967" stroke-width="1.4" opacity=".42"/>'
+      '<path d="M39 35 Q246 37 461 35 V525 Q251 522 39 525 Z M46 42 H454 V518 H46 Z" fill="none" stroke="#776c57" stroke-width=".85" opacity=".46"/>'
+      '<path d="M66 64 h42 M392 64 h42 M66 496 h42 M392 496 h42" stroke="#655b4b" opacity=".45"/>'
+      +''.join(hatch)+''.join(strokes)
+      +f'<text x="250" y="507" text-anchor="middle" fill="#625746" font-size="11" font-family="serif" letter-spacing="4">FIELD NOTE · {html.escape(ident.upper())}</text></svg>')
+
+def main():
+    rows=species(); ART.mkdir(parents=True,exist_ok=True)
+    for row in rows:
+        (ART/row['image']).write_text(svg(row),encoding='utf-8')
+    # Starter seed plates match the same archival art direction.
+    for ident,base in [('seed_01','plant_081'),('seed_02','plant_051'),('seed_03','plant_071')]:
+        sample=next(r for r in rows if r['id']==base)
+        (ART/(ident+'.svg')).write_text(svg({**sample,'id':ident}),encoding='utf-8')
+    payload=[{k:row[k] for k in ('id','category','name','kind','rarity','image','description','uses','conditions')} for row in rows]
+    encoded=json.dumps(payload,ensure_ascii=False,separators=(',',':')).replace("'","''")
+    sql=f'''-- FNF v0.11.0 · 100 plants, 30 animals; independent descriptive field guide.
+-- Existing starter ids stay stable. These entries have no harvest/breeding effects.
+insert into fnf_private.codex_catalog
+  (id,category,name,kind,rarity,image,description,uses,conditions)
+select x.id,x.category,x.name,x.kind,x.rarity,x.image,x.description,x.uses,x.conditions
+from jsonb_to_recordset('{encoded}'::jsonb) as x(
+  id text,category text,name text,kind text,rarity text,image text,
+  description text,uses text,conditions text)
+on conflict(id) do update set category=excluded.category,name=excluded.name,
+  kind=excluded.kind,rarity=excluded.rarity,image=excluded.image,
+  description=excluded.description,uses=excluded.uses,conditions=excluded.conditions;
+
+-- Existing rooms acquire undiscovered rows; room-init trigger handles future rooms.
+insert into public.fnf_codex_reveals(room_id,entry_id)
+select r.id,c.id from public.fnf_rooms r cross join fnf_private.codex_catalog c
+on conflict(room_id,entry_id) do nothing;
+'''
+    (ROOT/'v15-field-guide.sql').write_text(sql,encoding='utf-8')
+    print(f"Generated {sum(r['category']=='plant' for r in rows)} plants, {sum(r['category']=='animal' for r in rows)} animals and three seed plates")
+
+if __name__=='__main__': main()

@@ -1,6 +1,13 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.11.0', date:'20 Ekim 2026', title:'Orman Defteri ve Tapınak', tag:'KEŞİF',
+    summary:'100 bitki, 30 hayvan ve DM tarafından yönetilen geçici tanrı hiyerarşisi eklendi.',
+    added:['Ansiklopediye 100 bitki ve 30 hayvan türü, her biri için parşömen üstü kara kalem çizim eklendi.','Tapınakta tek yüce kaynak, dört başmelek ve sekiz elçi hiyerarşisi var; DM tapınağı açabilir, isimleri oda bazında değiştirebilir ve ad, alan, anlatı bilgilerini ayrı ayrı gösterebilir.','Ansiklopedide kategori sayıları, arama ve sayfalama eklendi.'],
+    fixed:['Yeni keşif kayıtları eski odalara kapalı olarak eklendi; yeni oda kurulumunda da gizli başlar.'],
+    changed:['Tapınak açılma ve isim düzenlemeleri kampanya yedeğine girer; eski yedekler açılabilir. Çizim ve anlatılar otomatik üretim/üreme kuralı getirmez.']
+  },
+  {
     version:'0.10.1', date:'20 Ekim 2026', title:'Oda Yapıları', tag:'DÜZELTME',
     summary:'Köy yapılarının yanında DM ortak yapılarını kurma yolu geri geldi.',
     added:[],

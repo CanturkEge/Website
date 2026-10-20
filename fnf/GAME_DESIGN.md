@@ -1,6 +1,12 @@
 # Farms & Fields — oyun fikri ve sınırlar
 
-Bu dosya önceki çalışan sürümün **tarihsel kısa kaydıdır**; aşağıdaki “canlı v0.7.0” paragrafları güncel durum değildir. Konuşmanın bütün hedef oyunu, v0.10.1 ile farkı ve açık kararlar [GDD.md](GDD.md) içinde; 20 Ekim ayrıntılı kararları [DESIGN_DECISIONS_2026-10-20.md](DESIGN_DECISIONS_2026-10-20.md) içinde bulunur.
+Bu dosya önceki çalışan sürümün **tarihsel kısa kaydıdır**; aşağıdaki “canlı v0.7.0” paragrafları güncel durum değildir. Konuşmanın bütün hedef oyunu, güncel sürümle farkı ve açık kararlar [GDD.md](GDD.md) içinde; 20 Ekim ayrıntılı kararları [DESIGN_DECISIONS_2026-10-20.md](DESIGN_DECISIONS_2026-10-20.md) içinde bulunur.
+
+## v0.11.0 içerik durumu
+
+`v15-field-guide.sql` 100 bitki ve 30 hayvanı aşamalı ansiklopediye ekler; her türün benzersiz çizimi `assets/codex/` altındadır. Metin ve adların düzenlenebilir kaynağı `tools/generate_fieldguide.py` dosyasıdır. Bunlar doğal yaşam ve gözlem kayıtlarıdır; türlerin ekim, tüketim, işleme, evcilleştirme ve genetik kuralı henüz tanımlanmadı. Başlangıçta var olan üç tohumun yetiştirme kuralı korunur.
+
+`v16-divine-hierarchy.sql` tek Kaynak → dört başmelek → sekiz elçi düzenini kurar. Bu isimler geçicidir; DM oda bazında ad değiştirebilir. Tapınak kapalı başlar, DM açınca ad, alan ve anlatı ayrı ayrı açıklanır. Alamet, nimet, günah puanı ve başmelek yolu için sayısal etki henüz yoktur.
 
 ## Kesinleşen yön
 

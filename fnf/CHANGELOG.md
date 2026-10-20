@@ -4,6 +4,13 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
+## v0.11.0 — Orman Defteri ve Tapınak (20 Ekim 2026)
+
+- Ansiklopedide 100 ayrı bitki, 30 hayvan ve mevcut üç başlangıç tohumu var. Her kaydın ayrı parşömen/kara kalem SVG çizimi, nadirliği, doğal yaşam koşulu ve gözlem notu bulunur. Yeni kayıtlar var olan odalarda ve yeni odalarda gizli başlar; DM beş bilgi alanını ayrı açar.
+- Kategori sayısı, bilinen bilgilerde arama ve 12 kayıtlık sayfalama eklendi. Gizli ad ve açıklamalar arama sonucunda ifşa edilmez.
+- Tek yüce kaynak, dört başmelek, sekiz elçi hiyerarşisi; oda başına kapalı tapınak, DM tarafından açma, her ad için oda özelinde düzenleme ve ad/alan/anlatı için ayrı gösterme kontrolü eklendi.
+- Tapınak durumu, isimler ve açılan bilgiler kampanya yedeğine katıldı; eski yedekler bu bölüm olmadan yüklenebilir. Adlar ve anlatılar değiştirilebilir taslaktır. Katalog kayıtları kendiliğinden ekim, hasat, hayvan yetiştirme, nimet ya da ceza mekaniği başlatmaz.
+
 ## v0.10.1 — Oda Yapıları (20 Ekim 2026)
 
 - DM ortak depodan çalışma evi, ahır, han, depo ve çiti yeniden kurabilir. Bunlar oda desteğidir; köy evleri, kuyuları ve işçilikle yapılan yapılar ayrı kalır.

@@ -1,0 +1,10 @@
+.temple-intro{padding:30px;border:1px solid #b59972;background:linear-gradient(115deg,#36494a,#514736);border-radius:3px 26px 3px 3px;margin-bottom:20px}
+.temple-intro h2{font:600 clamp(32px,4vw,52px) Fraunces,serif;margin:8px 0}.temple-intro p{max-width:710px;color:#e9ddc8}
+.temple-status{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:22px;color:#efc896}
+.temple-locked{text-align:center;padding:60px 20px;border:1px solid #8b806b;background:#293a3c}.temple-locked span{font-size:65px;color:#d6b88b}
+.divine-tree{display:grid;grid-template-columns:1fr;gap:12px;max-width:900px}.divine-node{display:flex;gap:15px;background:#263638;border:1px solid #8d816c;padding:20px;border-radius:3px 15px 3px 3px;min-width:0}
+.divine-node.source{background:linear-gradient(105deg,#514632,#293c3c);border-color:#cfb07b}.divine-node.archangel{margin-left:20px;border-color:#aa9173}.divine-node.messenger{margin-left:65px;border-color:#6d786e}
+.divine-mark{font:35px Fraunces,serif;color:#ddb782;line-height:1}.divine-body{min-width:0;flex:1}.divine-body h3{font:600 27px Fraunces,serif;margin:7px 0}.divine-body p{color:#e4d8c6;font-size:13px;margin:7px 0}.divine-domain{color:#deb989!important}
+.divine-controls{display:flex;gap:12px;flex-wrap:wrap;border-top:1px solid #a6937466;margin-top:15px;padding-top:10px;align-items:center}.divine-controls label{font-size:12px;display:flex;align-items:center;gap:4px}.divine-controls input{accent-color:#ddb782}
+.divine-rename{display:flex;gap:5px;flex-wrap:wrap}.divine-rename input{min-width:140px;max-width:200px}.divine-rename .button{padding:8px}
+@media(max-width:760px){.divine-node.archangel{margin-left:8px}.divine-node.messenger{margin-left:20px}}

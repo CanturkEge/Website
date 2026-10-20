@@ -10,7 +10,8 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Oturum, oda, yönlendirme, render akışı | `app.js`: `refreshRooms`, `openRoom`, `render`, `renderSidebar` |
 | Kayıt, eski hesaba kullanıcı adı, giriş, oda kurma/katılma | `app.js`: `renderAuth`, `renderLegacyClaim`, `renderLobby` |
 | Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
-| Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; sunucu kuralları `v04-farming-day-codex.sql` |
+| Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; katalog `v15-field-guide.sql`, üretim kaynağı `tools/generate_fieldguide.py` |
+| Tapınak, tanrı hiyerarşisi, DM isim ve keşif kontrolü | `divinity.js`, `divinity.css`, `v16-divine-hierarchy.sql` |
 | Kampanya yedekleme, geri yükleme, silme | `app.js`: `renderLobby`, `renderGame`; SQL `v05-campaign-backup.sql` |
 | Köyler, davetler, üye yetkileri | `village.js`, `village.css`; sunucu `v08-villages-permissions.sql` |
 | 20 kare parseller, su ve kamp başlangıcı | `parcels.js`, `parcels.css`, `v09-parcels-camps.sql` |
@@ -29,7 +30,7 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 
 `egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js` + `world-systems.js` / `world-systems.css`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
-v0.10.1 veritabanı geçişleri v08–v14 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; DM ortak yapıları v14 köprüsüyle, eski yerleşim durumu `fnf_sim_snapshot` ile yürür.
+v0.11.0 veritabanı geçişleri v08–v16 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; DM ortak yapıları v14 köprüsüyle, eski yerleşim durumu `fnf_sim_snapshot` ile yürür. v15 100 bitki/30 hayvan ekler; v16 tapınak ve hiyerarşi durumunu yedek zincirine taşır. İllüstrasyonları yeniden üretmek için `python3 fnf/tools/generate_fieldguide.py` çalıştır.
 
 Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
 
@@ -50,4 +51,4 @@ v0.7.0 SQL geçişi üretime uygulandı. DM gün geçişi, yapı, ticaret ve tar
 
 ## Taslak geçiş sırası
 
-v08 → v09 → v10 → v11 → v12 → v13 → v14 sırası zorunludur. İlk üçü yeni sistemleri, sonraki üçü RPC doğrulama düzeltmelerini, v14 DM ortak yapı köprüsünü taşır. JSON yedek zinciri genişletildi; eski kayıtlar korundu. Köy, parsel, yapı, iş, DM gün geçişi ve yedek üretimde geri alınan işlemlerle kontrol edildi; gerçek tarayıcı hesabı ve şifreli yükleme uçtan uca sınanmadı. README.md içindeki dağıtım notlarına bak.
+v08 → v09 → v10 → v11 → v12 → v13 → v14 → v15 → v16 sırası zorunludur. v15 kataloğu genişletir, v16 tapınak kayıtlarını ve yedeği ekler. Eski kayıtlar korunur. DM/oyuncu tapınak yetkisi, gizlilik ve yedek çıktısı geri alınan işlemlerde kontrol edildi; gerçek tarayıcı hesabı ve şifreli yükleme uçtan uca sınanmadı. README.md içindeki dağıtım notlarına bak.

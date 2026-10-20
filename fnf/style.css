@@ -350,6 +350,7 @@ input:focus,select:focus{border-color:#e2ac75;box-shadow:0 0 0 3px #e0a56b40}
 .codex-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
 .codex-tabs button{background:#253941;border:1px solid #b29270;color:#ead9c3;padding:7px 14px;border-radius:100px}
 .codex-tabs button.active{background:#e2b57e;color:#1a2a2f}
+.codex-tabs small{opacity:.8;margin-left:3px}.codex-toolbar,.codex-pages{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0;color:#e4ceb4}.codex-toolbar input{max-width:320px;min-width:200px}.codex-toolbar span{margin-left:auto}.codex-pages{justify-content:center;margin:25px 0}.codex-pages button:disabled{opacity:.42;cursor:default}
 .codex-shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
 .codex-entry{display:grid;grid-template-columns:minmax(130px,.65fr) 1fr;overflow:hidden;background:#26363e;border:1px solid #997b60;border-radius:2px 20px 2px 2px;min-height:328px}
 .codex-entry{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
