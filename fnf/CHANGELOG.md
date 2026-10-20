@@ -4,6 +4,21 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
+## v0.10.0 — Köyde Emek (hazırlık dalı, 20 Ekim 2026)
+
+- İnşa yetkisiyle köy başına ev, kuyu, atölye ve okul başlatılır. Malzeme başta ödenir; oyuncu emeği veya atanmış yapıcıyla gün içinde ilerler, tamamlanmadan kullanılmaz.
+- DM aday getirebilir; adaylar seyrek günlük gelişlerle de görünür. Ev kapasitesi içinde köye kabul veya ret, ayrı karar yetkisiyle yapılır.
+- NPC'ye yalnız yetkili üye veya DM günün bir işini atar. Oyuncu aynı gün ikinci kez değiştiremez; DM tamamlanmadan düzeltebilir. Gün geçişinde meslek deneyimi, yorgunluk, dinlenme ve temel ürünler işlenir.
+- Kampanya yedeği yapıları, adayları, köylüleri, güncel işleri ve oyuncu inşa emeğini içerir.
+- **Durum:** Sadece hazırlık PR'ında. Veritabanı ve canlı siteye uygulanmadı.
+
+## v0.9.0 — Yirmi Kare Toprak (hazırlık dalı, 20 Ekim 2026)
+
+- Köy başına çoklu 20 kare parsel; kare aralığına tohum, iki gün tarla açma, sınırlı dere suyu, yağmur, hasat kalıntısı ve nadas.
+- Yeni odada hazır ekin/tohum/hayvan/köylü bulunmaz; altı yiyeceklik geçici kamp payını DM kaynak veya tohumla genişletebilir. Eski odaların stoğu korunur.
+- Yedek köy parsellerini, ekinleri ve suyu geri yükler. Dört eski boş tarla kaydı yalnız önceki yedek biçimi için tutulur.
+- **Durum:** Sadece hazırlık PR'ında. Veritabanı ve canlı siteye uygulanmadı.
+
 ## v0.8.0 — Köylerin İlk Adımı (hazırlık dalı, 20 Ekim 2026)
 
 - Oyuncular rastgele arazi ipucuyla kendi köylerini kurar veya başvuru/davetle bir köye katılır. İlk gün en çok üç eş kurucu, kabul ederek katılabilir.
