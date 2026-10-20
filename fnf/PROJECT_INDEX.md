@@ -11,11 +11,12 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Kayıt, eski hesaba kullanıcı adı, giriş, oda kurma/katılma | `app.js`: `renderAuth`, `renderLegacyClaim`, `renderLobby` |
 | Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
 | Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; sunucu kuralları `v04-farming-day-codex.sql` |
+| Kampanya yedekleme, geri yükleme, silme | `app.js`: `renderLobby`, `renderGame`; SQL `v05-campaign-backup.sql` |
 | Yerleşim ve keşif taslak ekranları | `app.js`: `renderGame`; metinler `game-data.js/featurePanels` |
 | Ansiklopedi çizimleri | `assets/codex/*.svg`; katalog ve kilit durumu veritabanında |
 | Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
 | Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
-| Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql` |
+| Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql` |
 | Tasarım kararları ve açık sorular | `GAME_DESIGN.md` |
 | Kurulum ve sınırlar | `README.md` |
 
@@ -24,6 +25,8 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 `egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
 Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
+
+DM yedeği JSON indirilir; yükleme şifre kapısından geçerek yeni kodlu oda açar. Karakterler aynı kullanıcı kimliği yeni odaya katılınca geri gelir. Silme oda adını aynen ister ve oda altındaki veriyi kaldırır.
 
 ## Değişiklik ritmi
 

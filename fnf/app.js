@@ -1,4 +1,4 @@
-/* Farms & Fields · v0.5.0. Persistent rules and authorization live on Supabase. */
+/* Farms & Fields · v0.6.0. Persistent rules and authorization live on Supabase. */
 (() => {
   'use strict';
   const cfg = window.FNF_CONFIG || {};
@@ -71,7 +71,7 @@
   function renderSidebar(){
     const dm=state.room.role==='dm';
     const nav=[['overview','◈','Günün Akışı'],['farming','❀','Tarlalar'],['codex','✧','Ansiklopedi'],['settlement','⌂','Yerleşim'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['exploration','⌁','Keşif'],['patchnotes','▤','Sürüm Notları']];
-    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.5.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
+    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.6.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
     sidebar.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.nav;document.body.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');render()});
     sidebar.querySelector('#sideLobby').onclick=()=>{state.room=null;render()};
   }
@@ -119,9 +119,20 @@
     };
   }
   function renderLobby(){
-    app.innerHTML=`<section class="page-intro"><div><span class="eyebrow">OYUN LOBİSİ</span><h1>Yolunu seç.</h1><p>Yeni bir yerleşim başlat veya arkadaşının oda koduyla katıl.</p></div></section><div class="grid-2"><section class="panel"><span class="panel-kicker">SENİN ODALARIN</span><h2>Yerleşimler</h2><div class="room-list">${state.rooms.length?state.rooms.map(r=>`<div class="room-row"><div><strong>${safe(r.name)}</strong><small>${r.role==='dm'?'Kurucu · DM':'Oyuncu'} · ${safe(r.code)}</small></div><button class="button secondary" data-open="${safe(r.id)}">Odaya gir →</button></div>`).join(''):'<div class="empty">Henüz bir odaya katılmadın. İlk tohum burada atılacak.</div>'}</div></section><div><section class="panel"><span class="panel-kicker">KURUCULAR İÇİN</span><h2>Oda kur</h2><p>Kurucu şifresini yalnızca yetki verdiğin kişiler bilmeli. Oyuncular ayrı bir kodla katılır.</p><form id="createForm"><label for="roomName">Yerleşimin adı</label><input id="roomName" required maxlength="48" placeholder="Ör. Sisli Vadi"><label for="roomPassword">Oda kurma şifresi</label><input id="roomPassword" type="password" required autocomplete="off" placeholder="Kurucu şifresi"><button class="button full">Yeni oda oluştur</button><p class="feedback" role="status"></p></form></section><section class="panel stacked"><span class="panel-kicker">OYUNCULAR İÇİN</span><h2>Kodla katıl</h2><form id="joinForm"><label for="roomCode">Davet kodu</label><input id="roomCode" required maxlength="10" autocomplete="off" placeholder="10 karakterli kod"><button class="button secondary full">Odaya katıl</button><p class="feedback" role="status"></p></form></section></div></div>`;
+    app.innerHTML=`<section class="page-intro"><div><span class="eyebrow">OYUN LOBİSİ</span><h1>Yolunu seç.</h1><p>Yeni bir yerleşim başlat veya arkadaşının oda koduyla katıl.</p></div></section><div class="grid-2"><section class="panel"><span class="panel-kicker">SENİN ODALARIN</span><h2>Yerleşimler</h2><div class="room-list">${state.rooms.length?state.rooms.map(r=>`<div class="room-row"><div><strong>${safe(r.name)}</strong><small>${r.role==='dm'?'Kurucu · DM':'Oyuncu'} · ${safe(r.code)}</small></div><button class="button secondary" data-open="${safe(r.id)}">Odaya gir →</button></div>`).join(''):'<div class="empty">Henüz bir odaya katılmadın. İlk tohum burada atılacak.</div>'}</div></section><div><section class="panel"><span class="panel-kicker">KURUCULAR İÇİN</span><h2>Oda kur</h2><p>Kurucu şifresini yalnızca yetki verdiğin kişiler bilmeli. Oyuncular ayrı bir kodla katılır.</p><form id="createForm"><label for="roomName">Yerleşimin adı</label><input id="roomName" required maxlength="48" placeholder="Ör. Sisli Vadi"><label for="roomPassword">Oda kurma şifresi</label><input id="roomPassword" type="password" required autocomplete="off" placeholder="Kurucu şifresi"><button class="button full">Yeni oda oluştur</button><p class="feedback" role="status"></p></form></section><section class="panel stacked"><span class="panel-kicker">OYUNCULAR İÇİN</span><h2>Kodla katıl</h2><form id="joinForm"><label for="roomCode">Davet kodu</label><input id="roomCode" required maxlength="10" autocomplete="off" placeholder="10 karakterli kod"><button class="button secondary full">Odaya katıl</button><p class="feedback" role="status"></p></form></section><section class="panel stacked"><span class="panel-kicker">KAMPANYA YEDEĞİ</span><h2>Yedekten yeni oda kur</h2><p>Eski oda korunur. Yedek yeni oda koduyla ayrı açılır; oyuncular katıldığında karakterleri geri gelir.</p><form id="restoreForm"><label for="backupFile">FNF JSON yedeği</label><input id="backupFile" type="file" accept=".json,application/json" required><label for="restorePassword">Oda kurma şifresi</label><input id="restorePassword" type="password" required autocomplete="off"><button class="button secondary full">Yedeği yükle</button><p class="feedback" role="status"></p></form></section></div></div>`;
     app.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openRoom(b.dataset.open));
     el('#createForm').onsubmit=async e=>{e.preventDefault();const b=e.submitter;busy(b,true);const {data,error}=await db.rpc('fnf_create_room',{p_name:el('#roomName').value.trim(),p_password:el('#roomPassword').value});busy(b,false);if(error||data?.error)return showError(error||{message:data.error});try{await refreshRooms();await openRoom(data.id)}catch(err){showError(err)}};
+    el('#restoreForm').onsubmit=async e=>{
+      e.preventDefault();const file=el('#backupFile').files?.[0],b=e.submitter;
+      if(!file||file.size>1000000)return feedback('En çok 1 MB büyüklüğünde bir JSON yedeği seç.',false,'#restoreForm .feedback');
+      let backup;try{backup=JSON.parse(await file.text())}catch{return feedback('JSON dosyası okunamadı.',false,'#restoreForm .feedback')}
+      if(backup?.format!=='fnf-room-backup'||backup?.version!==1)return feedback('Geçerli bir FNF oda yedeği seç.',false,'#restoreForm .feedback');
+      busy(b,true);
+      const {data,error}=await db.rpc('fnf_restore_room',{p_backup:backup,p_password:el('#restorePassword').value});
+      busy(b,false);
+      if(error||data?.error)return showError(error||new Error(data.error),'#restoreForm .feedback');
+      try{await refreshRooms();await openRoom(data.id)}catch(err){showError(err,'#restoreForm .feedback')}
+    };
     el('#joinForm').onsubmit=async e=>{e.preventDefault();const b=e.submitter;busy(b,true);const {data,error}=await db.rpc('fnf_join_room',{p_code:el('#roomCode').value.trim().toUpperCase()});busy(b,false);if(error||data?.error)return showError(error||{message:data.error},'#joinForm .feedback');try{await refreshRooms();await openRoom(data.id)}catch(err){showError(err,'#joinForm .feedback')}};
   }
   function choice(x,selected,type){return `<button type="button" class="choice ${selected?'selected':''}" data-choice="${type}" data-value="${safe(x.id)}" aria-pressed="${selected}"><span class="symbol">${x.icon}</span><strong>${safe(x.name)}</strong><small>${safe(x.desc)}</small></button>`}
@@ -168,6 +179,31 @@
     if(state.tab==='overview'){
       const playerChars=state.characters.filter(c=>state.members.some(m=>m.user_id===c.user_id&&m.role==='player'));
       main.innerHTML=`<div class="world-grid"><section class="morning-scene"><span class="eyebrow">GÜN ${safe(w?.day)} · SABAH HABERİ</span><h2>${safe(w?.event)}</h2><p>Bu bir RP kancası. Gün geçişinde ekinler işlenir, yeni hava ve olay belirir; hikâyeyi DM yönetir.</p><span class="horizon" aria-hidden="true">☼</span>${dm?'<button id="advanceDay" class="button">Günü bitir → yeni güne geç</button>':'<span class="badge">GÜNÜ DM GEÇİRİR</span>'}<p id="worldFeedback" class="feedback" role="status"></p></section><section class="ledger"><span class="panel-kicker">ODA DEFTERİ</span><h2>${safe(room.name)}</h2><p>${dm?'Davet kodunu arkadaşlarına gönder.':'Arkadaşların kodla katılabilir.'}</p><div class="code">${safe(room.code)}</div><button id="copyCode" class="button secondary">Kodu kopyala</button><div class="rule"></div><div class="stat-strip"><div class="stat"><b>${state.members.filter(m=>m.role==='player').length}</b><small>Oyuncu</small></div><div class="stat"><b>${playerChars.length}</b><small>Karakter</small></div><div class="stat"><b>${safe(w?.day)}</b><small>Gün</small></div></div></section></div><section class="timeline stacked"><span class="panel-kicker">SON SABAHlar</span><h2>Günlük</h2><div class="timeline-list">${w?.log?.length?w.log.map(l=>`<div class="timeline-row"><b>${safe(l.day)}</b><div><strong>${safe(l.season)} · ${safe(l.weather)}</strong><p>${safe(l.event)}</p></div></div>`).join(''):'<p>İlk günün hikâyesi başlıyor. Gün geçtikçe kayıtlar burada birikecek.</p>'}</div></section><section class="ledger stacked"><span class="panel-kicker">YERLEŞİM HALKI</span><h2>İlk sakinler</h2><div class="roster">${playerChars.length?playerChars.map(c=>`<div class="roster-item"><div><strong>${safe(c.name)}</strong><small>${safe(getSpecies(c.species)?.name)} · ${safe(getClass(c.class_id)?.name)} / ${safe(getSpec(c.class_id,c.specialty)?.[1])}</small></div>${c.user_id===state.user.id?'<span class="badge">Sen</span>':''}</div>`).join(''):'<p class="muted">Oyuncular karakterlerini oluşturduğunda burada görünecek.</p>'}</div></section>`;
+      if(dm){
+        const tools=document.createElement('section');
+        tools.className='panel campaign-tools stacked';
+        tools.innerHTML=`<span class="panel-kicker">KAMPANYA YÖNETİMİ · DM</span><h2>Yedek ve silme</h2><p>Yedeği JSON dosyası olarak indir. Yükleme lobide yeni oda açar.</p><button id="backupRoom" class="button secondary" type="button">Kampanya yedeğini indir</button><details class="danger-zone"><summary>Kampanyayı sil</summary><p>Bu oda ve oyun verisi kalıcı olarak silinir. Önce yedeğini al.</p><form id="deleteRoom"><label for="confirmRoom">Onay için oda adını aynen yaz</label><input id="confirmRoom" autocomplete="off" required placeholder="${safe(room.name)}"><button class="button danger" type="submit">Kampanyayı sil</button></form></details><p id="campaignFeedback" class="feedback" role="status"></p>`;
+        main.append(tools);
+        tools.querySelector('#backupRoom').onclick=async e=>{
+          const b=e.currentTarget;busy(b,true);
+          const {data,error}=await db.rpc('fnf_backup_room',{p_room_id:room.id});busy(b,false);
+          if(error||data?.error)return showError(error||new Error(data.error),'#campaignFeedback');
+          const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+          const link=document.createElement('a');link.href=URL.createObjectURL(blob);
+          link.download=`fnf-${room.code}-gun-${w.day}.json`;link.click();
+          setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+          feedback('Yedek indirildi.',true,'#campaignFeedback');
+        };
+        tools.querySelector('#deleteRoom').onsubmit=async e=>{
+          e.preventDefault();const b=e.submitter,confirmation=tools.querySelector('#confirmRoom').value;
+          if(confirmation!==room.name)return feedback('Oda adını aynen yaz.',false,'#campaignFeedback');
+          busy(b,true);
+          const {data,error}=await db.rpc('fnf_delete_room',{p_room_id:room.id,p_confirmation:confirmation});
+          busy(b,false);
+          if(error||data?.error)return showError(error||new Error(data.error),'#campaignFeedback');
+          state.room=null;state.world=null;await refreshRooms();render();
+        };
+      }
       el('#copyCode').onclick=async e=>{try{await navigator.clipboard.writeText(room.code);e.target.textContent='Kopyalandı ✓'}catch{e.target.textContent=room.code}};
       if(dm)el('#advanceDay').onclick=async e=>{const b=e.currentTarget;busy(b,true);const {data,error}=await db.rpc('fnf_advance_day',{p_room_id:room.id});if(error||data?.error){busy(b,false);return showError(error||new Error(data.error),'#worldFeedback')}try{await loadWorld();render()}catch(err){busy(b,false);showError(err,'#worldFeedback')}};
     } else if(state.tab==='character'&&me){

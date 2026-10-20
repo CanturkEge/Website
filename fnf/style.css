@@ -380,3 +380,10 @@ input:focus,select:focus{border-color:#e2ac75;box-shadow:0 0 0 3px #e0a56b40}
 @media(max-width:950px){.world-grid,.farm-layout{grid-template-columns:1fr}}
 @media(max-width:620px){.day-ribbon{gap:10px;padding:8px}.day-ribbon strong{font-size:18px}.day-ribbon small{font-size:8px}.day-ribbon .text-button{font-size:11px;padding:5px}.field-row{grid-template-columns:44px 1fr 95px;gap:7px;padding:12px;min-height:104px}.furrows{display:none}.field-index{font-size:22px}.field-life{grid-template-columns:26px 1fr}.sprout{font-size:25px}.field-life strong{font-size:15px}.field-life small{font-size:10px}.field-actions .button{font-size:10px}.codex-entry{grid-template-columns:1fr}.codex-visual{min-height:185px;height:185px}.codex-copy{padding:18px}.farm-heading,.codex-heading{padding:24px}.farm-ornament{display:none}}
 @media(prefers-reduced-motion:reduce){.codex-entry,.codex-art,.seed-option,.field-row{transition:none}.codex-entry:hover,.codex-entry:hover .codex-art,.seed-option:hover{transform:none}}
+.campaign-tools { max-width: 100%; }
+.campaign-tools .danger-zone { margin-top: 1.3rem; border-top: 1px solid rgba(205,171,133,.24); padding-top: 1rem; }
+.danger-zone summary { color: #dc9a83; cursor: pointer; font-weight: 700; }
+.danger-zone form { max-width: 440px; display: grid; gap: .6rem; margin-top: 1rem; }
+.button.danger { background: #8b3c3b; color: #fff; }
+.button.danger:hover { background: #aa4945; }
+#backupFile { padding: .75rem; }

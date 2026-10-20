@@ -2,19 +2,20 @@
 
 Independent, static browser game shell at `https://egecanturk.dev/fnf/` in the same GitHub Pages repository as the D&D site. It has its **own** Supabase project, auth session (`fnf-auth-v1`), tables, and room memberships. D&D files are not imported or changed.
 
-## Current version (v0.5.0)
+## Current version (v0.6.0)
 
 - Username/password registration and sign-in without an invitation. A room code is required only to join, and the creator password only to create a room. No real email or confirmation link is needed.
 - DM room creation with a server-checked creator password and a separate 10-character player invite code.
 - The DM enters their room directly without creating a character. Players create one character per room: six species, four paths, twelve specializations, six abilities starting at 10, eight ability points, one species bonus, and two chosen class skills. Species and specialization also grant fixed training; overlapping training gives expertise.
 - Copper and midnight-blue field-journal UI, room roster, character sheet, and patch notes.
 - Four shared farm plots, seed stock, plant/water/harvest actions, DM-controlled days, recorded daily RP prompts, and an illustrated codex whose fields are unlocked by the DM. Settlement and exploration remain draft panels.
+- DM campaign management: JSON backup, import into a separate room with a fresh invite code, and deletion by exact room-name confirmation. Returning players reclaim their backed-up characters after joining the new room.
 
 Start future edits with `PROJECT_INDEX.md`; confirmed concepts and open decisions live in `GAME_DESIGN.md`. Names and descriptions are centralized in `game-data.js`.
 
 ## Set up a dedicated Supabase project
 
-1. Apply `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, then `v04-farming-day-codex.sql` to the dedicated FNF project only. Its private `fnf_private.room_gate` starts empty.
+1. Apply `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, then `v05-campaign-backup.sql` to the dedicated FNF project only. Its private `fnf_private.room_gate` starts empty.
 2. Generate a high-entropy room creation password and insert only its salted SHA-256 digest into `fnf_private.room_gate`; do not put the password in Git or `config.js`. The SQL comment in `schema.sql` shows the insert pattern. Give the password only to trusted room creators.
 3. Deploy `functions/fnf-auth/index.ts` as `fnf-auth` with `verify_jwt=false`: public registration validates username/password; account migration validates the existing user JWT in the function. Supabase's privileged secret key stays in Edge Function environment variables, never in client code.
 4. Put the new project's API URL and **publishable** key in `config.js`. Publish the repository root via GitHub Pages; `/fnf/` is served from `fnf/index.html`.

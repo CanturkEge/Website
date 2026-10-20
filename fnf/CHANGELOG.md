@@ -2,6 +2,14 @@
 
 Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sırayla tutulur. Teknik dağıtım ile oyun mekaniği henüz ayrı sürümlenmez.
 
+Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
+
+## v0.6.0 — Kampanya Defteri (20 Ekim 2026)
+
+- DM kampanyayı JSON olarak indirir; gün, günlük, tarla, stok, ansiklopedi keşfi ve karakterler saklanır.
+- Yedek yüklenince önceki kampanya korunarak yeni kodlu oda açılır. Oyuncular eski hesaplarıyla yeni koda katıldığında kayıtlı karakterleri geri gelir.
+- DM oda adını aynen yazarak kampanyayı silebilir. Silme geri alınamaz; önce yedek önerilir.
+
 ## v0.5.0 — İlk Hasat (20 Ekim 2026)
 
 - Kayıt oda kodundan ayrıldı; kullanıcı adı ve şifre yeterli. Oda kurma şifresi ve katılım kodu kendi işlemlerinde kaldı.

@@ -1,6 +1,16 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.6.0', date:'20 Ekim 2026', title:'Kampanya Defteri', tag:'YÖNETİM',
+    summary:'DM kampanyayı yedekleyebilir, yedekten ayrı bir oda açabilir ve oda adını yazarak silebilir.',
+    added:[
+      'Odanın günlüğü, tarlaları, tohumu, ansiklopedi keşfi ve karakterleri JSON yedeğine alınır.',
+      'Yedek yeni kodlu ayrı odaya yüklenir; önceki oda korunur. Oyuncu eski hesabıyla koda katılınca karakteri geri gelir.',
+      'DM oda adını aynen yazarak kampanyasını silebilir.'
+    ],
+    fixed:[], changed:['Sürümler major.minor.patch düzeninde ilerler; 0.11.23 gibi sürümler mümkündür.']
+  },
+  {
     version:'0.5.0', date:'20 Ekim 2026', title:'İlk Hasat', tag:'OYUN DÖNGÜSÜ',
     summary:'Kod istemeyen hesap açma, ortak tarla, gün akışı ve keşif ansiklopedisi.',
     added:[
