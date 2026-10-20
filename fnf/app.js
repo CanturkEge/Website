@@ -1,4 +1,4 @@
-/* Farms & Fields · v0.7.0. Persistent rules and authorization live on Supabase. */
+/* Farms & Fields · v0.10.0. Persistent rules and authorization live on Supabase. */
 (() => {
   'use strict';
   const cfg = window.FNF_CONFIG || {};
@@ -71,7 +71,7 @@
   function renderSidebar(){
     const dm=state.room.role==='dm';
     const nav=[['overview','◈','Günün Akışı'],['farming','❀','Tarlalar'],['settlement','⌂','Yerleşim'],['livestock','♧','Ahır'],['market','◇','Pazar & Han'],['research','✳','Araştırma'],['codex','✧','Ansiklopedi'],dm?['people','♧','Yerleşim Halkı']:['character','◇','Karakterim'],['exploration','⌁','Keşif'],['patchnotes','▤','Sürüm Notları']];
-    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.8.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
+    sidebar.innerHTML=`<a class="side-brand" href="./"><span>✳</span><strong>Farms <i>&</i> Fields</strong><small>FNF / v0.10.0</small></a><div class="side-room"><span class="panel-kicker">AKTİF YERLEŞİM</span><strong>${safe(state.room.name)}</strong><small>${dm?'KURUCU · DM':'OYUNCU'} · ${safe(state.room.code)}</small></div><div class="side-label">OYUN MENÜSÜ</div><nav class="side-nav">${nav.map(([id,icon,label])=>`<button type="button" data-nav="${id}" class="${state.tab===id?'active':''}"><span>${icon}</span>${label}${id==='patchnotes'?'<b class="nav-dot"></b>':''}</button>`).join('')}</nav><div class="side-bottom"><button type="button" id="sideLobby">← Odalara dön</button><small>Toprak seni hatırlar.</small></div>`;
     sidebar.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.nav;document.body.classList.remove('menu-open');menuToggle.setAttribute('aria-expanded','false');render()});
     sidebar.querySelector('#sideLobby').onclick=()=>{state.room=null;render()};
   }

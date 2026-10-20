@@ -12,9 +12,9 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
 | Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; sunucu kuralları `v04-farming-day-codex.sql` |
 | Kampanya yedekleme, geri yükleme, silme | `app.js`: `renderLobby`, `renderGame`; SQL `v05-campaign-backup.sql` |
-| Köyler, davetler, üye yetkileri (v0.8 hazırlık) | `village.js`, `village.css`; sunucu `v08-villages-permissions.sql` |
-| 20 kare parseller, su ve kamp başlangıcı (v0.9 hazırlık) | `parcels.js`, `parcels.css`, `v09-parcels-camps.sql` |
-| Köy yapıları, adaylar, NPC işleri (v0.10 hazırlık) | `village-ops.js`, `village-ops.css`, `v10-village-ops.sql` |
+| Köyler, davetler, üye yetkileri | `village.js`, `village.css`; sunucu `v08-villages-permissions.sql` |
+| 20 kare parseller, su ve kamp başlangıcı | `parcels.js`, `parcels.css`, `v09-parcels-camps.sql` |
+| Köy yapıları, adaylar, NPC işleri | `village-ops.js`, `village-ops.css`, `v10-village-ops.sql`; üretim onarımları `v11`–`v13` |
 | Yerleşim, ahır, pazar, araştırma, keşif | `world-systems.js`, `world-systems.css`; sunucu `v06-world-systems.sql`, hazırlık `v08-villages-permissions.sql` |
 | Ansiklopedi çizimleri | `assets/codex/*.svg`; katalog ve kilit durumu veritabanında |
 | Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
@@ -28,7 +28,7 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 
 `egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js` + `world-systems.js` / `world-systems.css`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
-v0.7.0 sunucu geçişi uygulandı. Yeni eylemler `fnf_sim_snapshot` ve `fnf_sim_action` RPC'leriyle; gün geçişi, hasat ve yedek eski RPC adlarıyla genişletilerek yürür.
+v0.10.0 veritabanı geçişleri v08–v13 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; eski yerleşim durumu `fnf_sim_snapshot` ile yürür.
 
 Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
 
@@ -43,10 +43,10 @@ DM yedeği JSON indirilir; yükleme şifre kapısından geçerek yeni kodlu oda 
 
 Son doğrulama: 20 Ekim 2026. Gerçek hesapla tüm kayıt/oyun akışı uçtan uca denenmedi; eski onaysız e-posta hesabı otomatik etkinleştirilmedi. Bu dosyayı sonraki değişiklikte güncel tut.
 
-20 Ekim görüşmesinden ilk uygulama dilimi v0.8 hazırlık PR'ındadır: köy kurma, davet/başvuru, ayrı yetkiler ve 20 günlük mevsim. Canlı Supabase geçişi uygulanmadığı için ana dala alınmamalıdır. Parsel, üretim, pazar ve NPC iş kuralları hâlâ tasarım hedefidir. Canlı v0.7'de bu yeni özellikler bulunmaz.
+20 Ekim görüşmesinden ilk uygulama dilimi köy kurma, davet/başvuru, ayrı yetkiler, 20 günlük mevsim, 20 kare parseller ve günlük NPC işidir. Şehir pazarları, tarif bazlı üretim ve NPC aileleri hâlâ tasarım hedefidir.
 
 v0.7.0 SQL geçişi üretime uygulandı. DM gün geçişi, yapı, ticaret ve tarla işlemleri geri alınan veritabanı denemelerinde çalıştı; oyuncu DM eylemine erişemedi. Gerçek hesapla tüm oyun akışı, eski yedeğin şifreli geri yüklenmesi ve mobil ekran uçtan uca denenmedi; ilk oyun raporuyla incele.
 
 ## Taslak geçiş sırası
 
-PR #3 dalında v08 → v09 → v10 birbirine bağlıdır. Üçü de henüz canlı Supabase projesine uygulanmadı, dolayısıyla dal ana dala alınmadı ve /fnf/ v0.7.0'da. v09 yirmi kareli köy tarlaları ve küçük başlangıç kampını, v10 yetkili inşaat ve günlük NPC işini ekler. JSON yedek zinciri her geçişte genişletilir; eski kayıtlar geriye uyumlu tutulur. JS sözdizimi kontrol edildi fakat migrasyon ve gerçek hesap senaryoları henüz çalıştırılamadı. README.md içindeki dağıtım notlarına bak.
+v08 → v09 → v10 → v11 → v12 → v13 sırası zorunludur. İlk üçü yeni sistemleri, son üçü üretim RPC doğrulama düzeltmelerini taşır. JSON yedek zinciri genişletildi; eski kayıtlar korundu. Köy, parsel, yapı, iş, DM gün geçişi ve yedek üretimde geri alınan işlemlerle kontrol edildi; gerçek tarayıcı hesabı ve şifreli yükleme uçtan uca sınanmadı. README.md içindeki dağıtım notlarına bak.

@@ -4,28 +4,28 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
-## v0.10.0 — Köyde Emek (hazırlık dalı, 20 Ekim 2026)
+## v0.10.0 — Köyde Emek (20 Ekim 2026)
 
 - İnşa yetkisiyle köy başına ev, kuyu, atölye ve okul başlatılır. Malzeme başta ödenir; oyuncu emeği veya atanmış yapıcıyla gün içinde ilerler, tamamlanmadan kullanılmaz.
 - DM aday getirebilir; adaylar seyrek günlük gelişlerle de görünür. Ev kapasitesi içinde köye kabul veya ret, ayrı karar yetkisiyle yapılır.
 - NPC'ye yalnız yetkili üye veya DM günün bir işini atar. Oyuncu aynı gün ikinci kez değiştiremez; DM tamamlanmadan düzeltebilir. Gün geçişinde meslek deneyimi, yorgunluk, dinlenme ve temel ürünler işlenir.
 - Kampanya yedeği yapıları, adayları, köylüleri, güncel işleri ve oyuncu inşa emeğini içerir.
-- **Durum:** Sadece hazırlık PR'ında. Veritabanı ve canlı siteye uygulanmadı.
+- **Durum:** v08–v13 veritabanı geçişleri uygulandı. Köy işi RPC'leri geri alınan işlemlerle doğrulandı; gerçek tarayıcı hesabı ve şifreli yedek yükleme uçtan uca sınanmadı.
 
-## v0.9.0 — Yirmi Kare Toprak (hazırlık dalı, 20 Ekim 2026)
+## v0.9.0 — Yirmi Kare Toprak (20 Ekim 2026)
 
 - Köy başına çoklu 20 kare parsel; kare aralığına tohum, iki gün tarla açma, sınırlı dere suyu, yağmur, hasat kalıntısı ve nadas.
 - Yeni odada hazır ekin/tohum/hayvan/köylü bulunmaz; altı yiyeceklik geçici kamp payını DM kaynak veya tohumla genişletebilir. Eski odaların stoğu korunur.
 - Yedek köy parsellerini, ekinleri ve suyu geri yükler. Dört eski boş tarla kaydı yalnız önceki yedek biçimi için tutulur.
-- **Durum:** Sadece hazırlık PR'ında. Veritabanı ve canlı siteye uygulanmadı.
+- **Durum:** Veritabanı geçişi uygulandı; parsel açma ve günlük akış geri alınan işlemlerle doğrulandı.
 
-## v0.8.0 — Köylerin İlk Adımı (hazırlık dalı, 20 Ekim 2026)
+## v0.8.0 — Köylerin İlk Adımı (20 Ekim 2026)
 
 - Oyuncular rastgele arazi ipucuyla kendi köylerini kurar veya başvuru/davetle bir köye katılır. İlk gün en çok üç eş kurucu, kabul ederek katılabilir.
 - Köy yöneticileri inşa, karar ve NPC iş atama yetkilerini üyeye ayrı ayrı verebilir. Yetkiler sunucuda saklanır; ortak oda deposu ve mevcut DM inşa işlemleri henüz köylere ayrılmadı.
 - Mevsimler 20 oyun gününe çıkar. Günlük ve ekim koşulları aynı takvimi kullanır; on günlük vergi döngüsü ayrıca sürer.
 - Yedek köyleri ve kabul edilmiş üyelikleri içerir. Yüklemede oyuncu yeni odaya katıldığında köy hakkını geri alır. Bekleyen davet/başvurular aktarılmaz.
-- **Durum:** Canlı Supabase geçişi otomatik onay incelemesinde durdu; bu kod hazırlık PR'ında, sitede henüz yayında değil. Eski kampanyalar korunur.
+- **Durum:** Veritabanı geçişi uygulandı; köy kurma ve yetki RPC'leri kontrol edildi. Eski kampanyalar korundu.
 
 ## v0.7.0 — Yaşayan Yerleşim (20 Ekim 2026)
 
