@@ -1,6 +1,18 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.8.0', date:'20 Ekim 2026', title:'Köylerin İlk Adımı', tag:'KÖY YÖNETİMİ',
+    summary:'Oyuncular kendi köylerini kurabilir veya davet ve başvuruyla başka köye katılabilir.',
+    added:[
+      'Köy konumu rastgele atanır; ilk arazi ipucu köy defterinde görünür.',
+      'Kurucu, ilk gün eş kurucu davet edebilir. Katılım isteği kabul veya ret kararı bekler.',
+      'Üyeye inşa, karar ve iş atama yetkileri ayrı ayrı kaydedilir; eski ortak depo ve yapı eylemleri şimdilik DM yönetiminde kalır.',
+      'Kampanya yedeği köyleri ve kabul edilmiş üyelerin yetkilerini de saklar.'
+    ],
+    fixed:['Normal mevsim uzunluğu 20 oyun günü oldu.'],
+    changed:['Köy üyeliği oda üyeliğinden ayrı tutulur; hazır dört tarla ve ortak kaynaklar bu adımda korunur.']
+  },
+  {
     version:'0.7.0', date:'20 Ekim 2026', title:'Yaşayan Yerleşim', tag:'OYUN SİSTEMLERİ',
     summary:'Günlük yerleşim, iklim, yetiştirme, ticaret, araştırma ve keşif döngüsü.',
     added:[
