@@ -369,12 +369,12 @@ begin
     skill:=case p_action when 'field' then 'botany' when 'breed' then 'husbandry'
       when 'explore' then 'exploration' when 'ask' then 'diplomacy'
       when 'trade' then 'diplomacy' else 'craft' end;
-    insert into public.fnf_player_progress(room_id,user_id,xp,skill_xp)
+    insert into public.fnf_player_progress as prog(room_id,user_id,xp,skill_xp)
       values(p_room_id,actor,2,jsonb_build_object(skill,2))
     on conflict(room_id,user_id) do update set
-      xp=least(1000000,fnf_player_progress.xp+2),
-      skill_xp=jsonb_set(fnf_player_progress.skill_xp,array[skill],
-        to_jsonb(coalesce((fnf_player_progress.skill_xp->>skill)::integer,0)+2));
+      xp=least(1000000,prog.xp+2),
+      skill_xp=jsonb_set(prog.skill_xp,array[skill],
+        to_jsonb(coalesce((prog.skill_xp->>skill)::integer,0)+2));
   end if;
   return jsonb_build_object('ok',true,'message',result);
 end;
@@ -421,12 +421,12 @@ begin
     care=0,fertilizer=0,magic=0 where room_id=p_room_id and slot=p_slot;
   if exists(select 1 from public.fnf_room_members m where m.room_id=p_room_id
     and m.user_id=auth.uid() and m.role='player') then
-    insert into public.fnf_player_progress(room_id,user_id,xp,skill_xp)
+    insert into public.fnf_player_progress as prog(room_id,user_id,xp,skill_xp)
       values(p_room_id,auth.uid(),3,'{"botany":3}'::jsonb)
     on conflict(room_id,user_id) do update set
-      xp=least(1000000,fnf_player_progress.xp+3),
-      skill_xp=jsonb_set(fnf_player_progress.skill_xp,'{botany}',
-        to_jsonb(coalesce((fnf_player_progress.skill_xp->>'botany')::integer,0)+3));
+      xp=least(1000000,prog.xp+3),
+      skill_xp=jsonb_set(prog.skill_xp,'{botany}',
+        to_jsonb(coalesce((prog.skill_xp->>'botany')::integer,0)+3));
   end if;
   return jsonb_build_object('ok',true,'yield',yield_amount,'product',product);
 end;
