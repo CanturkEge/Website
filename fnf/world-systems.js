@@ -39,7 +39,7 @@
     if(!s)return;
     const block=document.createElement('section');
     block.className='sim-overview stacked';
-    block.innerHTML=`<div class="sim-heading"><span class="eyebrow">DÜNYANIN NABZI · ${safe(s.climate)}</span><h2>Günün ritmi</h2><p>Dünya tohumu <code>${safe(s.world_seed)}</code> · Mevsimler 10 gün sürer. Güneş ${safe(s.conditions?.sun)} · Nem %${safe(s.conditions?.humidity)} · Sıcaklık ${safe(s.conditions?.temperature)}°C. Sabah kuralları DM gün geçirdiğinde işler.</p></div>
+    block.innerHTML=`<div class="sim-heading"><span class="eyebrow">DÜNYANIN NABZI · ${safe(s.climate)}</span><h2>Günün ritmi</h2><p>Dünya tohumu <code>${safe(s.world_seed)}</code> · Mevsimler 20 gün sürer. Güneş ${safe(s.conditions?.sun)} · Nem %${safe(s.conditions?.humidity)} · Sıcaklık ${safe(s.conditions?.temperature)}°C. Sabah kuralları DM gün geçirdiğinde işler.</p></div>
       <div class="weather-track">${(s.weather_phases||[]).map((v,i)=>`<div class="${i===s.phase?'current':''}"><small>${phaseNames[i]}</small><strong>${safe(v)}</strong></div>`).join('')}</div>
       ${dm&&s.phase<2?`<button class="button secondary" data-sim="phase">Sonraki hava evresi →</button>`:''}
       <div class="sim-kpis"><div><b>${s.population}</b><small>HALK</small></div><div><b>${s.morale}</b><small>MORAL</small></div><div><b>${s.threat}</b><small>TEHLİKE</small></div><div><b>${s.favor}</b><small>LÜTUF</small></div></div>
@@ -75,6 +75,7 @@
       <section class="sim-sheet stacked"><div class="sim-section-head"><div><span class="eyebrow">YAPILAR</span><h3>İnşa ve bakım</h3></div><span>Günlük bakım odun ister.</span></div>
         <div class="buildings">${Object.entries(buildings).map(([id,[name,desc]])=>`<div class="building"><span>⌂</span><div><strong>${name} · Seviye ${s.buildings[id]}</strong><small>${desc}</small></div>${dm?`<button class="button secondary" data-sim="build" data-target="${id}" ${s.buildings[id]>=3?'disabled':''}>Yükselt · ${4+3*s.buildings[id]} odun / ${2+s.buildings[id]} taş</button>`:''}</div>`).join('')}</div></section>${notice('')}`;
     bind(main,ctx);
+    window.FNF_VILLAGES?.render(main,ctx);
   }
   function livestock(main,ctx){
     const s=ctx.world.sim,entry=ctx.world.catalog.find(x=>x.id==='animal_01');
