@@ -2,7 +2,7 @@
 
 Independent, static browser game shell at `https://egecanturk.dev/fnf/` in the same GitHub Pages repository as the D&D site. It has its **own** Supabase project, auth session (`fnf-auth-v1`), tables, and room memberships. D&D files are not imported or changed.
 
-## Current release (v0.10.0)
+## Current release (v0.10.1)
 
 - Username/password registration and sign-in without an invitation. A room code is required only to join, and the creator password only to create a room. No real email or confirmation link is needed.
 - DM room creation with a server-checked creator password and a separate 10-character player invite code.
@@ -16,7 +16,7 @@ Start future edits with `PROJECT_INDEX.md`; confirmed concepts and open decision
 
 ## Set up a dedicated Supabase project
 
-1. Apply `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql`, `v06-world-systems.sql`, then `v08-villages-permissions.sql` through `v13-uuid-validation-repair.sql` in numerical order to the dedicated FNF project only. The v11–v13 migrations repair v10 validation and PL/pgSQL column ambiguity; keep their order even for a fresh database. Its private `fnf_private.room_gate` starts empty.
+1. Apply `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql`, `v06-world-systems.sql`, then `v08-villages-permissions.sql` through `v14-legacy-dm-building-bridge.sql` in numerical order to the dedicated FNF project only. The v11–v13 migrations repair v10 validation and PL/pgSQL column ambiguity; keep their order even for a fresh database. Its private `fnf_private.room_gate` starts empty.
 2. Generate a high-entropy room creation password and insert only its salted SHA-256 digest into `fnf_private.room_gate`; do not put the password in Git or `config.js`. The SQL comment in `schema.sql` shows the insert pattern. Give the password only to trusted room creators.
 3. Deploy `functions/fnf-auth/index.ts` as `fnf-auth` with `verify_jwt=false`: public registration validates username/password; account migration validates the existing user JWT in the function. Supabase's privileged secret key stays in Edge Function environment variables, never in client code.
 4. Put the new project's API URL and **publishable** key in `config.js`. Publish the repository root via GitHub Pages; `/fnf/` is served from `fnf/index.html`.
@@ -41,7 +41,7 @@ The village ownership and permission foundation plus twenty-day seasons are in `
 
 ## v0.9 / v0.10 parcels and village jobs
 
-The production database has v08 through v13 applied. The v11–v13 repairs cover canonical UUID validation and an ambiguous building column found during rollback-only RPC tests.
+The production database has v08 through v14 applied. The v11–v13 repairs cover canonical UUID validation and an ambiguous building column found during rollback-only RPC tests. v14 restores DM-only common buildings as a bridge for existing research, livestock and tavern actions.
 
 - v09 introduces separate village parcels with 20 tiles and multiple seed groups, two-day opening, daily carried water/rain, harvest residue/cleanup and two-day fallow. New rooms start with six food; the DM can grant starter resources or seed stock. Existing rooms retain their old stocks. Four inert legacy plot rows remain for historical JSON backup compatibility; public old farm actions are retired in v10.
 - v10 introduces village-scoped houses, wells, workshops and schools. Upfront material costs are paid from the still-shared room stock. Players with build permission can commit one day of labor; a building becomes usable only after all its workdays. Applicants require finished housing and an explicit acceptance decision. Daily NPC work is locked for players, adjustable by the DM, and grants job XP at day change.

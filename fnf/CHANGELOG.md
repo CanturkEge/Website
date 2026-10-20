@@ -4,6 +4,11 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
+## v0.10.1 — Oda Yapıları (20 Ekim 2026)
+
+- DM ortak depodan çalışma evi, ahır, han, depo ve çiti yeniden kurabilir. Bunlar oda desteğidir; köy evleri, kuyuları ve işçilikle yapılan yapılar ayrı kalır.
+- Yeni odalarda araştırma, ahır ve hanın önceki yapı önkoşulları tekrar ulaşılabilir olur. Sunucu DM rolünü ve malzeme bedelini doğrular.
+
 ## v0.10.0 — Köyde Emek (20 Ekim 2026)
 
 - İnşa yetkisiyle köy başına ev, kuyu, atölye ve okul başlatılır. Malzeme başta ödenir; oyuncu emeği veya atanmış yapıcıyla gün içinde ilerler, tamamlanmadan kullanılmaz.

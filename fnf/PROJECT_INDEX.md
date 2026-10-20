@@ -28,7 +28,7 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 
 `egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js` + `world-systems.js` / `world-systems.css`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
-v0.10.0 veritabanı geçişleri v08–v13 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; eski yerleşim durumu `fnf_sim_snapshot` ile yürür.
+v0.10.1 veritabanı geçişleri v08–v14 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; DM ortak yapıları v14 köprüsüyle, eski yerleşim durumu `fnf_sim_snapshot` ile yürür.
 
 Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
 
@@ -49,4 +49,4 @@ v0.7.0 SQL geçişi üretime uygulandı. DM gün geçişi, yapı, ticaret ve tar
 
 ## Taslak geçiş sırası
 
-v08 → v09 → v10 → v11 → v12 → v13 sırası zorunludur. İlk üçü yeni sistemleri, son üçü üretim RPC doğrulama düzeltmelerini taşır. JSON yedek zinciri genişletildi; eski kayıtlar korundu. Köy, parsel, yapı, iş, DM gün geçişi ve yedek üretimde geri alınan işlemlerle kontrol edildi; gerçek tarayıcı hesabı ve şifreli yükleme uçtan uca sınanmadı. README.md içindeki dağıtım notlarına bak.
+v08 → v09 → v10 → v11 → v12 → v13 → v14 sırası zorunludur. İlk üçü yeni sistemleri, sonraki üçü RPC doğrulama düzeltmelerini, v14 DM ortak yapı köprüsünü taşır. JSON yedek zinciri genişletildi; eski kayıtlar korundu. Köy, parsel, yapı, iş, DM gün geçişi ve yedek üretimde geri alınan işlemlerle kontrol edildi; gerçek tarayıcı hesabı ve şifreli yükleme uçtan uca sınanmadı. README.md içindeki dağıtım notlarına bak.

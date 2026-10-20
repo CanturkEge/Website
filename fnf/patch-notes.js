@@ -1,6 +1,13 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.10.1', date:'20 Ekim 2026', title:'Oda Yapıları', tag:'DÜZELTME',
+    summary:'Köy yapılarının yanında DM ortak yapılarını kurma yolu geri geldi.',
+    added:[],
+    fixed:['Çalışma evi, ahır, han, depo ve çit DM tarafından ortak depodan yeniden kurulabilir; araştırma ve ahır gibi eski akışlar erişilebilir.'],
+    changed:['Köy evleri ve kuyuları ayrı inşaat/iş günü düzeninde kalır.']
+  },
+  {
     version:'0.10.0', date:'20 Ekim 2026', title:'Köyde Emek', tag:'KÖY YAŞAMI',
     summary:'Köy yapıları için iş günü; aday ve köylü işlerinin yetkili oyuncularca yönetimi.',
     added:['Ev, kuyu, atölye ve okulda malzemeyi başta öde, günlük iş gücüyle yapıyı bitir.','Adayı uygun ev kapasitesinde kabul et veya geri çevir.','NPC işini gün için kilitle; DM gerektiğinde düzeltsin. İş sonunda meslek deneyimi ve yorgunluk işlensin.'],
