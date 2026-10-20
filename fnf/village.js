@@ -22,7 +22,7 @@
     if(!panel.isConnected)return;
     const mine=snapshot.mine;
     const villages=snapshot.villages||[];
-    const selected=mine?.village_id||selectedByRoom.get(ctx.room.id)||villages[0]?.id;
+    const selected=selectedByRoom.get(ctx.room.id)||mine?.village_id||villages[0]?.id;
     const village=villages.find(v=>v.id===selected);
     const managed=ctx.room.role==='dm'||(mine?.village_id===selected&&['owner','cofounder'].includes(mine.role));
     const members=(snapshot.members||[]).filter(m=>m.village_id===selected);
@@ -46,6 +46,7 @@
           p_room_id:ctx.room.id,p_action:name,p_payload:payload
         });
         if(error||data?.error)throw error||new Error(data.error);
+        if(name==='create'||name==='accept_invite')selectedByRoom.delete(ctx.room.id);
         ctx.render();
       }catch(err){
         if(button){button.disabled=false;if(button.type==='checkbox')button.checked=!button.checked;}
