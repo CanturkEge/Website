@@ -4,6 +4,14 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
+## v0.8.0 — Köylerin İlk Adımı (hazırlık dalı, 20 Ekim 2026)
+
+- Oyuncular rastgele arazi ipucuyla kendi köylerini kurar veya başvuru/davetle bir köye katılır. İlk gün en çok üç eş kurucu, kabul ederek katılabilir.
+- Köy yöneticileri inşa, karar ve NPC iş atama yetkilerini üyeye ayrı ayrı verebilir. Yetkiler sunucuda saklanır; ortak oda deposu ve mevcut DM inşa işlemleri henüz köylere ayrılmadı.
+- Mevsimler 20 oyun gününe çıkar. Günlük ve ekim koşulları aynı takvimi kullanır; on günlük vergi döngüsü ayrıca sürer.
+- Yedek köyleri ve kabul edilmiş üyelikleri içerir. Yüklemede oyuncu yeni odaya katıldığında köy hakkını geri alır. Bekleyen davet/başvurular aktarılmaz.
+- **Durum:** Canlı Supabase geçişi otomatik onay incelemesinde durdu; bu kod hazırlık PR'ında, sitede henüz yayında değil. Eski kampanyalar korunur.
+
 ## v0.7.0 — Yaşayan Yerleşim (20 Ekim 2026)
 
 - On günlük mevsimler, seçilebilir dünya tohumu ve iklim, üç günlük hava evresi; güneş, nem, sıcaklık, toprak, su ve mevsim zorunlu büyüme koşullarıdır.
