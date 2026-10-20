@@ -205,7 +205,7 @@ begin
     kind:=p_payload->>'job';
     if kind not in ('farm','build','mine','research','rest')
     then return jsonb_build_object('error','İş bilinmiyor.'); end if;
-    if worker.health<30 or worker.sick_until>=world_day
+    if kind<>'rest' and (worker.health<30 or worker.sick_until>=world_day)
     then return jsonb_build_object('error','Köylü bugün çalışamayacak durumda.'); end if;
     if kind='research' and not exists(select 1 from public.fnf_village_buildings
       where village_id=v and kind='workshop' and finished_day is not null and durability>0)
