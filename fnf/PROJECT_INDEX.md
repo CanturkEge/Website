@@ -12,7 +12,8 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
 | Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; sunucu kuralları `v04-farming-day-codex.sql` |
 | Kampanya yedekleme, geri yükleme, silme | `app.js`: `renderLobby`, `renderGame`; SQL `v05-campaign-backup.sql` |
-| Yerleşim, ahır, pazar, araştırma, keşif | `world-systems.js`, `world-systems.css`; sunucu `v06-world-systems.sql` |
+| Köyler, davetler, üye yetkileri (v0.8 hazırlık) | `village.js`, `village.css`; sunucu `v08-villages-permissions.sql` |
+| Yerleşim, ahır, pazar, araştırma, keşif | `world-systems.js`, `world-systems.css`; sunucu `v06-world-systems.sql`, hazırlık `v08-villages-permissions.sql` |
 | Ansiklopedi çizimleri | `assets/codex/*.svg`; katalog ve kilit durumu veritabanında |
 | Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
 | Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
@@ -40,6 +41,6 @@ DM yedeği JSON indirilir; yükleme şifre kapısından geçerek yeni kodlu oda 
 
 Son doğrulama: 20 Ekim 2026. Gerçek hesapla tüm kayıt/oyun akışı uçtan uca denenmedi; eski onaysız e-posta hesabı otomatik etkinleştirilmedi. Bu dosyayı sonraki değişiklikte güncel tut.
 
-20 Ekim ayrıntılı görüşmesi yalnızca tasarım kaydına işlendi. 20 günlük mevsim, parsel başına 20 kare, çoklu köy, yetki ve şehir pazarı bu aşamada kodlanmadı; sürüm notlarına tamamlandı diye ekleme.
+20 Ekim görüşmesinden ilk uygulama dilimi v0.8 hazırlık PR'ındadır: köy kurma, davet/başvuru, ayrı yetkiler ve 20 günlük mevsim. Canlı Supabase geçişi uygulanmadığı için ana dala alınmamalıdır. Parsel, üretim, pazar ve NPC iş kuralları hâlâ tasarım hedefidir. Canlı v0.7'de bu yeni özellikler bulunmaz.
 
 v0.7.0 SQL geçişi üretime uygulandı. DM gün geçişi, yapı, ticaret ve tarla işlemleri geri alınan veritabanı denemelerinde çalıştı; oyuncu DM eylemine erişemedi. Gerçek hesapla tüm oyun akışı, eski yedeğin şifreli geri yüklenmesi ve mobil ekran uçtan uca denenmedi; ilk oyun raporuyla incele.
