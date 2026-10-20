@@ -272,6 +272,11 @@ begin
       finished_day=case when remaining_days=1 then world_day else finished_day end
       where id=labor_record.building_id and finished_day is null;
   end loop;
+  update public.fnf_village_water water set source='well',carried=greatest(water.carried,8)
+    where water.room_id=new.room_id and water.source='river'
+      and exists(select 1 from public.fnf_village_buildings b
+        where b.village_id=water.village_id and b.kind='well'
+          and b.finished_day is not null and b.durability>0);
   return new;
 end;
 $$;
