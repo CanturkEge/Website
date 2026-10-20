@@ -165,7 +165,7 @@ begin
       and day=w.day and carried>0 returning carried into water_left;
     if not found then return jsonb_build_object('error','Günlük taşınan su bitti.'); end if;
     update public.fnf_parcel_crops set watered_day=w.day where id=crop.id;
-    return jsonb_build_object('ok',true,'message','Dereden taşınan bir birim su kullanıldı.');
+    return jsonb_build_object('ok',true,'message','Kaynağından bir birim su kullanıldı.');
   elsif p_action='harvest' then
     select * into k from fnf_private.codex_catalog where id=crop.seed_id;
     if crop.residue or crop.growth<k.growth_days
