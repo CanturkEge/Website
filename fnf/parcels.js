@@ -17,6 +17,7 @@
     const plots=(data.parcels||[]).filter(p=>p.village_id===village);
     const water=(data.water||[]).find(x=>x.village_id===village);
     const seeds=(ctx.world.catalog||[]).filter(x=>x.category==='seed');
+    const available=seeds.filter(x=>(ctx.world.stock?.[x.id]||0)>0);
     main.innerHTML='<section class="parcel-scene"><span class="eyebrow">20 KARE / PARSEL</span><h2>Bir tarla, birçok olasılık.</h2><p>Tarla açmak iki oyun günü sürer. Ekim, su, hasat ve temizleme ayrı işlerdir; gün geçişini DM yönetir.</p></section>'
       +'<div class="parcel-toolbar"><label>Köy <select id="parcelVillage">'+villages.map(v=>'<option value="'+esc(v.id)+'" '+(v.id===village?'selected':'')+'>'+esc(v.name)+'</option>').join('')+'</select></label>'
       +(village?'<form id="openParcel"><label>Toprak <select name="soil"><option value="loam">Tınlı</option><option value="sand">Kumlu</option><option value="marsh">Sulak</option></select></label><button class="button" type="submit">Yeni tarla aç · 2 gün</button></form>':'')+'</div>'
@@ -31,13 +32,13 @@
               +(c.residue?'<button data-work="clean"':'<button data-work="'+(c.ready?'harvest':'water')+'"')
               +' data-parcel="'+esc(p.id)+'" data-crop="'+esc(c.id)+'" class="button secondary" '+(!c.residue&&!c.ready&&c.watered_day===ctx.world.day?'disabled':'')+'>'
               +(c.residue?'Temizle':c.ready?'Hasat et':c.watered_day===ctx.world.day?'Sulandı ✓':'Dereden sula')+'</button></div></div>').join('')
-            +'<form class="parcel-plant" data-parcel="'+esc(p.id)+'"><select name="seed_id" aria-label="Tohum">'
-            +seeds.map(s=>'<option value="'+esc(s.id)+'" '+(!(ctx.world.stock?.[s.id])?'disabled':'')+'>'+esc(s.name||'?')+' · '+esc(ctx.world.stock?.[s.id]||0)+'</option>').join('')
-            +'</select><input name="first_tile" type="number" min="1" max="20" value="1" aria-label="Başlangıç karesi"><input name="tile_count" type="number" min="1" max="20" value="1" aria-label="Kare sayısı"><button class="button" '+(!seeds.some(s=>ctx.world.stock?.[s.id])?'disabled':'')+'>Ekim yap</button></form>'
+            +'<form class="parcel-plant" data-parcel="'+esc(p.id)+'"><input type="search" name="seed_search" placeholder="Tohum ara…" aria-label="Ekimlik tohumlarda ara"><select name="seed_id" aria-label="Tohum">'
+            +available.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name||'?')+' · '+esc(ctx.world.stock?.[s.id]||0)+'</option>').join('')
+            +'</select><input name="first_tile" type="number" min="1" max="20" value="1" aria-label="Başlangıç karesi"><input name="tile_count" type="number" min="1" max="20" value="1" aria-label="Kare sayısı"><button class="button" '+(!available.length?'disabled':'')+'>Ekim yap</button></form>'
             +'<button class="text-button" data-work="fallow" data-parcel="'+esc(p.id)+'" '+((p.crops||[]).length?'disabled':'')+'>İki gün nadasa bırak</button>')
           +'</article>';
       }).join('')+'</div>'
-      +(dm?'<section class="parcel-grant sim-sheet stacked"><span class="eyebrow">DM · BAŞLANGIÇ PAYI</span><h3>Malzeme dağıt</h3><form id="parcelGrant"><select name="kind"><option value="seed">Tohum</option><option value="resource">Kaynak</option></select><select name="id">'+seeds.map(s=>'<option value="'+esc(s.id)+'" data-kind="seed">'+esc(s.name||s.id)+'</option>').join('')+Object.entries(resources).map(([id,name])=>'<option value="'+esc(id)+'" data-kind="resource" hidden>'+esc(name)+'</option>').join('')+'</select><input name="amount" type="number" min="0" max="100" value="1" aria-label="Miktar"><button class="button">Dağıt</button></form></section>':'')
+      +(dm?'<section class="parcel-grant sim-sheet stacked"><span class="eyebrow">DM · BAŞLANGIÇ PAYI</span><h3>Malzeme dağıt</h3><form id="parcelGrant"><select name="kind"><option value="seed">Tohum</option><option value="resource">Kaynak</option></select><input type="search" name="search" placeholder="Malzeme ara…" aria-label="Dağıtılacak malzemede ara"><select name="id">'+seeds.map(s=>'<option value="'+esc(s.id)+'" data-kind="seed">'+esc(s.name||s.id)+'</option>').join('')+Object.entries(resources).map(([id,name])=>'<option value="'+esc(id)+'" data-kind="resource" hidden>'+esc(name)+'</option>').join('')+'</select><input name="amount" type="number" min="0" max="100" value="1" aria-label="Miktar"><button class="button">Dağıt</button></form></section>':'')
       +'<p class="parcel-feedback feedback" role="status"></p>';
     const feedback=main.querySelector('.parcel-feedback');
     async function work(action,payload,button,rpc='fnf_parcel_action'){
@@ -54,11 +55,17 @@
       e.preventDefault();work('plant',{parcel_id:f.dataset.parcel,seed_id:f.elements.seed_id.value,
         first_tile:f.elements.first_tile.value,tile_count:f.elements.tile_count.value},e.submitter);
     }));
+    main.querySelectorAll('.parcel-plant').forEach(f=>f.elements.seed_search.oninput=()=>{
+      const q=f.elements.seed_search.value.toLocaleLowerCase('tr-TR');
+      for(const option of f.elements.seed_id.options)option.hidden=!option.text.toLocaleLowerCase('tr-TR').includes(q);
+      if(f.elements.seed_id.selectedOptions[0]?.hidden)f.elements.seed_id.value=Array.from(f.elements.seed_id.options).find(o=>!o.hidden)?.value||'';
+    });
     main.querySelectorAll('[data-work]').forEach(b=>b.onclick=()=>work(b.dataset.work,{parcel_id:b.dataset.parcel,crop_id:b.dataset.crop},b));
     const grant=main.querySelector('#parcelGrant');
     if(grant){
       const kind=grant.elements.kind,id=grant.elements.id;
-      kind.onchange=()=>{Array.from(id.options).forEach(o=>{o.hidden=o.dataset.kind!==kind.value});id.value=Array.from(id.options).find(o=>o.dataset.kind===kind.value)?.value||''};
+      const filter=()=>{const q=grant.elements.search.value.toLocaleLowerCase('tr-TR');Array.from(id.options).forEach(o=>{o.hidden=o.dataset.kind!==kind.value||!o.text.toLocaleLowerCase('tr-TR').includes(q)});id.value=Array.from(id.options).find(o=>!o.hidden)?.value||''};
+      kind.onchange=filter;grant.elements.search.oninput=filter;
       grant.onsubmit=e=>{e.preventDefault();work('',{p_kind:kind.value,p_id:id.value,p_amount:Number(grant.elements.amount.value)},e.submitter,'fnf_grant_supplies')};
     }
   }

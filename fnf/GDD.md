@@ -174,6 +174,8 @@ Dünya güvenli ve tekdüze değildir: hava, kıtlık, vergi, eşkıya, hastalı
 
 Mitolojinin yönü **tek yüce tanrı** ve ona bağlı yardımcı elçi/meleklerdir. Alamet, görev, nimet, reddetme/yardım etme ve sonuçları RP ve dünya mekaniğine bağlanır. İyilik/kötülük ve günah davranışlarının izlenmesi, belirli ürün ve doğaüstü olaylara etkisi hedeflenir. Oyuncu bunun bütün formülünü başlangıçta görmez. **Tapınak başlangıçta kilitlidir**, DM açınca başmelek seçimi ve ilgili yol ilerler. Başmelek listesi, puan eşikleri, olay havuzu ve ödül/ceza formülü henüz onaylı değildir. Nadir doğum nimeti ve tür yatkınlığı mümkündür; kesin oran uydurulmaz.
 
+**v0.12.0 uygulama notu:** 100 eski bitki türüne karşılık ayrı stokta tutulan ekimlik kayıt açıldı; 18 büyülü türle toplam 118 tohum/spor/rizom ve 118 yetişkin bitki vardır. Altı 20 günlük mevsimin son ikisi Gümüş Sis ve Yıldız Dönemi’dir. Meyveli çalılar ve altı büyülü meyve yiyecek hasadı verir. Türlerin özel tıbbi veya kutsal etkileri DM keşfine bağlı anlatıdır. Kaynak → üç seraf → dört başmelek → sekiz elçi düzeni geçerlidir. 63 türün yeni doğal habitat grafit çizimi vardır; kalan eski türlerin SVG çizimleri korunur. Unity 2D pixel art için [UNITY_2D_PLAN.md](UNITY_2D_PLAN.md) ayrı istemci taslağıdır.
+
 **v0.11.0 uygulama notu:** Geçici hiyerarşi `Kaynak` → `Taşın Bekçisi`, `Devrin Sözcüsü`, `Yolun Gözcüsü`, `İzin Muhafızı` → her başmeleğe bağlı iki elçi biçimindedir. Kimlikler sabit teknik anahtarlardır, DM görünen adları oda özelinde değiştirebilir. Başmelek seçimi ve mekanik sonuçlar hâlâ tasarımdır. Ansiklopedide 100 bitki ve 30 hayvanın çizim/gözlem kaydı vardır; üretim, işleme ve ekolojik etkilerinin tamamlandığı anlamına gelmez.
 
 ## 15. Arayüz, navigasyon ve erişilebilirlik

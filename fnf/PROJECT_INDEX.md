@@ -10,14 +10,15 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 | Oturum, oda, yönlendirme, render akışı | `app.js`: `refreshRooms`, `openRoom`, `render`, `renderSidebar` |
 | Kayıt, eski hesaba kullanıcı adı, giriş, oda kurma/katılma | `app.js`: `renderAuth`, `renderLegacyClaim`, `renderLobby` |
 | Karakter oluşturma ve görüntüleme | `app.js`: `renderCreation`, `renderGame` içindeki `character` dalı |
-| Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; katalog `v15-field-guide.sql`, üretim kaynağı `tools/generate_fieldguide.py` |
+| Gün akışı, tarla, ansiklopedi | `app.js`: `renderGame`, `renderFarm`, `renderCodex`; tohum kaynağı `tools/generate_seed_catalog.py`, geçişler `v17`–`v18` |
 | Tapınak, tanrı hiyerarşisi, DM isim ve keşif kontrolü | `divinity.js`, `divinity.css`, `v16-divine-hierarchy.sql` |
 | Kampanya yedekleme, geri yükleme, silme | `app.js`: `renderLobby`, `renderGame`; SQL `v05-campaign-backup.sql` |
 | Köyler, davetler, üye yetkileri | `village.js`, `village.css`; sunucu `v08-villages-permissions.sql` |
 | 20 kare parseller, su ve kamp başlangıcı | `parcels.js`, `parcels.css`, `v09-parcels-camps.sql` |
 | Köy yapıları, adaylar, NPC işleri | `village-ops.js`, `village-ops.css`, `v10-village-ops.sql`; üretim onarımları `v11`–`v13` |
 | Yerleşim, ahır, pazar, araştırma, keşif | `world-systems.js`, `world-systems.css`; sunucu `v06-world-systems.sql`, hazırlık `v08-villages-permissions.sql` |
-| Ansiklopedi çizimleri | `assets/codex/*.svg`; katalog ve kilit durumu veritabanında |
+| Ansiklopedi çizimleri | `assets/codex/*.webp` ve SVG yedekleri; katalog ve kilit durumu veritabanında |
+| Unity 2D pixel art geçiş taslağı | `UNITY_2D_PLAN.md`; mevcut oda/gün verileri korunur |
 | Sürüm notu içeriği / arayüzü | `patch-notes.js` ve `CHANGELOG.md` / `app.js`: `renderPatchNotes` |
 | Auth kayıt sunucusu | `functions/fnf-auth/index.ts` (`register`, `claim`) |
 | Veritabanı ve yetkiler | `schema.sql`, `v02-update.sql`, `v03-username-auth.sql`, `v04-farming-day-codex.sql`, `v05-campaign-backup.sql`, `v06-world-systems.sql` |
@@ -30,7 +31,7 @@ Bu dosyadan başla. `fnf/` dışına yalnızca istenen karşılaştırma için �
 
 `egecanturk.dev/fnf/` → `index.html` → `config.js` + `game-data.js` + `patch-notes.js` + `app.js` + `world-systems.js` / `world-systems.css`. Aynı GitHub deposunda, D&D'den ayrı Supabase projesi ve ayrı `fnf-auth-v1` oturumu vardır. Kimlik anahtarı `config.js` içindeki **yayınlanabilir** anahtardır; yetkili anahtar ve kurucu şifresi repoda bulunmaz.
 
-v0.11.1 arayüzü ve v0.11.0 veritabanı geçişleri v08–v16 uygulandı. Köy, parsel ve köy işleri kendi RPC'leriyle; DM ortak yapıları v14 köprüsüyle, eski yerleşim durumu `fnf_sim_snapshot` ile yürür. v15 100 bitki/30 hayvan ekler; v16 tapınak ve hiyerarşi durumunu yedek zincirine taşır. İllüstrasyonları yeniden üretmek için `python3 fnf/tools/generate_fieldguide.py` çalıştır.
+v0.12.0 arayüzü ve v17–v18 veritabanı geçişleri 118 tohum, 118 yetişkin bitki, altı mevsim ve seraf katmanı ekler. Köy, parsel ve köy işleri kendi RPC'leriyle; DM ortak yapıları v14 köprüsüyle yürür. `generate_fieldguide.py` eski SVG listesinin, `generate_seed_catalog.py` ekilebilir tohum kuralının kaynağıdır. Hazır WebP çizimleri yeniden üretici betiği çalıştırınca silinmez.
 
 Kullanıcı adıyla kayıt Edge Function üzerinden davetsiz yapılır; giriş Supabase Auth ile olur. Oda kurucusu `dm`, kodla katılan kişi `player` olur. DM karakter açmaz. Oda/karakter/tarla/keşif yazmaları sunucuda doğrulanan RPC'lerle yapılır; tarayıcı tabloları doğrudan değiştirmez. Eski, onaylı e-posta hesabı bir kez girip kullanıcı adı alabilir.
 

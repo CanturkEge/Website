@@ -4,6 +4,14 @@ Oyuncuya görünen sürümler bu dosyada ve `patch-notes.js` içinde aynı sıra
 
 Sürüm biçimi `major.minor.patch`: yeni bir özellik için minor, küçük düzeltme için patch artar. `0.9.0` sonrasında `0.10.0`, sonra `0.11.0` gelir; `1.0.0` otomatik bir eşik değildir. Örneğin `0.11.23` geçerli bir sürümdür.
 
+## v0.12.0 — Tohumlar ve kutsal mevsimler (23 Ekim 2026)
+
+- 100 eski bitki türüne ekimlik tohum/spor/rizom kaydı bağlandı; 18 yeni büyülü türle 118 ekilebilir tür var. Yetişkin ve tohum kaydı aynı türe ve görsele bağlanır; sıfır stoklu tohumları DM dağıtabilir.
+- Altı mevsim 20'şer gün sürer: Bahar, Yaz, Güz, Kış, Gümüş Sis, Yıldız Dönemi. Toprak, su, ışık, nem ve sıcaklık büyümeyi belirler. Hasat artık türe göre tahıl, yiyecek, ot, yem veya odun üretir.
+- On meyveli çalı ile altı büyülü meyveli türün meyvesi sahnede çizildi. Toplam 63 türün grafit/parşömen doğal habitat çizimi WebP biçiminde hazırlandı; kalan 55 eski bitki ve 30 hayvan mevcut SVG çizimlerini kullanır.
+- Kaynak ve dört başmelek arasına üç seraf eklendi. Eski odaların gizli keşif kayıtları ve tohum stokları eklendi; yedeklerin tohum/ilahi kayıt sınırları artırıldı. Otomatik nimet etkisi henüz yok.
+- Parselde kullanılabilir tohum ve DM malzeme listelerinde arama eklendi.
+
 ## v0.11.1 — Saha Çizimleri (20 Ekim 2026)
 
 - Parşömen defteri çizimlerinde bitki yaprak damarları ve hayvan türlerine göre ayırt edici vücut, kanat, kabuk ve kuyruk biçimleri güçlendirildi. Görseller için önbellek sürümü yenilendi.

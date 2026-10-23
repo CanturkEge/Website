@@ -1,6 +1,13 @@
 // Player-facing notes. Keep this timeline aligned with CHANGELOG.md.
 window.FNF_RELEASES = [
   {
+    version:'0.12.0', date:'23 Ekim 2026', title:'Tohumlar ve kutsal mevsimler', tag:'TARIM & KEŞİF',
+    summary:'118 ekilebilir tohum, meyveler, iki büyülü mevsim ve seraf katmanı.',
+    added:['100 eski bitki türü ekilebilir tohum/spor/rizom kaydıyla eşlendi; 18 büyülü tür ve meyve eklendi.','Gümüş Sis ve Yıldız Dönemi, 20 günlük mevsim döngüsüne girdi.','Kaynak ile başmeleklerin arasına üç seraf eklendi.','63 tür için doğal habitatlı grafit parşömen çizimi hazırlandı; tohum ve yetişkin bitki aynı tür görselini paylaşır.'],
+    fixed:['Tohum hasadı türüne göre tahıl, yiyecek, ot, yem veya odun üretir; yedekleme sınırları yeni tohum ve ilahi kayıt sayısına uyar.'],
+    changed:['DM malzeme listesi ve ekimlik tohumlar aranabilir. Kalan türlerin mevcut çizimleri korunur; görsel seri sonraki sürümlerde tamamlanır.']
+  },
+  {
     version:'0.11.1', date:'20 Ekim 2026', title:'Saha Çizimleri', tag:'GÖRSEL DÜZELTME',
     summary:'Parşömen defterindeki tür çizimleri belirginleştirildi.',
     added:[],
