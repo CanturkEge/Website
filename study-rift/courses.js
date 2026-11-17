@@ -1,6 +1,8 @@
 export const COURSES = [
   {
     id: "oop",
+    emoji: "📜",
+    atmosphere: "Kadim kitaplar · mor rünler",
     name: "Object Oriented Software Design",
     short: "OOD / OOP",
     realm: "Rün Arşivleri",
@@ -20,6 +22,8 @@ export const COURSES = [
   },
   {
     id: "database",
+    emoji: "🗄️",
+    atmosphere: "Kayıt kuleleri · mavi kristaller",
     name: "Database Management",
     short: "Veritabanı",
     realm: "Kayıtlar Mahzeni",
@@ -39,6 +43,8 @@ export const COURSES = [
   },
   {
     id: "os",
+    emoji: "⚙️",
+    atmosphere: "Demirhane · bakır çekirdekler",
     name: "Operating Systems",
     short: "İşletim Sistemleri",
     realm: "Çekirdek Demirhanesi",
@@ -58,6 +64,8 @@ export const COURSES = [
   },
   {
     id: "logic",
+    emoji: "💡",
+    atmosphere: "Devre tapınağı · zümrüt izler",
     name: "Digital Logic Design",
     short: "Dijital Mantık",
     realm: "Devreler Tapınağı",
@@ -77,6 +85,8 @@ export const COURSES = [
   },
   {
     id: "simulation",
+    emoji: "🪐",
+    atmosphere: "Gözlemevi · altın yörüngeler",
     name: "Modeling & Discrete Simulation",
     short: "Modelleme & Simülasyon",
     realm: "Olasılık Gözlemevi",

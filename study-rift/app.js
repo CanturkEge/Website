@@ -1,3 +1,5 @@
+import { NAV_GROUPS, NAVS, navGroupFor } from "./navigation.js";
+import { realmArt } from "./realm-art.js";
 import {
   courseUnits,
   courseLessons,
@@ -27,6 +29,30 @@ import {
   masteryRequest,
   accountRequest,
 } from "./cloud.js";
+const marketSlots = {
+  all: ["🧺", "Tümü"],
+  consumable: ["🧪", "İksirler"],
+  weapon: ["🗡️", "Silahlar"],
+  armor: ["🛡️", "Zırhlar"],
+  relic: ["🧿", "Tılsımlar"],
+  notes: ["📑", "Cheat sheet"],
+};
+const statLabels = {
+  hp: "maks. can",
+  mp: "maks. mana",
+  xp: "XP / doğru",
+  mana: "mana / doğru",
+  defense: "hasar azaltma",
+  gold: "altın / doğru",
+};
+let lobbyFocus = "oop",
+  marketTab = "shop",
+  marketFilter = "all",
+  marketSearch = "",
+  marketSort = "level",
+  marketAffordable = false,
+  marketQuantities = {},
+  navOverrides = {};
 let lessonId = null,
   lessonTab = "read",
   flashIndex = 0,
@@ -66,7 +92,7 @@ const getLocal = (key) => {
   guestKey = "study-rift-guest-v1";
 let user = null,
   state = E.normalize(getLocal(guestKey) || E.freshState()),
-  page = "camp",
+  page = "lobby",
   busy = true,
   inventoryFilter = "all",
   trainingFilters = { topic: null, type: "", weak: false },
@@ -139,19 +165,7 @@ function sound(success = true) {
     o.onended = () => a.close();
   } catch {}
 }
-const navs = [
-  ["camp", "home", "Karargâh"],
-  ["courses", "book", "Dersler"],
-  ["learning", "book", "Öğrenme yolu"],
-  ["dungeons", "portal", "Zindanlar"],
-  ["training", "training", "Antrenman"],
-  ["character", "user", "Karakter"],
-  ["skills", "tree", "Yetenek ağacı"],
-  ["codex", "book", "Bilgi defteri"],
-  ["stats", "chart", "İstatistikler"],
-  ["leaderboard", "chart", "Ustalık tablosu"],
-  ["patches", "scroll", "Yama notları"],
-];
+const navs = NAVS;
 const pill = (text, cls = "") => `<span class="pill ${cls}">${text}</span>`;
 const button = (text, action, cls = "", attrs = "") =>
   `<button class="btn ${cls}" data-action="${action}" ${attrs}>${text}</button>`;
@@ -163,7 +177,13 @@ function heading(eyebrow, title, sub, extra = "") {
 }
 function render() {
   TOPICS = E.course(state).topics;
-  document.body.dataset.theme = E.course(state).theme;
+  document.body.dataset.theme =
+    page === "market"
+      ? "market"
+      : page === "lobby"
+        ? getCourse(lobbyFocus).theme
+        : E.course(state).theme;
+  document.body.dataset.page = page;
   if (busy && !user) {
     $("#app").innerHTML = loadingScreen();
     return;
@@ -188,7 +208,7 @@ function render() {
   const l = E.level(state),
     a = E.attributes(state);
   $("#app").innerHTML =
-    `<aside class="sidebar"><a href="#camp" class="brand" data-page="camp" aria-label="Study Rift karargâh"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>KNOWLEDGE IS POWER</small></span></a><div class="nav-caption">AVCI MERKEZİ</div><nav>${navs.map(([id, ico, label]) => `<button class="nav-item ${page === id ? "active" : ""}" data-page="${id}" aria-label="${label}">${icon(ico)}<span>${label}</span>${id === "skills" && E.points(state) ? `<b>${E.points(state)}</b>` : ""}</button>`).join("")}</nav><div class="sidebar-bottom"><div class="system-dot">SİSTEM ÇEVRİMİÇİ <span>v${VERSION}</span></div><p>Her doğru cevap,<br>bir seviye daha ileri.</p><button class="nav-item" data-page="settings" aria-label="Ayarlar">${icon("settings")}<span>Ayarlar</span></button><button class="hunter-mini" data-page="character" aria-label="Avcı karakteri"><span class="avatar">${icon("user")}</span><span>${esc(state.name)}<small>Seviye ${l.level} · ${state.skills.length ? "Yolunu seçen" : "Uyanan avcı"}</small></span>${icon("arrow")}</button></div></aside><div class="workspace"><header class="topbar"><button class="course-switch" data-page="courses">${icon(E.course(state).icon)} <span>${E.course(state).short}</span>${icon("arrow")}</button><div class="breadcrumbs">AVCI MERKEZİ <span>/</span> <strong>${navs.find((n) => n[0] === page)?.[2] || "Ayarlar"}</strong></div><div class="top-actions"><span class="currency">${icon("coin")} ${state.gold.toLocaleString("tr-TR")}</span><span class="level-chip">SV. ${l.level}</span><button class="account-btn" aria-label="Hesap" data-action="account">${icon("user")}<span>${user ? "Hesabım" : "Giriş yap"}</span></button></div></header><main id="content" tabindex="-1">${entering ? `<div class="rift-entry" aria-hidden="true"><div class="entry-gate"></div><span>KAPI AÇILIYOR</span><strong>${E.course(state).realm}</strong></div>` : ""}${busy ? loadingScreen() : renderPage()}</main><footer><span class="footer-brand">◈ STUDY RIFT</span><button id="sync" data-action="sync"></button><span>${E.bank(state).length} soru · ${E.course(state).short}</span></footer></div>`;
+    `<aside class="sidebar"><a href="#lobby" class="brand" data-page="lobby" aria-label="Study Rift ana lobi"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>KNOWLEDGE IS POWER</small></span></a><div class="nav-caption">${E.course(state).emoji} ${E.course(state).short}</div><nav aria-label="Ana menü">${sidebarGroups()}</nav><div class="sidebar-bottom"><div class="system-dot">SİSTEM ÇEVRİMİÇİ <span>v${VERSION}</span></div><button class="nav-item ${page === "settings" ? "active" : ""}" data-page="settings" aria-label="Ayarlar"><i class="nav-emoji" aria-hidden="true">⚙️</i><span>Ayarlar</span></button><button class="hunter-mini" data-page="character" aria-label="Avcı karakteri"><span class="avatar">${icon("user")}</span><span>${esc(state.name)}<small>Seviye ${l.level} · ${CLASSES.find((c) => c.id === state.classId)?.name || "Avcı"}</small></span>${icon("arrow")}</button></div></aside><div class="workspace"><div class="world-ambient" aria-hidden="true">${realmArt(page === "market" ? "market" : page === "lobby" ? lobbyFocus : state.course, "ambient")}</div><header class="topbar"><button class="course-switch" data-page="lobby"><span class="course-emoji" aria-hidden="true">${E.course(state).emoji}</span><span>${E.course(state).short}</span>${icon("arrow")}</button><div class="breadcrumbs">${page === "lobby" || page === "market" ? "DÜNYALAR ARASI" : esc(E.course(state).short)} <span>/</span><strong>${navs.find((n) => n[0] === page)?.[2] || "Ayarlar"}</strong></div><div class="top-actions"><span class="currency" title="Altın · market alışverişi">🪙 ${state.gold.toLocaleString("tr-TR")}</span><span class="currency essence" title="Öz · ekipman geliştirme">💠 ${state.essence.toLocaleString("tr-TR")}</span><span class="level-chip">SV. ${l.level}</span><button class="account-btn" aria-label="Hesap" data-action="account">${icon("user")}<span>Hesabım</span></button></div></header><main id="content" tabindex="-1">${entering ? `<div class="rift-entry" aria-hidden="true"><div class="entry-gate"></div><span>KAPI AÇILIYOR</span><strong>${E.course(state).realm}</strong></div>` : ""}${busy ? loadingScreen() : renderPage()}</main><footer><span class="footer-brand">◈ STUDY RIFT</span><button id="sync" data-action="sync"></button><span>${page === "lobby" ? COURSES.length + " ders dünyası" : page === "market" ? "GEZGİN PAZARI" : E.bank(state).length + " soru · " + E.course(state).short}</span></footer></div>`;
   renderSync();
 }
 function renderPage() {
@@ -202,6 +222,8 @@ function renderPage() {
     {
       camp,
       courses,
+      lobby,
+      market,
       dungeons,
       training,
       character,
@@ -223,11 +245,12 @@ function camp() {
       : 0;
   return (
     heading(
-      "SİSTEM BİLDİRİMİ",
-      "Yeniden hoş geldin, <em>" + esc(state.name) + ".</em>",
-      "Bugünkü rakibin dün bilmediklerin.",
+      E.course(state).emoji + " " + E.course(state).realm,
+      E.course(state).short + " <em>karargâhı</em>",
+      E.course(state).name + " · Öğrenme yolundan başla veya keşfine devam et.",
+      button("Ana lobiye dön", "go-lobby", "secondary"),
     ) +
-    `<section class="panel learning-callout"><div class="activity-icon purple">${icon("book")}</div><div><span class="eyebrow">ÖNCE ANLA, SONRA MEYDAN OKU</span><h2>Kendi hızında öğren.</h2><p>${courseUnits(state.course).length} ünite · ${courseLessons(state.course).length} alt bölüm · anlatımlar, flash kartlar ve kısa kontroller.</p></div>${button("Öğrenme yoluna git " + icon("arrow"), "go-learning", "primary")}</section><div class="camp-grid"><section class="hero panel"><div class="hero-art">${portalArt("hero")}</div><div class="hero-shade"></div><div class="hero-content">${pill("● KEŞFEDİLMEYİ BEKLEYEN BİR DÜNYA", "soft")}<h2>Bilgini<br><em>güce dönüştür.</em></h2><p>Zindanlara gir. Sınırlarını aş.<br>Her soruda biraz daha güçlen.</p>${button(state.run ? "Keşfe devam et " + icon("arrow") : "Zindana gir " + icon("arrow"), "go-dungeons", "primary")}<div class="hero-meta"><span>${icon("shield")} ${d.rank}-Rank erişimi</span><span>${icon("chest")} Kalıcı ganimetler</span></div></div></section><section class="panel hunter-panel"><div class="section-top"><h3>Avcı profili</h3>${button("Karakter " + icon("arrow"), "go-character", "text")}</div><div class="profile-summary"><div class="profile-sigil">◈</div><div><h2>${esc(state.name)}</h2><p>${CLASSES.find((c) => c.id === state.classId)?.name || "Avcı"} <span>•</span> ${d.rank}-Rank</p></div><b class="level-badge">${l.level}<small>SEVİYE</small></b></div><div class="bar-label"><span>SEVİYE İLERLEMESİ</span><strong>${l.current} / ${l.needed} XP</strong></div>${progress(l.current, l.needed, "xp")}<div class="profile-stats"><div>${icon("heart")}<b>${E.attributes(state).hp}</b><small>CAN</small></div><div>${icon("gem")}<b>${E.attributes(state).mp}</b><small>MANA</small></div><div>${icon("bolt")}<b>${E.points(state)}</b><small>YETENEK PUANI</small></div></div><div class="mini-callout">${icon("tree")}<p>${E.points(state) ? "Yeni bir yetenek açabilirsin." : "Seviye atla, kendi yolunu seç."}<small>${CLASSES.find((c) => c.id === state.classId)?.name || "Sınıf seçimi"} · 16 yetenek</small></p>${button(icon("arrow"), "go-skills", "icon-btn", 'aria-label="Yetenek ağacını aç"')}</div></section></div><div class="quick-stats"><div>${icon("check")}<p><b>${state.stats.correct}</b><span>Doğru cevap</span></p></div><div>${icon("portal")}<p><b>${state.stats.wins}</b><span>Temizlenen zindan</span></p></div><div>${icon("chart")}<p><b>%${correct}</b><span>Doğruluk oranı</span></p></div><div>${icon("flame")}<p><b>${state.stats.bestCombo}×</b><span>En iyi seri</span></p></div></div><div class="section-top section-space"><div><h2>Bir sonraki adımın</h2><p>Sana uygun bir meydan okuma seç.</p></div><div class="section-actions">${button(icon("potion") + " Simyacı", "shop", "text")}${button("Tüm zindanlar " + icon("arrow"), "go-dungeons", "text")}</div></div><div class="three-grid"><button class="activity-card" data-action="go-dungeons"><div class="activity-icon purple">${icon("portal")}</div><span class="activity-kicker">ZİNDAN KEŞFİ</span><h3>${d.name}</h3><p>${d.desc}</p><div class="card-bottom"><span>${d.rank}-Rank · 8 oda</span>${icon("arrow")}</div></button><button class="activity-card" data-action="go-training"><div class="activity-icon green">${icon("training")}</div><span class="activity-kicker">GÜVENLİ ALAN</span><h3>Antrenman avlusu</h3><p>Can kaybetmeden öğren. Konunu seç, ipuçlarını aç, eksiklerini tamamla.</p><div class="card-bottom"><span>Sınırsız pratik · Ücretsiz ipucu</span>${icon("arrow")}</div></button>${dailyQuestView()}</div><div class="notice">${icon("book")}<p><strong>İlk keşif sürümü.</strong> ${E.course(state).name} · ${E.bank(state).length} özgün örnek soru, 5 zorluk. Slayt kaynağı henüz eklenmedi. Diğer dersler ayrı havuzlarla açılacak.</p></div>`
+    `<section class="panel learning-callout"><div class="activity-icon purple">${icon("book")}</div><div><span class="eyebrow">ÖNCE ANLA, SONRA MEYDAN OKU</span><h2>Kendi hızında öğren.</h2><p>${courseUnits(state.course).length} ünite · ${courseLessons(state.course).length} alt bölüm · anlatımlar, flash kartlar ve kısa kontroller.</p></div>${button("Öğrenme yoluna git " + icon("arrow"), "go-learning", "primary")}</section><div class="camp-grid"><section class="hero panel"><div class="hero-art">${realmArt(state.course, "camp-hero")}</div><div class="hero-shade"></div><div class="hero-content">${pill("● KEŞFEDİLMEYİ BEKLEYEN BİR DÜNYA", "soft")}<h2>Bilgini<br><em>güce dönüştür.</em></h2><p>Zindanlara gir. Sınırlarını aş.<br>Her soruda biraz daha güçlen.</p>${button(state.run ? "Keşfe devam et " + icon("arrow") : "Zindana gir " + icon("arrow"), "go-dungeons", "primary")}<div class="hero-meta"><span>${icon("shield")} ${d.rank}-Rank erişimi</span><span>${icon("chest")} Kalıcı ganimetler</span></div></div></section><section class="panel hunter-panel"><div class="section-top"><h3>Avcı profili</h3>${button("Karakter " + icon("arrow"), "go-character", "text")}</div><div class="profile-summary"><div class="profile-sigil">◈</div><div><h2>${esc(state.name)}</h2><p>${CLASSES.find((c) => c.id === state.classId)?.name || "Avcı"} <span>•</span> ${d.rank}-Rank</p></div><b class="level-badge">${l.level}<small>SEVİYE</small></b></div><div class="bar-label"><span>SEVİYE İLERLEMESİ</span><strong>${l.current} / ${l.needed} XP</strong></div>${progress(l.current, l.needed, "xp")}<div class="profile-stats"><div>${icon("heart")}<b>${E.attributes(state).hp}</b><small>CAN</small></div><div>${icon("gem")}<b>${E.attributes(state).mp}</b><small>MANA</small></div><div>${icon("bolt")}<b>${E.points(state)}</b><small>YETENEK PUANI</small></div></div><div class="mini-callout">${icon("tree")}<p>${E.points(state) ? "Yeni bir yetenek açabilirsin." : "Seviye atla, kendi yolunu seç."}<small>${CLASSES.find((c) => c.id === state.classId)?.name || "Sınıf seçimi"} · 16 yetenek</small></p>${button(icon("arrow"), "go-skills", "icon-btn", 'aria-label="Yetenek ağacını aç"')}</div></section></div><div class="quick-stats"><div>${icon("check")}<p><b>${state.stats.correct}</b><span>Doğru cevap</span></p></div><div>${icon("portal")}<p><b>${state.stats.wins}</b><span>Temizlenen zindan</span></p></div><div>${icon("chart")}<p><b>%${correct}</b><span>Doğruluk oranı</span></p></div><div>${icon("flame")}<p><b>${state.stats.bestCombo}×</b><span>En iyi seri</span></p></div></div><div class="section-top section-space"><div><h2>Bir sonraki adımın</h2><p>Sana uygun bir meydan okuma seç.</p></div><div class="section-actions">${button("🛒 Market", "go-market", "text")}${button("Tüm zindanlar " + icon("arrow"), "go-dungeons", "text")}</div></div><div class="three-grid"><button class="activity-card" data-action="go-dungeons"><div class="activity-icon purple">${icon("portal")}</div><span class="activity-kicker">ZİNDAN KEŞFİ</span><h3>${d.name}</h3><p>${d.desc}</p><div class="card-bottom"><span>${d.rank}-Rank · 8 oda</span>${icon("arrow")}</div></button><button class="activity-card" data-action="go-training"><div class="activity-icon green">${icon("training")}</div><span class="activity-kicker">GÜVENLİ ALAN</span><h3>Antrenman avlusu</h3><p>Can kaybetmeden öğren. Konunu seç, ipuçlarını aç, eksiklerini tamamla.</p><div class="card-bottom"><span>Sınırsız pratik · Ücretsiz ipucu</span>${icon("arrow")}</div></button>${dailyQuestView()}</div><div class="notice">${icon("book")}<p><strong>İlk keşif sürümü.</strong> ${E.course(state).name} · ${E.bank(state).length} özgün örnek soru, 5 zorluk. Slayt kaynağı henüz eklenmedi. Diğer dersler ayrı havuzlarla açılacak.</p></div>`
   );
 }
 function dungeons() {
@@ -240,13 +263,13 @@ function dungeons() {
     ) +
     `<div class="dungeon-grid">${DUNGEONS.map((d, i) => {
       const locked = !E.canEnter(state, d);
-      return `<section class="dungeon-card panel ${locked ? "locked" : ""}" style="--dungeon:${d.color}"><div class="dungeon-art">${portalArt("d" + i)}<span class="rank-stamp">${d.rank}<small>RANK</small></span>${locked ? `<div class="lock-overlay">${icon("lock")}<span>Seviye ${d.level} gerekli</span></div>` : ""}</div><div class="dungeon-info"><div class="section-top"><span class="eyebrow">${d.subtitle}</span>${state.cleared[state.course + ":" + d.id] ? pill(icon("check") + " " + state.cleared[state.course + ":" + d.id] + " KEZ") : ""}</div><h2>${d.name}</h2><p>${d.desc}</p><div class="dungeon-details"><span>${icon("sword")} ${["Temel", "Uygulama", "Analiz", "İleri", "Ustalık"][d.difficulty - 1]}</span><span>${icon("chest")} ${d.reward}</span></div>${button(locked ? icon("lock") + " Kilitli" : "Kapıdan geç " + icon("arrow"), "enter", "primary wide", `data-id="${d.id}" ${locked ? "disabled" : ""}`)}</div></section>`;
+      return `<section class="dungeon-card panel ${locked ? "locked" : ""}" style="--dungeon:${d.color}"><div class="dungeon-art">${realmArt(state.course, "dungeon-" + i)}<span class="rank-stamp">${d.rank}<small>RANK</small></span>${locked ? `<div class="lock-overlay">${icon("lock")}<span>Seviye ${d.level} gerekli</span></div>` : ""}</div><div class="dungeon-info"><div class="section-top"><span class="eyebrow">${d.subtitle}</span>${state.cleared[state.course + ":" + d.id] ? pill(icon("check") + " " + state.cleared[state.course + ":" + d.id] + " KEZ") : ""}</div><h2>${d.name}</h2><p>${d.desc}</p><div class="dungeon-details"><span>${icon("sword")} ${["Temel", "Uygulama", "Analiz", "İleri", "Ustalık"][d.difficulty - 1]}</span><span>${icon("chest")} ${d.reward}</span></div>${button(locked ? icon("lock") + " Kilitli" : "Kapıdan geç " + icon("arrow"), "enter", "primary wide", `data-id="${d.id}" ${locked ? "disabled" : ""}`)}</div></section>`;
     }).join("")}</div>`
   );
 }
 function itemCard(i) {
   const equipped = state.equipment[i.slot] === i.id;
-  return `<button class="item-card ${equipped ? "equipped" : ""}" style="--rarity:${RARITIES[i.rarity].color}" data-action="item" data-id="${i.id}"><span class="item-visual">${icon(i.icon)}<small>×${state.inventory[i.id]}</small></span><span class="item-rarity">${RARITIES[i.rarity].name}</span><h3>${i.name}</h3><p>${i.effect}</p><span class="item-bottom">${equipped ? icon("check") + " KUŞANILDI" : { weapon: "SİLAH", armor: "ZIRH", notes: "CHEAT SHEET", relic: "TILSIM", consumable: "TÜKETİLEBİLİR" }[i.slot]}</span></button>`;
+  return `<button class="item-card ${equipped ? "equipped" : ""}" style="--rarity:${RARITIES[i.rarity].color}" data-action="item" data-id="${i.id}"><span class="item-visual">${icon(i.icon)}<small>×${state.inventory[i.id]}</small></span><span class="item-rarity">${RARITIES[i.rarity].name}</span><h3>${i.name}${E.upgradeLevel(state, i.id) ? " +" + E.upgradeLevel(state, i.id) : ""}</h3><p>${i.effect}${E.upgradeLevel(state, i.id) ? " · " + bonusText(E.upgradeBonus(state, i.id)) : ""}</p><span class="item-bottom">${equipped ? icon("check") + " KUŞANILDI" : { weapon: "SİLAH", armor: "ZIRH", notes: "CHEAT SHEET", relic: "TILSIM", consumable: "TÜKETİLEBİLİR" }[i.slot]}</span></button>`;
 }
 function character() {
   const a = E.attributes(state),
@@ -534,26 +557,14 @@ function showRecovery() {
   );
 }
 function shopModal() {
-  modal(
-    `<div class="auth-heading"><div class="activity-icon gold">${icon("potion")}</div><h2>Kamptaki Simyacı</h2><p>Bir sonraki keşfin için hazırlan. ${state.gold} altının var.</p></div>${[
-      ["potion", 40],
-      ["ether", 55],
-    ]
-      .map(
-        ([id, cost]) =>
-          `<div class="shop-item"><div>${icon("potion")}<h3>${E.item(id).name}</h3><p>${E.item(id).effect}</p></div>${button(cost + " altın · Al", "buy", "secondary", `data-id="${id}" ${state.gold < cost || state.run ? "disabled" : ""}`)}</div>`,
-      )
-      .join(
-        "",
-      )}<p class="muted small">${state.run ? "Alışveriş için önce kampa dön." : "İksirler çantana eklenir. Zindanda yetenek panelinden kullan."}</p>`,
-  );
+  navigate("market");
 }
 function itemModal(id) {
   const i = E.item(id);
   if (!i) return;
   const owned = state.equipment[i.slot] === id;
   modal(
-    `<div class="item-detail" style="--rarity:${RARITIES[i.rarity].color}"><div class="detail-art">${icon(i.icon)}</div><div class="item-rarity">${RARITIES[i.rarity].name}</div><h2>${i.name}</h2><p>${i.desc}</p><div class="item-effect">${i.effect}</div><p class="muted">Çantanda ${state.inventory[id] || 0} adet var.</p>${i.slot === "consumable" ? "<p>İksirleri zindandayken yetenek panelinden kullanabilirsin.</p>" : button(owned ? "Kuşanmayı bırak" : "Kuşan " + icon("arrow"), "equip", "primary wide", `data-id="${id}" ${state.run ? "disabled" : ""}`)}${!state.run && i.slot !== "consumable" && !owned ? button("Öze dönüştür", "salvage", "text wide", `data-id="${id}"`) : ""}${state.run ? "<small>Önce keşfini bitirip kampa dön.</small>" : ""}</div>`,
+    `<div class="item-detail" style="--rarity:${RARITIES[i.rarity].color}"><div class="detail-art">${icon(i.icon)}</div><div class="item-rarity">${RARITIES[i.rarity].name}</div><h2>${i.name}${E.upgradeLevel(state, i.id) ? " +" + E.upgradeLevel(state, i.id) : ""}</h2><p>${i.desc}</p><div class="item-effect">${i.effect}${E.upgradeLevel(state, i.id) ? " · " + bonusText(E.upgradeBonus(state, i.id)) : ""}</div><p class="muted">Çantanda ${state.inventory[id] || 0} adet var.</p>${i.slot === "consumable" ? "<p>İksirleri zindandayken yetenek panelinden kullanabilirsin.</p>" : button(owned ? "Kuşanmayı bırak" : "Kuşan " + icon("arrow"), "equip", "primary wide", `data-id="${id}" ${state.run ? "disabled" : ""}`)}${!state.run && i.slot !== "consumable" && !owned ? button("💠 " + E.salvageValue(state, id) + " öze dönüştür", "market-salvage", "text wide", `data-id="${id}"`) : ""}${state.run ? "<small>Önce keşfini bitirip kampa dön.</small>" : ""}</div>`,
   );
 }
 function accountModal(mode = "login") {
@@ -626,12 +637,15 @@ async function loadUser(u) {
     return;
   }
   busy = false;
-  if (state.run) page = "dungeons";
+  lobbyFocus = state.course;
+  page = "lobby";
   render();
   if (recovery) showRecovery();
 }
 function navigate(p) {
-  page = p;
+  page = p === "courses" ? "lobby" : p;
+  const group = navGroupFor(page);
+  if (group) navOverrides[group.id] = false;
   if (p === "leaderboard") fetchBoard();
   if (p === "training" && state.training)
     trainingFilters = state.training.filters;
@@ -682,6 +696,7 @@ document.addEventListener("click", async (e) => {
   const act = el.dataset.action,
     id = el.dataset.id;
   if (act.startsWith("go-")) {
+    if ($("#modal").open) $("#modal").close();
     navigate(act.slice(3));
     return;
   }
@@ -756,6 +771,87 @@ document.addEventListener("click", async (e) => {
     render();
     return;
   }
+  if (act === "nav-folder") {
+    const closed = !navCollapsed(id);
+    mutate(() => {
+      state.settings.navGroups ||= {};
+      state.settings.navGroups[id] = closed;
+      navOverrides[id] = closed;
+    });
+    return;
+  }
+  if (act === "preview-course") {
+    lobbyFocus = id;
+    page = "lobby";
+    render();
+    window.scrollTo({ top: 0, behavior: "auto" });
+    return;
+  }
+  if (act === "market-tab") {
+    marketTab = id;
+    render();
+    return;
+  }
+  if (act === "market-filter") {
+    marketFilter = id;
+    render();
+    return;
+  }
+  if (act === "market-quantity") {
+    const product = el.dataset.product;
+    marketQuantities[product] = Math.min(
+      99,
+      Math.max(1, (marketQuantities[product] || 1) + Number(id)),
+    );
+    render();
+    return;
+  }
+  if (act === "market-preview") {
+    purchaseModal(id, marketQuantities[id] || 1);
+    return;
+  }
+  if (act === "market-buy") {
+    if (el.disabled) return;
+    el.disabled = true;
+    let receipt;
+    mutate(() => (receipt = E.buy(state, id, Number(el.dataset.quantity))));
+    if (receipt) purchaseReceipt(receipt);
+    else el.disabled = false;
+    return;
+  }
+  if (act === "market-upgrade") {
+    upgradeModal(id);
+    return;
+  }
+  if (act === "market-upgrade-confirm") {
+    if (el.disabled) return;
+    el.disabled = true;
+    let quote;
+    mutate(() => (quote = E.upgrade(state, id)));
+    if (quote) {
+      $("#modal").close();
+      toast(E.item(id).name + " +" + quote.next + " seviyesine geliştirildi.");
+    } else el.disabled = false;
+    return;
+  }
+  if (act === "market-salvage") {
+    salvageModal(id);
+    return;
+  }
+  if (act === "market-salvage-confirm") {
+    let value;
+    mutate(() => (value = E.salvage(state, id)));
+    if (value !== undefined) {
+      $("#modal").close();
+      toast(value + " öz kazandın.");
+    }
+    return;
+  }
+  if (act === "market-equip") {
+    mutate(() => E.equip(state, id));
+    $("#modal").close();
+    return;
+  }
   if (act === "shop") {
     shopModal();
     return;
@@ -769,6 +865,8 @@ document.addEventListener("click", async (e) => {
     if (!user || !userProfile) return;
     try {
       E.chooseClass(state, id);
+      page = "lobby";
+      lobbyFocus = state.course;
       save();
       render();
       toast("Sınıfın uyandı. İlk keşfin seni bekliyor.");
@@ -784,6 +882,8 @@ document.addEventListener("click", async (e) => {
       boardData = null;
       lessonId = null;
       page = "camp";
+      lobbyFocus = id;
+      navOverrides.study = false;
       trainingFilters = { topic: null, type: "", weak: false };
     });
     return;
@@ -1229,22 +1329,7 @@ function classScreen() {
   return `<main class="class-selection"><a class="brand"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>THE AWAKENING</small></span></a>${button("Hesap ayarları", "account-settings", "secondary")}${heading("UYANIŞ ANI", "Nasıl bir avcı olacaksın?", "Sınıf seçimin bütün derslerde geçerli. Her sınıfta 16 kalıcı yetenek var.")}<div class="three-grid class-cards">${CLASSES.map((c) => `<article class="panel class-card" style="--class-color:${c.color}"><div class="class-emblem">${icon(c.icon)}</div><span class="eyebrow">${c.tag}</span><h2>${c.name}</h2><p>${c.desc}</p><div class="class-unique">${c.unique}</div><div class="class-starter">Başlangıç yeteneği: ${c.starter === "eliminate" ? "Eleme" : c.starter === "shield" ? "Rün Kalkanı" : "Keskin Odak"}</div>${button("Bu yolu seç " + icon("arrow"), "select-class", "primary wide", `data-id="${c.id}"`)}</article>`).join("")}</div><p class="class-note">Sınıf seçimi kalıcıdır. Önceki sürümden gelen XP ve eşyaların korunur; eski yetenek puanların yeni ağaç için geri verilir.</p></main>`;
 }
 function courses() {
-  return (
-    heading(
-      "DÜNYALAR ARASI GEÇİT",
-      "Derslerini keşfet",
-      "Aynı avcı, ayrı bilgi dünyaları. Her dersin soruları, yanlışları ve notları ayrı tutulur.",
-    ) +
-    `<div class="course-grid">${COURSES.map(
-      (c) =>
-        `<article class="panel course-card theme-${c.theme} ${c.locked ? "course-locked" : ""}"><div class="course-backdrop">${portalArt("course-" + c.id)}</div><div class="course-card-content"><span class="pill">${icon(c.locked ? "lock" : c.id === state.course ? "check" : "portal")} ${c.locked ? "İÇERİK BEKLİYOR" : c.id === state.course ? "AKTİF DERS" : "AÇIK"}</span><span class="eyebrow">${c.realm}</span><h2>${c.name}</h2><p>${c.desc}</p><div class="course-topics">${c.topics
-          .slice(0, 4)
-          .map((t) => `<span>${t}</span>`)
-          .join(
-            "",
-          )}</div>${button(c.locked ? "Slaytlar eklenince açılacak" : c.id === state.course ? "Bu derste devam et" : "Derse geç", "select-course", c.locked ? "secondary wide" : "primary wide", `data-id="${c.id}" ${c.locked ? "disabled" : ""}`)}</div></article>`,
-    ).join("")}</div>`
-  );
+  return lobby();
 }
 function abilityPanel(r, a, q) {
   const data = {
@@ -1413,7 +1498,7 @@ function leaderboard() {
         boardLoading ? "disabled" : "",
       ),
     ) +
-    `<div class="mastery-hero panel"><div><span class="eyebrow">AYNI SET. AYNI KURALLAR.</span><h2>Gücünü değil,<br><em>bilgini yarıştır.</em></h2><p>Bugünün 10 sorusu herkes için aynı. Sınıf, ekipman, XP ve hız bonusu yok. Her zorluktan iki soru; en fazla 200 puan.</p><div class="mastery-tags"><span>${icon("shield")} Yetenekler kapalı</span><span>${icon("book")} 10 dakika · tek hak</span><span>${icon("check")} Eşit skora eşit sıra</span></div></div><div class="mastery-ticket"><span>GÜNLÜK USTALIK</span><strong>${own?.completed ? own.score + "/200" : own ? own.cursor + "/10" : "10 soru"}</strong><p>${own?.completed ? own.correct + " doğru · sınav tamamlandı" : own ? "Kaldığın yerden devam et; sayaç durmaz." : "10 dakika. Sayaç ilk girişte başlar."}</p>${button(own?.completed ? "Sonucumu incele" : own ? "Sınava devam et" : "Bugünün sınavına gir", "rank-start", "primary wide", quizBusy || boardLoading ? "disabled" : "")}</div></div>${boardError ? `<div class="notice"><p>${esc(boardError)}</p></div>` : ""}<div class="panel leaderboard-panel"><div class="section-top"><h2>Bugünün sıralaması</h2><span>En fazla 100 avcı · Türkiye saati</span></div>${boardLoading && !boardData ? '<div class="empty">Sıralama yükleniyor…</div>' : rows.length ? `<div class="table-wrap"><table class="mastery-table"><thead><tr><th>SIRA</th><th>AVCI</th><th>USTALIK PUANI</th><th>DOĞRU</th></tr></thead><tbody>${rows.map((row) => `<tr class="${row.isMe ? "my-rank" : ""}"><td><span class="rank-medal">${row.rank <= 3 ? "♜" : "#"} ${row.rank}</span></td><td>${esc(row.displayName || row.username)}<small class="rank-handle">@${esc(row.username)}</small> ${row.isMe ? pill("SEN", "green") : ""}</td><td><strong>${row.score}</strong> <small>/200</small></td><td>${row.correct}/10</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">${icon("chart")}<h3>Bugünün ilk sonucu henüz yok.</h3><p>Sınavı bitiren avcılar burada görünür. Örnek veya sahte oyuncu gösterilmez.</p></div>`}</div><div class="notice">${icon("shield")}<p>Her gün Türkiye saatiyle 00.00’da yeni sınav açılır. Zorluk 1–5 için doğru cevap puanları sırasıyla 10, 15, 20, 25, 30’dur. Çoklu seçim ve sıralamada tam doğruluk gerekir. Sıralama puanı oyun XP’sine eklenmez. 10 dakikalık süre sunucuda kontrol edilir; süre dolunca kalan sorular boş sayılır, kazanılan puan korunur.</p></div>`
+    `<div class="mastery-hero panel"><div><span class="eyebrow">AYNI SET. AYNI KURALLAR.</span><h2>Gücünü değil,<br><em>bilgini yarıştır.</em></h2><p>Bugünün 10 sorusu herkes için aynı. Sınıf, ekipman, XP ve hız bonusu yok. Her zorluktan iki soru; en fazla 200 puan.</p><div class="mastery-tags"><span>${icon("shield")} Yetenekler kapalı</span><span>${icon("book")} 10 dakika · tek hak</span><span>${icon("check")} Eşit skora eşit sıra</span></div></div><div class="mastery-ticket"><span>GÜNLÜK USTALIK</span><strong>${own?.completed ? own.score + "/200" : own ? own.cursor + "/10" : "10 soru"}</strong><p>${own?.completed ? own.correct + " doğru · sınav tamamlandı" : own ? "Kaldığın yerden devam et; sayaç durmaz." : "10 dakika. Sayaç ilk girişte başlar."}</p>${button(own?.completed ? "Sonucumu incele" : own ? "Sınava devam et" : "Bugünün sınavına gir", "rank-start", "primary wide", quizBusy || boardLoading ? "disabled" : "")}</div></div>${boardError ? `<div class="notice"><p>${esc(boardError)}</p></div>` : ""}<div class="panel leaderboard-panel"><div class="section-top"><h2>Bugünün sıralaması</h2><span>En fazla 100 avcı · Türkiye saati</span></div>${boardLoading && !boardData ? '<div class="empty">Sıralama yükleniyor…</div>' : rows.length ? `<div class="table-wrap"><table class="mastery-table"><thead><tr><th>SIRA</th><th>AVCI</th><th>USTALIK PUANI</th><th>DOĞRU</th></tr></thead><tbody>${rows.map((row) => `<tr class="${row.isMe ? "my-rank" : ""}"><td><span class="rank-medal">${row.rank <= 3 ? "♜" : "#"} ${row.rank}</span></td><td>${esc(row.displayName || "Adsız avcı")} ${row.isMe ? pill("SEN", "green") : ""}</td><td><strong>${row.score}</strong> <small>/200</small></td><td>${row.correct}/10</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">${icon("chart")}<h3>Bugünün ilk sonucu henüz yok.</h3><p>Sınavı bitiren avcılar burada görünür. Örnek veya sahte oyuncu gösterilmez.</p></div>`}</div><div class="notice">${icon("shield")}<p>Her gün Türkiye saatiyle 00.00’da yeni sınav açılır. Zorluk 1–5 için doğru cevap puanları sırasıyla 10, 15, 20, 25, 30’dur. Çoklu seçim ve sıralamada tam doğruluk gerekir. Sıralama puanı oyun XP’sine eklenmez. 10 dakikalık süre sunucuda kontrol edilir; süre dolunca kalan sorular boş sayılır, kazanılan puan korunur.</p></div>`
   );
 }
 function masteryExam() {
@@ -1644,4 +1729,228 @@ function trainingQuestBanner() {
   if (d.claimed)
     return `<div class="notice">${icon("check")}<p>Bugünün görevi tamamlandı. 35 altın ve Can İksiri çantana eklendi.</p></div>`;
   return "";
+}
+
+document.addEventListener("input", (e) => {
+  if (e.target.id === "market-search") {
+    marketSearch = e.target.value;
+    const grid = $("#market-products");
+    if (grid) grid.innerHTML = marketProductGrid();
+  }
+});
+document.addEventListener("change", (e) => {
+  if (e.target.id === "market-sort") {
+    marketSort = e.target.value;
+    render();
+  }
+  if (e.target.id === "market-affordable") {
+    marketAffordable = e.target.checked;
+    render();
+  }
+});
+
+function navCollapsed(id) {
+  return (
+    navOverrides[id] ??
+    state.settings.navGroups?.[id] ??
+    (page === "lobby" && id === "study")
+  );
+}
+function sidebarGroups() {
+  return NAV_GROUPS.map((group) => {
+    const closed = navCollapsed(group.id);
+    return `<section class="nav-group"><button class="nav-group-heading" data-action="nav-folder" data-id="${group.id}" aria-expanded="${!closed}" aria-controls="nav-${group.id}" aria-label="${group.label} menüsü"><i class="group-emoji" aria-hidden="true">${group.emoji}</i><span>${group.id === "study" ? E.course(state).short : group.label}</span><b>${closed ? "›" : "⌄"}</b></button><div id="nav-${group.id}" ${closed ? "hidden" : ""}>${group.items.map(([id, emoji, label]) => `<button class="nav-item ${page === id ? "active" : ""}" data-page="${id}" aria-label="${label}"><i class="nav-emoji" aria-hidden="true">${emoji}</i><span>${label}</span>${id === "skills" && E.points(state) ? `<b>${E.points(state)}</b>` : ""}</button>`).join("")}</div></section>`;
+  }).join("");
+}
+function lobby() {
+  const c = getCourse(lobbyFocus),
+    read = state.learning?.[c.id]?.read?.length || 0,
+    lessonCount = courseLessons(c.id).length,
+    questionCount = QUESTIONS.filter((q) => q.course === c.id).length,
+    run = state.run;
+  return (
+    heading(
+      "DÜNYALAR ARASI GEÇİT",
+      "Ana lobi",
+      "Her dersin kendi dünyası, öğrenme yolu ve keşifleri var.",
+      pill(
+        COURSES.filter((c) => !c.locked).length +
+          " AÇIK · " +
+          COURSES.length +
+          " DÜNYA",
+        "green",
+      ),
+    ) +
+    `<section class="lobby-hero panel" style="--world-accent:${c.color}"><div class="lobby-scene">${realmArt(c.id, "lobby-hero")}</div><div class="lobby-hero-shade"></div><div class="lobby-hero-copy"><div class="lobby-world-status">${pill(c.locked ? "🔒 İÇERİK BEKLİYOR" : "✦ KEŞFE AÇIK", c.locked ? "dim" : "green")}<span>${c.atmosphere}</span></div><span class="eyebrow">${c.realm}</span><h2><span>${c.emoji}</span> ${c.short}</h2><p>${c.name}<br>${c.desc}</p><div class="lobby-topics">${c.topics
+      .slice(0, 4)
+      .map((t) => `<span>${t}</span>`)
+      .join(
+        "",
+      )}</div><div class="lobby-hero-actions">${button(c.locked ? "Slaytlar eklenince açılacak" : "Dersin karargâhına gir " + icon("arrow"), "select-course", "primary", `data-id="${c.id}" ${c.locked ? "disabled" : ""}`)}${button("🛒 Markete uğra", "go-market", "secondary")}</div><small>${c.locked ? "Bu dünyanın kapısı henüz kapalı. Temasını ve konu haritasını önizliyorsun." : `${questionCount} soru · ${read}/${lessonCount} bölüm tamamlandı · Karakterin bütün dünyalarda seninle.`}</small></div><span class="lobby-realm-stamp">${String(COURSES.indexOf(c) + 1).padStart(2, "0")}<small>DÜNYA</small></span></section>${run ? `<section class="panel lobby-active-run"><div class="activity-icon purple">${icon("portal")}</div><div><span class="eyebrow">DEVAM EDEN KEŞFİN</span><h3>${getCourse(run.course).short} · ${DUNGEONS.find((d) => d.id === run.dungeon)?.name}</h3><p>Oda ${run.index + 1}/8 · ${run.hp} can · ${run.mp} mana. ${run.status === "active" ? "Keşfin kaldığın yerde." : "Keşif sonucunu inceleyebilirsin."}</p></div>${run.rooms?.[run.index]?.deadline ? countdown(run.rooms[run.index].deadline) : ""}${button("Keşfe dön " + icon("arrow"), "go-dungeons", "secondary")}</section>` : ""}<div class="section-top worlds-heading"><div><h2>Ders dünyaları</h2><p>Bir dünya seç. Açık derse gir veya sıradaki dünyanın temasını önizle.</p></div><span>📍 Aktif ders: ${E.course(state).short}</span></div><div class="world-grid">${COURSES.map((world, i) => `<button class="world-card ${world.id === c.id ? "selected" : ""}" style="--world-accent:${world.color}" data-action="preview-course" data-id="${world.id}" aria-label="${world.short} dünyasını önizle" aria-pressed="${world.id === c.id}"><div class="world-card-art">${realmArt(world.id, "world-card-" + world.id)}<span class="world-index">0${i + 1}</span><span class="world-lock">${world.locked ? "🔒" : "🟢"}</span></div><div class="world-card-copy"><span>${world.emoji} ${world.realm}</span><h3>${world.short}</h3><p>${world.locked ? "Kaynakları bekliyor" : QUESTIONS.filter((q) => q.course === world.id).length + " soru · çalışmaya hazır"}</p><div><small>${world.id === c.id ? "SEÇİLİ DÜNYA" : "DÜNYAYI İNCELE"}</small>${icon("arrow")}</div></div></button>`).join("")}</div><div class="notice">${icon("book")}<p>Sınıfın, ekipmanın ve altının ortak; her dersin soruları, notları ve öğrenme ilerlemesi ayrı. Kilitli dersler kendi içerikleri hazır olduğunda açılacak.</p></div>`
+  );
+}
+function bonusText(bonus) {
+  return (
+    Object.entries(bonus)
+      .map(([key, value]) => "+" + value + " " + statLabels[key])
+      .join(" · ") || "Geliştirme yok"
+  );
+}
+function purchaseError(offer, quantity = 1) {
+  try {
+    E.marketQuote(state, offer.id, quantity);
+    return "";
+  } catch (e) {
+    return e.message;
+  }
+}
+function market() {
+  const stock = E.marketOffers(state).filter((o) => o.kind === "gear");
+  return (
+    heading(
+      "GEZGİN PAZARI · " + E.course(state).short,
+      "Market",
+      "Keşif hazırlığı, günlük ekipman tezgâhı ve geliştirme ocağı.",
+      button("🌌 Ana lobi", "go-lobby", "secondary"),
+    ) +
+    `<section class="panel market-banner"><div class="market-scene">${realmArt("market", "market-hero")}</div><div class="market-banner-copy"><span class="eyebrow">BİLGİYLE KAZAN, HAZIRLANARAK İLERLE</span><h2>Bir sonraki keşfine hazırlan.</h2><p>${stock.length} ekipman bugün tezgâhta. Günlük stok ve paketler Türkiye saatiyle 00.00'da yenilenir.</p><small>Altın: doğru cevaplar ve görevler · Öz: eşya parçalama</small></div><div class="market-wallet"><div><span>🪙 ALTIN</span><strong>${state.gold.toLocaleString("tr-TR")}</strong></div><div><span>💠 ÖZ</span><strong>${state.essence.toLocaleString("tr-TR")}</strong></div></div></section>${state.run ? `<div class="notice">${icon("lock")}<p>Keşfin devam ediyor. Marketi gezebilirsin; alışveriş, geliştirme ve parçalama için keşfi bitir veya kampa çekil.</p>${button("Keşfe dön", "go-dungeons", "secondary")}</div>` : ""}<nav class="market-tabs" aria-label="Market bölümleri">${[
+      ["shop", "🏪", "Tezgâh"],
+      ["bundles", "🎒", "Paketler"],
+      ["forge", "⚒️", "Geliştirme ocağı"],
+    ]
+      .map(
+        ([id, emoji, label]) =>
+          `<button class="${marketTab === id ? "selected" : ""}" data-action="market-tab" data-id="${id}" aria-pressed="${marketTab === id}">${emoji} ${label}</button>`,
+      )
+      .join("")}</nav>${
+      marketTab === "forge"
+        ? forgeMarket()
+        : `<section class="market-toolbar"><label class="market-search-label"><span>ÜRÜN ARA</span><input id="market-search" type="search" value="${esc(marketSearch)}" placeholder="Ekipman veya etki ara…" autocomplete="off"></label><label><span>SIRALA</span><select id="market-sort"><option value="level" ${marketSort === "level" ? "selected" : ""}>Seviye</option><option value="price" ${marketSort === "price" ? "selected" : ""}>Fiyat · artan</option><option value="name" ${marketSort === "name" ? "selected" : ""}>İsim</option></select></label><label class="market-budget"><input id="market-affordable" type="checkbox" ${marketAffordable ? "checked" : ""}> Alabileceklerim</label></section>${
+            marketTab === "shop"
+              ? `<div class="market-filters">${Object.entries(marketSlots)
+                  .map(
+                    ([id, [emoji, name]]) =>
+                      `<button class="${marketFilter === id ? "selected" : ""}" data-action="market-filter" data-id="${id}">${emoji} ${name}</button>`,
+                  )
+                  .join("")}</div>`
+              : `<div class="market-section-intro"><h2>Birlikte daha hesaplı.</h2><p>Her paket bu dersin marketinden günde bir kez alınabilir. İçindeki iksirler normal oda kullanım sınırlarına tabidir.</p></div>`
+          }<div id="market-products">${marketProductGrid()}</div>`
+    }`
+  );
+}
+function marketProductGrid() {
+  let offers = E.marketOffers(state).filter((o) =>
+    marketTab === "bundles" ? o.kind === "bundle" : o.kind !== "bundle",
+  );
+  const needle = marketSearch.trim().toLocaleLowerCase("tr");
+  offers = offers.filter((o) => {
+    const i = E.item(o.itemId);
+    return (
+      (marketTab === "bundles" ||
+        marketFilter === "all" ||
+        i?.slot === marketFilter) &&
+      (!needle ||
+        [o.name, o.desc, i?.effect || ""]
+          .join(" ")
+          .toLocaleLowerCase("tr")
+          .includes(needle)) &&
+      (!marketAffordable || !purchaseError(o, marketQuantities[o.id] || 1))
+    );
+  });
+  offers.sort((a, b) =>
+    marketSort === "name"
+      ? a.name.localeCompare(b.name, "tr")
+      : marketSort === "price"
+        ? a.price - b.price
+        : a.level - b.level || a.price - b.price,
+  );
+  return offers.length
+    ? `<div class="market-product-count">${offers.length} ürün · ${marketTab === "bundles" ? "Günlük avantajlar" : "Sabit iksir fiyatları, günlük ekipman seçkisi"}</div><div class="market-grid">${offers.map(marketCard).join("")}</div>`
+    : `<div class="panel empty market-empty">🧺<h3>Bu filtrede ürün yok.</h3><p>Aramayı veya kategoriyi değiştir. Alabileceklerin filtresi seviyeni, altınını ve günlük stok hakkını kontrol eder.</p></div>`;
+}
+function marketCard(offer) {
+  const i = E.item(offer.itemId),
+    quantity = offer.kind === "potion" ? marketQuantities[offer.id] || 1 : 1,
+    error = purchaseError(offer, quantity),
+    bought = E.marketBought(state, offer.id),
+    owned = offer.kind === "gear" && state.inventory[offer.id],
+    rarity = i?.rarity || "rare";
+  return `<article class="panel market-card" style="--rarity:${RARITIES[rarity].color}"><div class="market-item-art ${offer.kind === "potion" ? "potion-art " + offer.id : ""}"><div class="market-item-halo"></div><span class="market-item-symbol">${offer.emoji || icon(i.icon)}</span><span class="market-stock-badge">${offer.kind === "potion" ? "SINIRSIZ STOK" : bought ? "BUGÜN ALINDI" : owned ? "ÇANTANDA" : "GÜNLÜK 1 ADET"}</span>${offer.kind === "gear" ? `<span class="market-rarity">${RARITIES[rarity].name}</span>` : ""}</div><div class="market-card-content"><div class="section-top"><span class="eyebrow">${offer.kind === "bundle" ? "AVANTAJ PAKETİ" : marketSlots[i.slot]?.[1] || "ÜRÜN"}</span><span class="market-level ${E.level(state).level < offer.level ? "locked-text" : ""}">SV. ${offer.level}</span></div><h3>${offer.name}</h3><p>${offer.kind === "gear" ? i.effect : offer.desc}</p>${offer.kind === "bundle" ? `<div class="bundle-contents">${offer.contents.map(([id, n]) => `<span>${id === "potion" ? "🧪" : "🔮"} ${n}× ${E.item(id).name}</span>`).join("")}</div>` : `<small class="market-owned">Çantanda: ${state.inventory[offer.itemId] || 0}</small>`}<div class="market-card-bottom"><div class="market-price"><strong>🪙 ${(offer.price * quantity).toLocaleString("tr-TR")}</strong>${quantity > 1 ? `<small>${offer.price} × ${quantity} adet</small>` : "<small>altın</small>"}</div>${offer.kind === "potion" ? `<div class="quantity-stepper"><button data-action="market-quantity" data-id="-1" data-product="${offer.id}" aria-label="${offer.name} adedini azalt" ${quantity <= 1 ? "disabled" : ""}>−</button><output>${quantity}</output><button data-action="market-quantity" data-id="1" data-product="${offer.id}" aria-label="${offer.name} adedini artır" ${quantity >= 99 ? "disabled" : ""}>+</button></div>` : ""}</div><button class="btn ${error ? "secondary" : "primary"} wide" data-action="market-preview" data-id="${offer.id}">${owned ? "Ekipmanı incele" : bought && offer.limit ? "Alışverişi incele" : error && E.level(state).level < offer.level ? "🔒 Seviye " + offer.level + " gerekli" : "Ürünü incele " + icon("arrow")}</button>${error ? `<small class="market-restriction">${esc(error)}</small>` : '<small class="market-restriction available">Alışverişe uygun</small>'}</div></article>`;
+}
+function compareGear(i) {
+  if (!i || i.slot === "consumable") return "";
+  const old = E.item(state.equipment[i.slot]);
+  return `<div class="market-comparison"><span class="eyebrow">KUŞANDIĞIN EKİPMANLA KARŞILAŞTIR</span><p>${old ? esc(old.name) + (E.upgradeLevel(state, old.id) ? " +" + E.upgradeLevel(state, old.id) : "") : "Bu yuva boş"}</p><div>${Object.entries(
+    statLabels,
+  )
+    .filter(
+      ([key]) => i[key] || old?.[key] || E.upgradeBonus(state, old?.id)?.[key],
+    )
+    .map(([key, label]) => {
+      const before =
+          (old?.[key] || 0) + (E.upgradeBonus(state, old?.id)[key] || 0),
+        after = (i[key] || 0) + (E.upgradeBonus(state, i.id)[key] || 0),
+        delta = after - before;
+      return `<div><span>${label}</span><b>${before} → ${after}</b><small class="${delta > 0 ? "correct-text" : delta < 0 ? "wrong-text" : ""}">${delta > 0 ? "+" : ""}${delta}</small></div>`;
+    })
+    .join(
+      "",
+    )}</div><small>Yalnız eşya ve geliştirme farkıdır. Sınıf katkıları iki tarafta da aynıdır.</small></div>`;
+}
+function purchaseModal(id, quantity = 1) {
+  const offer = E.marketOffers(state).find((o) => o.id === id);
+  if (!offer) {
+    toast("Bu ürünün günlük stoğu değişti.");
+    render();
+    return;
+  }
+  const i = E.item(offer.itemId),
+    error = purchaseError(offer, quantity);
+  modal(
+    `<div class="purchase-heading"><div class="activity-icon gold">${offer.emoji || icon(i.icon)}</div><span class="eyebrow">${offer.kind === "gear" ? RARITIES[i.rarity].name : "KEŞİF HAZIRLIĞI"}</span><h2>${offer.name}</h2><p>${offer.desc}</p></div>${i ? `<div class="item-effect">${i.effect}</div>` : ""}${compareGear(i)}<div class="purchase-contents">${offer.contents.map(([id, n]) => `<span>${icon(E.item(id).icon)} <b>${n * quantity}×</b> ${E.item(id).name}</span>`).join("")}</div><div class="purchase-total"><span>Toplam</span><strong>🪙 ${(offer.price * quantity).toLocaleString("tr-TR")} altın</strong></div><p class="muted small">Alışveriş sonrası: ${Math.max(0, state.gold - offer.price * quantity)} altın. ${offer.limit ? "Ders başına günlük tek alım." : "İksirler çantanda birikir."}</p>${error ? `<div class="notice"><p>${esc(error)}</p></div>` : ""}<button class="btn primary wide" data-action="market-buy" data-id="${id}" data-quantity="${quantity}" ${error ? "disabled" : ""}>${offer.price * quantity} altın öde · satın al</button>${offer.kind === "gear" && state.inventory[id] ? button(state.equipment[i.slot] === id ? "Kuşanmayı bırak" : "Bu ekipmanı kuşan", "market-equip", "secondary wide", `data-id="${id}" ${state.run ? "disabled" : ""}`) : ""}`,
+  );
+}
+function purchaseReceipt(receipt) {
+  modal(
+    `<div class="purchase-heading"><div class="result-emblem victory">${icon("chest")}</div><span class="eyebrow">ALIŞVERİŞ TAMAMLANDI</span><h2>Çantana eklendi.</h2></div><div class="purchase-contents">${receipt.items.map(({ id, quantity }) => `<span>${icon(E.item(id).icon)} <b>${quantity}×</b> ${E.item(id).name}</span>`).join("")}</div><p class="purchase-summary">${receipt.total} altın harcadın · ${state.gold} altının kaldı.</p>${button("Alışverişe devam et", "close-modal", "primary wide")}${button("Çantayı aç " + icon("arrow"), "go-character", "secondary wide")}`,
+  );
+}
+function forgeMarket() {
+  const owned = ITEMS.filter(
+      (i) =>
+        state.inventory[i.id] && ["weapon", "armor", "relic"].includes(i.slot),
+    ),
+    salvage = ITEMS.filter(
+      (i) => state.inventory[i.id] && i.slot !== "consumable",
+    );
+  return `<section class="panel forge-intro"><div class="forge-anvil">⚒️</div><div><span class="eyebrow">ÖZÜ GÜCE DÖNÜŞTÜR</span><h2>Ekipmanına yatırım yap.</h2><p>Silah, zırh ve tılsımlar +3'e kadar geliştirilebilir. Silah başına +2 XP/doğru, zırh başına +8 can ve +1 savunma, tılsım başına +8 maksimum mana; her geliştirme kademesinde eklenir.</p><small>Geliştirme için altın + öz harcanır. +1/+2/+3 için karakter seviyesi 2/4/6 gerekir.</small></div></section><div class="section-top"><h2>Geliştirilebilir ekipmanların</h2><span>${owned.length} eşya</span></div><div class="forge-grid">${
+    owned
+      .map((i) => {
+        const plan = E.upgradePlan(state, i.id);
+        return `<article class="panel forge-card" style="--rarity:${RARITIES[i.rarity].color}"><div class="forge-item-icon">${icon(i.icon)}</div><div><span class="eyebrow">${RARITIES[i.rarity].name} ${state.equipment[i.slot] === i.id ? "· KUŞANILDI" : ""}</span><h3>${i.name} <b>+${plan.current}</b></h3><p>${bonusText(E.upgradeBonus(state, i.id))}</p><small>${plan.max ? "En yüksek geliştirme seviyesi" : `Sıradaki: +${plan.next} · 🪙 ${plan.gold} · 💠 ${plan.essence} · SV. ${plan.level}`}</small></div>${button(plan.max ? "✓ Tam geliştirildi" : "Geliştirmeyi incele", "market-upgrade", plan.max ? "secondary" : "primary", `data-id="${i.id}" ${plan.max ? "disabled" : ""}`)}</article>`;
+      })
+      .join("") ||
+    '<div class="panel empty">Geliştirilebilir bir ekipmanın henüz yok.</div>'
+  }</div><div class="section-top section-space"><div><h2>Parçala & öz kazan</h2><p>Kuşandığın ekipman korunur. Parçaladığın eşyanın geliştirmeleri de silinir.</p></div></div><div class="salvage-grid">${salvage.map((i) => `<article class="panel salvage-card"><span>${icon(i.icon)}</span><div><h3>${i.name}${E.upgradeLevel(state, i.id) ? " +" + E.upgradeLevel(state, i.id) : ""}</h3><small>Çantanda ${state.inventory[i.id]} · 💠 ${E.salvageValue(state, i.id)} öz</small></div>${button(state.equipment[i.slot] === i.id ? "Kuşanıldı" : "Parçala", "market-salvage", "secondary", `data-id="${i.id}" ${state.run || state.equipment[i.slot] === i.id ? "disabled" : ""}`)}</article>`).join("")}</div>`;
+}
+function upgradeModal(id) {
+  const i = E.item(id),
+    plan = E.upgradePlan(state, id);
+  if (!i || !plan) return;
+  let error = "";
+  try {
+    E.upgradeQuote(state, id);
+  } catch (e) {
+    error = e.message;
+  }
+  modal(
+    `<div class="purchase-heading"><div class="activity-icon gold">⚒️</div><span class="eyebrow">GELİŞTİRME OCAĞI</span><h2>${i.name}</h2><p>+${plan.current} → +${plan.next}</p></div><div class="upgrade-preview"><div><span>MEVCUT GELİŞTİRME</span><strong>${bonusText(E.upgradeBonus(state, id))}</strong></div><div><span>SONRAKİ GELİŞTİRME</span><strong>${bonusText(plan.bonus)}</strong></div></div>${plan.max ? "<p>Bu eşya zaten en yüksek seviyede.</p>" : `<div class="purchase-total"><span>Gerekli kaynaklar</span><strong>🪙 ${plan.gold} + 💠 ${plan.essence}</strong></div><p class="muted small">Karakter seviyesi ${plan.level} gerekir. Bonus yalnız bu eşya kuşanıldığında uygulanır.</p>`}${error ? `<div class="notice"><p>${esc(error)}</p></div>` : ""}<button class="btn primary wide" data-action="market-upgrade-confirm" data-id="${id}" ${error ? "disabled" : ""}>+${plan.next} seviyesine geliştir</button>`,
+  );
+}
+function salvageModal(id) {
+  const i = E.item(id);
+  if (!i) return;
+  modal(
+    `<div class="purchase-heading"><div class="activity-icon purple">💠</div><h2>${i.name} parçalansın mı?</h2><p>Eşyanın bir kopyası ve varsa geliştirmeleri kaldırılır. Karşılığında <strong>${E.salvageValue(state, id)} öz</strong> kazanırsın.</p></div>${button("Vazgeç", "close-modal", "secondary")}${button(E.salvageValue(state, id) + " öz kazan · parçala", "market-salvage-confirm", "primary", `data-id="${id}"`)}`,
+  );
 }

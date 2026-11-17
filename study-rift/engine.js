@@ -1,3 +1,18 @@
+import {
+  marketProducts,
+  quotePurchase,
+  quoteUpgrade,
+  upgradeBonus,
+  upgradeLevel,
+  purchaseCount,
+  salvageValue,
+} from "./market.js";
+export {
+  upgradeBonus,
+  upgradeLevel,
+  upgradePlan,
+  salvageValue,
+} from "./market.js";
 import { ROOMS, DAILY_TRAINING_SECONDS } from "./rooms.js";
 export { ROOMS } from "./rooms.js";
 import { gradeAnswer } from "./question-utils.js";
@@ -22,13 +37,15 @@ export const bank = (s) => QUESTIONS.filter((q) => q.course === course(s).id);
 export const learned = (s, key) => s.skills.includes(s.classId + "-" + key);
 export function freshState() {
   return {
-    version: 4,
+    version: 5,
     name: "Avcı",
     classId: null,
     course: "oop",
     xp: 0,
     gold: 0,
     essence: 0,
+    upgrades: {},
+    market: { date: today(), purchases: {} },
     inventory: { dagger: 1, cloak: 1, potion: 2 },
     equipment: { weapon: "dagger", armor: "cloak", relic: null, notes: null },
     skills: [],
@@ -49,9 +66,29 @@ export function freshState() {
   };
 }
 export function normalize(raw = {}) {
-  const s = { ...freshState(), ...raw, version: 4 };
+  const s = { ...freshState(), ...raw, version: 5 };
   s.stats = { ...freshState().stats, ...s.stats };
-  s.settings = { sound: false, ...s.settings };
+  s.settings = {
+    sound: false,
+    ...s.settings,
+    navGroups: { ...(s.settings?.navGroups || {}) },
+  };
+  s.upgrades = Object.fromEntries(
+    Object.entries(s.upgrades || {}).filter(
+      ([id, n]) =>
+        s.inventory[id] &&
+        ITEMS.some(
+          (i) => i.id === id && ["weapon", "armor", "relic"].includes(i.slot),
+        ) &&
+        Number.isInteger(n) &&
+        n >= 0 &&
+        n <= 3,
+    ),
+  );
+  s.market =
+    s.market && s.market.date === today()
+      ? { date: today(), purchases: { ...(s.market.purchases || {}) } }
+      : { date: today(), purchases: {} };
   s.notebooks = { oop: raw.notes || "", ...(raw.notebooks || {}) };
   if (!s.daily || s.daily.date !== today()) s.daily = freshDaily();
   if ((raw.version || 1) < 2) {
@@ -158,9 +195,11 @@ export function attributes(s) {
     a[k] = (a[k] || 0) + v;
   for (const id of Object.values(s.equipment)) {
     const it = item(id);
-    if (it)
+    if (it) {
       for (const k of ["hp", "mp", "xp", "mana", "defense", "gold"])
         a[k] += it[k] || 0;
+      for (const [k, v] of Object.entries(upgradeBonus(s, id))) a[k] += v;
+    }
   }
   const absolute = new Set([
     "hintCost",
@@ -211,10 +250,11 @@ export function canEnter(s, d) {
   );
 }
 export function switchCourse(s, id) {
-  if (s.run) throw Error("Ders değiştirmek için keşfini bitir.");
   const c = getCourse(id);
   if (c.id !== id || c.locked)
     throw Error("Bu ders, içerikleri yüklendiğinde açılacak.");
+  if (id === course(s).id) return;
+  if (s.run) throw Error("Ders değiştirmek için keşfini bitir.");
   s.course = id;
   s.training = null;
 }
@@ -907,12 +947,29 @@ export function useSkill(s, id, training = false) {
     r.mp = Math.min(a.mp, r.mp + 35);
   }
 }
-export function buy(s, id) {
-  if (s.run) throw Error("Alışveriş için kampa dön.");
-  const p = { potion: 40, ether: 55 }[id];
-  if (!p || s.gold < p) throw Error("Yeterli altın yok.");
-  s.gold -= p;
-  addItem(s, id);
+export const marketOffers = (s, date = today()) =>
+  marketProducts(s.course, date);
+export const marketBought = (s, id, date = today()) =>
+  purchaseCount(s, id, date);
+export const marketQuote = (s, id, quantity = 1, date = today()) =>
+  quotePurchase(s, id, quantity, date, level(s).level);
+export function buy(s, id, quantity = 1, date = today()) {
+  const receipt = marketQuote(s, id, quantity, date);
+  s.gold -= receipt.total;
+  for (const { id, quantity } of receipt.items)
+    s.inventory[id] = (s.inventory[id] || 0) + quantity;
+  if (s.market?.date !== date) s.market = { date, purchases: {} };
+  const key = s.course + ":" + id;
+  s.market.purchases[key] = (s.market.purchases[key] || 0) + quantity;
+  return receipt;
+}
+export const upgradeQuote = (s, id) => quoteUpgrade(s, id, level(s).level);
+export function upgrade(s, id) {
+  const quote = upgradeQuote(s, id);
+  s.gold -= quote.gold;
+  s.essence -= quote.essence;
+  s.upgrades[id] = quote.next;
+  return quote;
 }
 export function salvage(s, id) {
   const i = item(id);
@@ -924,8 +981,11 @@ export function salvage(s, id) {
     Object.values(s.equipment).includes(id)
   )
     throw Error("Kampta kuşanılmamış bir ekipman seç.");
+  const value = salvageValue(s, id);
   s.inventory[id]--;
-  s.essence += { common: 5, rare: 12, epic: 25, legendary: 60 }[i.rarity];
+  s.essence += value;
+  delete s.upgrades[id];
+  return value;
 }
 
 export function enterRoom(s, index, now = Date.now()) {

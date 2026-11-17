@@ -1,5 +1,51 @@
 export const RELEASES = [
   {
+    version: "0.5.0",
+    date: "2026-11-18",
+    title: "Ana lobi, ders dünyaları ve Gezgin Pazarı",
+    groups: [
+      {
+        title: "Ana lobi ve ders dünyaları",
+        items: [
+          "Giriş sonrası ana lobi açılır. Buradan dersin karargâhına, öğrenme yoluna ve zindanlarına geçilir; devam eden keşif lobiden sürdürülebilir.",
+          "Beş dersin ayrı sahnesi ve renk paleti var: OOD rün arşivleri, veritabanı kayıt kuleleri, işletim sistemleri çekirdek demirhanesi, dijital mantık devre tapınağı ve simülasyon gözlemevi.",
+          "İçeriği beklenen dört ders lobide önizlenebilir; kilitleri korunur. Ders önizlemek aktif dersi veya ilerlemeyi değiştirmez.",
+        ],
+      },
+      {
+        title: "Düzenli sol menü",
+        items: [
+          "Dünyalar arası, Aktif ders, Avcı gelişimi ve Sistem menüleri açılıp kapanan gruplara ayrıldı. Her sayfa ayrı emojiyle gösterilir.",
+          "Ana lobi ve Market sol menüye taşındı. Menü grubu tercihleri hesaba kaydedilir; açılan sayfanın grubu otomatik görünür.",
+        ],
+      },
+      {
+        title: "Gezgin Pazarı",
+        items: [
+          "Market artık tam sayfa: Tezgâh, Paketler ve Geliştirme ocağı bölümleri var. Altın ve özün kullanım yerleri açıklanır.",
+          "Derse ve güne bağlı 11 ekipman/cheat sheet seçkisi, nadirliğe göre seviye koşulları, kategori ve arama filtreleri, fiyat/isim/seviye sıralaması ve Alabileceklerim filtresi eklendi.",
+          "İksirler 1–99 adet alınabilir. Üç indirimli iksir paketi ders başına günde bir kez alınabilir. Günlük stok Türkiye saatiyle 00.00'da değişir; aynı ekipman aynı gün yeniden alınamaz.",
+          "Satın almadan önce gerçek etkiler, kuşanılan eşyaya göre fark, adet, toplam ücret ve kalan bakiye gösterilir. Alışveriş sonrası eşya makbuzu açılır.",
+        ],
+      },
+      {
+        title: "Geliştirme ocağı ve kayıt",
+        items: [
+          "Silah, zırh ve tılsımlar altın + öz ile +3'e kadar geliştirilebilir. +1/+2/+3 için karakter seviyesi 2/4/6 gerekir; kaynak bedeli nadirlikle artar.",
+          "Her geliştirme silaha +2 XP/doğru, zırha +8 maksimum can ve +1 savunma, tılsıma +8 maksimum mana verir. Bonus yalnız eşya kuşanıldığında uygulanır.",
+          "Eşya parçalama onay ister; kuşanılan ekipman korunur. Geliştirilmiş eşya ek öz verir ve parçalandığında geliştirmesi kaldırılır.",
+          "Günlük alımlar ve geliştirmeler kalıcı kaydedilir. Mevcut ilerleme korunur. Keşifte market incelenebilir; alışveriş, geliştirme ve parçalama için keşfin bitmesi gerekir.",
+        ],
+      },
+      {
+        title: "Ustalık tablosu",
+        items: [
+          "Sıralamadaki @kullanıcıadı satırı kaldırıldı. Yalnız görünen ad gösterilir; puanlar ve sıralama korunur.",
+        ],
+      },
+    ],
+  },
+  {
     version: "0.4.0",
     date: "2026-11-17",
     title: "Öğrenme yolu, oda sınavları ve mana dengesi",
