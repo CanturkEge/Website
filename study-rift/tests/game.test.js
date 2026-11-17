@@ -14,8 +14,11 @@ const hunter = (c = "sage") => {
   E.chooseClass(s, c);
   return s;
 };
-const correct = (s) => E.displayQuestion(s).answer;
-test("valid questions, difficulty coverage and 15 nodes per class", () => {
+const correct = (s) => {
+  const q = E.displayQuestion(s);
+  return q.type === "short" ? q.answer[0] : q.answer;
+};
+test("valid questions, difficulty coverage and 16 nodes per class", () => {
   assert.equal(new Set(QUESTIONS.map((q) => q.id)).size, QUESTIONS.length);
   for (let d = 1; d <= 5; d++)
     assert(
@@ -24,12 +27,15 @@ test("valid questions, difficulty coverage and 15 nodes per class", () => {
     );
   for (const q of QUESTIONS) {
     assert(q.explanation && q.hint && q.source);
-    if (q.type === "match") assert.equal(q.options.length, q.answer.length);
+    if (["match", "order"].includes(q.type))
+      assert.equal(q.options.length, q.answer.length);
+    else if (q.type === "short") assert(q.answer.length > 0);
+    else if (q.type === "multi") assert(q.answer.every((i) => q.options[i]));
     else assert(q.options[q.answer]);
   }
   for (const c of CLASSES) {
     const nodes = SKILLS.filter((sk) => sk.classId === c.id);
-    assert.equal(nodes.length, 15);
+    assert.equal(nodes.length, 16);
     assert.equal(new Set(nodes.map((n) => n.col)).size, 3);
     for (const sk of nodes)
       for (const dep of sk.requires) assert(nodes.some((n) => n.id === dep));
@@ -78,7 +84,7 @@ test("unique scaled queues do not repeat until deck exhausted", () => {
 });
 test("duplicate submission cannot farm XP and correct restores mana", () => {
   const s = hunter();
-  E.startRun(s, "e");
+  start(s, "e");
   s.run.mp = 0;
   E.answer(s, correct(s));
   assert(s.run.mp > 0);
@@ -88,15 +94,15 @@ test("duplicate submission cannot farm XP and correct restores mana", () => {
 });
 test("full clear grants notes, rewards are idempotent, loadout requires camp", () => {
   const s = hunter();
-  E.startRun(s, "e");
+  start(s, "e");
   for (let i = 0; i < 8; i++) {
     E.answer(s, correct(s));
-    E.nextRoom(s);
+    next(s);
   }
   assert.equal(s.run.status, "won");
   assert(s.run.drops.some((id) => E.item(id).slot === "notes"));
   const inv = JSON.stringify(s.inventory);
-  E.nextRoom(s);
+  next(s);
   assert.equal(JSON.stringify(s.inventory), inv);
   assert.throws(() => E.equip(s, "dagger"));
   E.leaveRun(s);
@@ -140,7 +146,7 @@ test("class, prerequisite and point constraints", () => {
 test("sage prophecy fills correct matches and rejects inappropriate formats", () => {
   const s = hunter();
   s.skills.push("sage-prophecy");
-  E.startRun(s, "e");
+  start(s, "e");
   s.run.queue[0] = QUESTIONS.find((q) => q.type === "match").id;
   E.useSkill(s, "prophecy");
   assert.equal(Object.keys(s.run.fixedMatches).length, 1);
@@ -149,7 +155,7 @@ test("sage prophecy fills correct matches and rejects inappropriate formats", ()
 test("warden second chance preserves HP, does not farm XP or stats", () => {
   const s = hunter("warden");
   s.skills.push("warden-second");
-  E.startRun(s, "e");
+  start(s, "e");
   s.run.hp = 1;
   const q = E.displayQuestion(s);
   E.answer(s, q.type === "match" ? [] : (q.answer + 1) % q.options.length);
@@ -167,12 +173,12 @@ test("warden second chance preserves HP, does not farm XP or stats", () => {
 test("ranger wager multiplies XP and evasion blocks damage", () => {
   const s = hunter("ranger");
   s.skills.push("ranger-wager", "ranger-evasion");
-  E.startRun(s, "e");
+  start(s, "e");
   E.useSkill(s, "wager");
   const q = E.displayQuestion(s),
     base = 18 + q.difficulty * 8 + E.attributes(s).xp;
-  assert.equal(E.answer(s, q.answer).xp, 2 * base);
-  E.nextRoom(s);
+  assert.equal(E.answer(s, correct(s)).xp, 2 * base);
+  next(s);
   E.useSkill(s, "evasion");
   const n = E.displayQuestion(s),
     hp = s.run.hp;
@@ -206,4 +212,86 @@ test("shop and salvage enforce costs and equipment ownership", () => {
   E.salvage(s, "blade");
   assert.equal(s.inventory.blade, 0);
   assert.equal(s.essence, 25);
+});
+
+function start(s, id) {
+  const r = E.startRun(s, id);
+  E.enterRoom(s, 0);
+  return r;
+}
+function next(s) {
+  const v = E.nextRoom(s);
+  if (s.run?.status === "active") E.enterRoom(s, s.run.index);
+  return v;
+}
+
+test("bank doubled to 168 and six valid formats", () => {
+  assert.equal(QUESTIONS.length, 168);
+  for (const type of ["mc", "tf", "match", "multi", "order", "short"])
+    assert(QUESTIONS.some((q) => q.type === type));
+});
+test("new formats grade canonical answers, reject partial and duplicate selections", () => {
+  for (const q of QUESTIONS) {
+    const value = q.type === "short" ? q.answer[0] : q.answer;
+    assert(E.checkAnswer(q, value), q.id);
+    if (q.type === "multi") {
+      assert(!E.checkAnswer(q, q.answer.slice(1)));
+      assert(!E.checkAnswer(q, [...q.answer, q.answer[0]]));
+    }
+    if (q.type === "order") assert(!E.checkAnswer(q, [...q.answer].reverse()));
+  }
+  const q = QUESTIONS.find((q) => q.id === "v3-s07");
+  assert(E.checkAnswer(q, "  lsp  "));
+});
+test("multiple answer indices survive shuffled option mapping", () => {
+  const s = hunter();
+  E.startTraining(s, { type: "multi" });
+  const q = E.displayQuestion(s, true);
+  assert.equal(q.type, "multi");
+  assert(E.checkAnswer(q, q.answer));
+  E.answer(s, q.answer, true);
+  assert(s.training.feedback.correct);
+});
+test("room locks, fatal damage and same-rank restart reset to room one", () => {
+  const s = hunter();
+  E.startRun(s, "e");
+  assert.equal(s.run.roomMode, "map");
+  assert.throws(() => E.answer(s, correct(s)));
+  assert.throws(() => E.enterRoom(s, 1));
+  E.enterRoom(s, 0);
+  E.answer(s, correct(s));
+  E.nextRoom(s);
+  assert.equal(s.run.index, 1);
+  assert.equal(s.run.roomMode, "map");
+  assert.throws(() => E.enterRoom(s, 0));
+  E.enterRoom(s, 1);
+  s.run.hp = 1;
+  const q = E.displayQuestion(s);
+  E.answer(
+    s,
+    q.type === "short"
+      ? "not-an-answer"
+      : Array.isArray(q.answer)
+        ? []
+        : (q.answer + 1) % q.options.length,
+  );
+  assert.equal(s.run.status, "failed");
+  assert.equal(E.nextRoom(s), null);
+  assert.throws(() => E.enterRoom(s, 2));
+  const xp = s.xp;
+  E.retryRun(s);
+  assert.equal(s.run.dungeon, "e");
+  assert.equal(s.run.index, 0);
+  assert.equal(s.run.roomMode, "map");
+  assert.equal(s.xp, xp);
+});
+test("damage increased and new passive mitigates it without removing risk", () => {
+  const s = hunter();
+  E.startRun(s, "e");
+  const q = E.currentQuestion(s),
+    before = E.incomingDamage(s, q);
+  assert(before >= 42);
+  s.skills.push("sage-resistance");
+  const after = E.incomingDamage(s, q);
+  assert(after < before && after >= 8);
 });

@@ -1,3 +1,5 @@
+import { QUESTION_TYPES, answerLabel } from "./question-utils.js";
+import { RELEASES, VERSION, compareVersions } from "./releases.js";
 import {
   TOPICS as BASE_TOPICS,
   COURSES,
@@ -12,7 +14,12 @@ import {
 } from "./game-data.js";
 import * as E from "./engine.js";
 import { icon, portalArt, knightArt } from "./art.js";
-import { cloud, SaveStore, authRequest } from "./cloud.js";
+import { cloud, SaveStore, authRequest, masteryRequest } from "./cloud.js";
+let boardData = null,
+  rankedSession = null,
+  boardLoading = false,
+  boardError = "",
+  quizBusy = false;
 let TOPICS = BASE_TOPICS,
   authMode = "login",
   userProfile = null,
@@ -123,6 +130,8 @@ const navs = [
   ["skills", "tree", "Yetenek ağacı"],
   ["codex", "book", "Bilgi defteri"],
   ["stats", "chart", "İstatistikler"],
+  ["leaderboard", "chart", "Ustalık tablosu"],
+  ["patches", "scroll", "Yama notları"],
 ];
 const pill = (text, cls = "") => `<span class="pill ${cls}">${text}</span>`;
 const button = (text, action, cls = "", attrs = "") =>
@@ -160,7 +169,7 @@ function render() {
   const l = E.level(state),
     a = E.attributes(state);
   $("#app").innerHTML =
-    `<aside class="sidebar"><a href="#camp" class="brand" data-page="camp" aria-label="Study Rift karargâh"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>KNOWLEDGE IS POWER</small></span></a><div class="nav-caption">AVCI MERKEZİ</div><nav>${navs.map(([id, ico, label]) => `<button class="nav-item ${page === id ? "active" : ""}" data-page="${id}" aria-label="${label}">${icon(ico)}<span>${label}</span>${id === "skills" && E.points(state) ? `<b>${E.points(state)}</b>` : ""}</button>`).join("")}</nav><div class="sidebar-bottom"><div class="system-dot">SİSTEM ÇEVRİMİÇİ <span>v0.2.0</span></div><p>Her doğru cevap,<br>bir seviye daha ileri.</p><button class="nav-item" data-page="settings" aria-label="Ayarlar">${icon("settings")}<span>Ayarlar</span></button><button class="hunter-mini" data-page="character" aria-label="Avcı karakteri"><span class="avatar">${icon("user")}</span><span>${esc(state.name)}<small>Seviye ${l.level} · ${state.skills.length ? "Yolunu seçen" : "Uyanan avcı"}</small></span>${icon("arrow")}</button></div></aside><div class="workspace"><header class="topbar"><button class="course-switch" data-page="courses">${icon(E.course(state).icon)} <span>${E.course(state).short}</span>${icon("arrow")}</button><div class="breadcrumbs">AVCI MERKEZİ <span>/</span> <strong>${navs.find((n) => n[0] === page)?.[2] || "Ayarlar"}</strong></div><div class="top-actions"><span class="currency">${icon("coin")} ${state.gold.toLocaleString("tr-TR")}</span><span class="level-chip">SV. ${l.level}</span><button class="account-btn" aria-label="Hesap" data-action="account">${icon("user")}<span>${user ? "Hesabım" : "Giriş yap"}</span></button></div></header><main id="content" tabindex="-1">${entering ? `<div class="rift-entry" aria-hidden="true"><div class="entry-gate"></div><span>KAPI AÇILIYOR</span><strong>${E.course(state).realm}</strong></div>` : ""}${busy ? loadingScreen() : renderPage()}</main><footer><span class="footer-brand">◈ STUDY RIFT</span><button id="sync" data-action="sync"></button><span>${E.bank(state).length} soru · ${E.course(state).short}</span></footer></div>`;
+    `<aside class="sidebar"><a href="#camp" class="brand" data-page="camp" aria-label="Study Rift karargâh"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>KNOWLEDGE IS POWER</small></span></a><div class="nav-caption">AVCI MERKEZİ</div><nav>${navs.map(([id, ico, label]) => `<button class="nav-item ${page === id ? "active" : ""}" data-page="${id}" aria-label="${label}">${icon(ico)}<span>${label}</span>${id === "skills" && E.points(state) ? `<b>${E.points(state)}</b>` : ""}</button>`).join("")}</nav><div class="sidebar-bottom"><div class="system-dot">SİSTEM ÇEVRİMİÇİ <span>v${VERSION}</span></div><p>Her doğru cevap,<br>bir seviye daha ileri.</p><button class="nav-item" data-page="settings" aria-label="Ayarlar">${icon("settings")}<span>Ayarlar</span></button><button class="hunter-mini" data-page="character" aria-label="Avcı karakteri"><span class="avatar">${icon("user")}</span><span>${esc(state.name)}<small>Seviye ${l.level} · ${state.skills.length ? "Yolunu seçen" : "Uyanan avcı"}</small></span>${icon("arrow")}</button></div></aside><div class="workspace"><header class="topbar"><button class="course-switch" data-page="courses">${icon(E.course(state).icon)} <span>${E.course(state).short}</span>${icon("arrow")}</button><div class="breadcrumbs">AVCI MERKEZİ <span>/</span> <strong>${navs.find((n) => n[0] === page)?.[2] || "Ayarlar"}</strong></div><div class="top-actions"><span class="currency">${icon("coin")} ${state.gold.toLocaleString("tr-TR")}</span><span class="level-chip">SV. ${l.level}</span><button class="account-btn" aria-label="Hesap" data-action="account">${icon("user")}<span>${user ? "Hesabım" : "Giriş yap"}</span></button></div></header><main id="content" tabindex="-1">${entering ? `<div class="rift-entry" aria-hidden="true"><div class="entry-gate"></div><span>KAPI AÇILIYOR</span><strong>${E.course(state).realm}</strong></div>` : ""}${busy ? loadingScreen() : renderPage()}</main><footer><span class="footer-brand">◈ STUDY RIFT</span><button id="sync" data-action="sync"></button><span>${E.bank(state).length} soru · ${E.course(state).short}</span></footer></div>`;
   renderSync();
 }
 function renderPage() {
@@ -176,6 +185,8 @@ function renderPage() {
       codex,
       stats,
       settings,
+      leaderboard,
+      patches,
     }[page] || camp
   )();
 }
@@ -191,7 +202,7 @@ function camp() {
       "Yeniden hoş geldin, <em>" + esc(state.name) + ".</em>",
       "Bugünkü rakibin dün bilmediklerin.",
     ) +
-    `<div class="camp-grid"><section class="hero panel"><div class="hero-art">${portalArt("hero")}</div><div class="hero-shade"></div><div class="hero-content">${pill("● KEŞFEDİLMEYİ BEKLEYEN BİR DÜNYA", "soft")}<h2>Bilgini<br><em>güce dönüştür.</em></h2><p>Zindanlara gir. Sınırlarını aş.<br>Her soruda biraz daha güçlen.</p>${button(state.run ? "Keşfe devam et " + icon("arrow") : "Zindana gir " + icon("arrow"), "go-dungeons", "primary")}<div class="hero-meta"><span>${icon("shield")} ${d.rank}-Rank erişimi</span><span>${icon("chest")} Kalıcı ganimetler</span></div></div></section><section class="panel hunter-panel"><div class="section-top"><h3>Avcı profili</h3>${button("Karakter " + icon("arrow"), "go-character", "text")}</div><div class="profile-summary"><div class="profile-sigil">◈</div><div><h2>${esc(state.name)}</h2><p>${CLASSES.find((c) => c.id === state.classId)?.name || "Avcı"} <span>•</span> ${d.rank}-Rank</p></div><b class="level-badge">${l.level}<small>SEVİYE</small></b></div><div class="bar-label"><span>SEVİYE İLERLEMESİ</span><strong>${l.current} / ${l.needed} XP</strong></div>${progress(l.current, l.needed, "xp")}<div class="profile-stats"><div>${icon("heart")}<b>${E.attributes(state).hp}</b><small>CAN</small></div><div>${icon("gem")}<b>${E.attributes(state).mp}</b><small>MANA</small></div><div>${icon("bolt")}<b>${E.points(state)}</b><small>YETENEK PUANI</small></div></div><div class="mini-callout">${icon("tree")}<p>${E.points(state) ? "Yeni bir yetenek açabilirsin." : "Seviye atla, kendi yolunu seç."}<small>${CLASSES.find((c) => c.id === state.classId)?.name || "Sınıf seçimi"} · 15 yetenek</small></p>${button(icon("arrow"), "go-skills", "icon-btn", 'aria-label="Yetenek ağacını aç"')}</div></section></div><div class="quick-stats"><div>${icon("check")}<p><b>${state.stats.correct}</b><span>Doğru cevap</span></p></div><div>${icon("portal")}<p><b>${state.stats.wins}</b><span>Temizlenen zindan</span></p></div><div>${icon("chart")}<p><b>%${correct}</b><span>Doğruluk oranı</span></p></div><div>${icon("flame")}<p><b>${state.stats.bestCombo}×</b><span>En iyi seri</span></p></div></div><div class="section-top section-space"><div><h2>Bir sonraki adımın</h2><p>Sana uygun bir meydan okuma seç.</p></div><div class="section-actions">${button(icon("potion") + " Simyacı", "shop", "text")}${button("Tüm zindanlar " + icon("arrow"), "go-dungeons", "text")}</div></div><div class="three-grid"><button class="activity-card" data-action="go-dungeons"><div class="activity-icon purple">${icon("portal")}</div><span class="activity-kicker">ZİNDAN KEŞFİ</span><h3>${d.name}</h3><p>${d.desc}</p><div class="card-bottom"><span>${d.rank}-Rank · 8 oda</span>${icon("arrow")}</div></button><button class="activity-card" data-action="go-training"><div class="activity-icon green">${icon("training")}</div><span class="activity-kicker">GÜVENLİ ALAN</span><h3>Antrenman avlusu</h3><p>Can kaybetmeden öğren. Konunu seç, ipuçlarını aç, eksiklerini tamamla.</p><div class="card-bottom"><span>Sınırsız pratik · Ücretsiz ipucu</span>${icon("arrow")}</div></button><section class="daily-card panel"><div class="section-top"><span class="activity-kicker">GÜNLÜK GÖREV</span>${icon("flame")}</div><h3>Zihnini uyandır</h3><p>Antrenmanda 5 farklı soruyu doğru çöz.</p><div class="bar-label"><span>${Math.min(5, state.daily.ids.length)} / 5 tamamlandı</span><span>+35 ${icon("coin")}</span></div>${progress(Math.min(5, state.daily.ids.length), 5, "gold")}<div class="daily-reward">${icon(state.daily.claimed ? "check" : "potion")} ${state.daily.claimed ? "Ödül çantana eklendi" : "Bonus: 1 Can İksiri"}</div></section></div><div class="notice">${icon("book")}<p><strong>İlk keşif sürümü.</strong> ${E.course(state).name} · ${E.bank(state).length} özgün örnek soru, 5 zorluk. Slayt kaynağı henüz eklenmedi. Diğer dersler ayrı havuzlarla açılacak.</p></div>`
+    `<div class="camp-grid"><section class="hero panel"><div class="hero-art">${portalArt("hero")}</div><div class="hero-shade"></div><div class="hero-content">${pill("● KEŞFEDİLMEYİ BEKLEYEN BİR DÜNYA", "soft")}<h2>Bilgini<br><em>güce dönüştür.</em></h2><p>Zindanlara gir. Sınırlarını aş.<br>Her soruda biraz daha güçlen.</p>${button(state.run ? "Keşfe devam et " + icon("arrow") : "Zindana gir " + icon("arrow"), "go-dungeons", "primary")}<div class="hero-meta"><span>${icon("shield")} ${d.rank}-Rank erişimi</span><span>${icon("chest")} Kalıcı ganimetler</span></div></div></section><section class="panel hunter-panel"><div class="section-top"><h3>Avcı profili</h3>${button("Karakter " + icon("arrow"), "go-character", "text")}</div><div class="profile-summary"><div class="profile-sigil">◈</div><div><h2>${esc(state.name)}</h2><p>${CLASSES.find((c) => c.id === state.classId)?.name || "Avcı"} <span>•</span> ${d.rank}-Rank</p></div><b class="level-badge">${l.level}<small>SEVİYE</small></b></div><div class="bar-label"><span>SEVİYE İLERLEMESİ</span><strong>${l.current} / ${l.needed} XP</strong></div>${progress(l.current, l.needed, "xp")}<div class="profile-stats"><div>${icon("heart")}<b>${E.attributes(state).hp}</b><small>CAN</small></div><div>${icon("gem")}<b>${E.attributes(state).mp}</b><small>MANA</small></div><div>${icon("bolt")}<b>${E.points(state)}</b><small>YETENEK PUANI</small></div></div><div class="mini-callout">${icon("tree")}<p>${E.points(state) ? "Yeni bir yetenek açabilirsin." : "Seviye atla, kendi yolunu seç."}<small>${CLASSES.find((c) => c.id === state.classId)?.name || "Sınıf seçimi"} · 16 yetenek</small></p>${button(icon("arrow"), "go-skills", "icon-btn", 'aria-label="Yetenek ağacını aç"')}</div></section></div><div class="quick-stats"><div>${icon("check")}<p><b>${state.stats.correct}</b><span>Doğru cevap</span></p></div><div>${icon("portal")}<p><b>${state.stats.wins}</b><span>Temizlenen zindan</span></p></div><div>${icon("chart")}<p><b>%${correct}</b><span>Doğruluk oranı</span></p></div><div>${icon("flame")}<p><b>${state.stats.bestCombo}×</b><span>En iyi seri</span></p></div></div><div class="section-top section-space"><div><h2>Bir sonraki adımın</h2><p>Sana uygun bir meydan okuma seç.</p></div><div class="section-actions">${button(icon("potion") + " Simyacı", "shop", "text")}${button("Tüm zindanlar " + icon("arrow"), "go-dungeons", "text")}</div></div><div class="three-grid"><button class="activity-card" data-action="go-dungeons"><div class="activity-icon purple">${icon("portal")}</div><span class="activity-kicker">ZİNDAN KEŞFİ</span><h3>${d.name}</h3><p>${d.desc}</p><div class="card-bottom"><span>${d.rank}-Rank · 8 oda</span>${icon("arrow")}</div></button><button class="activity-card" data-action="go-training"><div class="activity-icon green">${icon("training")}</div><span class="activity-kicker">GÜVENLİ ALAN</span><h3>Antrenman avlusu</h3><p>Can kaybetmeden öğren. Konunu seç, ipuçlarını aç, eksiklerini tamamla.</p><div class="card-bottom"><span>Sınırsız pratik · Ücretsiz ipucu</span>${icon("arrow")}</div></button><section class="daily-card panel"><div class="section-top"><span class="activity-kicker">GÜNLÜK GÖREV</span>${icon("flame")}</div><h3>Zihnini uyandır</h3><p>Antrenmanda 5 farklı soruyu doğru çöz.</p><div class="bar-label"><span>${Math.min(5, state.daily.ids.length)} / 5 tamamlandı</span><span>+35 ${icon("coin")}</span></div>${progress(Math.min(5, state.daily.ids.length), 5, "gold")}<div class="daily-reward">${icon(state.daily.claimed ? "check" : "potion")} ${state.daily.claimed ? "Ödül çantana eklendi" : "Bonus: 1 Can İksiri"}</div></section></div><div class="notice">${icon("book")}<p><strong>İlk keşif sürümü.</strong> ${E.course(state).name} · ${E.bank(state).length} özgün örnek soru, 5 zorluk. Slayt kaynağı henüz eklenmedi. Diğer dersler ayrı havuzlarla açılacak.</p></div>`
   );
 }
 function dungeons() {
@@ -299,23 +310,60 @@ function skills() {
       )}</div></section><div class="notice">${icon(c.icon)}<p>${c.unique} Sınıf seçimi kalıcıdır; bütün derslerde aynı avcıyla ilerlersin. Savaş içi yetenekler mana ve oda sınırlarıyla dengelenir.</p></div>`
   );
 }
-function questionView(q, ctx, train = false) {
-  const feedback = ctx.feedback,
-    correct = feedback?.correct;
+function stableChoices(q) {
+  let seed = 0;
+  for (const ch of q.id) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
+  return E.shuffle(
+    q.type === "match" ? (q.choices ?? q.answer) : q.options,
+    () => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed / 4294967296;
+    },
+  );
+}
+function readQuestionForm(form, q) {
+  if (q.type === "short") return form.elements.response.value.trim();
+  if (q.type === "multi")
+    return Array.from(form.querySelectorAll("input[name=choice]:checked")).map(
+      (n) => Number(n.value),
+    );
+  return q.options.map((_, i) => form.elements["step" + i].value);
+}
+function questionView(q, ctx, train = false, ranked = false) {
+  const f = ctx.feedback,
+    answered = !!ctx.answered,
+    correct = f?.correct,
+    formId = ranked ? "rank-answer-form" : "answer-form",
+    draft = f?.value ?? ctx.draft ?? ctx.matchDraft,
+    pending = ranked && quizBusy;
   let answers = "";
-  if (q.type === "match") {
-    const options = E.shuffle(q.answer, () => 0.65);
-    answers = `<form id="answer-form"><div class="matching">${q.options.map((label, i) => `<label><span>${esc(label)}</span><select name="match${i}" required ${ctx.answered || ctx.fixedMatches?.[i] ? "disabled" : ""}><option value="">Karşılığını seç…</option>${options.map((o) => `<option value="${esc(o)}" ${(feedback?.value[i] ?? ctx.fixedMatches?.[i] ?? ctx.matchDraft?.[i]) === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>${ctx.answered ? `<small class="${feedback.value[i] === q.answer[i] ? "correct-text" : "wrong-text"}">${esc(q.answer[i])}</small>` : ""}</label>`).join("")}</div>${!ctx.answered ? '<button class="btn primary" type="submit">Eşleştirmeyi kontrol et ' + icon("arrow") + "</button>" : ""}</form>`;
+  if (q.type === "match" || q.type === "order") {
+    const choices = stableChoices(q);
+    answers = `<form id="${formId}"><div class="matching ${q.type === "order" ? "ordering" : ""}">${q.options.map((label, i) => `<label><span>${q.type === "order" ? `<b>${i + 1}</b> ${i + 1}. adım` : esc(label)}</span><select name="step${i}" required ${answered || pending || ctx.fixedMatches?.[i] ? "disabled" : ""}><option value="">${q.type === "order" ? "Bu adıma gelecek ifadeyi seç…" : "Karşılığını seç…"}</option>${choices.map((o) => `<option value="${esc(o)}" ${(ctx.fixedMatches?.[i] ?? draft?.[i]) === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>${answered ? `<small class="${f.value?.[i] === q.answer[i] ? "correct-text" : "wrong-text"}">${esc(q.answer[i])}</small>` : ""}</label>`).join("")}</div>${!answered ? '<button type="submit" class="btn primary" ' + (pending ? "disabled" : "") + ">Yanıtı kontrol et " + icon("arrow") + "</button>" : ""}</form>`;
+  } else if (q.type === "multi") {
+    answers = `<form id="${formId}"><p class="format-instruction">Doğru olan bütün seçenekleri işaretle. Eksik veya fazla seçim yanlış sayılır.</p><div class="multi-options">${q.options.map((option, i) => `<label class="multi-option ${answered ? (q.answer.includes(i) ? "correct-option" : f.value.includes(i) ? "wrong-option" : "") : ""}"><input type="checkbox" name="choice" value="${i}" ${draft?.includes(i) ? "checked" : ""} ${answered || pending ? "disabled" : ""}><span>${esc(option)}</span>${answered && q.answer.includes(i) ? icon("check") : ""}</label>`).join("")}</div>${!answered ? '<button type="submit" class="btn primary" ' + (pending ? "disabled" : "") + ">Seçimleri kontrol et " + icon("arrow") + "</button>" : ""}</form>`;
+  } else if (q.type === "short") {
+    answers = `<form id="${formId}" class="short-form"><label>Kısa yanıtın<input name="response" required maxlength="200" autocomplete="off" spellcheck="false" placeholder="Yanıtını yaz…" value="${esc(draft || "")}" ${answered || pending ? "disabled" : ""}></label><p class="format-instruction">Harf büyüklüğü önemli değil. Sorunun istediği terimi veya değeri yaz.</p>${!answered ? '<button type="submit" class="btn primary" ' + (pending ? "disabled" : "") + ">Yanıtı kontrol et " + icon("arrow") + "</button>" : ""}</form>`;
   } else
     answers = `<div class="answers ${q.type === "tf" ? "boolean" : ""}">${q.options
       .map((option, i) => {
-        const reveal = ctx.answered && i === q.answer,
-          wrong = ctx.answered && !correct && Number(feedback.value) === i;
-        return `<button class="answer ${reveal ? "correct" : ""} ${wrong ? "wrong" : ""} ${ctx.hidden?.includes(i) ? "eliminated" : ""}" data-action="answer" data-id="${i}" ${ctx.answered || ctx.hidden?.includes(i) ? "disabled" : ""}><span class="answer-letter">${q.type === "tf" ? (i === 0 ? "✓" : "×") : String.fromCharCode(65 + i)}</span><span>${esc(option)}</span>${reveal ? icon("check") : ""}</button>`;
+        const reveal = answered && i === q.answer,
+          wrong = answered && !correct && Number(f.value) === i;
+        return `<button class="answer ${reveal ? "correct" : ""} ${wrong ? "wrong" : ""} ${ctx.hidden?.includes(i) ? "eliminated" : ""}" data-action="${ranked ? "rank-answer" : "answer"}" data-id="${i}" ${answered || ctx.hidden?.includes(i) || (ranked && quizBusy) ? "disabled" : ""}><span class="answer-letter">${q.type === "tf" ? (i === 0 ? "✓" : "×") : String.fromCharCode(65 + i)}</span><span>${esc(option)}</span>${reveal ? icon("check") : ""}</button>`;
       })
       .join("")}</div>`;
-  return `<section class="panel question-panel"><div class="question-meta"><span>${pill({ mc: "ÇOKTAN SEÇMELİ", tf: "DOĞRU / YANLIŞ", match: "EŞLEŞTİRME" }[q.type])} ${pill(["", "TEMEL", "UYGULAMA", "ANALİZ", "İLERİ", "USTALIK"][q.difficulty], "dim")}</span><span>${esc(TOPICS[q.topic])}</span></div><h2>${esc(q.prompt)}</h2>${q.code ? "<pre><code>" + esc(q.code) + "</code></pre>" : ""}${answers}${ctx.hint ? `<div class="hint-box">${icon("eye")}<div><b>Sezgi</b><p>${esc(q.hint)}</p>${E.attributes(state).deepHint ? `<p>${esc(BONUS_NOTES.find((n) => n.course === q.course && n.topic === q.topic)?.text || "Önce tanımı, sonra senaryonun varsayımlarını kontrol et.")}</p>` : ""}</div></div>` : ""}${ctx.answered ? `<div class="feedback ${correct ? "success" : "danger"}"><div class="feedback-head">${icon(correct ? "check" : "shield")}<strong>${correct ? "Doğru. Güçleniyorsun." : "Bu da yolun bir parçası."}</strong><span>${correct ? "+" + feedback.xp + " XP" : train ? "Can kaybı yok" : "−" + feedback.damage + " CAN"}</span></div><p>${esc(q.explanation)}</p>${feedback.loot?.length ? `<div class="inline-loot">${icon("chest")} Ganimet düştü: ${feedback.loot.map((id) => E.item(id).name).join(", ")}</div>` : ""}</div><div class="question-next"><small>${q.source}</small>${button(train ? "Sonraki soru " + icon("arrow") : state.run.status === "failed" ? "Keşif sonucu " + icon("arrow") : state.run.index === 7 ? "Boss ödülünü al " + icon("chest") : "Sonraki oda " + icon("arrow"), train ? "next-training" : "next-room", "primary")}</div>` : `<div class="question-source">${q.source}</div>`}</section>`;
+  const label = ranked
+    ? correct
+      ? "+" + f?.points + " PUAN"
+      : "0 PUAN"
+    : correct
+      ? "+" + f?.xp + " XP"
+      : train
+        ? "Can kaybı yok"
+        : "−" + f?.damage + " CAN";
+  return `<section class="panel question-panel"><div class="question-meta"><span>${pill(QUESTION_TYPES[q.type])} ${pill(["", "TEMEL", "UYGULAMA", "ANALİZ", "İLERİ", "USTALIK"][q.difficulty], "dim")}</span><span>${esc(TOPICS[q.topic])}</span></div><h2>${esc(q.prompt)}</h2>${q.code ? "<pre><code>" + esc(q.code) + "</code></pre>" : ""}${answers}${!ranked && ctx.hint ? `<div class="hint-box">${icon("eye")}<div><b>Sezgi</b><p>${esc(q.hint)}</p>${E.attributes(state).deepHint ? `<p>${esc(BONUS_NOTES.find((n) => n.course === q.course && n.topic === q.topic)?.text || "Tanımı ve senaryonun varsayımlarını kontrol et.")}</p>` : ""}</div></div>` : ""}${answered ? `<div class="feedback ${correct ? "success" : "danger"}"><div class="feedback-head">${icon(correct ? "check" : "shield")}<strong>${correct ? "Doğru." : "Bu cevap doğru değil."}</strong><span>${label}</span></div>${["multi", "order", "short"].includes(q.type) ? `<p class="correct-text"><b>Doğru yanıt:</b> ${esc(answerLabel(q))}</p>` : ""}<p>${esc(q.explanation)}</p>${f.loot?.length ? `<div class="inline-loot">${icon("chest")} Ganimet: ${f.loot.map((id) => E.item(id).name).join(", ")}</div>` : ""}</div><div class="question-next"><small>${esc(q.source)}</small>${button(ranked ? (rankedSession.attempt.completed ? "Sonucu gör" : "Sonraki soru") + " " + icon("arrow") : train ? "Sonraki soru " + icon("arrow") : state.run.status === "failed" ? "Keşif sonucu " + icon("arrow") : state.run.index === 7 ? "Boss ödülünü al " + icon("chest") : "Oda haritasına dön " + icon("arrow"), ranked ? "rank-next" : train ? "next-training" : "next-room", "primary", quizBusy ? "disabled" : "")}</div>` : `<div class="question-source">${esc(q.source)}${ranked ? " · İpucu ve sınıf yetenekleri kapalı." : ""}</div>`}</section>`;
 }
+
 function battle() {
   const r = state.run,
     d = DUNGEONS.find((d) => d.id === r.dungeon),
@@ -323,6 +371,7 @@ function battle() {
     a = E.attributes(state);
   if (r.status === "won" || (r.status === "failed" && r.showResult))
     return results();
+  if (r.roomMode === "map") return roomMap();
   return (
     heading(
       r.index >= 6 ? "BOSS KARŞILAŞMASI" : "AKTİF KEŞİF",
@@ -330,14 +379,14 @@ function battle() {
       `Oda ${r.index + 1} / ${r.queue.length} · ${r.index >= 6 ? d.enemy : "Kadim sınav"}`,
       button("Kampa çekil", "retreat", "secondary"),
     ) +
-    `<div class="battle-layout"><div><div class="room-track">${r.queue.map((_, i) => `<div class="${i < r.index ? "done" : i === r.index ? "current" : ""}">${icon(i >= 6 ? "sword" : i < r.index ? "check" : "gem")}<small>${i >= 6 ? "BOSS" : String(i + 1).padStart(2, "0")}</small></div>`).join("")}</div>${questionView(q, r)}</div><aside class="battle-side"><section class="panel vitals"><div class="section-top"><h3>${esc(state.name)}</h3>${pill("SV. " + E.level(state).level)}</div><div class="bar-label"><span class="hp-text">${icon("heart")} CAN</span><strong>${r.hp} / ${a.hp}</strong></div>${progress(r.hp, a.hp, "hp")}<div class="bar-label"><span class="mp-text">${icon("gem")} MANA</span><strong>${r.mp} / ${a.mp}</strong></div>${progress(r.mp, a.mp, "mp")}<div class="combo">${icon("flame")} <strong>${r.combo}× seri</strong><span>${r.combo >= a.comboThreshold ? "+" + a.comboXP + " XP bonus" : a.comboThreshold + " doğruda XP bonusu"}</span></div>${r.shield ? '<p class="shield-status">Kalkan etkin · sıradaki hasar yarıya iner</p>' : ""}</section><section class="panel abilities"><div class="section-top"><h3>Yeteneklerin</h3><span>Her oda 1×</span></div>${abilityPanel(r, a, q)}<div class="potion-row">${button(icon("potion") + " Can ×" + (state.inventory.potion || 0), "skill", "secondary", `data-id="potion" ${r.answered ? "disabled" : ""}`)}${button(icon("potion") + " Mana ×" + (state.inventory.ether || 0), "skill", "secondary", `data-id="ether" ${r.answered ? "disabled" : ""}`)}</div><p class="muted">Doğru cevap: +${a.mana} mana.<br>Yanlış cevap: can kaybı. Süre sınırı yok.</p></section><div class="battle-rewards">${icon("chest")}<span>Bu keşifte <b>+${r.earnedXP} XP · ${r.drops.length} loot</b></span></div></aside></div>`
+    `<div class="battle-layout"><div><div class="room-track">${r.queue.map((_, i) => `<div class="${i < r.index ? "done" : i === r.index ? "current" : ""}">${icon(i >= 6 ? "sword" : i < r.index ? "check" : "gem")}<small>${i >= 6 ? "BOSS" : String(i + 1).padStart(2, "0")}</small></div>`).join("")}</div>${questionView(q, r)}</div><aside class="battle-side"><section class="panel vitals"><div class="section-top"><h3>${esc(state.name)}</h3>${pill("SV. " + E.level(state).level)}</div><div class="bar-label"><span class="hp-text">${icon("heart")} CAN</span><strong>${r.hp} / ${a.hp}</strong></div>${progress(r.hp, a.hp, "hp")}<div class="bar-label"><span class="mp-text">${icon("gem")} MANA</span><strong>${r.mp} / ${a.mp}</strong></div>${progress(r.mp, a.mp, "mp")}<div class="combo">${icon("flame")} <strong>${r.combo}× seri</strong><span>${r.combo >= a.comboThreshold ? "+" + a.comboXP + " XP bonus" : a.comboThreshold + " doğruda XP bonusu"}</span></div>${r.shield ? '<p class="shield-status">Kalkan etkin · sıradaki hasar yarıya iner</p>' : ""}</section><section class="panel abilities"><div class="section-top"><h3>Yeteneklerin</h3><span>Her oda 1×</span></div>${abilityPanel(r, a, q)}<div class="potion-row">${button(icon("potion") + " Can ×" + (state.inventory.potion || 0), "skill", "secondary", `data-id="potion" ${r.answered ? "disabled" : ""}`)}${button(icon("potion") + " Mana ×" + (state.inventory.ether || 0), "skill", "secondary", `data-id="ether" ${r.answered ? "disabled" : ""}`)}</div><p class="muted">Doğru cevap: +${a.mana} mana.<br>Yanlış cevap: yaklaşık ${E.incomingDamage(state, q, r)} can. Kalkan ve kaçış bu hasarı azaltır.</p></section><div class="battle-rewards">${icon("chest")}<span>Bu keşifte <b>+${r.earnedXP} XP · ${r.drops.length} loot</b></span></div></aside></div>`
   );
 }
 function results() {
   const r = state.run,
     d = DUNGEONS.find((d) => d.id === r.dungeon),
     won = r.status === "won";
-  return `<div class="results"><div class="result-emblem ${won ? "victory" : ""}">${icon(won ? "chest" : "shield")}</div><span class="eyebrow">${d.rank}-RANK · ${d.name}</span><h1>${won ? "Zindan temizlendi." : "Bugünlük bu kadar."}</h1><p>${won ? "Bilgin derinleşti. Ganimetlerin seni bekliyor." : "Kazandığın XP ve ganimetler sende. Eksiklerini çalış, tekrar gel."}</p><div class="result-stats panel"><div><b>${r.correct} / ${r.queue.length}</b><span>Doğru cevap</span></div><div><b>+${r.earnedXP}</b><span>Deneyim puanı</span></div><div><b>+${r.earnedGold}</b><span>Altın</span></div></div>${r.drops.length ? `<h2>Ganimetlerin</h2><div class="loot-grid">${r.drops.map((id, i) => `<div class="loot-reveal" style="--delay:${i * 0.15}s;--rarity:${RARITIES[E.item(id).rarity].color}">${icon(E.item(id).icon)}<small>${RARITIES[E.item(id).rarity].name}</small><h3>${E.item(id).name}</h3><p>${E.item(id).effect}</p></div>`).join("")}</div>` : ""}<div class="result-actions">${button("Kampa dön", "end-run", "secondary")}${button("Ekipmanları incele " + icon("arrow"), "end-equip", "primary")}</div></div>`;
+  return `<div class="results"><div class="result-emblem ${won ? "victory" : ""}">${icon(won ? "chest" : "shield")}</div><span class="eyebrow">${d.rank}-RANK · ${d.name}</span><h1>${won ? "Zindan temizlendi." : "Bugünlük bu kadar."}</h1><p>${won ? "Bilgin derinleşti. Ganimetlerin seni bekliyor." : "Bu keşif bitti. Aynı zorluğu yeniden denediğinde 1. odadan başlayacaksın. Kalıcı XP ve eşyaların sende."}</p><div class="result-stats panel"><div><b>${r.correct} / ${r.queue.length}</b><span>Doğru cevap</span></div><div><b>+${r.earnedXP}</b><span>Deneyim puanı</span></div><div><b>+${r.earnedGold}</b><span>Altın</span></div></div>${r.drops.length ? `<h2>Ganimetlerin</h2><div class="loot-grid">${r.drops.map((id, i) => `<div class="loot-reveal" style="--delay:${i * 0.15}s;--rarity:${RARITIES[E.item(id).rarity].color}">${icon(E.item(id).icon)}<small>${RARITIES[E.item(id).rarity].name}</small><h3>${E.item(id).name}</h3><p>${E.item(id).effect}</p></div>`).join("")}</div>` : ""}<div class="result-actions">${!won ? button("Aynı zorluğu baştan dene", "retry-run", "primary") : ""}${button("Kampa dön", "end-run", "secondary")}${button("Ekipmanları incele " + icon("arrow"), "end-equip", "primary")}</div></div>`;
 }
 function training() {
   const ctx = state.training,
@@ -352,6 +401,9 @@ function training() {
       ["mc", "Çoktan seçmeli"],
       ["tf", "Doğru / yanlış"],
       ["match", "Eşleştirme"],
+      ["multi", "Çoklu seçim"],
+      ["order", "Sıralama"],
+      ["short", "Kısa yanıt"],
     ]
       .map(
         ([v, n]) =>
@@ -359,7 +411,7 @@ function training() {
       )
       .join(
         "",
-      )}</select></label><label>ZORLUK<select id="train-difficulty"><option value="">Bütün seviyeler</option>${[1, 2, 3, 4, 5].map((v) => `<option value="${v}" ${Number(trainingFilters.difficulty) === v ? "selected" : ""}>${v} · ${["Temel", "Uygulama", "Analiz", "İleri", "Ustalık"][v - 1]}</option>`).join("")}</select></label><label class="checkbox-label"><input id="train-weak" type="checkbox" ${trainingFilters.weak ? "checked" : ""}> Yanlış yaptıklarım</label>${button("Antrenmana başla " + icon("arrow"), "train-start", "primary")}</section>${ctx && q ? `<div class="training-meta"><span>${pill("GÜVENLİ ALAN", "green")} İlk doğru çözüm: +6 XP / soru / gün</span>${button(icon("eye") + " Ücretsiz ipucu", "training-hint", "secondary", ctx.answered ? "disabled" : "")}</div>${questionView(q, ctx, true)}` : `<div class="training-empty panel"><div class="activity-icon green">${icon("training")}</div><h2>Burası senin deneme alanın.</h2><p>Konu seç, soruları çöz, açıklamaları oku.<br>Hata yapmanın hiçbir cezası yok.</p><div class="training-benefits"><span>${icon("heart")} Can kaybı yok</span><span>${icon("eye")} Ücretsiz ipuçları</span><span>${icon("book")} Ayrıntılı açıklamalar</span></div></div>`}`
+      )}</select></label><label>ZORLUK<select id="train-difficulty"><option value="">Bütün seviyeler</option>${[1, 2, 3, 4, 5].map((v) => `<option value="${v}" ${Number(trainingFilters.difficulty) === v ? "selected" : ""}>${v} · ${["Temel", "Uygulama", "Analiz", "İleri", "Ustalık"][v - 1]}</option>`).join("")}</select></label><label class="checkbox-label"><input id="train-weak" type="checkbox" ${trainingFilters.weak ? "checked" : ""}> Yanlış yaptıklarım</label>${button("Antrenmana başla " + icon("arrow"), "train-start", "primary")}</section>${ctx && q ? `<div class="training-meta"><span>${pill("GÜVENLİ ALAN", "green")} İlk doğru çözüm: +6–12 XP / soru / gün</span>${button(icon("eye") + " Ücretsiz ipucu", "training-hint", "secondary", ctx.answered ? "disabled" : "")}</div>${questionView(q, ctx, true)}` : `<div class="training-empty panel"><div class="activity-icon green">${icon("training")}</div><h2>Burası senin deneme alanın.</h2><p>Konu seç, soruları çöz, açıklamaları oku.<br>Hata yapmanın hiçbir cezası yok.</p><div class="training-benefits"><span>${icon("heart")} Can kaybı yok</span><span>${icon("eye")} Ücretsiz ipuçları</span><span>${icon("book")} Ayrıntılı açıklamalar</span></div></div>`}`
   );
 }
 function codex() {
@@ -388,7 +440,7 @@ function codex() {
             .join("")}</div>`
         : codexTab === "wrong"
           ? wrong.length
-            ? `<div class="wrong-list">${wrong.map((q) => `<details class="panel"><summary><span>${pill(TOPICS[q.topic])}<strong>${esc(q.prompt)}</strong></span><span>${state.mastery[q.id].wrong} yanlış ${icon("arrow")}</span></summary>${q.code ? "<pre>" + esc(q.code) + "</pre>" : ""}<p class="correct-text">Doğru cevap: ${q.type === "match" ? q.options.map((o, i) => esc(o) + " → " + esc(q.answer[i])).join(" · ") : esc(q.options[q.answer])}</p><p>${esc(q.explanation)}</p></details>`).join("")}</div>`
+            ? `<div class="wrong-list">${wrong.map((q) => `<details class="panel"><summary><span>${pill(TOPICS[q.topic])}<strong>${esc(q.prompt)}</strong></span><span>${state.mastery[q.id].wrong} yanlış ${icon("arrow")}</span></summary>${q.code ? "<pre>" + esc(q.code) + "</pre>" : ""}<p class="correct-text">Doğru cevap: ${esc(answerLabel(q))}</p><p>${esc(q.explanation)}</p></details>`).join("")}</div>`
             : `<div class="empty panel">${icon("check")}<h2>Henüz yanlışın yok.</h2><p>Yanlış çözdüğün her soru açıklamasıyla burada birikir.</p></div>`
           : `<section class="panel personal-notes"><label for="personal-notes">Avcı notların</label><textarea id="personal-notes" maxlength="30000" placeholder="Kendi örneklerini, formüllerini ve aklında kalmasını istediğin şeyleri yaz…">${esc(state.notebooks[state.course] || "")}</textarea><div class="section-top"><small>Hesabına giriş yaptıysan notların da buluta kaydedilir.</small>${button("Notları kaydet", "save-notes", "primary")}</div></section>`
     }`
@@ -442,7 +494,7 @@ function settings() {
       "Kendi ritmini bul",
       "İlerlemen otomatik kaydedilir.",
     ) +
-    `<section class="panel settings-panel"><label>AVCI ADIN<input id="hunter-name" value="${esc(state.name)}" maxlength="24"></label>${button("Adı kaydet", "save-name", "primary")}<hr><label class="checkbox-label"><input type="checkbox" id="sound" ${state.settings.sound ? "checked" : ""}> Cevap seslerini aç</label><hr><h3>Hesap & kayıt</h3><p>${user ? "Hesabına bağlı ilerleme cihazlar arasında taşınır." : "Misafir ilerlemesi yalnızca bu tarayıcıda saklanır. Kalıcı bulut kaydı için giriş yap."}</p>${button(user ? "Hesabımı görüntüle" : "Giriş yap / hesap oluştur", "account", "secondary")}<hr><h3>Oyun kuralları</h3><p>Zindanlarda 8 soru bulunur; son iki oda boss karşılaşmasıdır. Doğru cevaplar mana, XP ve altın verir. Üç doğru üst üste +6 XP bonusu getirir. Canın biterse koşu sonlanır; kazandığın ödüller kalır.</p><p>Ekipmanı kampta değiştirebilirsin. Aktif yetenekler sınıfına ve kuşandığın silaha göre açılır. İkinci Şans dışında oda başına birer kez kullanılabilir. İlk zindan zaferinde bir cheat sheet garanti düşer.</p><p>Antrenmanda günde her farklı sorunun ilk doğru çözümü +6 XP verir. 5 farklı doğru çözüm 35 altın ve bir Can İksiri kazandırır. Kamptaki Simyacıdan altınla Can ve Mana İksiri alabilirsin. Bonus notlar, ilgili cheat sheet ganimetini bulunca Bilgi defterinde açılır.</p><p class="muted">v0.2.0 · Sorular şimdilik örnek içeriktir. Kaynak slaytlar henüz eklenmedi. Aynı zorlukta havuz tükenmeden soru tekrarı yapılmaz; şık sıraları her keşifte değişir.</p></section>`
+    `<section class="panel settings-panel"><label>AVCI ADIN<input id="hunter-name" value="${esc(state.name)}" maxlength="24"></label>${button("Adı kaydet", "save-name", "primary")}<hr><label class="checkbox-label"><input type="checkbox" id="sound" ${state.settings.sound ? "checked" : ""}> Cevap seslerini aç</label><hr><h3>Hesap & kayıt</h3><p>${user ? "Hesabına bağlı ilerleme cihazlar arasında taşınır." : "Misafir ilerlemesi yalnızca bu tarayıcıda saklanır. Kalıcı bulut kaydı için giriş yap."}</p>${button(user ? "Hesabımı görüntüle" : "Giriş yap / hesap oluştur", "account", "secondary")}<hr><h3>Oyun kuralları</h3><p>Zindanlarda 8 soru bulunur; son iki oda boss karşılaşmasıdır. Doğru cevaplar mana, XP ve altın verir. Üç doğru üst üste +6 XP bonusu getirir. Canın biterse koşu sonlanır; kazandığın ödüller kalır.</p><p>Ekipmanı kampta değiştirebilirsin. Aktif yetenekler sınıfına ve kuşandığın silaha göre açılır. İkinci Şans dışında oda başına birer kez kullanılabilir. İlk zindan zaferinde bir cheat sheet garanti düşer.</p><p>Antrenmanda günde her farklı sorunun ilk doğru çözümü +6 XP verir. 5 farklı doğru çözüm 35 altın ve bir Can İksiri kazandırır. Kamptaki Simyacıdan altınla Can ve Mana İksiri alabilirsin. Bonus notlar, ilgili cheat sheet ganimetini bulunca Bilgi defterinde açılır.</p><p class="muted">v${VERSION} · Sorular şimdilik örnek içeriktir. Kaynak slaytlar henüz eklenmedi. Aynı zorlukta havuz tükenmeden soru tekrarı yapılmaz; şık sıraları her keşifte değişir.</p></section>`
   );
 }
 function modal(content) {
@@ -543,6 +595,7 @@ async function loadUser(u) {
 }
 function navigate(p) {
   page = p;
+  if (p === "leaderboard") fetchBoard();
   if (p === "training" && state.training)
     trainingFilters = state.training.filters;
   render();
@@ -562,9 +615,10 @@ function mutate(fn) {
     const draftForm = $("#answer-form"),
       draftCtx = page === "training" ? state.training : state.run;
     if (draftForm && draftCtx && !draftCtx.answered)
-      draftCtx.matchDraft = Array.from(
-        draftForm.querySelectorAll("select"),
-      ).map((n) => n.value);
+      draftCtx.draft = readQuestionForm(
+        draftForm,
+        E.displayQuestion(state, page === "training"),
+      );
     const oldLevel = E.level(state).level;
     fn();
     save();
@@ -653,6 +707,8 @@ document.addEventListener("click", async (e) => {
     }
     user = null;
     userProfile = null;
+    boardData = null;
+    rankedSession = null;
     sessionExpired = false;
     store.user = null;
     store.pending = null;
@@ -687,6 +743,8 @@ document.addEventListener("click", async (e) => {
   if (act === "select-course") {
     mutate(() => {
       E.switchCourse(state, id);
+      rankedSession = null;
+      boardData = null;
       page = "camp";
       trainingFilters = { topic: null, type: "", weak: false };
     });
@@ -731,6 +789,35 @@ document.addEventListener("click", async (e) => {
   }
   if (act === "unlock") {
     mutate(() => E.unlock(state, id));
+    return;
+  }
+  if (act === "open-room") {
+    mutate(() => E.enterRoom(state, Number(id)));
+    return;
+  }
+  if (act === "retry-run") {
+    mutate(() => E.retryRun(state));
+    return;
+  }
+  if (act === "rank-start" || act === "rank-resume") {
+    await loadRanked();
+    return;
+  }
+  if (act === "rank-refresh") {
+    await fetchBoard();
+    return;
+  }
+  if (act === "rank-answer") {
+    await submitRanked(Number(id));
+    return;
+  }
+  if (act === "rank-next") {
+    await loadRanked();
+    return;
+  }
+  if (act === "rank-back") {
+    rankedSession = null;
+    await fetchBoard();
     return;
   }
   if (act === "answer") {
@@ -810,15 +897,27 @@ document.addEventListener("click", async (e) => {
   }
 });
 document.addEventListener("submit", async (e) => {
-  if (e.target.id === "answer-form") {
+  if (e.target.id === "answer-form" || e.target.id === "rank-answer-form") {
     e.preventDefault();
-    const values = E.displayQuestion(state, page === "training").options.map(
-      (_, i) => e.target.elements["match" + i].value,
-    );
-    mutate(() => {
-      const f = E.answer(state, values, page === "training");
-      sound(f.correct);
-    });
+    const ranked = e.target.id === "rank-answer-form",
+      q = ranked
+        ? rankedSession.question
+        : E.displayQuestion(state, page === "training"),
+      value = readQuestionForm(e.target, q);
+    if (q.type === "multi" && !value.length) {
+      toast("En az bir seçenek işaretle.");
+      return;
+    }
+    if (q.type === "order" && new Set(value).size !== value.length) {
+      toast("Her adımı bir kez kullan.");
+      return;
+    }
+    if (ranked) await submitRanked(value);
+    else
+      mutate(() => {
+        const f = E.answer(state, value, page === "training");
+        sound(f.correct);
+      });
     return;
   }
   if (["auth-form", "claim-form", "reset-form"].includes(e.target.id)) {
@@ -926,7 +1025,7 @@ function authGate() {
   const signup = authMode === "signup",
     recover = authMode === "recover",
     legacy = authMode === "legacy";
-  return `<div class="auth-world"><div class="auth-world-art">${portalArt("auth")}</div><div class="auth-world-copy"><a class="brand"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>KNOWLEDGE IS POWER</small></span></a><span class="eyebrow">HER DERS BAŞKA BİR DÜNYA</span><h1>Bilgiyle uyan.<br><em>Kendi yolunu çiz.</em></h1><p>Bir sınıf seç. Zindanlara gir.<br>Öğrendiklerini kalıcı güce dönüştür.</p><div class="auth-world-meta"><span>3 sınıf · 45 yetenek</span><span>89 ganimet · 5 zorluk</span></div></div><section class="auth-box panel"><span class="eyebrow">AVCI KAYDI</span><h2>${signup ? "Bir avcı uyanıyor." : recover ? "Geçidi yeniden aç." : legacy ? "Eski hesabını taşı." : "Keşfine devam et."}</h2><p>${recover ? "Kurtarma e-postası eklediğin hesabın için sıfırlama bağlantısı iste." : signup ? "Kullanıcı adın ve şifren yeterli. E-posta doğrulaması yok." : "Kullanıcı adınla giriş yap. İlerlemen kaldığın yerde."}</p><form id="auth-form" data-mode="${authMode}">${legacy ? '<label>E-posta<input name="email" type="email" required autocomplete="email"></label>' : '<label>Kullanıcı adı<input name="username" required pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" autocomplete="username" placeholder="ege_avci"></label>'}${!recover ? `<label>Şifre<input name="password" type="password" minlength="8" maxlength="128" required autocomplete="${signup ? "new-password" : "current-password"}" placeholder="En az 8 karakter"></label>` : ""}${signup ? '<label>Kurtarma e-postası <small>isteğe bağlı</small><input name="email" type="email" autocomplete="email" placeholder="İstersen boş bırak"></label><p class="auth-privacy">Kurtarma adresi eklemezsen şifreni e-posta ile sıfırlayamazsın. Oynamak için adres veya doğrulama gerekmez.</p>' : ""}<div id="auth-error" role="status" class="form-message"></div><button type="submit" class="btn primary wide">${signup ? "Hesabını oluştur" : recover ? "Bağlantı gönder" : "Giriş yap"} ${icon("arrow")}</button></form><div class="auth-switch">${signup ? "Hesabın var mı?" : "İlk kez mi geliyorsun?"}${button(signup ? "Giriş yap" : "Hesap oluştur", "auth-mode", "text", `data-id="${signup ? "login" : "signup"}"`)}</div><div class="auth-links">${button("Şifremi unuttum", "auth-mode", "text", 'data-id="recover"')}${button(legacy ? "Kullanıcı adıyla giriş" : "Önceki e-posta hesabım var", "auth-mode", "text", `data-id="${legacy ? "login" : "legacy"}"`)}</div></section></div>`;
+  return `<div class="auth-world"><div class="auth-world-art">${portalArt("auth")}</div><div class="auth-world-copy"><a class="brand"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>KNOWLEDGE IS POWER</small></span></a><span class="eyebrow">HER DERS BAŞKA BİR DÜNYA</span><h1>Bilgiyle uyan.<br><em>Kendi yolunu çiz.</em></h1><p>Bir sınıf seç. Zindanlara gir.<br>Öğrendiklerini kalıcı güce dönüştür.</p><div class="auth-world-meta"><span>3 sınıf · ${SKILLS.length} yetenek</span><span>89 ganimet · 6 soru türü</span></div></div><section class="auth-box panel"><span class="eyebrow">AVCI KAYDI</span><h2>${signup ? "Bir avcı uyanıyor." : recover ? "Geçidi yeniden aç." : legacy ? "Eski hesabını taşı." : "Keşfine devam et."}</h2><p>${recover ? "Kurtarma e-postası eklediğin hesabın için sıfırlama bağlantısı iste." : signup ? "Kullanıcı adın ve şifren yeterli. E-posta doğrulaması yok." : "Kullanıcı adınla giriş yap. İlerlemen kaldığın yerde."}</p><form id="auth-form" data-mode="${authMode}">${legacy ? '<label>E-posta<input name="email" type="email" required autocomplete="email"></label>' : '<label>Kullanıcı adı<input name="username" required pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" autocomplete="username" placeholder="ege_avci"></label>'}${!recover ? `<label>Şifre<input name="password" type="password" minlength="8" maxlength="128" required autocomplete="${signup ? "new-password" : "current-password"}" placeholder="En az 8 karakter"></label>` : ""}${signup ? '<label>Kurtarma e-postası <small>isteğe bağlı</small><input name="email" type="email" autocomplete="email" placeholder="İstersen boş bırak"></label><p class="auth-privacy">Kurtarma adresi eklemezsen şifreni e-posta ile sıfırlayamazsın. Oynamak için adres veya doğrulama gerekmez.</p>' : ""}<div id="auth-error" role="status" class="form-message"></div><button type="submit" class="btn primary wide">${signup ? "Hesabını oluştur" : recover ? "Bağlantı gönder" : "Giriş yap"} ${icon("arrow")}</button></form><div class="auth-switch">${signup ? "Hesabın var mı?" : "İlk kez mi geliyorsun?"}${button(signup ? "Giriş yap" : "Hesap oluştur", "auth-mode", "text", `data-id="${signup ? "login" : "signup"}"`)}</div><div class="auth-links">${button("Şifremi unuttum", "auth-mode", "text", 'data-id="recover"')}${button(legacy ? "Kullanıcı adıyla giriş" : "Önceki e-posta hesabım var", "auth-mode", "text", `data-id="${legacy ? "login" : "legacy"}"`)}</div></section></div>`;
 }
 function claimScreen() {
   return `<div class="center-gate"><section class="panel auth-box"><span class="eyebrow">ESKİ KAYDIN KORUNDU</span><h2>Kullanıcı adını seç.</h2><p>Mevcut karakterin ve eşyaların aynı hesapta kalacak. Bundan sonra bu adla giriş yapacaksın.</p><form id="claim-form"><label>Kullanıcı adı<input name="username" required pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" autocomplete="username"></label><div id="auth-error" class="form-message" role="status"></div><button type="submit" class="btn primary wide">Adı kaydet</button></form></section></div>`;
@@ -935,7 +1034,7 @@ function resetScreen() {
   return `<div class="center-gate"><section class="panel auth-box"><h2>Yeni şifreni belirle.</h2><form id="reset-form"><label>Yeni şifre<input name="password" required type="password" minlength="8" maxlength="128" autocomplete="new-password"></label><div id="auth-error" class="form-message" role="status"></div><button type="submit" class="btn primary wide">Şifreyi güncelle</button></form></section></div>`;
 }
 function classScreen() {
-  return `<main class="class-selection"><a class="brand"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>THE AWAKENING</small></span></a>${heading("UYANIŞ ANI", "Nasıl bir avcı olacaksın?", "Sınıf seçimin bütün derslerde geçerli. Her sınıfta 15 kalıcı yetenek var.")}<div class="three-grid class-cards">${CLASSES.map((c) => `<article class="panel class-card" style="--class-color:${c.color}"><div class="class-emblem">${icon(c.icon)}</div><span class="eyebrow">${c.tag}</span><h2>${c.name}</h2><p>${c.desc}</p><div class="class-unique">${c.unique}</div><div class="class-starter">Başlangıç yeteneği: ${c.starter === "eliminate" ? "Eleme" : c.starter === "shield" ? "Rün Kalkanı" : "Keskin Odak"}</div>${button("Bu yolu seç " + icon("arrow"), "select-class", "primary wide", `data-id="${c.id}"`)}</article>`).join("")}</div><p class="class-note">Sınıf seçimi kalıcıdır. Önceki sürümden gelen XP ve eşyaların korunur; eski yetenek puanların yeni ağaç için geri verilir.</p></main>`;
+  return `<main class="class-selection"><a class="brand"><img src="./sigil.svg" alt=""><span>STUDY RIFT<small>THE AWAKENING</small></span></a>${heading("UYANIŞ ANI", "Nasıl bir avcı olacaksın?", "Sınıf seçimin bütün derslerde geçerli. Her sınıfta 16 kalıcı yetenek var.")}<div class="three-grid class-cards">${CLASSES.map((c) => `<article class="panel class-card" style="--class-color:${c.color}"><div class="class-emblem">${icon(c.icon)}</div><span class="eyebrow">${c.tag}</span><h2>${c.name}</h2><p>${c.desc}</p><div class="class-unique">${c.unique}</div><div class="class-starter">Başlangıç yeteneği: ${c.starter === "eliminate" ? "Eleme" : c.starter === "shield" ? "Rün Kalkanı" : "Keskin Odak"}</div>${button("Bu yolu seç " + icon("arrow"), "select-class", "primary wide", `data-id="${c.id}"`)}</article>`).join("")}</div><p class="class-note">Sınıf seçimi kalıcıdır. Önceki sürümden gelen XP ve eşyaların korunur; eski yetenek puanların yeni ağaç için geri verilir.</p></main>`;
 }
 function courses() {
   return (
@@ -1008,4 +1107,166 @@ try {
   busy = false;
   render();
   toast("Hesap bağlantısı kurulamadı. Giriş yaparak tekrar dene.");
+}
+
+function roomMap() {
+  const r = state.run,
+    d = DUNGEONS.find((d) => d.id === r.dungeon),
+    a = E.attributes(state),
+    cells = [
+      [1, 1],
+      [2, 1],
+      [3, 1],
+      [3, 2],
+      [2, 2],
+      [1, 2],
+      [1, 3],
+      [2, 3],
+    ];
+  return (
+    heading(
+      d.rank + "-RANK · " + E.course(state).realm,
+      d.name + " · Oda haritası",
+      "Her oda bir sınav. Bir odayı temizlemeden sonraki mühür açılmaz.",
+      button("Kampa çekil", "retreat", "secondary"),
+    ) +
+    `<div class="expedition-layout"><section class="panel map-panel"><div class="map-topline"><span>${r.index}/8 oda temizlendi</span>${pill("KEŞİF DEVAM EDİYOR", "green")}</div><div class="dungeon-rooms"><svg class="room-path" viewBox="0 0 600 420" preserveAspectRatio="none" aria-hidden="true"><path d="M100 70H500V210H100V350H300" fill="none" stroke="#483c5b" stroke-width="2" stroke-dasharray="6 7"/></svg>${E.ROOMS.map((room, i) => `<button class="room-node ${i < r.index ? "cleared" : i === r.index ? "unsealed" : "sealed"} ${room.kind === "BOSS" ? "boss-node" : ""}" style="grid-column:${cells[i][0]};grid-row:${cells[i][1]}" data-action="open-room" data-id="${i}" ${i !== r.index ? "disabled" : ""}><span class="room-number">${String(i + 1).padStart(2, "0")}</span><span class="room-symbol">${icon(i < r.index ? "check" : i > r.index ? "lock" : room.icon)}</span><strong>${room.name}</strong><small>${i < r.index ? "TEMİZLENDİ" : i === r.index ? "ODAYA GİR" : room.kind}</small></button>`).join("")}</div><div class="map-legend"><span>◈ Açık oda</span><span>✓ Temizlenmiş</span><span>${icon("lock")} Mühürlü</span></div></section><aside class="panel expedition-brief"><span class="eyebrow">SIRADAKİ ODA</span><h2>${E.ROOMS[r.index].name}</h2><p>${r.index >= 6 ? "Boss soruları daha zor ve daha fazla hasar verir. Hazır olduğunda mührü aç." : r.index === 2 ? "Elit nöbetçi hatalarını ağır cezalandırır. Kalkan veya ipucunu düşün." : "Bilgini sınayacak yeni bir soru seni bekliyor."}</p><div class="bar-label"><span>CAN</span><strong>${r.hp}/${a.hp}</strong></div>${progress(r.hp, a.hp, "hp")}<div class="bar-label"><span>MANA</span><strong>${r.mp}/${a.mp}</strong></div>${progress(r.mp, a.mp, "mp")}${button("Odaya gir " + icon("arrow"), "open-room", "primary wide", `data-id="${r.index}"`)}<p class="map-death-rule">${icon("shield")} Ölürsen bu zorluğa 1. odadan dönersin. Ölümden dönüş ve İkinci Şans, kendi kullanım sınırlarıyla istisna sağlar.</p></aside></div>`
+  );
+}
+async function fetchBoard() {
+  if (!user) return;
+  boardLoading = true;
+  boardError = "";
+  const c = state.course;
+  try {
+    const data = await masteryRequest("board", { course: c });
+    if (state.course === c) boardData = data;
+  } catch (e) {
+    boardError = e.message;
+  } finally {
+    boardLoading = false;
+    if (page === "leaderboard") render();
+  }
+}
+async function loadRanked() {
+  if (quizBusy) return;
+  quizBusy = true;
+  boardError = "";
+  render();
+  try {
+    const data = await masteryRequest("resume", { course: state.course });
+    rankedSession = { ...data, phase: data.question ? "question" : "results" };
+  } catch (e) {
+    boardError = e.message;
+    toast(e.message);
+  } finally {
+    quizBusy = false;
+    render();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+}
+async function submitRanked(value) {
+  if (quizBusy || !rankedSession?.question || rankedSession.feedback) return;
+  const old = rankedSession,
+    c = old.attempt.course;
+  const form = $("#rank-answer-form");
+  if (form) old.draft = value;
+  quizBusy = true;
+  render();
+  try {
+    const data = await masteryRequest("answer", {
+      course: c,
+      attemptId: old.attempt.id,
+      cursor: old.attempt.cursor,
+      questionId: old.question.id,
+      value,
+    });
+    rankedSession = { ...data, phase: "feedback" };
+    sound(data.feedback.correct);
+  } catch (e) {
+    toast(e.message);
+    if (e.code === "cursor_changed") {
+      try {
+        const data = await masteryRequest("resume", { course: c });
+        rankedSession = {
+          ...data,
+          phase: data.question ? "question" : "results",
+        };
+      } catch (resumeError) {
+        toast(resumeError.message);
+      }
+    }
+  } finally {
+    quizBusy = false;
+    render();
+  }
+}
+function leaderboard() {
+  if (rankedSession) return masteryExam();
+  const own = boardData?.own,
+    rows = boardData?.entries || [];
+  return (
+    heading(
+      "XP’DEN BAĞIMSIZ · SUNUCUDA PUANLANIR",
+      "Ustalık tablosu",
+      E.course(state).name + " · " + (boardData?.date || E.today()),
+      button(
+        icon("chart") + " Yenile",
+        "rank-refresh",
+        "secondary",
+        boardLoading ? "disabled" : "",
+      ),
+    ) +
+    `<div class="mastery-hero panel"><div><span class="eyebrow">AYNI SET. AYNI KURALLAR.</span><h2>Gücünü değil,<br><em>bilgini yarıştır.</em></h2><p>Bugünün 10 sorusu herkes için aynı. Sınıf, ekipman, XP ve hız bonusu yok. Her zorluktan iki soru; en fazla 200 puan.</p><div class="mastery-tags"><span>${icon("shield")} Yetenekler kapalı</span><span>${icon("book")} Günlük tek hak</span><span>${icon("check")} Eşit skora eşit sıra</span></div></div><div class="mastery-ticket"><span>GÜNLÜK USTALIK</span><strong>${own?.completed ? own.score + "/200" : own ? own.cursor + "/10" : "10 soru"}</strong><p>${own?.completed ? own.correct + " doğru · sınav tamamlandı" : own ? "Yarım bıraktığın yerden devam et." : "Süre sınırı yok. Hazır olduğunda başla."}</p>${button(own?.completed ? "Sonucumu incele" : own ? "Sınava devam et" : "Bugünün sınavına gir", "rank-start", "primary wide", quizBusy || boardLoading ? "disabled" : "")}</div></div>${boardError ? `<div class="notice"><p>${esc(boardError)}</p></div>` : ""}<div class="panel leaderboard-panel"><div class="section-top"><h2>Bugünün sıralaması</h2><span>En fazla 100 avcı · Türkiye saati</span></div>${boardLoading && !boardData ? '<div class="empty">Sıralama yükleniyor…</div>' : rows.length ? `<div class="table-wrap"><table class="mastery-table"><thead><tr><th>SIRA</th><th>AVCI</th><th>USTALIK PUANI</th><th>DOĞRU</th></tr></thead><tbody>${rows.map((row) => `<tr class="${row.isMe ? "my-rank" : ""}"><td><span class="rank-medal">${row.rank <= 3 ? "♜" : "#"} ${row.rank}</span></td><td>${esc(row.username)} ${row.isMe ? pill("SEN", "green") : ""}</td><td><strong>${row.score}</strong> <small>/200</small></td><td>${row.correct}/10</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">${icon("chart")}<h3>Bugünün ilk sonucu henüz yok.</h3><p>Sınavı bitiren avcılar burada görünür. Örnek veya sahte oyuncu gösterilmez.</p></div>`}</div><div class="notice">${icon("shield")}<p>Her gün Türkiye saatiyle 00.00’da yeni sınav açılır. Zorluk 1–5 için doğru cevap puanları sırasıyla 10, 15, 20, 25, 30’dur. Çoklu seçim ve sıralamada tam doğruluk gerekir. Sıralama puanı oyun XP’sine eklenmez.</p></div>`
+  );
+}
+function masteryExam() {
+  const rs = rankedSession,
+    a = rs.attempt;
+  if (rs.phase === "results") {
+    return (
+      heading(
+        "GÜNLÜK USTALIK TAMAMLANDI",
+        "Bilginin sonucu",
+        E.course(state).name,
+        button("Sıralamaya dön", "rank-back", "secondary"),
+      ) +
+      `<div class="mastery-result panel"><div class="result-emblem victory">${icon("chart")}</div><h1>${a.score}<small> / 200</small></h1><p>${a.correct} doğru · ${a.total - a.correct} yanlış · ${a.date}</p><div class="mastery-tags"><span>Sınıf bonusu: 0</span><span>XP bonusu: 0</span><span>Hız bonusu: 0</span></div></div><h2 class="review-heading">Soruların incelemesi</h2><div class="wrong-list">${(rs.review || []).map((q, i) => `<details class="panel"><summary><span>${pill(QUESTION_TYPES[q.type])}<strong>${i + 1}. ${esc(q.prompt)}</strong></span><span class="${q.result.correct ? "correct-text" : "wrong-text"}">${q.result.correct ? "✓" : "×"} +${q.result.points}</span></summary><p class="correct-text">Doğru yanıt: ${esc(answerLabel(q))}</p><p>${esc(q.explanation)}</p></details>`).join("")}</div>`
+    );
+  }
+  const ctx = {
+      answered: !!rs.feedback,
+      feedback: rs.feedback,
+      draft: rs.draft,
+      hint: false,
+    },
+    n = rs.feedback ? a.cursor : a.cursor + 1;
+  return (
+    heading(
+      "SABİT KOŞULLAR · GÜNLÜK TEK DENEME",
+      "Günlük Ustalık",
+      `Soru ${n}/10 · Herkesle aynı soru seti`,
+      button("Ara ver · kayıt korunur", "rank-back", "secondary"),
+    ) +
+    `<div class="mastery-exam-bar panel"><span>${icon("book")} ${n}/10</span>${progress(a.cursor, 10, "xp")}<strong>${a.score}/200 PUAN</strong></div><div class="mastery-disabled">${icon("shield")} Bu modda ekipman, yetenek, ipucu, can ve mana kullanılmaz. Süre sınırı yok.</div>${quizBusy ? '<div class="server-check" role="status">Yanıt sunucuda kontrol ediliyor…</div>' : ""}${questionView(rs.question, ctx, false, true)}`
+  );
+}
+function patches() {
+  return (
+    heading(
+      "SÜRÜM GEÇMİŞİ",
+      "Yama notları",
+      "Üç parça: ana sürüm · özellik sürümü · düzeltme. Her parça bağımsız tam sayıdır.",
+      pill("v" + VERSION, "purple"),
+    ) +
+    `<div class="notice semver-note">${icon("scroll")}<p><strong>0.3.9 → 0.3.10</strong> geçerlidir. 10’a gelince üst sürüme taşma olmaz. <strong>1.20.0</strong> da geçerli bir sürümdür.</p></div><div class="release-timeline">${[
+      ...RELEASES,
+    ]
+      .sort((a, b) => compareVersions(b.version, a.version))
+      .map(
+        (r, i) =>
+          `<article class="release panel"><header><div><span class="release-version">v${r.version}</span>${i === 0 ? pill("GÜNCEL", "green") : ""}</div><time datetime="${r.date}">${new Date(r.date + "T12:00:00+03:00").toLocaleDateString("tr-TR")}</time></header><h2>${r.title}</h2>${r.groups.map((g) => `<section><h3>${g.title}</h3><ul>${g.items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul></section>`).join("")}</article>`,
+      )
+      .join("")}</div>`
+  );
 }

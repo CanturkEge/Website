@@ -1,11 +1,11 @@
-# Study Rift · v0.2.0
+# Study Rift · v0.3.0
 
 A standalone Turkish study dungeon RPG served at `/study-rift/` by the existing GitHub Pages site. The website homepage is unchanged.
 
 ## Current game
 
 - Mandatory username/password accounts. Email is optional, only for recovery. New Study Rift accounts do not require email confirmation; other apps' Auth configuration is unchanged.
-- Choose a permanent class: **Rün Bilgesi**, **Rift Muhafızı**, or **Gölge Gezgin**. Each has **15 branched nodes** and a unique starting ability. Root is free; each subsequent level gives 2 points. All 45 node effects are connected to the engine.
+- Choose a permanent class: **Rün Bilgesi**, **Rift Muhafızı**, or **Gölge Gezgin**. Each has **16 branched nodes** and a unique starting ability. Root is free; each subsequent level gives 2 points. All 48 node effects are connected to the engine.
 - Class-specific actions include correct matching pairs (Kehanet), a single reward-free correction (İkinci Şans), conversion of HP to MP, shields, evasion, and a risky XP wager.
 - **89 catalog items**: 17 original items and 72 combinations of 18 equipment families × 4 rarities. Gear has actual stat differences; some open abilities. Topic-specific cheat sheets unlock notes and give limited free hints.
 - Rank-weighted loot excludes currently owned equipment and prefers families outside the last four drops. No selected-rarity candidates → another allowed rarity; no eligible equipment left → consumable + essence. D+ rank has a quality guarantee after 5 drops (3 with the appropriate Ranger node). Consumables stack. Salvaged items may become eligible again; there is no claim of an infinite unique catalog.
@@ -17,11 +17,25 @@ A standalone Turkish study dungeon RPG served at `/study-rift/` by the existing 
 
 ## Content and adding courses
 
-**84 original OOD sample questions, including 48 additional application/analysis/advanced/mastery scenarios. No professor slides have been imported.** Every question displays its source status. High-tier distractors distinguish closely related concepts, rather than just asking for definitions.
+**168 original OOD sample questions across six formats, including 84 new multi-select, sequence-ordering and short-answer questions. No professor slides have been imported.** Every question displays its source status. High-tier distractors distinguish closely related concepts, rather than just asking for definitions.
 
-`courses.js` is the course registry. `game-data.js` combines catalog data. Add a course entry with a unique ID, topics, realm, theme and lock status. Add source-backed question objects with that `course` ID, globally unique question IDs, topic index, difficulty 1–5, type `mc`/`tf`/`match`, options, answer, explanation, hint, and source filename/slide. MC/TF answers are integer indices; matching answers are parallel arrays of right-side labels. Add the course's notes and course-tagged cheat sheets.
+`courses.js` is the course registry. `game-data.js` combines catalog data. Add a course entry with a unique ID, topics, realm, theme and lock status. Add source-backed question objects with that `course` ID, globally unique question IDs, topic index, difficulty 1–5, type `mc`/`tf`/`match`/`multi`/`order`/`short`, options, answer, explanation, hint, and source filename/slide. MC/TF answers are integer indices; matching answers are parallel arrays of right-side labels; multi answers are an exact set of integer indices; order answers are the ordered labels; short answers are a nonempty array of accepted string aliases. Add the course's notes and course-tagged cheat sheets.
 
 Leave a course locked until its content is ready. At least 8 questions per difficulty is the minimum engine/test requirement; larger, balanced topic/format banks are preferable. The client doesn't upload or parse slides and does not call an AI service. The assistant can import reviewed slide content through repository changes.
+
+## Rooms and daily mastery
+
+Each dungeon has eight rooms, opened sequentially. A wrong answer has base damage `34 + 8 × question difficulty + 5 × rank index`, with +8 for the elite room and +12 for boss rooms before defenses and reduction. Shields, evasion and class passives mitigate this. Death prevents advancing; restarting the same rank begins at room one with a fresh queue. Existing once-per-run second-chance/phoenix abilities are explicit exceptions. Previous v0.2 active runs preserve their current question and continue into the map afterward.
+
+The **Ustalık tablosu** is independent of game XP and equipment. The authenticated `study-rift-mastery` function creates one frozen set per course per Istanbul calendar day: 2 questions from each difficulty, 10 total, maximum 200 points. Correct answers award 10/15/20/25/30 by difficulty. No speed, class, skill, hints or XP bonus is used. Equal score and correct count share a dense rank. One attempt per user/day/course resumes from its saved cursor. The board lists up to 100 completed results and public usernames, without emails or user UUIDs.
+
+`study_rift_exams` and `study_rift_attempts` are service-role-only tables with RLS and revoked client grants. Each request validates the JWT and profile. The server checks answers against the private frozen set, ignores client-supplied scores and conditionally advances the cursor to reject duplicate/racing submissions. Active question responses omit answer keys and hints; matching questions expose shuffled candidates without their mapping. Feedback releases the answered solution. This is a learning leaderboard; the downloadable study question bank is public and it is not a proctored examination.
+
+After question edits, run `npm run build:bank` and redeploy **study-rift-mastery** with `index.ts`, `question-utils.js` and `bank.json`. Only reviewed, ready course content should be deployed; locked course content is currently absent from the bank. `ranking-v3.sql` documents the already-applied hosted migration. Never expose service-role keys in client code.
+
+## Version history
+
+`releases.js` is the app's version and release-note source. Use three independent integer components: major.minor.patch. New features increment minor; compatible fixes increment patch; breaking releases increment major. There is no carry at ten: `0.3.9 → 0.3.10` and `1.20.0` are valid. Update package metadata and the release entry together. The Yama Notları page sorts components numerically and shows prior releases. `CHANGELOG.md` provides the same history in the repository.
 
 ## Identity and saved progress
 
@@ -40,10 +54,13 @@ The public function has `verify_jwt: false` because signup/signin have no sessio
 ```sh
 cd study-rift
 npm ci --ignore-scripts
+npm run build:bank    # after editing questions or shared grading
 npm test
 npm run build:vendor  # only after changing SDK inputs
 ```
 
-No frontend build is required. Commit the vendored SDK and lockfile, not `node_modules`. Tests cover all 5 tiers, 15 nodes/class, old-save migration, course locks, no-repeat decks, correct shuffled answer handling, reward idempotency, loot rarity/uniqueness/pity, class prerequisites, unique class actions, training rewards, shop and salvage.
+No frontend build is required. Commit the vendored SDK and lockfile, not `node_modules`. Tests cover all 5 tiers, 16 nodes/class, old-save migration, course locks, no-repeat decks, correct shuffled answer handling, reward idempotency, loot rarity/uniqueness/pity, class prerequisites, unique class actions, training rewards, shop and salvage.
 
 Backend integration was tested with a disposable account: signup without email, username login, duplicate/wrong-password rejection, own-profile visibility, save creation/readback and stale revision rejection. The test session was signed out and the disposable account removed. Browser QA checks the login gate and registration form; an isolated preview-only character fixture tests class selection, branches, realms and combat without using user credentials. QA fixture files are never shipped.
+
+Version 0.3 checks additionally cover all six formats, exact multi-selection, canonical short aliases, shuffled multi answer mapping, room locks, fatal damage/restart, defensive passives, numeric versions and server bank consistency. Live backend tests used two disposable accounts: identical daily questions, both 200/200 despite forged XP/class/equipment inputs, equal rank, foreign-attempt and anonymous rejection, duplicate submission rejection and one attempt per day. Sessions were signed out and both accounts removed. No professor slides have been imported.

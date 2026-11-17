@@ -347,3 +347,30 @@ export const SKILLS = CLASSES.flatMap((c) =>
     col: i === 0 ? 2 : ((i - 1) % 3) + 1,
   })),
 );
+
+const defenses = [
+  ["sage", "Öngörü Zırhı", "sage-logic", 0.12],
+  ["warden", "Demir İrade", "warden-thorns", 0.18],
+  ["ranger", "Gölge Zırhı", "ranger-evasion", 0.1],
+];
+for (const [classId, name, requires, reduction] of defenses) {
+  const c = CLASSES.find((c) => c.id === classId);
+  SKILLS.push({
+    id: classId + "-resistance",
+    key: "resistance",
+    classId,
+    path: c.name,
+    name,
+    branch: "defense",
+    desc:
+      "Bütün zindan hasarını %" +
+      Math.round(reduction * 100) +
+      " azaltır. Ustalık puanına etki etmez.",
+    effects: { damageReduction: reduction },
+    icon: "armor",
+    level: 9,
+    requires: [requires],
+    row: 5,
+    col: 3,
+  });
+}

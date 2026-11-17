@@ -1,3 +1,4 @@
+import { gradeAnswer } from "./question-utils.js";
 import {
   ITEMS,
   QUESTIONS,
@@ -19,7 +20,7 @@ export const bank = (s) => QUESTIONS.filter((q) => q.course === course(s).id);
 export const learned = (s, key) => s.skills.includes(s.classId + "-" + key);
 export function freshState() {
   return {
-    version: 2,
+    version: 3,
     name: "Avcı",
     classId: null,
     course: "oop",
@@ -45,13 +46,13 @@ export function freshState() {
   };
 }
 export function normalize(raw = {}) {
-  const s = { ...freshState(), ...raw, version: 2 };
+  const s = { ...freshState(), ...raw, version: 3 };
   s.stats = { ...freshState().stats, ...s.stats };
   s.settings = { sound: false, ...s.settings };
   s.notebooks = { oop: raw.notes || "", ...(raw.notebooks || {}) };
   if (!s.daily || s.daily.date !== today())
     s.daily = { date: today(), ids: [], claimed: false };
-  if (raw.version !== 2) {
+  if ((raw.version || 1) < 2) {
     s.skills = [];
     s.classId = null;
     for (const key of Object.keys(s.cleared))
@@ -63,6 +64,7 @@ export function normalize(raw = {}) {
       s.run.used ||= [];
     }
   }
+  if (s.run && !s.run.roomMode) s.run.roomMode = "question";
   return s;
 }
 export function level(s) {
@@ -231,21 +233,25 @@ export function displayQuestion(s, training = false) {
   const ctx = training ? s.training : s.run,
     q = currentQuestion(s, training);
   if (!q) return null;
-  if (q.type === "match") return q;
+  if (!["mc", "multi"].includes(q.type)) return q;
   const order = ctx.orders?.[q.id] || q.options.map((_, i) => i);
   return {
     ...q,
     options: order.map((i) => q.options[i]),
-    answer: order.indexOf(q.answer),
+    answer:
+      q.type === "multi"
+        ? q.answer.map((i) => order.indexOf(i))
+        : order.indexOf(q.answer),
   };
 }
+
 function orders(ids, rng = Math.random) {
   return Object.fromEntries(
     ids.map((id) => {
       const q = QUESTIONS.find((q) => q.id === id);
       return [
         id,
-        q.type === "mc"
+        ["mc", "multi"].includes(q.type)
           ? shuffle(
               q.options.map((_, i) => i),
               rng,
@@ -287,6 +293,7 @@ export function startRun(s, id) {
     status: "active",
     correct: 0,
     secondUsed: false,
+    roomMode: "map",
     comboSaved: false,
   };
   s.stats.runs++;
@@ -326,13 +333,7 @@ export function startTraining(s, filters = {}) {
   };
   return s.training;
 }
-export function checkAnswer(q, value) {
-  return q.type === "match"
-    ? Array.isArray(value) &&
-        value.length === q.answer.length &&
-        q.answer.every((a, i) => value[i] === a)
-    : Number(value) === q.answer;
-}
+export const checkAnswer = gradeAnswer;
 export function addItem(s, id) {
   s.inventory[id] = (s.inventory[id] || 0) + 1;
 }
@@ -435,6 +436,8 @@ export function answer(s, value, training = false, rng = Math.random) {
     q = displayQuestion(s, training);
   if (!ctx || !q || ctx.answered || (!training && ctx.status !== "active"))
     throw Error("Bu soru zaten tamamlandı.");
+  if (!training && ctx.roomMode === "map")
+    throw Error("Önce odanın mührünü aç.");
   const correct = checkAnswer(q, value);
   ctx.answered = true;
   if (ctx.retry) {
@@ -480,17 +483,7 @@ export function answer(s, value, training = false, rng = Math.random) {
   } else {
     if (a.keepCombo && !ctx.comboSaved) ctx.comboSaved = true;
     else ctx.combo = 0;
-    damage = Math.max(
-      5,
-      18 +
-        q.difficulty * 5 +
-        DUNGEONS.indexOf(d) * 3 +
-        (boss ? 6 : 0) -
-        a.defense -
-        (ctx.hint ? a.hintDefense || 0 : 0) -
-        (boss ? a.bossDefense || 0 : 0) +
-        (ctx.wager ? 10 : 0),
-    );
+    damage = incomingDamage(s, q, ctx) + (ctx.wager ? 10 : 0);
     if (ctx.shield) {
       damage = Math.ceil(damage * (1 - a.shieldReduction));
       ctx.shield = false;
@@ -544,6 +537,7 @@ export function nextRoom(s, rng = Math.random) {
     hidden: [],
     hint: false,
     answered: false,
+    roomMode: "map",
     feedback: null,
     wager: false,
     focus: false,
@@ -744,4 +738,43 @@ export function salvage(s, id) {
     throw Error("Kampta kuşanılmamış bir ekipman seç.");
   s.inventory[id]--;
   s.essence += { common: 5, rare: 12, epic: 25, legendary: 60 }[i.rarity];
+}
+
+export const ROOMS = [
+  { name: "Eşik Odası", icon: "portal", kind: "GİRİŞ" },
+  { name: "Yankı Salonu", icon: "eye", kind: "SINAV" },
+  { name: "Elit Nöbetçi", icon: "sword", kind: "ELİT" },
+  { name: "Rün Kütüphanesi", icon: "book", kind: "ARŞİV" },
+  { name: "Kayıp Mahzen", icon: "chest", kind: "SINAV" },
+  { name: "Mühür Odası", icon: "gem", kind: "SINAV" },
+  { name: "Boss Eşiği", icon: "shield", kind: "BOSS" },
+  { name: "Büyük Mühür", icon: "flame", kind: "BOSS" },
+];
+export function enterRoom(s, index) {
+  const r = s.run;
+  if (!r || r.status !== "active" || r.index !== index || r.answered)
+    throw Error("Bu oda henüz açık değil.");
+  r.roomMode = "question";
+}
+export function incomingDamage(s, q, r = s.run) {
+  const a = attributes(s),
+    d = DUNGEONS.find((x) => x.id === r.dungeon),
+    boss = r.index >= 6;
+  const raw =
+    34 +
+    q.difficulty * 8 +
+    DUNGEONS.indexOf(d) * 5 +
+    (boss ? 12 : r.index === 2 ? 8 : 0) -
+    a.defense -
+    (r.hint ? a.hintDefense || 0 : 0) -
+    (boss ? a.bossDefense || 0 : 0);
+  return Math.max(8, Math.ceil(raw * (1 - (a.damageReduction || 0))));
+}
+export function retryRun(s) {
+  const r = s.run;
+  if (!r || r.status !== "failed")
+    throw Error("Yalnızca biten bir yenilgi yeniden başlatılabilir.");
+  const id = r.dungeon;
+  leaveRun(s);
+  return startRun(s, id);
 }

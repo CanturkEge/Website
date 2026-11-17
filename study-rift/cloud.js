@@ -111,3 +111,26 @@ export async function authRequest(action, fields = {}) {
   }
   return body;
 }
+export async function masteryRequest(action, fields = {}) {
+  const {
+    data: { session },
+    error,
+  } = await cloud.auth.getSession();
+  if (error || !session) throw Error("Ustalık sınavı için giriş yap.");
+  const res = await fetch(SUPABASE_URL + "/functions/v1/study-rift-mastery", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_KEY,
+      Authorization: "Bearer " + session.access_token,
+    },
+    body: JSON.stringify({ action, ...fields }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const err = new Error(data.error || "Ustalık sunucusuna ulaşılamadı.");
+    err.code = data.code;
+    throw err;
+  }
+  return data;
+}

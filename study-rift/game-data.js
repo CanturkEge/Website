@@ -1,4 +1,5 @@
 import * as V1 from "./data.js";
+import { EXTENDED } from "./questions-v3.js";
 import { ADVANCED } from "./questions-advanced.js";
 import { GEAR } from "./loot.js";
 export { CLASSES, SKILLS } from "./classes.js";
@@ -12,6 +13,7 @@ export const ITEMS = [
 export const QUESTIONS = [
   ...V1.QUESTIONS.map((q) => ({ ...q, course: "oop" })),
   ...ADVANCED,
+  ...EXTENDED,
 ];
 export const BONUS_NOTES = V1.BONUS_NOTES.map((n) => ({ ...n, course: "oop" }));
 export const DUNGEONS = V1.DUNGEONS.map((d, i) => ({
