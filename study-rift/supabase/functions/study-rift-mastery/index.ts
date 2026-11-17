@@ -42,6 +42,9 @@ const summary = (a: any) => ({
   total: 10,
   maxScore: 200,
   completed: a.completed,
+  deadline: a.deadline_at,
+  durationSeconds: 600,
+  expired: a.completed && a.answers.length < 10,
 });
 Deno.serve(async (req) => {
   const origin = req.headers.get("origin") || "";
@@ -56,7 +59,10 @@ Deno.serve(async (req) => {
     Vary: "Origin",
   };
   const response = (body: any, status = 200) =>
-    new Response(JSON.stringify(body), { status, headers });
+    new Response(
+      JSON.stringify({ ...body, serverNow: new Date().toISOString() }),
+      { status, headers },
+    );
   if (req.method === "OPTIONS") return new Response(null, { headers });
   if (req.method !== "POST" || (origin && !allowed.has(origin)))
     return response({ error: "İstek kabul edilmedi." }, 403);
@@ -95,6 +101,19 @@ Deno.serve(async (req) => {
         { error: "Bu dersin Ustalık kapısı henüz açık değil." },
         400,
       );
+    // Deadline is authoritative on the server; refreshes never extend it.
+    const { error: expiryError } = await admin
+      .from("study_rift_attempts")
+      .update({
+        completed: true,
+        cursor: 10,
+        finished_at: new Date().toISOString(),
+      })
+      .eq("course", course)
+      .eq("exam_date", today)
+      .eq("completed", false)
+      .lt("deadline_at", new Date().toISOString());
+    if (expiryError) throw expiryError;
     if (body.action === "board") {
       const { data: rows, error } = await admin
         .from("study_rift_attempts")
@@ -112,28 +131,34 @@ Deno.serve(async (req) => {
       if (ids.length) {
         const { data: p, error: pError } = await admin
           .from("study_rift_profiles")
-          .select("user_id,username")
+          .select("user_id,username,display_name")
           .in("user_id", ids);
         if (pError) throw pError;
-        for (const row of p || []) names.set(row.user_id, row.username);
+        for (const row of p || []) names.set(row.user_id, row);
       }
       let rank = 0,
         key = "";
-      const entries = (rows || []).map((r) => {
-        const next = r.score + ":" + r.correct;
-        if (next !== key) {
-          rank++;
-          key = next;
-        }
-        return {
-          rank,
-          username: names.get(r.user_id) || "Avcı",
-          score: r.score,
-          correct: r.correct,
-          total: 10,
-          isMe: r.user_id === user.id,
-        };
-      });
+      const entries = (rows || [])
+        .filter((r) => names.has(r.user_id))
+        .map((r) => {
+          const next = r.score + ":" + r.correct;
+          if (next !== key) {
+            rank++;
+            key = next;
+          }
+          return {
+            rank,
+            username: names.get(r.user_id)?.username || "Avcı",
+            displayName:
+              names.get(r.user_id)?.display_name ||
+              names.get(r.user_id)?.username ||
+              "Avcı",
+            score: r.score,
+            correct: r.correct,
+            total: 10,
+            isMe: r.user_id === user.id,
+          };
+        });
       const { data: own, error: ownError } = await admin
         .from("study_rift_attempts")
         .select("*")
@@ -210,7 +235,12 @@ Deno.serve(async (req) => {
               ...publicQuestion(q),
               answer: q.answer,
               explanation: q.explanation,
-              result: attempt.answers[i],
+              result: attempt.answers[i] || {
+                correct: false,
+                points: 0,
+                value: null,
+                unanswered: true,
+              },
             }))
           : null,
       });
@@ -270,6 +300,8 @@ Deno.serve(async (req) => {
       })
       .eq("id", attempt.id)
       .eq("cursor", attempt.cursor)
+      .eq("completed", false)
+      .gt("deadline_at", new Date().toISOString())
       .select()
       .maybeSingle();
     if (writeError) throw writeError;

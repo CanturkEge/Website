@@ -1,3 +1,5 @@
+import { ROOMS, DAILY_TRAINING_SECONDS } from "./rooms.js";
+export { ROOMS } from "./rooms.js";
 import { gradeAnswer } from "./question-utils.js";
 import {
   ITEMS,
@@ -20,7 +22,7 @@ export const bank = (s) => QUESTIONS.filter((q) => q.course === course(s).id);
 export const learned = (s, key) => s.skills.includes(s.classId + "-" + key);
 export function freshState() {
   return {
-    version: 3,
+    version: 4,
     name: "Avcı",
     classId: null,
     course: "oop",
@@ -40,18 +42,18 @@ export function freshState() {
     seenDecks: {},
     lootPity: {},
     lootRecent: [],
-    daily: { date: today(), ids: [], claimed: false },
+    daily: freshDaily(),
+    learning: {},
     settings: { sound: false },
     stats: { answered: 0, correct: 0, runs: 0, wins: 0, bestCombo: 0 },
   };
 }
 export function normalize(raw = {}) {
-  const s = { ...freshState(), ...raw, version: 3 };
+  const s = { ...freshState(), ...raw, version: 4 };
   s.stats = { ...freshState().stats, ...s.stats };
   s.settings = { sound: false, ...s.settings };
   s.notebooks = { oop: raw.notes || "", ...(raw.notebooks || {}) };
-  if (!s.daily || s.daily.date !== today())
-    s.daily = { date: today(), ids: [], claimed: false };
+  if (!s.daily || s.daily.date !== today()) s.daily = freshDaily();
   if ((raw.version || 1) < 2) {
     s.skills = [];
     s.classId = null;
@@ -65,6 +67,45 @@ export function normalize(raw = {}) {
     }
   }
   if (s.run && !s.run.roomMode) s.run.roomMode = "question";
+  s.learning ||= {};
+  s.daily.rewardedIds ||= [...s.daily.ids];
+  if ((raw.version || 1) < 4 && !s.daily.claimed) {
+    s.daily.ids = [];
+    s.daily.deadline = null;
+    s.daily.failed = false;
+  }
+  if (s.run && !s.run.rooms) {
+    const r = s.run,
+      d = DUNGEONS.find((d) => d.id === r.dungeon);
+    if (
+      d &&
+      r.index === 0 &&
+      r.roomMode === "map" &&
+      !r.answered &&
+      !r.correct
+    ) {
+      const rooms = makeRoomExams(s, d),
+        queue = rooms.flatMap((r) => r.queue);
+      Object.assign(r, {
+        rooms,
+        queue,
+        orders: orders(queue),
+        questionIndex: 0,
+      });
+    } else {
+      r.rooms = r.queue.map((id, i) => ({
+        ...ROOMS[i],
+        queue: [id],
+        seconds: 0,
+        deadline: null,
+        cleared: i < r.index,
+        correct: 0,
+        answered: i < r.index ? 1 : 0,
+      }));
+      r.questionIndex = 0;
+      r.legacyRooms = true;
+    }
+  }
   return s;
 }
 export function level(s) {
@@ -94,7 +135,7 @@ export function attributes(s) {
     hp: 100,
     mp: 80,
     xp: 0,
-    mana: 12,
+    mana: 3,
     defense: 0,
     gold: 0,
     hintCost: 20,
@@ -216,18 +257,85 @@ function drawQuestions(s, difficulty, count, excluded = [], rng = Math.random) {
   s.seenDecks[key] = [...seen, ...chosen.map((q) => q.id)];
   return chosen;
 }
-export function makeQueue(s, d, rng = Math.random) {
-  const regular = drawQuestions(s, d.difficulty, 6, [], rng),
-    boss = drawQuestions(
-      s,
-      Math.min(5, d.difficulty + 1),
-      2,
-      regular.map((q) => q.id),
-      rng,
+export function makeRoomExams(s, d, rng = Math.random) {
+  const slots = [],
+    assigned = new Map(),
+    owners = new Map();
+  for (const [roomIndex, room] of ROOMS.entries()) {
+    const difficulty = Math.min(5, d.difficulty + (roomIndex >= 6 ? 1 : 0)),
+      key = course(s).id + ":" + difficulty;
+    const tier = bank(s).filter((q) => q.difficulty === difficulty);
+    let seen = s.seenDecks[key] || [];
+    if (tier.every((q) => seen.includes(q.id))) {
+      seen = [];
+      s.seenDecks[key] = [];
+    }
+    const pool = tier.filter((q) => room.types.includes(q.type)),
+      fresh = pool.filter((q) => !seen.includes(q.id)),
+      old = pool.filter((q) => seen.includes(q.id));
+    for (let index = 0; index < room.count; index++)
+      slots.push({
+        roomIndex,
+        index,
+        key,
+        candidates: [
+          ...weightedSample(fresh, fresh.length, s, rng),
+          ...weightedSample(old, old.length, s, rng),
+        ],
+      });
+  }
+  // Match scarce format slots before flexible rooms; augmenting paths reserve
+  // a unique eligible question for every slot instead of silently changing format.
+  function allocate(slot, visited) {
+    const usedTypes = new Set(
+      slots
+        .filter((x) => x.roomIndex === slot.roomIndex && x !== slot)
+        .map((x) => assigned.get(x)?.type)
+        .filter(Boolean),
     );
-  if (regular.length + boss.length < 8)
-    throw Error("Bu zorluk için yeterli soru yüklenmedi.");
-  return [...regular, ...boss].map((q) => q.id);
+    const candidates = [
+      ...slot.candidates.filter((q) => !usedTypes.has(q.type)),
+      ...slot.candidates.filter((q) => usedTypes.has(q.type)),
+    ];
+    for (const q of candidates) {
+      if (visited.has(q.id)) continue;
+      visited.add(q.id);
+      const owner = owners.get(q.id);
+      if (!owner || allocate(owner, visited)) {
+        owners.set(q.id, slot);
+        assigned.set(slot, q);
+        return true;
+      }
+    }
+    return false;
+  }
+  for (const slot of [...slots].sort(
+    (a, b) => a.candidates.length - b.candidates.length,
+  ))
+    if (!allocate(slot, new Set()))
+      throw Error(
+        "Bu zorluk ve soru türlerinde oda sınavları için yeterli farklı içerik yok.",
+      );
+  const rooms = ROOMS.map((room, roomIndex) => ({
+    ...room,
+    queue: slots
+      .filter((slot) => slot.roomIndex === roomIndex)
+      .map((slot) => assigned.get(slot).id),
+    deadline: null,
+    cleared: false,
+    correct: 0,
+    answered: 0,
+  }));
+  for (const slot of slots) {
+    const q = assigned.get(slot);
+    s.seenDecks[slot.key] = [
+      ...new Set([...(s.seenDecks[slot.key] || []), q.id]),
+    ];
+  }
+  return rooms;
+}
+export function makeQueue(s, d, rng = Math.random) {
+  return makeRoomExams(s, d, rng).flatMap((r) => r.queue);
 }
 export function displayQuestion(s, training = false) {
   const ctx = training ? s.training : s.run,
@@ -267,12 +375,15 @@ export function startRun(s, id) {
   const d = DUNGEONS.find((d) => d.id === id);
   if (!d || !canEnter(s, d))
     throw Error("Bu ders veya zindan henüz açık değil.");
-  const queue = makeQueue(s, d),
+  const rooms = makeRoomExams(s, d),
+    queue = rooms.flatMap((r) => r.queue),
     a = attributes(s);
   s.run = {
     course: course(s).id,
     dungeon: id,
     queue,
+    rooms,
+    questionIndex: 0,
     orders: orders(queue),
     index: 0,
     hp: a.hp,
@@ -300,7 +411,10 @@ export function startRun(s, id) {
   return s.run;
 }
 export function currentQuestion(s, training = false) {
-  const id = training ? s.training?.id : s.run?.queue[s.run.index];
+  const id = training
+    ? s.training?.id
+    : (s.run?.rooms?.[s.run.index]?.queue[s.run.questionIndex || 0] ??
+      s.run?.queue[s.run.index]);
   return QUESTIONS.find((q) => q.id === id);
 }
 export function startTraining(s, filters = {}) {
@@ -417,16 +531,31 @@ function mastery(s, q, correct, train) {
   if (correct) s.stats.correct++;
   let xp = 0;
   if (train) {
-    if (s.daily.date !== today())
-      s.daily = { date: today(), ids: [], claimed: false };
-    if (correct && !s.daily.ids.includes(q.id)) {
+    if (s.daily.date !== today()) s.daily = freshDaily();
+    expireDaily(s);
+    s.daily.rewardedIds ||= [];
+    if (
+      correct &&
+      s.daily.deadline &&
+      !s.daily.failed &&
+      !s.daily.claimed &&
+      !s.daily.ids.includes(q.id)
+    )
       s.daily.ids.push(q.id);
+    if (correct && !s.daily.rewardedIds.includes(q.id)) {
+      s.daily.rewardedIds.push(q.id);
       xp = 6 + Math.max(0, q.difficulty - 2) * 2;
-      if (s.daily.ids.length >= 5 && !s.daily.claimed) {
-        s.daily.claimed = true;
-        s.gold += 35;
-        addItem(s, "potion");
-      }
+    }
+    if (
+      s.daily.ids.length >= 5 &&
+      !s.daily.claimed &&
+      !s.daily.failed &&
+      s.daily.deadline
+    ) {
+      s.daily.claimed = true;
+      s.daily.deadline = null;
+      s.gold += 35;
+      addItem(s, "potion");
     }
   }
   return xp;
@@ -436,7 +565,12 @@ export function answer(s, value, training = false, rng = Math.random) {
     q = displayQuestion(s, training);
   if (!ctx || !q || ctx.answered || (!training && ctx.status !== "active"))
     throw Error("Bu soru zaten tamamlandı.");
-  if (!training && ctx.roomMode === "map")
+  if (!training) {
+    expireRun(s);
+    if (ctx.status !== "active")
+      throw Error("Odanın süresi doldu. Keşfi yeniden başlat.");
+  }
+  if (!training && ctx.roomMode !== "question")
     throw Error("Önce odanın mührünü aç.");
   const correct = checkAnswer(q, value);
   ctx.answered = true;
@@ -448,7 +582,8 @@ export function answer(s, value, training = false, rng = Math.random) {
   let xp = mastery(s, q, correct, training),
     damage = 0,
     loot = [],
-    hpBefore = ctx.hp;
+    hpBefore = ctx.hp,
+    mpBefore = ctx.mp;
   if (training) {
     ctx.feedback = { correct, value, xp };
     s.xp += xp;
@@ -456,9 +591,11 @@ export function answer(s, value, training = false, rng = Math.random) {
   }
   const d = DUNGEONS.find((d) => d.id === ctx.dungeon),
     a = attributes(s),
-    boss = ctx.index >= 6;
+    boss = ctx.index >= 6,
+    room = ctx.rooms[ctx.index];
   if (correct) {
     ctx.correct++;
+    room.correct++;
     ctx.combo++;
     s.stats.bestCombo = Math.max(s.stats.bestCombo, ctx.combo);
     xp =
@@ -478,7 +615,11 @@ export function answer(s, value, training = false, rng = Math.random) {
     const gold = 8 + q.difficulty * 2 + a.gold;
     s.gold += gold;
     ctx.earnedGold += gold;
-    if (ctx.index === 3 && rng() < a.lootChance)
+    if (
+      ctx.index === 3 &&
+      ctx.questionIndex === room.queue.length - 1 &&
+      rng() < a.lootChance
+    )
       loot.push(rollLoot(s, d.id, rng));
   } else {
     if (a.keepCombo && !ctx.comboSaved) ctx.comboSaved = true;
@@ -503,18 +644,69 @@ export function answer(s, value, training = false, rng = Math.random) {
       ctx.revived = true;
     }
     if (!ctx.hp) ctx.status = "failed";
+    ctx.mp = Math.max(0, ctx.mp - (8 + DUNGEONS.indexOf(d) * 2));
   }
   s.xp += xp;
   ctx.earnedXP += xp;
   ctx.drops.push(...loot);
-  ctx.feedback = { correct, value, xp, damage, loot, hpBefore };
+  room.answered++;
+  if (ctx.questionIndex === room.queue.length - 1 && ctx.status === "active") {
+    room.finishedAt = Date.now();
+    room.deadline = null;
+  }
+  ctx.feedback = {
+    correct,
+    value,
+    xp,
+    damage,
+    loot,
+    hpBefore,
+    mana: ctx.mp - mpBefore,
+  };
   return ctx.feedback;
+}
+function resetQuestion(r) {
+  Object.assign(r, {
+    hidden: [],
+    hint: false,
+    answered: false,
+    feedback: null,
+    wager: false,
+    focus: false,
+    noteThisRoom: false,
+    fixedMatches: {},
+    matchDraft: [],
+    draft: null,
+    retry: false,
+  });
+}
+export function nextQuestion(s) {
+  const r = s.run;
+  if (!r || r.status !== "active" || !r.answered || r.roomMode !== "question")
+    return null;
+  if (expireRun(s)) return "failed";
+  const room = r.rooms[r.index];
+  if ((r.questionIndex || 0) + 1 < room.queue.length) {
+    r.questionIndex++;
+    resetQuestion(r);
+    return "question";
+  }
+  room.cleared = true;
+  room.deadline = null;
+  r.roomMode = "report";
+  return "report";
 }
 export function nextRoom(s, rng = Math.random) {
   const r = s.run;
-  if (!r || !r.answered || r.status !== "active") return null;
+  if (
+    !r ||
+    r.status !== "active" ||
+    r.roomMode !== "report" ||
+    !r.rooms[r.index].cleared
+  )
+    return null;
   const a = attributes(s);
-  if (r.index === 7) {
+  if (r.index === r.rooms.length - 1) {
     r.status = "won";
     s.stats.wins++;
     const key = (r.course || "oop") + ":" + r.dungeon;
@@ -532,18 +724,11 @@ export function nextRoom(s, rng = Math.random) {
     return "won";
   }
   r.index++;
+  r.questionIndex = 0;
+  resetQuestion(r);
   Object.assign(r, {
     used: [],
-    hidden: [],
-    hint: false,
-    answered: false,
     roomMode: "map",
-    feedback: null,
-    wager: false,
-    focus: false,
-    noteThisRoom: false,
-    fixedMatches: {},
-    matchDraft: [],
     hp: Math.min(a.hp, r.hp + (a.roomHeal || 0)),
     mp: Math.min(a.mp, r.mp + (a.roomMana || 0)),
   });
@@ -559,7 +744,7 @@ export function recordRun(s) {
     dungeon: r.dungeon,
     status: r.status,
     correct: r.correct,
-    total: 8,
+    total: r.queue.length,
     xp: r.earnedXP,
   });
   s.history = s.history.slice(0, 80);
@@ -602,6 +787,9 @@ export function useSkill(s, id, training = false) {
     r.hint = true;
     return;
   }
+  expireRun(s);
+  if (r.timedOut || r.roomMode !== "question")
+    throw Error("Yetenekler aktif soruda kullanılabilir.");
   if (id === "second") {
     if (
       !availableAbilities(s).includes(id) ||
@@ -740,21 +928,37 @@ export function salvage(s, id) {
   s.essence += { common: 5, rare: 12, epic: 25, legendary: 60 }[i.rarity];
 }
 
-export const ROOMS = [
-  { name: "Eşik Odası", icon: "portal", kind: "GİRİŞ" },
-  { name: "Yankı Salonu", icon: "eye", kind: "SINAV" },
-  { name: "Elit Nöbetçi", icon: "sword", kind: "ELİT" },
-  { name: "Rün Kütüphanesi", icon: "book", kind: "ARŞİV" },
-  { name: "Kayıp Mahzen", icon: "chest", kind: "SINAV" },
-  { name: "Mühür Odası", icon: "gem", kind: "SINAV" },
-  { name: "Boss Eşiği", icon: "shield", kind: "BOSS" },
-  { name: "Büyük Mühür", icon: "flame", kind: "BOSS" },
-];
-export function enterRoom(s, index) {
+export function enterRoom(s, index, now = Date.now()) {
   const r = s.run;
-  if (!r || r.status !== "active" || r.index !== index || r.answered)
+  if (
+    !r ||
+    r.status !== "active" ||
+    r.index !== index ||
+    r.answered ||
+    r.roomMode !== "map"
+  )
     throw Error("Bu oda henüz açık değil.");
   r.roomMode = "question";
+  const room = r.rooms[index];
+  if (room.seconds && !room.deadline) room.deadline = now + room.seconds * 1000;
+}
+export function expireRun(s, now = Date.now()) {
+  const r = s.run,
+    room = r?.rooms?.[r.index];
+  if (
+    !r ||
+    r.status !== "active" ||
+    !room?.deadline ||
+    now < room.deadline ||
+    room.cleared
+  )
+    return false;
+  r.status = "failed";
+  r.timedOut = true;
+  r.showResult = true;
+  room.expired = true;
+  recordRun(s);
+  return true;
 }
 export function incomingDamage(s, q, r = s.run) {
   const a = attributes(s),
@@ -777,4 +981,46 @@ export function retryRun(s) {
   const id = r.dungeon;
   leaveRun(s);
   return startRun(s, id);
+}
+
+function freshDaily() {
+  return {
+    date: today(),
+    ids: [],
+    rewardedIds: [],
+    claimed: false,
+    startedAt: null,
+    deadline: null,
+    failed: false,
+  };
+}
+export function expireDaily(s, now = Date.now()) {
+  if (s.daily.date !== today()) {
+    s.daily = freshDaily();
+    return true;
+  }
+  if (
+    s.daily.deadline &&
+    now >= s.daily.deadline &&
+    !s.daily.claimed &&
+    !s.daily.failed
+  ) {
+    s.daily.failed = true;
+    s.daily.deadline = null;
+    return true;
+  }
+  return false;
+}
+export function startDaily(s, now = Date.now()) {
+  expireDaily(s, now);
+  if (s.daily.claimed) throw Error("Bugünün ödülünü zaten aldın.");
+  if (s.daily.deadline && !s.daily.failed)
+    throw Error("Günlük görev zaten sürüyor.");
+  Object.assign(s.daily, {
+    ids: [],
+    startedAt: now,
+    deadline: now + DAILY_TRAINING_SECONDS * 1000,
+    failed: false,
+  });
+  return s.daily;
 }

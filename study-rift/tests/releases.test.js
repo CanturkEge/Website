@@ -10,7 +10,12 @@ test("three-part numeric versions do not carry at ten", () => {
   assert(compareVersions("0.10.0", "0.9.99") > 0);
   assert.equal(compareVersions("1.20.0", "1.20.0"), 0);
   assert.throws(() => compareVersions("1.2", "1.2.0"));
-  assert.equal(VERSION, "0.3.0");
+  assert.equal(
+    VERSION,
+    JSON.parse(
+      readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+    ).version,
+  );
   assert(RELEASES.every((r) => /^\d+\.\d+\.\d+$/.test(r.version)));
 });
 test("deployed mastery bank matches current content and exact fixed-point budget", () => {

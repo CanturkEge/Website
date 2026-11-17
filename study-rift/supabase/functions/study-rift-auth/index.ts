@@ -96,6 +96,7 @@ Deno.serve(async (req) => {
         .insert({
           user_id: user.id,
           username,
+          display_name: username,
           recovery_enabled: !user.email?.endsWith("@rift.invalid"),
         });
       if (insertError)
@@ -150,7 +151,12 @@ Deno.serve(async (req) => {
         );
       const { error: insertError } = await admin
         .from("study_rift_profiles")
-        .insert({ user_id: data.user.id, username, recovery_enabled: !!email });
+        .insert({
+          user_id: data.user.id,
+          username,
+          display_name: username,
+          recovery_enabled: !!email,
+        });
       if (insertError) {
         await admin.auth.admin.deleteUser(data.user.id);
         return response({ error: "Kullanıcı adı kullanılamıyor." }, 409);

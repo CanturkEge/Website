@@ -134,3 +134,24 @@ export async function masteryRequest(action, fields = {}) {
   }
   return data;
 }
+
+export async function accountRequest(action, fields = {}) {
+  const {
+    data: { session },
+    error,
+  } = await cloud.auth.getSession();
+  if (error || !session) throw Error("Önce giriş yap.");
+  const res = await fetch(SUPABASE_URL + "/functions/v1/study-rift-account", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_KEY,
+      Authorization: "Bearer " + session.access_token,
+    },
+    body: JSON.stringify({ action, ...fields }),
+  });
+  const body = await res.json();
+  if (!res.ok || body.error)
+    throw Error(body.error || "Hesap işlemi tamamlanamadı.");
+  return body;
+}

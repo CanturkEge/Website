@@ -14,8 +14,8 @@ const hunter = (c = "sage") => {
   E.chooseClass(s, c);
   return s;
 };
-const correct = (s) => {
-  const q = E.displayQuestion(s);
+const correct = (s, training = false) => {
+  const q = E.displayQuestion(s, training);
   return q.type === "short" ? q.answer[0] : q.answer;
 };
 test("valid questions, difficulty coverage and 16 nodes per class", () => {
@@ -59,28 +59,28 @@ test("course locks and migration preserve old progress", () => {
   assert.equal(old.notebooks.oop, "test");
   assert.equal(old.cleared["oop:e"], 2);
 });
-test("unique scaled queues do not repeat until deck exhausted", () => {
+test("rooms use distinct tiered questions and varied examination formats", () => {
   for (const d of DUNGEONS) {
     const s = hunter(),
-      queue = E.makeQueue(s, d);
-    assert.equal(queue.length, 8);
-    assert.equal(new Set(queue).size, 8);
-    assert.equal(
-      QUESTIONS.find((q) => q.id === queue[0]).difficulty,
-      d.difficulty,
-    );
-    assert.equal(
-      QUESTIONS.find((q) => q.id === queue[7]).difficulty,
-      Math.min(5, d.difficulty + 1),
-    );
+      rooms = E.makeRoomExams(s, d),
+      queue = rooms.flatMap((r) => r.queue);
+    assert.equal(rooms.length, 8);
+    assert.equal(queue.length, 23);
+    assert.equal(new Set(queue).size, 23);
+    for (const [i, r] of rooms.entries()) {
+      assert.equal(r.queue.length, E.ROOMS[i].count);
+      for (const id of r.queue) {
+        const q = QUESTIONS.find((q) => q.id === id);
+        assert.equal(
+          q.difficulty,
+          Math.min(5, d.difficulty + (i >= 6 ? 1 : 0)),
+        );
+        assert(r.types.includes(q.type));
+      }
+    }
+    assert(rooms.some((r) => r.seconds === 0));
+    assert(rooms.some((r) => r.seconds > 0));
   }
-  const s = hunter(),
-    a = E.makeQueue(s, DUNGEONS[0]),
-    b = E.makeQueue(s, DUNGEONS[0]);
-  assert.equal(
-    a.slice(0, 6).filter((id) => b.slice(0, 6).includes(id)).length,
-    0,
-  );
 });
 test("duplicate submission cannot farm XP and correct restores mana", () => {
   const s = hunter();
@@ -95,7 +95,7 @@ test("duplicate submission cannot farm XP and correct restores mana", () => {
 test("full clear grants notes, rewards are idempotent, loadout requires camp", () => {
   const s = hunter();
   start(s, "e");
-  for (let i = 0; i < 8; i++) {
+  while (s.run.status === "active") {
     E.answer(s, correct(s));
     next(s);
   }
@@ -147,7 +147,7 @@ test("sage prophecy fills correct matches and rejects inappropriate formats", ()
   const s = hunter();
   s.skills.push("sage-prophecy");
   start(s, "e");
-  s.run.queue[0] = QUESTIONS.find((q) => q.type === "match").id;
+  s.run.rooms[0].queue[0] = QUESTIONS.find((q) => q.type === "match").id;
   E.useSkill(s, "prophecy");
   assert.equal(Object.keys(s.run.fixedMatches).length, 1);
   assert.throws(() => E.useSkill(s, "eliminate"));
@@ -192,13 +192,13 @@ test("training topic and difficulty filters, no daily repeated XP", () => {
   const q = E.displayQuestion(s, true);
   assert.equal(q.difficulty, 5);
   assert.equal(q.topic, 0);
-  E.answer(s, q.answer, true);
+  E.answer(s, correct(s, true), true);
   const xp = s.xp,
     old = s.training.id;
   E.startTraining(s, filters);
   assert.notEqual(s.training.id, old);
   s.training = { id: old, answered: false };
-  E.answer(s, QUESTIONS.find((q) => q.id === old).answer, true);
+  E.answer(s, correct(s, true), true);
   assert.equal(s.xp, xp);
 });
 test("shop and salvage enforce costs and equipment ownership", () => {
@@ -220,9 +220,11 @@ function start(s, id) {
   return r;
 }
 function next(s) {
-  const v = E.nextRoom(s);
-  if (s.run?.status === "active") E.enterRoom(s, s.run.index);
-  return v;
+  const step = E.nextQuestion(s);
+  if (step === "report") E.nextRoom(s);
+  if (s.run?.status === "active" && s.run.roomMode === "map")
+    E.enterRoom(s, s.run.index);
+  return step;
 }
 
 test("bank doubled to 168 and six valid formats", () => {
@@ -260,6 +262,12 @@ test("room locks, fatal damage and same-rank restart reset to room one", () => {
   assert.throws(() => E.enterRoom(s, 1));
   E.enterRoom(s, 0);
   E.answer(s, correct(s));
+  assert.equal(E.nextRoom(s), null);
+  assert.equal(E.nextQuestion(s), "question");
+  assert.equal(s.run.index, 0);
+  assert.equal(s.run.questionIndex, 1);
+  E.answer(s, correct(s));
+  assert.equal(E.nextQuestion(s), "report");
   E.nextRoom(s);
   assert.equal(s.run.index, 1);
   assert.equal(s.run.roomMode, "map");

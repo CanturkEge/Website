@@ -1,5 +1,55 @@
 export const RELEASES = [
   {
+    version: "0.4.0",
+    date: "2026-11-17",
+    title: "Öğrenme yolu, oda sınavları ve mana dengesi",
+    groups: [
+      {
+        title: "Öğrenme yolu",
+        items: [
+          "OOD için 6 ünite ve 18 alt bölüm eklendi. Her alt bölümde ayrı konu anlatımı, örnekler, iki flash kart ve iki isteğe bağlı kontrol sorusu var.",
+          "Okunan bölümler, kartların biliyorum/tekrar durumları ve kontrol yanıtları ders bazında kalıcı kaydedilir.",
+          "Öğrenme yolunda istediğin bölüme geri dönebilir, kaldığın yerden devam edebilirsin. Kontrol soruları anlatımdan ayrı sekmede açılır.",
+        ],
+      },
+      {
+        title: "Oda sınavları ve süre",
+        items: [
+          "Yeni zindanlar 8 ayrı oda sınavı ve toplam 23 sorudan oluşur. Odalarda 2–4 soru ve farklı soru türleri bulunur.",
+          "Beş oda sürelidir; üç oda süresizdir. Süreli odaların sayacı ilk girişte başlar ve yenilemeyle sıfırlanmaz.",
+          "Doğru veya yanlış cevap sonrası aynı odada kalırsın. Tüm soruların ardından oda raporu, sonra harita açılır.",
+          "Son soruyu zamanında yanıtlayınca oda sayacı durur. Süre dolarsa keşif biter ve aynı zorluk ilk odadan yeniden başlar.",
+          "Önceki sürümde yarım kalan koşular tek soruluk odalarıyla korunur; geriye dönük süre sınırı uygulanmaz.",
+        ],
+      },
+      {
+        title: "Günlük meydan okumalar",
+        items: [
+          "Günlük antrenman görevi: 5 dakikada 5 farklı doğru. Süre dolunca tekrar denenebilir; 35 altın ve Can İksiri ödülü günde bir kez alınır.",
+          "Günlük Ustalık sınavına herkes için 10 dakikalık süre eklendi. Sayaç sunucuda kontrol edilir, ara verince durmaz.",
+          "Ustalıkta süre dolunca kazanılan puan korunur; kalan sorular boş sayılır. Hız bonusu ve sınıf/ekipman avantajı yoktur.",
+        ],
+      },
+      {
+        title: "Mana dengesi",
+        items: [
+          "Temel doğru-cevap mana yenilenmesi 12’den 3’e düşürüldü; sınıf, eşya ve yetenek katkıları ayrıca uygulanır.",
+          "Yanlış cevap E/D/C/B/S zorluklarında sırasıyla 8/10/12/14/16 mana kaybettirir.",
+          "Aktif yeteneklerin kullanım sınırı soru başına yenilenmez; oda boyunca geçerlidir. Her yeni odada kullanım hakları açılır.",
+        ],
+      },
+      {
+        title: "Hesap ayarları",
+        items: [
+          "Giriş kullanıcı adından ayrı görünen ad eklendi. Karakter ekranı ve Ustalık tablosu aynı adı kullanır.",
+          "Görünen adı değiştirmek puanı, denemeyi ve sırayı korur; yalnız ad güncellenir.",
+          "Mevcut şifre ve SİL onayıyla Study Rift hesabı kalıcı silinebilir. Karakter, notlar, öğrenme ilerlemesi ve tüm sıralama sonuçları kaldırılır.",
+          "Hesap işlemleri oturum ve sahiplik kontrolüyle sunucuda yapılır; diğer uygulama verileri korunur.",
+        ],
+      },
+    ],
+  },
+  {
     version: "0.3.0",
     date: "2026-11-17",
     title: "Ustalık, odalar ve daha ağır sınavlar",
