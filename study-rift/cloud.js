@@ -5,7 +5,7 @@ export const cloud = createClient(SUPABASE_URL, SUPABASE_KEY, {
     storageKey: "study-rift-auth-v1",
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false,
+    detectSessionInUrl: true,
   },
 });
 export class SaveStore {
@@ -89,4 +89,25 @@ export class SaveStore {
       this.running = false;
     }
   }
+}
+export async function authRequest(action, fields = {}) {
+  const {
+    data: { session },
+  } = await cloud.auth.getSession();
+  const res = await fetch(SUPABASE_URL + "/functions/v1/study-rift-auth", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_KEY,
+      ...(session ? { Authorization: "Bearer " + session.access_token } : {}),
+    },
+    body: JSON.stringify({ action, ...fields }),
+  });
+  const body = await res.json();
+  if (!res.ok || body.error) throw Error(body.error || "Bağlantı kurulamadı.");
+  if (body.session) {
+    const { error } = await cloud.auth.setSession(body.session);
+    if (error) throw error;
+  }
+  return body;
 }

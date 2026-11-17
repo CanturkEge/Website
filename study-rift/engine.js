@@ -1,5 +1,12 @@
-import { ITEMS, QUESTIONS, SKILLS, DUNGEONS } from "./data.js";
-export const item = (id) => ITEMS.find((x) => x.id === id);
+import {
+  ITEMS,
+  QUESTIONS,
+  SKILLS,
+  DUNGEONS,
+  CLASSES,
+  getCourse,
+} from "./game-data.js";
+export const item = (id) => ITEMS.find((i) => i.id === id);
 export const today = () =>
   new Intl.DateTimeFormat("en-CA", {
     timeZone: "Europe/Istanbul",
@@ -7,12 +14,18 @@ export const today = () =>
     month: "2-digit",
     day: "2-digit",
   }).format(new Date());
+export const course = (s) => getCourse(s.course || "oop");
+export const bank = (s) => QUESTIONS.filter((q) => q.course === course(s).id);
+export const learned = (s, key) => s.skills.includes(s.classId + "-" + key);
 export function freshState() {
   return {
-    version: 1,
+    version: 2,
     name: "Avcı",
+    classId: null,
+    course: "oop",
     xp: 0,
     gold: 0,
+    essence: 0,
     inventory: { dagger: 1, cloak: 1, potion: 2 },
     equipment: { weapon: "dagger", armor: "cloak", relic: null, notes: null },
     skills: [],
@@ -21,18 +34,35 @@ export function freshState() {
     run: null,
     training: null,
     history: [],
+    notebooks: { oop: "" },
     notes: "",
+    seenDecks: {},
+    lootPity: {},
+    lootRecent: [],
     daily: { date: today(), ids: [], claimed: false },
     settings: { sound: false },
     stats: { answered: 0, correct: 0, runs: 0, wins: 0, bestCombo: 0 },
   };
 }
-export function normalize(raw) {
-  const s = { ...freshState(), ...raw };
+export function normalize(raw = {}) {
+  const s = { ...freshState(), ...raw, version: 2 };
   s.stats = { ...freshState().stats, ...s.stats };
   s.settings = { sound: false, ...s.settings };
-  if (s.daily.date !== today())
+  s.notebooks = { oop: raw.notes || "", ...(raw.notebooks || {}) };
+  if (!s.daily || s.daily.date !== today())
     s.daily = { date: today(), ids: [], claimed: false };
+  if (raw.version !== 2) {
+    s.skills = [];
+    s.classId = null;
+    for (const key of Object.keys(s.cleared))
+      if (!key.includes(":")) {
+        s.cleared["oop:" + key] = s.cleared[key];
+      }
+    if (s.run) {
+      s.run.course = "oop";
+      s.run.used ||= [];
+    }
+  }
   return s;
 }
 export function level(s) {
@@ -44,59 +74,206 @@ export function level(s) {
   }
   return { level: n, current: left, needed: n * 100 + 50 };
 }
-export const points = (s) => Math.max(0, level(s).level - 1 - s.skills.length);
+export const points = (s) =>
+  Math.max(
+    0,
+    2 * (level(s).level - 1) -
+      s.skills.filter((id) => !id.endsWith("-origin")).length,
+  );
+export function chooseClass(s, id) {
+  if (s.classId) throw Error("Sınıfın zaten seçildi.");
+  const c = CLASSES.find((c) => c.id === id);
+  if (!c) throw Error("Geçersiz sınıf.");
+  s.classId = id;
+  s.skills = [id + "-origin"];
+}
 export function attributes(s) {
-  let a = { hp: 100, mp: 80, xp: 0, mana: 12, defense: 0 };
+  let a = {
+    hp: 100,
+    mp: 80,
+    xp: 0,
+    mana: 12,
+    defense: 0,
+    gold: 0,
+    hintCost: 20,
+    heal: 30,
+    healCost: 25,
+    shieldCost: 20,
+    shieldReduction: 0.5,
+    focusCost: 18,
+    eliminate: 1,
+    prophecy: 1,
+    noteUses: 0,
+    lootChance: 0.25,
+    pity: 5,
+    comboThreshold: 3,
+    comboXP: 6,
+  };
+  for (const [k, v] of Object.entries(
+    CLASSES.find((c) => c.id === s.classId)?.base || {},
+  ))
+    a[k] = (a[k] || 0) + v;
   for (const id of Object.values(s.equipment)) {
     const it = item(id);
-    if (it) for (const k of Object.keys(a)) a[k] += it[k] || 0;
+    if (it)
+      for (const k of ["hp", "mp", "xp", "mana", "defense", "gold"])
+        a[k] += it[k] || 0;
   }
-  if (s.skills.includes("vitality")) a.hp += 30;
-  if (s.skills.includes("wisdom")) a.xp += 6;
-  if (s.skills.includes("flow")) a.mana += 5;
+  const absolute = new Set([
+    "hintCost",
+    "healCost",
+    "heal",
+    "shieldCost",
+    "shieldReduction",
+    "focusCost",
+    "eliminate",
+    "prophecy",
+    "lootChance",
+    "pity",
+    "comboThreshold",
+    "comboXP",
+  ]);
+  for (const sk of SKILLS.filter((sk) => s.skills.includes(sk.id))) {
+    for (const [k, v] of Object.entries(sk.effects)) {
+      if (k === "active") continue;
+      if (absolute.has(k)) a[k] = v;
+      else a[k] = (a[k] || 0) + v;
+    }
+  }
   return a;
+}
+export function availableAbilities(s) {
+  const c = CLASSES.find((c) => c.id === s.classId);
+  const list = ["hint", "heal", ...(c ? [c.starter] : [])];
+  for (const sk of SKILLS)
+    if (s.skills.includes(sk.id) && sk.effects.active)
+      list.push(sk.effects.active);
+  if (item(s.equipment.weapon)?.skill)
+    list.push(item(s.equipment.weapon).skill);
+  return [...new Set(list)];
 }
 export function shuffle(a, rng = Math.random) {
   a = [...a];
   for (let i = a.length - 1; i > 0; i--) {
-    let j = Math.floor(rng() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
 export function canEnter(s, d) {
-  return level(s).level >= d.level;
+  return (
+    !course(s).locked &&
+    bank(s).filter((q) => q.difficulty === d.difficulty).length >= 6 &&
+    level(s).level >= d.level
+  );
+}
+export function switchCourse(s, id) {
+  if (s.run) throw Error("Ders değiştirmek için keşfini bitir.");
+  const c = getCourse(id);
+  if (c.id !== id || c.locked)
+    throw Error("Bu ders, içerikleri yüklendiğinde açılacak.");
+  s.course = id;
+  s.training = null;
+}
+function weightedSample(pool, count, s, rng) {
+  const picked = [];
+  pool = [...pool];
+  while (picked.length < count && pool.length) {
+    const weights = pool.map((q) => {
+      const m = s.mastery[q.id];
+      return !m ? 4 : m.lastCorrect ? 1 : 3;
+    });
+    let r = rng() * weights.reduce((a, b) => a + b, 0),
+      idx = 0;
+    while (idx < weights.length - 1 && r >= weights[idx]) r -= weights[idx++];
+    picked.push(pool.splice(idx, 1)[0]);
+  }
+  return picked;
+}
+function drawQuestions(s, difficulty, count, excluded = [], rng = Math.random) {
+  const key = course(s).id + ":" + difficulty,
+    all = bank(s).filter(
+      (q) => q.difficulty === difficulty && !excluded.includes(q.id),
+    );
+  let seen = s.seenDecks[key] || [];
+  let fresh = all.filter((q) => !seen.includes(q.id));
+  if (fresh.length < count) {
+    const rest = weightedSample(fresh, fresh.length, s, rng);
+    seen = [];
+    const extra = weightedSample(
+      all.filter((q) => !rest.includes(q)),
+      count - rest.length,
+      s,
+      rng,
+    );
+    const chosen = [...rest, ...extra];
+    s.seenDecks[key] = chosen.map((q) => q.id);
+    return chosen;
+  }
+  const chosen = weightedSample(fresh, count, s, rng);
+  s.seenDecks[key] = [...seen, ...chosen.map((q) => q.id)];
+  return chosen;
 }
 export function makeQueue(s, d, rng = Math.random) {
-  const pool = QUESTIONS.filter((q) => q.difficulty === d.difficulty);
-  const ordered = shuffle(pool, rng).sort(
-    (a, b) => (s.mastery[a.id]?.correct || 0) - (s.mastery[b.id]?.correct || 0),
+  const regular = drawQuestions(s, d.difficulty, 6, [], rng),
+    boss = drawQuestions(
+      s,
+      Math.min(5, d.difficulty + 1),
+      2,
+      regular.map((q) => q.id),
+      rng,
+    );
+  if (regular.length + boss.length < 8)
+    throw Error("Bu zorluk için yeterli soru yüklenmedi.");
+  return [...regular, ...boss].map((q) => q.id);
+}
+export function displayQuestion(s, training = false) {
+  const ctx = training ? s.training : s.run,
+    q = currentQuestion(s, training);
+  if (!q) return null;
+  if (q.type === "match") return q;
+  const order = ctx.orders?.[q.id] || q.options.map((_, i) => i);
+  return {
+    ...q,
+    options: order.map((i) => q.options[i]),
+    answer: order.indexOf(q.answer),
+  };
+}
+function orders(ids, rng = Math.random) {
+  return Object.fromEntries(
+    ids.map((id) => {
+      const q = QUESTIONS.find((q) => q.id === id);
+      return [
+        id,
+        q.type === "mc"
+          ? shuffle(
+              q.options.map((_, i) => i),
+              rng,
+            )
+          : q.options.map((_, i) => i),
+      ];
+    }),
   );
-  const queue = ordered.slice(0, 6).map((q) => q.id);
-  const boss = shuffle(
-    QUESTIONS.filter(
-      (q) =>
-        q.difficulty === Math.min(3, d.difficulty + 1) && !queue.includes(q.id),
-    ),
-    rng,
-  )
-    .slice(0, 2)
-    .map((q) => q.id);
-  return [...queue, ...boss];
 }
 export function startRun(s, id) {
-  if (s.run) throw Error("Önce mevcut keşfini bitir veya kampta bırak.");
-  const d = DUNGEONS.find((x) => x.id === id);
-  if (!d || !canEnter(s, d)) throw Error("Bu kapı için seviyen yetersiz.");
-  const a = attributes(s);
+  if (s.run) throw Error("Mevcut keşfini önce bitir.");
+  if (!s.classId) throw Error("Önce sınıfını seç.");
+  const d = DUNGEONS.find((d) => d.id === id);
+  if (!d || !canEnter(s, d))
+    throw Error("Bu ders veya zindan henüz açık değil.");
+  const queue = makeQueue(s, d),
+    a = attributes(s);
   s.run = {
+    course: course(s).id,
     dungeon: id,
-    queue: makeQueue(s, d),
+    queue,
+    orders: orders(queue),
     index: 0,
     hp: a.hp,
     mp: a.mp,
     combo: 0,
     shield: false,
+    evade: false,
     revived: false,
     noteUses: 0,
     used: [],
@@ -109,6 +286,8 @@ export function startRun(s, id) {
     earnedGold: 0,
     status: "active",
     correct: 0,
+    secondUsed: false,
+    comboSaved: false,
   };
   s.stats.runs++;
   return s.run;
@@ -118,19 +297,28 @@ export function currentQuestion(s, training = false) {
   return QUESTIONS.find((q) => q.id === id);
 }
 export function startTraining(s, filters = {}) {
-  let pool = QUESTIONS.filter(
+  let pool = bank(s).filter(
     (q) =>
       (filters.topic == null || q.topic === Number(filters.topic)) &&
       (!filters.type || q.type === filters.type) &&
+      (!filters.difficulty || q.difficulty === Number(filters.difficulty)) &&
       (!filters.weak || (s.mastery[q.id]?.wrong || 0) > 0),
   );
-  if (!pool.length)
-    throw Error("Bu filtrelerde soru yok. Önce başka bir konu veya tür seç.");
-  const prev = s.training?.id;
-  const rest = pool.filter((q) => q.id !== prev);
-  const pick = shuffle(rest.length ? rest : pool)[0];
+  if (!pool.length) throw Error("Bu filtrelerde soru yok.");
+  const key = course(s).id + ":training:" + JSON.stringify(filters);
+  let seen = s.seenDecks[key] || [],
+    fresh = pool.filter((q) => !seen.includes(q.id));
+  if (!fresh.length) {
+    seen = [];
+    fresh = pool.filter((q) => q.id !== s.training?.id);
+    if (!fresh.length) fresh = pool;
+  }
+  const q = weightedSample(fresh, 1, s, Math.random)[0];
+  s.seenDecks[key] = [...seen, q.id];
   s.training = {
-    id: pick.id,
+    course: course(s).id,
+    id: q.id,
+    orders: orders([q.id]),
     answered: false,
     feedback: null,
     hint: false,
@@ -139,38 +327,83 @@ export function startTraining(s, filters = {}) {
   return s.training;
 }
 export function checkAnswer(q, value) {
-  if (q.type === "match")
-    return Array.isArray(value) && q.answer.every((a, i) => value[i] === a);
-  return Number(value) === q.answer;
+  return q.type === "match"
+    ? Array.isArray(value) &&
+        value.length === q.answer.length &&
+        q.answer.every((a, i) => value[i] === a)
+    : Number(value) === q.answer;
 }
 export function addItem(s, id) {
   s.inventory[id] = (s.inventory[id] || 0) + 1;
 }
-export function rollLoot(s, rank = "e", rng = Math.random) {
-  const n = rng();
-  const rarity =
+export function rollLoot(s, rank = "e", rng = Math.random, forceNotes = false) {
+  const c = course(s).id,
+    a = attributes(s),
+    key = c + ":" + rank;
+  s.lootPity[key] = (s.lootPity[key] || 0) + 1;
+  let n = rng(),
+    rarity =
+      rank === "e"
+        ? n < 0.6
+          ? "rare"
+          : "common"
+        : rank === "d"
+          ? n < 0.3
+            ? "epic"
+            : "rare"
+          : rank === "c"
+            ? n < 0.1
+              ? "legendary"
+              : n < 0.6
+                ? "epic"
+                : "rare"
+            : n < (rank === "s" ? 0.4 : 0.2)
+              ? "legendary"
+              : "epic";
+  if (rank !== "e" && s.lootPity[key] >= a.pity) {
+    rarity = rank === "d" ? "epic" : "legendary";
+    s.lootPity[key] = 0;
+  }
+  const rankRarities =
     rank === "e"
-      ? n < 0.6
-        ? "rare"
-        : "common"
+      ? ["common", "rare"]
       : rank === "d"
-        ? n < 0.25
-          ? "epic"
-          : "rare"
+        ? ["rare", "epic"]
         : rank === "c"
-          ? n < 0.05
-            ? "legendary"
-            : n < 0.45
-              ? "epic"
-              : "rare"
-          : n < (rank === "s" ? 0.25 : 0.1)
-            ? "legendary"
-            : "epic";
-  const pool = ITEMS.filter(
-    (i) => i.rarity === rarity && !["dagger", "cloak"].includes(i.id),
+          ? ["rare", "epic", "legendary"]
+          : ["epic", "legendary"];
+  const allowed = (i) =>
+    rankRarities.includes(i.rarity) &&
+    !["dagger", "cloak"].includes(i.id) &&
+    i.slot !== "consumable" &&
+    (!i.course || i.course === c) &&
+    !s.inventory[i.id];
+  let pool = ITEMS.filter(
+    (i) =>
+      allowed(i) && i.rarity === rarity && (!forceNotes || i.slot === "notes"),
   );
+  if (forceNotes && !pool.length)
+    pool = ITEMS.filter((i) => allowed(i) && i.slot === "notes");
+  if (!pool.length)
+    pool = ITEMS.filter(
+      (i) => allowed(i) && (!forceNotes || i.slot === "notes"),
+    );
+  if (!pool.length) {
+    s.essence += 15;
+    const id = rng() < 0.6 ? "potion" : "ether";
+    addItem(s, id);
+    return id;
+  }
+  const recentFamily = s.lootRecent
+    .map((id) => item(id)?.family)
+    .filter(Boolean);
+  const varied = pool.filter(
+    (i) => !i.family || !recentFamily.includes(i.family),
+  );
+  if (varied.length) pool = varied;
   const pick = pool[Math.floor(rng() * pool.length)];
   addItem(s, pick.id);
+  s.lootRecent = [...s.lootRecent, pick.id].slice(-4);
   return pick.id;
 }
 function mastery(s, q, correct, train) {
@@ -187,7 +420,7 @@ function mastery(s, q, correct, train) {
       s.daily = { date: today(), ids: [], claimed: false };
     if (correct && !s.daily.ids.includes(q.id)) {
       s.daily.ids.push(q.id);
-      xp = 6;
+      xp = 6 + Math.max(0, q.difficulty - 2) * 2;
       if (s.daily.ids.length >= 5 && !s.daily.claimed) {
         s.daily.claimed = true;
         s.gold += 35;
@@ -198,49 +431,82 @@ function mastery(s, q, correct, train) {
   return xp;
 }
 export function answer(s, value, training = false, rng = Math.random) {
-  const ctx = training ? s.training : s.run;
-  const q = currentQuestion(s, training);
+  const ctx = training ? s.training : s.run,
+    q = displayQuestion(s, training);
   if (!ctx || !q || ctx.answered || (!training && ctx.status !== "active"))
     throw Error("Bu soru zaten tamamlandı.");
   const correct = checkAnswer(q, value);
   ctx.answered = true;
-  let xp = mastery(s, q, correct, training);
-  let damage = 0,
-    loot = [];
+  if (ctx.retry) {
+    ctx.feedback = { correct, value, xp: 0, damage: 0, retry: true };
+    ctx.retry = false;
+    return ctx.feedback;
+  }
+  let xp = mastery(s, q, correct, training),
+    damage = 0,
+    loot = [],
+    hpBefore = ctx.hp;
   if (training) {
     ctx.feedback = { correct, value, xp };
     s.xp += xp;
     return ctx.feedback;
   }
-  const d = DUNGEONS.find((x) => x.id === ctx.dungeon),
-    a = attributes(s);
+  const d = DUNGEONS.find((d) => d.id === ctx.dungeon),
+    a = attributes(s),
+    boss = ctx.index >= 6;
   if (correct) {
     ctx.correct++;
     ctx.combo++;
     s.stats.bestCombo = Math.max(s.stats.bestCombo, ctx.combo);
-    xp = 18 + q.difficulty * 8 + a.xp + (ctx.combo >= 3 ? 6 : 0);
-    ctx.mp = Math.min(a.mp, ctx.mp + a.mana);
-    s.gold += 8 + q.difficulty * 2;
-    ctx.earnedGold += 8 + q.difficulty * 2;
-    if (ctx.index === 3 && rng() < (s.skills.includes("luck") ? 0.6 : 0.25))
+    xp =
+      18 +
+      q.difficulty * 8 +
+      a.xp +
+      (ctx.combo >= a.comboThreshold ? a.comboXP : 0) +
+      (boss ? a.bossXP || 0 : 0) +
+      (ctx.noteThisRoom ? a.noteXP || 0 : 0);
+    if (ctx.focus) xp += 12;
+    if (ctx.wager) xp *= 2;
+    ctx.mp = Math.min(
+      a.mp,
+      ctx.mp + a.mana + (ctx.combo >= a.comboThreshold ? a.comboMana || 0 : 0),
+    );
+    ctx.hp = Math.min(a.hp, ctx.hp + (a.onCorrectHeal || 0));
+    const gold = 8 + q.difficulty * 2 + a.gold;
+    s.gold += gold;
+    ctx.earnedGold += gold;
+    if (ctx.index === 3 && rng() < a.lootChance)
       loot.push(rollLoot(s, d.id, rng));
   } else {
-    ctx.combo = 0;
+    if (a.keepCombo && !ctx.comboSaved) ctx.comboSaved = true;
+    else ctx.combo = 0;
     damage = Math.max(
       5,
-      20 +
-        q.difficulty * 4 +
+      18 +
+        q.difficulty * 5 +
         DUNGEONS.indexOf(d) * 3 +
-        (ctx.index >= 6 ? 6 : 0) -
-        a.defense,
+        (boss ? 6 : 0) -
+        a.defense -
+        (ctx.hint ? a.hintDefense || 0 : 0) -
+        (boss ? a.bossDefense || 0 : 0) +
+        (ctx.wager ? 10 : 0),
     );
     if (ctx.shield) {
-      damage = Math.ceil(damage / 2);
+      damage = Math.ceil(damage * (1 - a.shieldReduction));
       ctx.shield = false;
     }
+    if (ctx.evade) {
+      damage = 0;
+      ctx.evade = false;
+      ctx.mp = Math.min(a.mp, ctx.mp + (a.evasionMana || 0));
+    }
     ctx.hp = Math.max(0, ctx.hp - damage);
-    if (!ctx.hp && s.equipment.relic === "phoenix" && !ctx.revived) {
-      ctx.hp = 40;
+    if (
+      !ctx.hp &&
+      !ctx.revived &&
+      (s.equipment.relic === "phoenix" || a.revive)
+    ) {
+      ctx.hp = s.equipment.relic === "phoenix" ? 40 : a.revive;
       ctx.revived = true;
     }
     if (!ctx.hp) ctx.status = "failed";
@@ -248,39 +514,45 @@ export function answer(s, value, training = false, rng = Math.random) {
   s.xp += xp;
   ctx.earnedXP += xp;
   ctx.drops.push(...loot);
-  ctx.feedback = { correct, value, xp, damage, loot };
+  ctx.feedback = { correct, value, xp, damage, loot, hpBefore };
   return ctx.feedback;
 }
 export function nextRoom(s, rng = Math.random) {
   const r = s.run;
   if (!r || !r.answered || r.status !== "active") return null;
-  if (r.index === r.queue.length - 1) {
+  const a = attributes(s);
+  if (r.index === 7) {
     r.status = "won";
     s.stats.wins++;
-    s.cleared[r.dungeon] = (s.cleared[r.dungeon] || 0) + 1;
+    const key = (r.course || "oop") + ":" + r.dungeon;
+    s.cleared[key] = (s.cleared[key] || 0) + 1;
     const drops = [rollLoot(s, r.dungeon, rng)];
-    if (s.stats.wins === 1) {
-      const available = ITEMS.filter(
-        (x) => x.slot === "notes" && x.rarity === "rare",
-      );
-      const note = available[Math.floor(rng() * available.length)];
-      addItem(s, note.id);
-      drops.push(note.id);
-    }
-    if (s.skills.includes("harvest")) drops.push(rollLoot(s, r.dungeon, rng));
-    const bonus = s.skills.includes("harvest") ? 50 : 0;
-    s.gold += 60 + bonus;
-    r.earnedGold += 60 + bonus;
+    if (s.stats.wins === 1) drops.push(rollLoot(s, r.dungeon, rng, true));
+    for (let i = 0; i < (a.extraLoot || 0); i++)
+      drops.push(rollLoot(s, r.dungeon, rng));
+    const bonus =
+      60 + (a.clearGold || 0) + (r.hp >= a.hp ? a.perfectGold || 0 : 0);
+    s.gold += bonus;
+    r.earnedGold += bonus;
     r.drops.push(...drops);
     recordRun(s);
     return "won";
   }
   r.index++;
-  r.used = [];
-  r.hidden = [];
-  r.hint = false;
-  r.answered = false;
-  r.feedback = null;
+  Object.assign(r, {
+    used: [],
+    hidden: [],
+    hint: false,
+    answered: false,
+    feedback: null,
+    wager: false,
+    focus: false,
+    noteThisRoom: false,
+    fixedMatches: {},
+    matchDraft: [],
+    hp: Math.min(a.hp, r.hp + (a.roomHeal || 0)),
+    mp: Math.min(a.mp, r.mp + (a.roomMana || 0)),
+  });
   return "next";
 }
 export function recordRun(s) {
@@ -289,13 +561,14 @@ export function recordRun(s) {
   r.recorded = true;
   s.history.unshift({
     date: Date.now(),
+    course: r.course || "oop",
     dungeon: r.dungeon,
     status: r.status,
     correct: r.correct,
-    total: r.queue.length,
+    total: 8,
     xp: r.earnedXP,
   });
-  s.history = s.history.slice(0, 40);
+  s.history = s.history.slice(0, 80);
 }
 export function leaveRun(s) {
   if (s.run) {
@@ -305,107 +578,170 @@ export function leaveRun(s) {
   s.run = null;
 }
 export function equip(s, id) {
-  if (s.run) throw Error("Ekipmanını değiştirmek için önce kampa dön.");
+  if (s.run) throw Error("Ekipmanını kampta değiştirebilirsin.");
   const i = item(id);
   if (!i || !s.inventory[id] || i.slot === "consumable")
-    throw Error("Bu eşya kuşanılamıyor.");
+    throw Error("Bu eşya kuşanılamaz.");
   s.equipment[i.slot] = s.equipment[i.slot] === id ? null : id;
 }
 export function unlock(s, id) {
-  const skill = SKILLS.find((x) => x.id === id);
+  const skill = SKILLS.find((sk) => sk.id === id);
   if (
     !skill ||
+    skill.classId !== s.classId ||
     s.skills.includes(id) ||
     points(s) < 1 ||
     level(s).level < skill.level ||
-    (skill.requires && !s.skills.includes(skill.requires))
+    skill.requires.some((r) => !s.skills.includes(r))
   )
-    throw Error("Seviye, önceki yetenek veya yetenek puanı şartı sağlanmıyor.");
+    throw Error("Sınıf, seviye, önkoşul veya puan şartı sağlanmıyor.");
   s.skills.push(id);
 }
 export function useSkill(s, id, training = false) {
   const r = training ? s.training : s.run,
-    q = currentQuestion(s, training);
-  if (!r || r.answered || (!training && r.status !== "active"))
-    throw Error("Önce aktif bir soruya gir.");
+    q = displayQuestion(s, training),
+    a = attributes(s);
+  if (!r || !q) throw Error("Önce aktif bir soruya gir.");
   if (training) {
-    if (id !== "hint")
-      throw Error("Antrenmanda ipucunu ücretsiz kullanabilirsin.");
+    if (id !== "hint" || r.answered)
+      throw Error("İpucu aktif soruda kullanılabilir.");
     r.hint = true;
     return;
   }
+  if (id === "second") {
+    if (
+      !availableAbilities(s).includes(id) ||
+      r.secondUsed ||
+      !r.answered ||
+      r.feedback.correct ||
+      r.feedback.retry
+    )
+      throw Error(
+        "Bu yetenek koşuda tek bir yanlış cevap sonrasında kullanılabilir.",
+      );
+    r.secondUsed = true;
+    r.retry = true;
+    r.answered = false;
+    r.status = "active";
+    r.hp = Math.min(a.hp, r.feedback.hpBefore || 1);
+    r.feedback = null;
+    r.hidden = [];
+    r.used.push(id);
+    return;
+  }
+  if (r.answered || r.status !== "active") throw Error("Soru tamamlandı.");
   if (r.used.includes(id)) throw Error("Bu yeteneği bu odada kullandın.");
-  let cost = {
-    hint: s.skills.includes("insight") ? 12 : 20,
-    heal: 25,
+  if (
+    !["notes", "potion", "ether"].includes(id) &&
+    !availableAbilities(s).includes(id)
+  )
+    throw Error("Bu yetenek sınıfın veya ekipmanınla açılmamış.");
+  const costs = {
+    hint: a.hintCost,
+    heal: a.healCost,
     eliminate: 25,
-    shield: 20,
+    shield: a.shieldCost,
+    focus: a.focusCost,
+    prophecy: 22,
+    channel: 0,
+    sanctuary: 25,
+    evasion: 20,
+    wager: 10,
     notes: 0,
     potion: 0,
     ether: 0,
-  }[id];
+  };
+  const cost = costs[id];
   if (cost == null) throw Error("Bilinmeyen yetenek.");
-  const a = attributes(s);
+  if (r.mp < cost) throw Error("Yeterli mana yok.");
   if (id === "hint" && r.hint) throw Error("İpucu zaten açık.");
   if (id === "heal" && r.hp >= a.hp) throw Error("Canın zaten dolu.");
-  if (id === "shield" && (!s.skills.includes("shield") || r.shield))
-    throw Error("Kalkan açık değil veya zaten etkin.");
-  if (
-    id === "eliminate" &&
-    !s.skills.includes("analysis") &&
-    item(s.equipment.weapon)?.skill !== "eliminate"
-  )
-    throw Error("Eleme için Sezgi Asası veya Olasılık Kırılması gerekli.");
+  if (id === "shield" && r.shield) throw Error("Kalkan zaten etkin.");
   if (id === "eliminate" && q.type !== "mc")
-    throw Error("Eleme yalnızca çoktan seçmeli sorularda kullanılır.");
+    throw Error("Eleme test sorularında kullanılır.");
+  if (id === "prophecy" && q.type !== "match")
+    throw Error("Kehanet eşleştirme sorularında kullanılır.");
+  if (id === "channel" && r.hp <= 20)
+    throw Error("Mana aktarımı için 20’den fazla can gerekli.");
   if (id === "notes") {
-    const n = item(s.equipment.notes);
-    if (r.hint) throw Error("İpucu zaten açık.");
-    if (!n || (n.topic !== -1 && n.topic !== q.topic))
-      throw Error("Bu konuya uygun bir cheat sheet kuşanmalısın.");
-    const limit = n.rarity === "legendary" ? 4 : n.rarity === "epic" ? 3 : 2;
-    if (r.noteUses >= limit)
-      throw Error("Bu zindandaki parşömen kullanımların bitti.");
+    const note = item(s.equipment.notes);
+    if (
+      r.hint ||
+      !note ||
+      note.course !== q.course ||
+      (note.topic !== -1 && note.topic !== q.topic)
+    )
+      throw Error("Bu ders ve konuya uygun, kullanılabilir bir not kuşan.");
+    const max =
+      (note.rarity === "legendary" ? 4 : note.rarity === "epic" ? 3 : 2) +
+      a.noteUses;
+    if (r.noteUses >= max) throw Error("Zindandaki not kullanım hakkın bitti.");
   }
   if (["potion", "ether"].includes(id)) {
-    if (!s.inventory[id]) throw Error("Bu iksirden çantanda yok.");
+    if (!s.inventory[id]) throw Error("Bu iksir çantanda yok.");
     if ((id === "potion" && r.hp >= a.hp) || (id === "ether" && r.mp >= a.mp))
-      throw Error("İlgili gösterge zaten dolu.");
+      throw Error("Gösterge zaten dolu.");
   }
-  if (r.mp < cost) throw Error("Yeterli manan yok.");
   r.mp -= cost;
   r.used.push(id);
   if (id === "hint") r.hint = true;
   if (id === "notes") {
     r.hint = true;
     r.noteUses++;
+    r.noteThisRoom = true;
   }
-  if (id === "heal")
-    r.hp = Math.min(a.hp, r.hp + (s.skills.includes("mend") ? 45 : 30));
+  if (id === "heal") r.hp = Math.min(a.hp, r.hp + a.heal);
   if (id === "shield") r.shield = true;
   if (id === "eliminate")
     r.hidden.push(
-      shuffle(
+      ...shuffle(
         q.options
           .map((_, i) => i)
           .filter((i) => i !== q.answer && !r.hidden.includes(i)),
-      )[0],
+      ).slice(0, a.eliminate),
     );
+  if (id === "prophecy") {
+    r.fixedMatches ||= {};
+    for (const i of shuffle(q.options.map((_, i) => i)).slice(0, a.prophecy))
+      r.fixedMatches[i] = q.answer[i];
+  }
+  if (id === "channel") {
+    r.hp -= 20;
+    r.mp = Math.min(a.mp, r.mp + 30);
+  }
+  if (id === "sanctuary") {
+    r.hp = Math.min(a.hp, r.hp + 20);
+    r.shield = true;
+  }
+  if (id === "evasion") r.evade = true;
+  if (id === "wager") r.wager = true;
+  if (id === "focus") r.focus = true;
   if (id === "potion") {
     s.inventory.potion--;
-    r.hp = Math.min(a.hp, r.hp + 40);
+    r.hp = Math.min(a.hp, r.hp + 40 + (a.potionBonus || 0));
   }
   if (id === "ether") {
     s.inventory.ether--;
     r.mp = Math.min(a.mp, r.mp + 35);
   }
 }
-
 export function buy(s, id) {
-  if (s.run) throw Error("Alışveriş için önce kampa dön.");
-  const price = { potion: 40, ether: 55 }[id];
-  if (!price) throw Error("Bu eşya satılmıyor.");
-  if (s.gold < price) throw Error("Yeterli altının yok.");
-  s.gold -= price;
+  if (s.run) throw Error("Alışveriş için kampa dön.");
+  const p = { potion: 40, ether: 55 }[id];
+  if (!p || s.gold < p) throw Error("Yeterli altın yok.");
+  s.gold -= p;
   addItem(s, id);
+}
+export function salvage(s, id) {
+  const i = item(id);
+  if (
+    s.run ||
+    !i ||
+    !s.inventory[id] ||
+    i.slot === "consumable" ||
+    Object.values(s.equipment).includes(id)
+  )
+    throw Error("Kampta kuşanılmamış bir ekipman seç.");
+  s.inventory[id]--;
+  s.essence += { common: 5, rare: 12, epic: 25, legendary: 60 }[i.rarity];
 }
