@@ -2,6 +2,15 @@
 
 Sürüm biçimi: `ana.özellik.düzeltme`. Bileşenler bağımsız tam sayıdır; `0.3.9 → 0.3.10`, `1.20.0` geçerlidir.
 
+## 0.6.1 · 2026-11-18
+
+Ekipman aktif yetenekleri düzeltildi
+
+- Aktif yetenekler artık silah, zırh ve tılsım yuvalarının tamamından okunur. Uyanmış/Kadim Akıl Pusulası ve Nöbetçi Yeleği gibi ekipmanlar üzerlerinde yazan Eleme’yi açar.
+- Aynı yeteneği sınıftan ve birden fazla eşyadan almak tek düğme ve ortak oda kullanım hakkı sağlar; ek kullanım veya ücretsiz mana avantajı vermez.
+- Eşya detayında ve markette kullanım şekli, aktif/pasif ayrımı, mana bedeli ve soru türü koşulu açıklanır. Yetenek paneli, aktif yeteneği veren kuşanılmış eşyaları gösterir.
+- Eleme yalnız çoktan seçmeli soruda, yanıtlamadan önce 25 MP ile kullanılabilir. Kehanet yalnız eşleştirmede çalışır; sıralama ve eşleştirme kuralları değiştirilmedi.
+
 ## 0.6.0 · 2026-11-18
 
 Modeling dünyası ve kısa cevap düzeltmesi

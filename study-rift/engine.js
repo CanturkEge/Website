@@ -224,14 +224,18 @@ export function attributes(s) {
   }
   return a;
 }
+export function equipmentSkillItems(s, ability = null) {
+  return ["weapon", "armor", "relic"]
+    .map((slot) => item(s.equipment[slot]))
+    .filter((i) => i?.skill && (!ability || i.skill === ability));
+}
 export function availableAbilities(s) {
   const c = CLASSES.find((c) => c.id === s.classId);
   const list = ["hint", "heal", ...(c ? [c.starter] : [])];
   for (const sk of SKILLS)
     if (s.skills.includes(sk.id) && sk.effects.active)
       list.push(sk.effects.active);
-  if (item(s.equipment.weapon)?.skill)
-    list.push(item(s.equipment.weapon).skill);
+  for (const equipped of equipmentSkillItems(s)) list.push(equipped.skill);
   return [...new Set(list)];
 }
 export function shuffle(a, rng = Math.random) {

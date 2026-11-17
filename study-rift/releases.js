@@ -1,5 +1,21 @@
 export const RELEASES = [
   {
+    version: "0.6.1",
+    date: "2026-11-18",
+    title: "Ekipman aktif yetenekleri düzeltildi",
+    groups: [
+      {
+        title: "Aktif ekipmanlar",
+        items: [
+          "Aktif yetenekler artık silah, zırh ve tılsım yuvalarının tamamından okunur. Uyanmış/Kadim Akıl Pusulası ve Nöbetçi Yeleği gibi ekipmanlar üzerlerinde yazan Eleme’yi açar.",
+          "Aynı yeteneği sınıftan ve birden fazla eşyadan almak tek düğme ve ortak oda kullanım hakkı sağlar; ek kullanım veya ücretsiz mana avantajı vermez.",
+          "Eşya detayında ve markette kullanım şekli, aktif/pasif ayrımı, mana bedeli ve soru türü koşulu açıklanır. Yetenek paneli, aktif yeteneği veren kuşanılmış eşyaları gösterir.",
+          "Eleme yalnız çoktan seçmeli soruda, yanıtlamadan önce25 MP ile kullanılabilir. Kehanet yalnız eşleştirmede çalışır; sıralama ve eşleştirme kuralları değiştirilmedi.",
+        ],
+      },
+    ],
+  },
+  {
     version: "0.6.0",
     date: "2026-11-18",
     title: "Modeling dünyası ve kısa cevap düzeltmesi",

@@ -579,12 +579,21 @@ function showRecovery() {
 function shopModal() {
   navigate("market");
 }
+function itemUsage(i) {
+  if (i.skill === "eliminate")
+    return `<div class="item-usage"><strong>⚡ Aktif yetenek · Eleme</strong><p>Bu eşyayı ${i.slot === "weapon" ? "silah" : i.slot === "armor" ? "zırh" : "tılsım"} yuvana kuşan. Zindanda, çoktan seçmeli bir soruyu yanıtlamadan önce <b>Yeteneklerin → Eleme</b> düğmesine bas: 25 MP harcar, bu odada bir kez kullanılır. Sıralama, eşleştirme ve diğer soru türlerinde çalışmaz.</p><small>Sınıfın veya başka ekipmanın da Eleme veriyorsa aynı düğme ve kullanım hakkı paylaşılır; ek kullanım kazandırmaz.</small></div>`;
+  if (i.slot === "relic" && i.revive)
+    return `<div class="item-usage"><strong>🔥 Otomatik tetiklenir</strong><p>Kuşanılıyken yanlış cevap hasarıyla canın sıfırlanırsa zindanda bir kez 40 canla geri dönersin. Düğmeye basman gerekmez; süre dolmasını engellemez.</p></div>`;
+  if (["weapon", "armor", "relic"].includes(i.slot))
+    return `<div class="item-usage"><strong>◇ Pasif ekipman</strong><p>Bonuslar kuşanınca otomatik uygulanır. Bu eşya için ayrı bir aktif yetenek düğmesi yoktur.</p></div>`;
+  return "";
+}
 function itemModal(id) {
   const i = E.item(id);
   if (!i) return;
   const owned = state.equipment[i.slot] === id;
   modal(
-    `<div class="item-detail" style="--rarity:${RARITIES[i.rarity].color}"><div class="detail-art">${icon(i.icon)}</div><div class="item-rarity">${RARITIES[i.rarity].name}</div><h2>${i.name}${E.upgradeLevel(state, i.id) ? " +" + E.upgradeLevel(state, i.id) : ""}</h2><p>${i.desc}</p><div class="item-effect">${i.effect}${E.upgradeLevel(state, i.id) ? " · " + bonusText(E.upgradeBonus(state, i.id)) : ""}</div><p class="muted">Çantanda ${state.inventory[id] || 0} adet var.</p>${i.sheet?.length ? `<div class="cheat-reference"><span class="eyebrow">KUŞANILABİLİR FORMÜL NOTLARI</span>${i.sheet.map((s) => `<section><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></section>`).join("")}<small>${esc(i.source)}</small></div>` : ""}${i.slot === "consumable" ? "<p>İksirleri zindandayken yetenek panelinden kullanabilirsin.</p>" : button(owned ? "Kuşanmayı bırak" : "Kuşan " + icon("arrow"), "equip", "primary wide", `data-id="${id}" ${state.run ? "disabled" : ""}`)}${!state.run && i.slot !== "consumable" && !owned ? button("💠 " + E.salvageValue(state, id) + " öze dönüştür", "market-salvage", "text wide", `data-id="${id}"`) : ""}${state.run ? "<small>Önce keşfini bitirip kampa dön.</small>" : ""}</div>`,
+    `<div class="item-detail" style="--rarity:${RARITIES[i.rarity].color}"><div class="detail-art">${icon(i.icon)}</div><div class="item-rarity">${RARITIES[i.rarity].name}</div><h2>${i.name}${E.upgradeLevel(state, i.id) ? " +" + E.upgradeLevel(state, i.id) : ""}</h2><p>${i.desc}</p><div class="item-effect">${i.effect}${E.upgradeLevel(state, i.id) ? " · " + bonusText(E.upgradeBonus(state, i.id)) : ""}</div>${itemUsage(i)}<p class="muted">Çantanda ${state.inventory[id] || 0} adet var.</p>${i.sheet?.length ? `<div class="cheat-reference"><span class="eyebrow">KUŞANILABİLİR FORMÜL NOTLARI</span>${i.sheet.map((s) => `<section><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></section>`).join("")}<small>${esc(i.source)}</small></div>` : ""}${i.slot === "consumable" ? "<p>İksirleri zindandayken yetenek panelinden kullanabilirsin.</p>" : button(owned ? "Kuşanmayı bırak" : "Kuşan " + icon("arrow"), "equip", "primary wide", `data-id="${id}" ${state.run ? "disabled" : ""}`)}${!state.run && i.slot !== "consumable" && !owned ? button("💠 " + E.salvageValue(state, id) + " öze dönüştür", "market-salvage", "text wide", `data-id="${id}"`) : ""}${state.run ? "<small>Önce keşfini bitirip kampa dön.</small>" : ""}</div>`,
   );
 }
 function accountModal(mode = "login") {
@@ -1387,7 +1396,16 @@ function abilityPanel(r, a, q) {
               (id === "notes" && !state.equipment.notes) ||
               (id === "eliminate" && q.type !== "mc") ||
               (id === "prophecy" && q.type !== "match");
-      return `<button class="ability" data-action="skill" data-id="${id}" ${disabled ? "disabled" : ""}>${icon(ico)}<span><b>${name}</b><small>${desc}</small></span><em>${cost ? cost + " MP" : "ÖZEL"}</em></button>`;
+      const sources = E.equipmentSkillItems(state, id);
+      const condition =
+        id === "eliminate" && q.type !== "mc"
+          ? "Yalnız çoktan seçmeli soruda"
+          : id === "prophecy" && q.type !== "match"
+            ? "Yalnız eşleştirme sorusunda"
+            : r.used.includes(id) && id !== "second"
+              ? "Bu odada kullanıldı"
+              : "";
+      return `<button class="ability" data-action="skill" data-id="${id}" ${disabled ? "disabled" : ""}>${icon(ico)}<span><b>${name}</b><small>${desc}</small>${sources.length ? `<small class="ability-source">Ekipman: ${sources.map((i) => esc(i.name)).join(" · ")}</small>` : ""}${condition ? `<small class="ability-condition">${condition}</small>` : ""}</span><em>${cost ? cost + " MP" : "ÖZEL"}</em></button>`;
     })
     .join("");
 }
@@ -1936,7 +1954,7 @@ function purchaseModal(id, quantity = 1) {
   const i = E.item(offer.itemId),
     error = purchaseError(offer, quantity);
   modal(
-    `<div class="purchase-heading"><div class="activity-icon gold">${offer.emoji || icon(i.icon)}</div><span class="eyebrow">${offer.kind === "gear" ? RARITIES[i.rarity].name : "KEŞİF HAZIRLIĞI"}</span><h2>${offer.name}</h2><p>${offer.desc}</p></div>${i ? `<div class="item-effect">${i.effect}</div>` : ""}${compareGear(i)}<div class="purchase-contents">${offer.contents.map(([id, n]) => `<span>${icon(E.item(id).icon)} <b>${n * quantity}×</b> ${E.item(id).name}</span>`).join("")}</div><div class="purchase-total"><span>Toplam</span><strong>🪙 ${(offer.price * quantity).toLocaleString("tr-TR")} altın</strong></div><p class="muted small">Alışveriş sonrası: ${Math.max(0, state.gold - offer.price * quantity)} altın. ${offer.limit ? "Ders başına günlük tek alım." : "İksirler çantanda birikir."}</p>${error ? `<div class="notice"><p>${esc(error)}</p></div>` : ""}<button class="btn primary wide" data-action="market-buy" data-id="${id}" data-quantity="${quantity}" ${error ? "disabled" : ""}>${offer.price * quantity} altın öde · satın al</button>${offer.kind === "gear" && state.inventory[id] ? button(state.equipment[i.slot] === id ? "Kuşanmayı bırak" : "Bu ekipmanı kuşan", "market-equip", "secondary wide", `data-id="${id}" ${state.run ? "disabled" : ""}`) : ""}`,
+    `<div class="purchase-heading"><div class="activity-icon gold">${offer.emoji || icon(i.icon)}</div><span class="eyebrow">${offer.kind === "gear" ? RARITIES[i.rarity].name : "KEŞİF HAZIRLIĞI"}</span><h2>${offer.name}</h2><p>${offer.desc}</p></div>${i ? `<div class="item-effect">${i.effect}</div>` : ""}${compareGear(i)}${i ? itemUsage(i) : ""}<div class="purchase-contents">${offer.contents.map(([id, n]) => `<span>${icon(E.item(id).icon)} <b>${n * quantity}×</b> ${E.item(id).name}</span>`).join("")}</div><div class="purchase-total"><span>Toplam</span><strong>🪙 ${(offer.price * quantity).toLocaleString("tr-TR")} altın</strong></div><p class="muted small">Alışveriş sonrası: ${Math.max(0, state.gold - offer.price * quantity)} altın. ${offer.limit ? "Ders başına günlük tek alım." : "İksirler çantanda birikir."}</p>${error ? `<div class="notice"><p>${esc(error)}</p></div>` : ""}<button class="btn primary wide" data-action="market-buy" data-id="${id}" data-quantity="${quantity}" ${error ? "disabled" : ""}>${offer.price * quantity} altın öde · satın al</button>${offer.kind === "gear" && state.inventory[id] ? button(state.equipment[i.slot] === id ? "Kuşanmayı bırak" : "Bu ekipmanı kuşan", "market-equip", "secondary wide", `data-id="${id}" ${state.run ? "disabled" : ""}`) : ""}`,
   );
 }
 function purchaseReceipt(receipt) {
