@@ -228,7 +228,7 @@ function next(s) {
 }
 
 test("bank doubled to 168 and six valid formats", () => {
-  assert.equal(QUESTIONS.length, 168);
+  assert.equal(QUESTIONS.filter((q) => q.course === "oop").length, 168);
   for (const type of ["mc", "tf", "match", "multi", "order", "short"])
     assert(QUESTIONS.some((q) => q.type === type));
 });

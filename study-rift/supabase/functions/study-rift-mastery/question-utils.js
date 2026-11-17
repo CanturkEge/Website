@@ -14,12 +14,34 @@ export const normalizeAnswer = (value) =>
     .replace(/ı/g, "i")
     .replace(/\s+/g, " ")
     .trim();
+// Accept one finite number, an optional simple fraction and an explicitly allowed unit.
+// Comma is a decimal separator, never an implicit thousands separator.
+export function parseNumericAnswer(value, units = []) {
+  if (typeof value !== "string" || value.length > 200) return null;
+  const text = normalizeAnswer(value).replace(/−/g, "-");
+  const match = text.match(
+    /^([+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?)(?:\s*\/\s*([+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?))?\s*(.*?)$/i,
+  );
+  if (!match) return null;
+  const suffix = match[3];
+  if (suffix && !units.some((u) => normalizeAnswer(u) === suffix)) return null;
+  const numerator = Number(match[1].replace(",", "."));
+  const denominator = match[2] ? Number(match[2].replace(",", ".")) : 1;
+  const result = numerator / denominator;
+  return Number.isFinite(result) ? result : null;
+}
 export function gradeAnswer(q, value) {
-  if (q.type === "short")
-    return (
-      typeof value === "string" &&
-      q.answer.some((a) => normalizeAnswer(a) === normalizeAnswer(value))
-    );
+  if (q.type === "short") {
+    if (typeof value !== "string") return false;
+    if (q.numeric) {
+      const number = parseNumericAnswer(value, q.numeric.units || []);
+      return (
+        number !== null &&
+        Math.abs(number - q.numeric.value) <= (q.numeric.tolerance || 0) + 1e-10
+      );
+    }
+    return q.answer.some((a) => normalizeAnswer(a) === normalizeAnswer(value));
+  }
   if (q.type === "multi") {
     if (
       !Array.isArray(value) ||
@@ -83,6 +105,7 @@ export function publicQuestion(q) {
       "options",
       "code",
       "source",
+      "answerFormat",
     ]
       .filter((k) => q[k] !== undefined)
       .map((k) => [k, q[k]]),

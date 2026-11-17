@@ -17,11 +17,23 @@ A standalone Turkish study dungeon RPG served at `/study-rift/` by the existing 
 
 ## Content and adding courses
 
-**168 original OOD sample questions across six formats, including 84 new multi-select, sequence-ordering and short-answer questions. No professor slides have been imported.** Every question displays its source status. High-tier distractors distinguish closely related concepts, rather than just asking for definitions.
+**168 original OOD sample questions across six formats, including 84 new multi-select, sequence-ordering and short-answer questions. No professor OOD slides have been imported.** Every question displays its source status. High-tier distractors distinguish closely related concepts, rather than just asking for definitions.
 
 `courses.js` is the course registry. `game-data.js` combines catalog data. Add a course entry with a unique ID, topics, realm, theme and lock status. Add source-backed question objects with that `course` ID, globally unique question IDs, topic index, difficulty 1–5, type `mc`/`tf`/`match`/`multi`/`order`/`short`, options, answer, explanation, hint, and source filename/slide. MC/TF answers are integer indices; matching answers are parallel arrays of right-side labels; multi answers are an exact set of integer indices; order answers are the ordered labels; short answers are a nonempty array of accepted string aliases. Add the course's notes and course-tagged cheat sheets.
 
 Leave a course locked until its content is ready. New-room exams need 16 distinct regular-tier questions and 7 boss-tier questions; S-rank needs 23 distinct tier-5 questions. The per-room format constraints in `rooms.js` must also be satisfiable; keep a balanced format pool and leave courses locked until ready. The client doesn't upload or parse slides and does not call an AI service. The assistant can import reviewed slide content through repository changes.
+
+## Modeling course (v0.6)
+
+The `simulation` realm is unlocked with **220 questions, 11 topics, 36 lessons, 108 explanation sections, 72 flashcards, 72 lesson-scoped mini checks and 12 equippable cheat sheets**. The OOD pool remains 168; total questions are 388. Question IDs are stable `sim-CC-NN`, with 20/chapter and 44/difficulty. All six formats and all five room-exam tiers are covered. Numerical questions state units, assumptions and rounding; explanations work through calculations. Mini checks test their own lesson's concepts, separately from the dungeon pool.
+
+`simulation-sources.js` indexes the professor's uploaded two-slides-per-page Subject1–11 PDFs, with one-based PDF page references on questions/lessons. The six-slides-per-page ZIP duplicates the source content and is not counted twice. `simulation-questions.js`, `simulation-learning.js`, `simulation-checks.js` and `simulation-loot.js` hold original adapted content; full source PDFs are not redistributed. Corrections/notation clarifications cover geometric support, normal/Weibull parameterization, Box–Muller and test-decision interpretations.
+
+All course progression/notebooks, random decks, market notes and mastery exams use the existing course-scoped mechanisms. Shared character gear/XP/gold remain shared. Modeling has its own dungeon and room presentation names. Skill-independent daily mastery must deploy the updated `bank.json` and shared `question-utils.js`; existing frozen OOD exams are preserved. No schema change is needed.
+
+Numeric short questions optionally carry private `numeric:{value,tolerance,units}` grading metadata and public `answerFormat` instructions. The strict parser accepts a finite decimal (comma/dot), scientific notation or a simple fraction with an explicitly allowed unit. It rejects expressions, unknown units, infinities and division by zero. It performs no implicit unit conversion. Public questions never expose the private numeric value. Text answers retain accent/case normalization.
+
+The form-input regression came from delegating all `[data-page]` ancestors after adding `body.dataset.page`: clicking inputs found `body` and rerendered the page. Delegation now selects only actionable links/buttons. Browser verification uses actual click then focused keyboard entry and submit, which reproduces the original failure; locator-fill alone would miss it.
 
 ## Lobby, navigation and market
 
@@ -45,7 +57,7 @@ After question edits, run `npm run build:bank` and redeploy **study-rift-mastery
 
 ## Guided learning
 
-`learning.js` contains six OOD units, three sublessons each, 54 explanation sections, 36 flash cards and 36 optional mini checks. Unit/lesson identifiers are course-scoped. The reader opens explanations first; flash cards and checks use separate, explicitly selected tabs. Read completion is manual and does not require a quiz score. Saved progress includes read lessons, known/review cards, check answers and last lesson. It does not award game XP or leaderboard points. Other courses need their own authored units; none borrow OOD content. All materials are original samples, pending the professor's slides.
+`learning.js` contains six OOD units, three sublessons each, 54 explanation sections, 36 flash cards and 36 optional mini checks. Unit/lesson identifiers are course-scoped. The reader opens explanations first; flash cards and checks use separate, explicitly selected tabs. Read completion is manual and does not require a quiz score. Saved progress includes read lessons, known/review cards, check answers and last lesson. It does not award game XP or leaderboard points. Modeling is separately authored from the supplied Subject1–11 slides; other locked courses still need their own content. No course borrows another course's lessons.
 
 ## Account management
 
@@ -85,8 +97,10 @@ No frontend build is required. Commit the vendored SDK and lockfile, not `node_m
 
 Backend integration was tested with a disposable account: signup without email, username login, duplicate/wrong-password rejection, own-profile visibility, save creation/readback and stale revision rejection. The test session was signed out and the disposable account removed. Browser QA checks the login gate and registration form; an isolated preview-only character fixture tests class selection, branches, realms and combat without using user credentials. QA fixture files are never shipped.
 
-Version 0.3 checks additionally cover all six formats, exact multi-selection, canonical short aliases, shuffled multi answer mapping, room locks, fatal damage/restart, defensive passives, numeric versions and server bank consistency. Live backend tests used two disposable accounts: identical daily questions, both 200/200 despite forged XP/class/equipment inputs, equal rank, foreign-attempt and anonymous rejection, duplicate submission rejection and one attempt per day. Sessions were signed out and both accounts removed. No professor slides have been imported.
+Version 0.3 checks additionally cover all six formats, exact multi-selection, canonical short aliases, shuffled multi answer mapping, room locks, fatal damage/restart, defensive passives, numeric versions and server bank consistency. Live backend tests used two disposable accounts: identical daily questions, both 200/200 despite forged XP/class/equipment inputs, equal rank, foreign-attempt and anonymous rejection, duplicate submission rejection and one attempt per day. Sessions were signed out and both accounts removed. No professor OOD slides have been imported.
 
 Version 0.4 adds regression checks for room exam progression, clock persistence/expiry, stopping the clock on final answer, v0.3 run migration, mana loss/regeneration, timed daily mission retries/reward idempotency and course-scoped learning progress. UI QA uses isolated preview fixtures; live backend tests use disposable accounts to verify server deadlines, rename-without-rerank, password rechecks, account deletion, leaderboard removal and stale-token denial.
 
 Version 0.5 adds eight engine regression checks for daily stock/limits, bulk and bundle accounting, purchase atomicity, level gates, forge costs/caps/equipped effects, salvage, active-run restrictions and v4 save migration. Isolated browser fixtures verify the lobby, locked-world previews, grouped navigation, market transactions and receipts, local persistence, forging, mobile layout and display-name-only leaderboard rows.
+
+Version 0.6 adds six regression checks for Modeling coverage/source references, numeric grading and public-payload privacy, room allocation/full clears at every tier, course-separated learning progress, and functional course-scoped cheat sheets. Browser fixtures exercise text and numeric answer clicks/submission, the new realm, its learning path, mini checks, flashcards, equipment reference content and mobile widths.
