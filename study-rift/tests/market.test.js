@@ -22,7 +22,7 @@ test("daily equipment stays stable across purchases and changes on a new date", 
     dailyStock("oop", "2026-11-18"),
     dailyStock("oop", "2026-11-19"),
   );
-  assert.deepEqual(dailyStock("database", date), []);
+  assert.deepEqual(dailyStock("os", date), []);
   E.buy(s, a[0].id);
   assert.deepEqual(dailyStock("oop", date), a);
   assert(s.inventory[a[0].id]);

@@ -2,6 +2,27 @@
 
 Sürüm biçimi: `ana.özellik.düzeltme`. Bileşenler bağımsız tam sayıdır; `0.3.9 → 0.3.10`, `1.20.0` geçerlidir.
 
+## 0.8.0 · 2026-11-18
+
+Database · Kayıtlar Mahzeni açıldı
+
+- Arşivdeki 21 PDF (151 fiziksel sayfa) ve 5 SQL metninden 7 konu ve 210 özgün soru. Her konuda 5 zorluk × 6 soru formatı; işlem izleri, model kararları ve SQL çıktıları.
+- 31 alt bölüm, 93 anlatım adımı, 62 flash kart ve 62 mini kontrol. Özgün ve açıklamalı ER/EER diyagramları; kaynak dosya/sayfa bilgileri.
+- Ortam/süreç, ER, EER, ilişkisel mapping, DDL, SELECT/JOIN/gruplama, alt sorgular/view/routines/triggers. Normalizasyon ayrıntılarının arşivde bulunmadığı açıkça belirtilir.
+- SQL Server lehçesi ve kaynak hataları ayrıştırıldı. SQL sorgu sonucu örnekleri geçici yerel veritabanlarında test edilir.
+- 7 konu notu + bir efsanevi atlas, kursa özel loot/market ve ücretsiz not ipuçları. Mavi tema, 5 zindan ve 8 oda adı.
+- 778 soruluk Ustalık havuzu; mevcut 10 soru/200 puan, süre ve sınıftan bağımsız sıralama kuralları. Auth ve veri şeması değişmedi, eski kayıtlar korunur.
+
+## 0.8.0 · 2026-11-18
+
+Database · Kayıtlar Mahzeni açıldı
+
+- Yüklenen 21 PDF (151 sayfa) ve 5 SQL notu incelenerek 210 özgün soru eklendi. 7 konu × 5 zorluk × 6 format; toplam havuz 778 soru.
+- 7 ünite, 31 alt bölüm, 93 anlatım adımı, 62 flash kart ve 62 mini kontrol. ER/EER için özgün, erişilebilir diyagramlar.
+- ER/EER, ilişkisel mapping, SQL Server DDL/DML, JOIN/NULL/gruplama, alt sorgular, view ve programlanabilir SQL. Kaynaklarda ayrıntısı bulunmayan normalizasyon/merge açıkça kapsam dışında işaretlenir.
+- Mavi Kayıtlar Mahzeni, 5 zindan/8 oda adı, 7 konu cheat sheet’i ve efsanevi Kayıp Katalog. Loot/market, öğrenme ve adil günlük Ustalık sistemiyle bütünleşir.
+- Kaynak SQL/kardinalite hataları açıklanarak düzeltilir; SQL çıktı örnekleri geçici yerel veritabanlarında sınanır. Eski kayıtlar, Auth ve sunucu şeması korunur.
+
 ## 0.7.0 · 2026-11-18
 
 Data Structures · Düğüm Korusu açıldı

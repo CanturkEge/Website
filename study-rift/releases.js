@@ -1,5 +1,30 @@
 export const RELEASES = [
   {
+    version: "0.8.0",
+    date: "2026-11-18",
+    title: "Database · Kayıtlar Mahzeni açıldı",
+    groups: [
+      {
+        title: "Kaynaklı veritabanı dünyası",
+        items: [
+          "Yüklenen arşivdeki 21 PDF (151 sayfa) ve 5 SQL metni incelendi. Veritabanı ortamı, ER, EER, ilişkisel mapping, SQL temelleri, sorgular/JOIN ve ileri SQL için 7 ünite açıldı.",
+          "210 özgün soru eklendi: her konuda 5 zorluk ve 6 format. Kardinalite/katılım, tekrar eden ilişkiler, PK/FK/UNIQUE, NULL, dış birleşim, gruplama ve ilişkili alt sorgular ayrıntılı senaryolarla çalışılır.",
+          "Ana lobiden mavi Kayıtlar Mahzeni’ne giriş, derse özel 5 zindan ve 8 oda adı eklendi. Önceki derslerdeki karakter ve kayıtlar korunur.",
+        ],
+      },
+      {
+        title: "Anlatım, diyagram, SQL ve ganimet",
+        items: [
+          "31 alt bölüm, 93 anlatım adımı, 62 flash kart ve 62 mini kontrol eklendi. Özgün ER/EER diyagramları, açıklamaları ve SQL kod blokları öğrenme yoluna eşlik eder.",
+          "7 konu cheat sheet’i ve efsanevi Kayıp Katalog loot/market havuzuna katıldı. Notlar yalnız bu dersin sorularında ücretsiz ipucu verir.",
+          "SQL Server’a özgü sözdizimi açıkça etiketlenir. LEFT JOIN ON/WHERE, NULL, alias kapsamı ve eksik ON DELETE gibi kaynak hataları düzeltilerek anlatılır.",
+          "Normalizasyon kaynaklarda hedef olarak geçer; ayrıntılı 2NF/3NF ve merge sayfaları arşivde bulunmadığı için tamamlanmış bir ders gibi sunulmaz. Kaynak ve kapsam paneli bütün dosyaları listeler.",
+          "Ustalık havuzu toplam 778 soruya çıktı. Aynı günlük 10 soru/200 puan sistemi sınıf, ekipman veya XP bonusu kullanmaz. SQL sonucu soruları ayrıca geçici yerel veritabanlarında doğrulanır.",
+        ],
+      },
+    ],
+  },
+  {
     version: "0.7.0",
     date: "2026-11-18",
     title: "Data Structures · Düğüm Korusu açıldı",

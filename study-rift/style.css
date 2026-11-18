@@ -7680,3 +7680,20 @@ body {
   color: var(--muted);
   line-height: 1.5;
 }
+
+.lesson-section > div { min-width: 0; flex: 1; }
+.database-diagram {
+  margin: 22px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  background: #07121b88;
+  max-width: 100%;
+}
+.database-diagram-scroll { overflow-x: auto; }
+.database-diagram svg { display: block; width: 100%; min-width: 520px; height: auto; }
+.database-diagram rect, .database-diagram circle { fill: #122a39; stroke: #83bddd; stroke-width: 1.5; }
+.database-diagram path { fill: none; stroke: #83bddd; stroke-width: 2; }
+.database-diagram text { fill: #c4dcec; stroke: none; font-size: 10px; font-family: inherit; text-anchor: middle; }
+.database-diagram .db-diagram-title { fill: #f0f8fc; font-size: 15px; font-weight: 650; }
+.database-diagram figcaption { margin-top: 10px; color: #b5cbd9; font-size: 12px; line-height: 1.7; }

@@ -165,10 +165,10 @@ test("learning path has scoped unit lessons, valid mini checks and durable read/
   const restored = E.normalize(JSON.parse(JSON.stringify(s)));
   assert.deepEqual(learningState(restored).read, ["java-1"]);
   assert.equal(learningState(restored).cards["java-1-card-0"], "review");
-  restored.course = "database";
+  restored.course = "os";
   assert.equal(learningState(restored).read.length, 0);
   assert.throws(() => markLesson(restored, "java-1"));
-  assert.equal(courseLessons("database").length, 0);
+  assert.equal(courseLessons("os").length, 0);
 });
 
 test("untouched v0.3 room maps upgrade without restarting rewards or losing daily XP history", () => {
