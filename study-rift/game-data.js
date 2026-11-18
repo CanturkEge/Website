@@ -1,4 +1,5 @@
 import { SIMULATION_QUESTIONS } from "./simulation-questions.js";
+import { DS_QUESTIONS, DS_ITEMS, DS_NOTES } from "./ds-content.js";
 import { SIMULATION_ITEMS, SIMULATION_NOTES } from "./simulation-loot.js";
 import * as V1 from "./data.js";
 import { EXTENDED } from "./questions-v3.js";
@@ -12,16 +13,19 @@ export const ITEMS = [
   ...V1.ITEMS.map((i) => (i.slot === "notes" ? { ...i, course: "oop" } : i)),
   ...GEAR,
   ...SIMULATION_ITEMS,
+  ...DS_ITEMS,
 ];
 export const QUESTIONS = [
   ...V1.QUESTIONS.map((q) => ({ ...q, course: "oop" })),
   ...ADVANCED,
   ...EXTENDED,
   ...SIMULATION_QUESTIONS,
+  ...DS_QUESTIONS,
 ];
 export const BONUS_NOTES = [
   ...V1.BONUS_NOTES.map((n) => ({ ...n, course: "oop" })),
   ...SIMULATION_NOTES,
+  ...DS_NOTES,
 ];
 export const DUNGEONS = V1.DUNGEONS.map((d, i) => ({
   ...d,

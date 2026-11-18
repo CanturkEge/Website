@@ -1,4 +1,4 @@
-# Study Rift · v0.4.0
+# Study Rift · v0.7.0
 
 A standalone Turkish study dungeon RPG served at `/study-rift/` by the existing GitHub Pages site. The website homepage is unchanged.
 
@@ -7,17 +7,17 @@ A standalone Turkish study dungeon RPG served at `/study-rift/` by the existing 
 - Mandatory username/password accounts. Email is optional, only for recovery. New Study Rift accounts do not require email confirmation; other apps' Auth configuration is unchanged.
 - Choose a permanent class: **Rün Bilgesi**, **Rift Muhafızı**, or **Gölge Gezgin**. Each has **16 branched nodes** and a unique starting ability. Root is free; each subsequent level gives 2 points. All 48 node effects are connected to the engine.
 - Class-specific actions include correct matching pairs (Kehanet), a single reward-free correction (İkinci Şans), conversion of HP to MP, shields, evasion, and a risky XP wager.
-- **89 catalog items**: 17 original items and 72 combinations of 18 equipment families × 4 rarities. Gear has actual stat differences; some open abilities. Topic-specific cheat sheets unlock notes and give limited free hints.
+- **108 catalog items**: 17 original items, 72 combinations of 18 equipment families × 4 rarities, 12 Modeling notes and 7 Data Structures notes. Gear has actual stat differences; some open abilities. Topic-specific cheat sheets unlock notes and give limited free hints.
 - Rank-weighted loot excludes currently owned equipment and prefers families outside the last four drops. No selected-rarity candidates → another allowed rarity; no eligible equipment left → consumable + essence. D+ rank has a quality guarantee after 5 drops (3 with the appropriate Ranger node). Consumables stack. Salvaged items may become eligible again; there is no claim of an infinite unique catalog.
 - Five ranks use **difficulty 1–5**, eight separate room exams and 23 distinct questions per new run; the final two rooms use the next tier (capped at 5). Room formats prefer variety and unseen/weak material. A bipartite assignment reserves scarce formats while keeping every question inside its room’s allowed formats. No question repeats within a new run. MC choices are shuffled and persisted for the run; matching layouts stay stable.
 - Training has topic, format, difficulty and wrong-answer filters. First daily correct answer per question gives limited XP. An explicitly started five-minute mission requires five unique correct answers and rewards 35 gold + one HP potion once per day. Expired missions can retry without resetting the daily question-XP ledger.
 - Separate course question pools, mastery, mistakes, bonus notes, personal notebooks and history. Character XP and equipment are shared across courses.
-- OOD is open. Database Management, Operating Systems, Digital Logic Design and Modeling & Discrete Simulation are currently locked. Each course has its own realm title, topics and scene color treatment.
+- OOD, Modeling & Discrete Simulation and Data Structures are open. Database Management, Operating Systems and Digital Logic Design are currently locked. Each course has its own realm title, topics and scene color treatment.
 - Animated startup, portal-entry transition, loot reveal, reduced-motion support, responsive layouts.
 
 ## Content and adding courses
 
-**168 original OOD sample questions across six formats, including 84 new multi-select, sequence-ordering and short-answer questions. No professor OOD slides have been imported.** Every question displays its source status. High-tier distractors distinguish closely related concepts, rather than just asking for definitions.
+**568 questions across six formats: 168 original OOD samples, 220 Modeling questions and 180 Data Structures questions adapted from supplied slides. No professor OOD slides have been imported.** Every question displays its source status. High-tier distractors distinguish closely related concepts, rather than just asking for definitions.
 
 `courses.js` is the course registry. `game-data.js` combines catalog data. Add a course entry with a unique ID, topics, realm, theme and lock status. Add source-backed question objects with that `course` ID, globally unique question IDs, topic index, difficulty 1–5, type `mc`/`tf`/`match`/`multi`/`order`/`short`, options, answer, explanation, hint, and source filename/slide. MC/TF answers are integer indices; matching answers are parallel arrays of right-side labels; multi answers are an exact set of integer indices; order answers are the ordered labels; short answers are a nonempty array of accepted string aliases. Add the course's notes and course-tagged cheat sheets.
 
@@ -106,3 +106,6 @@ Version 0.5 adds eight engine regression checks for daily stock/limits, bulk and
 Version 0.6 adds six regression checks for Modeling coverage/source references, numeric grading and public-payload privacy, room allocation/full clears at every tier, course-separated learning progress, and functional course-scoped cheat sheets. Browser fixtures exercise text and numeric answer clicks/submission, the new realm, its learning path, mini checks, flashcards, equipment reference content and mobile widths.
 
 Version 0.6.1 reads active skills from all three equipped weapon/armor/relic slots. Owning an item without equipping it grants no action. Repeated gear/class sources share one ability and one per-room cast. Item/market details explain activation, passive and automatic effects; the combat panel identifies equipped skill sources and format restrictions. Eleme remains MC-only (25 MP); Kehanet remains matching-only. Three regressions cover every skill-bearing item, source deduplication, per-room limits, format/mana atomicity, passive relics and automatic Phoenix revival. No backend or save migration change is needed.
+
+
+Version 0.7 adds Data Structures from the supplied `DataStructures.zip` / `Week1.pdf` through `Week6.pdf` (316 PDF pages, Borahan Tümer). The original Turkish adaptations cover 180 questions (30/week, one of each six formats per difficulty), 6 units, 24 lessons, 72 explanation sections, 48 cards, 48 optional mini checks and 7 course-scoped cheat-sheet items. `ds-sources.js` records physical PDF page references and explicit corrections for source C/index/asymptotic/rotation errors. `ds-content.js` assembles separately authored foundation, linear structure and tree modules. PDF originals are not redistributed. The Düğüm Korusu realm has a distinct cyan scene, reduced-motion-aware node animation and its own dungeon/room names. Existing version-5 saves need no migration; progress, notebook and mastery remain scoped by course. The 568-question mastery snapshot must be deployed with the unchanged authenticated grading function. No Auth or database schema changes are required.

@@ -1,5 +1,29 @@
 export const RELEASES = [
   {
+    version: "0.7.0",
+    date: "2026-11-18",
+    title: "Data Structures · Düğüm Korusu açıldı",
+    groups: [
+      {
+        title: "Altı haftalık ders dünyası",
+        items: [
+          "DataStructures.zip içindeki Week1–6 slaytlarından 180 özgün soru eklendi. Bellek/pointer, algoritma analizi, sparse yapılar, recursion, stack, queue, BST, AVL, splay ve B-tree kapsanır.",
+          "Her haftada 5 zorluk ve 6 soru türü bulunur: çoktan seçmeli, doğru/yanlış, çoklu seçim, eşleştirme, sıralama ve kısa/sayısal yanıt. Üst seviyeler işlem izleri ve çok adımlı çıkarımlar içerir.",
+          "Ana lobiden girilen turkuaz Düğüm Korusu, hareketli düğüm sahnesi, derse özel 5 zindan ve 8 oda adıyla açıldı. Mevcut odalı sınav, can/mana ve ölümde yeniden başlama kuralları geçerlidir.",
+        ],
+      },
+      {
+        title: "Öğrenme, ganimet ve Ustalık",
+        items: [
+          "6 ünite, 24 alt bölüm, 72 anlatım adımı, 48 flash kart ve 48 isteğe bağlı mini kontrol eklendi. Okuma/kart ilerlemesi diğer derslerden ayrı kaydedilir.",
+          "6 konu notu ve bir efsanevi atlas loot ve market havuzuna eklendi. Kuşanılan notlar yalnız Data Structures sorularında ücretsiz ipucu verir.",
+          "Soruların ve bölümlerin altında PDF sayfa kaynakları bulunur. C boyutları, stack/queue sınırları, asimptotik tanımlar ve AVL rotasyon adlandırmasındaki slayt hataları açıklanarak düzeltildi.",
+          "Ustalık havuzu Data Structures’ı içerir. Günlük 10 soru/200 puan sınavı ekipman, sınıf ve XP bonuslarından bağımsızdır. Önceki derslerin kayıtları korunur.",
+        ],
+      },
+    ],
+  },
+  {
     version: "0.6.1",
     date: "2026-11-18",
     title: "Ekipman aktif yetenekleri düzeltildi",
@@ -10,7 +34,7 @@ export const RELEASES = [
           "Aktif yetenekler artık silah, zırh ve tılsım yuvalarının tamamından okunur. Uyanmış/Kadim Akıl Pusulası ve Nöbetçi Yeleği gibi ekipmanlar üzerlerinde yazan Eleme’yi açar.",
           "Aynı yeteneği sınıftan ve birden fazla eşyadan almak tek düğme ve ortak oda kullanım hakkı sağlar; ek kullanım veya ücretsiz mana avantajı vermez.",
           "Eşya detayında ve markette kullanım şekli, aktif/pasif ayrımı, mana bedeli ve soru türü koşulu açıklanır. Yetenek paneli, aktif yeteneği veren kuşanılmış eşyaları gösterir.",
-          "Eleme yalnız çoktan seçmeli soruda, yanıtlamadan önce25 MP ile kullanılabilir. Kehanet yalnız eşleştirmede çalışır; sıralama ve eşleştirme kuralları değiştirilmedi.",
+          "Eleme yalnız çoktan seçmeli soruda, yanıtlamadan önce 25 MP ile kullanılabilir. Kehanet yalnız eşleştirmede çalışır; sıralama ve eşleştirme kuralları değiştirilmedi.",
         ],
       },
     ],

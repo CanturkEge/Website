@@ -2,6 +2,17 @@
 
 Sürüm biçimi: `ana.özellik.düzeltme`. Bileşenler bağımsız tam sayıdır; `0.3.9 → 0.3.10`, `1.20.0` geçerlidir.
 
+## 0.7.0 · 2026-11-18
+
+Data Structures · Düğüm Korusu açıldı
+
+- Yüklenen Week1–6 PDF’lerinden 180 özgün, kaynak sayfalı soru: her haftada 5 zorluk ve 6 format. Bellek/pointer, analiz/sparse/recursion, stack, queue, BST, AVL, splay ve B-tree.
+- 6 ünite, 24 alt bölüm, 72 anlatım adımı, 48 flash kart ve 48 isteğe bağlı mini kontrol. İlerleme diğer derslerden ayrı kaydedilir.
+- Lobiden erişilen turkuaz Düğüm Korusu; hareketli düğüm sahnesi, 5 zindan ve 8 oda adı. Mevcut sınav, süre, can/mana ve loot kuralları korunur.
+- 6 konu cheat sheet’i + efsanevi atlas; dersle sınırlı ücretsiz ipuçları, market ve ganimet entegrasyonu.
+- C boyutu/indis, asimptotik tanım, stack/queue sınırı ve AVL adlandırma hataları kaynak notlarında açıklandı.
+- Data Structures, aynı 10 soru/200 puan ve sınıf/ekipman bonusu olmayan günlük Ustalık sistemine eklendi. Soru bankası 568 soruya çıktı. Auth, veri şeması ve önceki kayıtlar değişmedi.
+
 ## 0.6.1 · 2026-11-18
 
 Ekipman aktif yetenekleri düzeltildi

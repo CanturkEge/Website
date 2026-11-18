@@ -1,3 +1,4 @@
+import { DS_CREDITS, DS_CONVENTIONS } from "./ds-sources.js";
 import {
   SIMULATION_CREDITS,
   SIMULATION_CORRECTIONS,
@@ -375,6 +376,8 @@ function realmRooms() {
   }));
 }
 function courseSourceNote() {
+  if (state.course === "structures")
+    return `<details class="panel course-sources"><summary>🌳 Slayt kaynakları & işlem kuralları</summary><p>${esc(DS_CREDITS)}</p><ul>${DS_CONVENTIONS.map((t) => `<li>${esc(t)}</li>`).join("")}</ul><p>İndis, yükseklik ve B-tree kapasitesi soruda verilen tanıma göre hesaplanır. Altındaki kaynaklar dosyanın fiziksel PDF sayfalarıdır; basılı slayt numarası farklı olabilir.</p></details>`;
   if (state.course !== "simulation") return "";
   return `<details class="panel course-sources"><summary>📚 Slayt kaynakları & gösterim notları</summary><p>${esc(SIMULATION_CREDITS)}</p><ul>${SIMULATION_CORRECTIONS.map((t) => `<li>${esc(t)}</li>`).join("")}</ul><p>Soru ve bölüm altındaki sayfalar, iki slayt/sayfa dosyasının PDF sayfalarıdır. Sorular slaytların özgün uyarlamalarıdır.</p></details>`;
 }

@@ -1,4 +1,5 @@
 import { SIMULATION_UNITS } from "./simulation-learning.js";
+import { DS_UNITS } from "./ds-content.js";
 const section = (title, text, example) => ({ title, text, example });
 const check = (prompt, options, answer, explanation) => ({
   prompt,
@@ -19,6 +20,7 @@ const lesson = (id, title, summary, sections, cards, checks) => ({
   checks: checks.map((q, i) => ({ ...q, id: id + "-check-" + i })),
 });
 export const LEARNING_UNITS = [
+  ...DS_UNITS,
   ...SIMULATION_UNITS,
   {
     id: "java",

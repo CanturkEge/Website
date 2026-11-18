@@ -6098,6 +6098,23 @@ body[data-theme="cosmos"] {
   --purple: #dec491;
   --world-glow: #887097;
 }
+body[data-theme="grove"] {
+  --bg: #081216;
+  --panel: #102125;
+  --line: #274447;
+  --purple: #83dcd4;
+  --world-glow: #347d7c;
+}
+.grove-node {
+  animation: grove-breathe 5s ease-in-out infinite alternate;
+}
+@keyframes grove-breathe {
+  from { opacity: .55; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grove-node { animation: none; }
+}
 body[data-theme="market"] {
   --bg: #110f0d;
   --panel: #1c1916;

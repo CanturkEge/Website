@@ -23,7 +23,7 @@ const hunter = () => {
 };
 const bank = QUESTIONS.filter((q) => q.course === "simulation");
 test("Modeling opens with 220 unique questions, all 11 source chapters and balanced five tiers", () => {
-  assert.equal(COURSES.filter((c) => !c.locked).length, 2);
+  assert.equal(COURSES.find((c) => c.id === "simulation").locked, false);
   assert.equal(bank.length, 220);
   assert.equal(new Set(bank.map((q) => q.prompt)).size, 220);
   for (let chapter = 0; chapter < 11; chapter++) {
